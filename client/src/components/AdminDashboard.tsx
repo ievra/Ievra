@@ -8010,15 +8010,28 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             {displayArticle.publishedAt ? formatDate(displayArticle.publishedAt) : '-'}
                           </TableCell>
                           <TableCell>
-                            <Badge
-                              variant="outline"
-                              className="text-white border-white/30"
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-sm px-3 py-1 h-auto hover:bg-white/10"
                               data-testid={`badge-status-${slug}`}
+                              onClick={async () => {
+                                const statusOrder = ['draft', 'published', 'archived'] as const;
+                                const currentIndex = statusOrder.indexOf(displayArticle.status as any);
+                                const nextStatus = statusOrder[(currentIndex + 1) % 3];
+                                try {
+                                  for (const article of articleGroup) {
+                                    await updateArticleMutation.mutateAsync({ 
+                                      id: article.id, 
+                                      data: { status: nextStatus } 
+                                    });
+                                  }
+                                } catch (error) {
+                                }
+                              }}
                             >
-                              {language === 'vi' 
-                                ? (displayArticle.status === 'draft' ? 'Bản Nháp' : displayArticle.status === 'published' ? 'Đã Đăng' : 'Lưu Trữ')
-                                : displayArticle.status}
-                            </Badge>
+                              {displayArticle.status === 'draft' ? 'Bản Nháp' : displayArticle.status === 'published' ? 'Đã Đăng' : 'Lưu Trữ'}
+                            </Button>
                           </TableCell>
                         </TableRow>
                       );
