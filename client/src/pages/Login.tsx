@@ -77,7 +77,7 @@ export default function Login() {
                 {/* Logo */}
                 <div className="mx-auto mb-6">
                   <img 
-                    src="/api/assets/logo.white.png" 
+                    src="/api/assets/Brand_Mark_Logo_1770767374146.png" 
                     alt="IEVRA Design & Build" 
                     className="h-20 w-auto mx-auto opacity-90"
                   />
