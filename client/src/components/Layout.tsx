@@ -107,7 +107,7 @@ export default function Layout({ children }: LayoutProps) {
                 className="text-[13px] font-light tracking-wider text-white/70 hover:text-white transition-colors flex items-center gap-1"
                 data-testid="lang-toggle"
               >
-                {language === 'vi' ? 'Tiếng Việt' : 'English'}
+                {language === 'vi' ? 'TIẾNG VIỆT' : 'ENGLISH'}
                 <svg width="10" height="6" viewBox="0 0 10 6" fill="none" className={`ml-1 transition-transform duration-300 ${langDropdownOpen ? 'rotate-180' : ''}`}>
                   <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
                 </svg>
@@ -124,7 +124,7 @@ export default function Layout({ children }: LayoutProps) {
                   }`}
                   data-testid="lang-en"
                 >
-                  English
+                  ENGLISH
                 </button>
                 <button
                   onClick={() => { handleLanguageChange('vi'); setLangDropdownOpen(false); }}
@@ -133,7 +133,7 @@ export default function Layout({ children }: LayoutProps) {
                   }`}
                   data-testid="lang-vi"
                 >
-                  Tiếng Việt
+                  TIẾNG VIỆT
                 </button>
               </div>
               {langDropdownOpen && (
@@ -218,7 +218,7 @@ export default function Layout({ children }: LayoutProps) {
                   className={`text-sm font-light tracking-wider transition-colors ${language === 'en' ? 'text-white' : 'text-white/40'}`}
                   data-testid="lang-en"
                 >
-                  English
+                  ENGLISH
                 </button>
                 <span className="text-white/20">|</span>
                 <button
@@ -226,7 +226,7 @@ export default function Layout({ children }: LayoutProps) {
                   className={`text-sm font-light tracking-wider transition-colors ${language === 'vi' ? 'text-white' : 'text-white/40'}`}
                   data-testid="lang-vi"
                 >
-                  Tiếng Việt
+                  TIẾNG VIỆT
                 </button>
               </div>
             </div>
