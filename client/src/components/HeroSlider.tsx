@@ -98,13 +98,6 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
     return (
       <div className="bg-black text-white min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <div className="mb-4">
-            <img 
-              src="/api/assets/logo.white.png" 
-              alt="IEVRA Design & Build" 
-              className="h-24 md:h-32 w-auto mx-auto"
-            />
-          </div>
           <p className="text-lg text-white/80">No projects available</p>
         </div>
       </div>
