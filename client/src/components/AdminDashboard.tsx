@@ -7259,19 +7259,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     }
     return (
       <div className="space-y-6 p-6">
-        <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-sans font-light min-h-[36px]">{language === 'vi' ? 'Quản Lý Bài Viết' : 'Articles Management'}</h2>
-          <Button
-            variant="outline"
-            onClick={() => setIsCategoryManagementDialogOpen(true)}
-            data-testid="button-category-settings"
-            className="h-10 px-4 min-w-[160px] justify-center"
-          >
-            <Settings className="mr-2 h-4 w-4" />
-            {language === 'vi' ? 'Cài Đặt Danh Mục' : 'Category Settings'}
-          </Button>
-        </div>
-
         {/* Category Management Dialog for Articles */}
         <Dialog open={isCategoryManagementDialogOpen} onOpenChange={setIsCategoryManagementDialogOpen}>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-black border border-white/20 rounded-none">
@@ -7437,43 +7424,54 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         <Card>
           <CardHeader>
             <div className="flex justify-between items-center">
-              <CardTitle>{language === 'vi' ? 'Bài Viết' : 'Articles'}</CardTitle>
-              <Dialog open={isArticleDialogOpen} onOpenChange={setIsArticleDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button 
-                    onClick={() => {
-                      setEditingArticle(null);
-                      setArticleImagePreview('');
-                      setArticleImageFile(null);
-                      setArticleContentImages([]);
-                      articleForm.reset({
-                        titleEn: "",
-                        titleVi: "",
-                        excerptEn: "",
-                        excerptVi: "",
-                        contentEn: "",
-                        contentVi: "",
-                        slug: "",
-                        category: "news",
-                        status: "draft",
-                        featured: false,
-                        featuredImage: "",
-                        metaTitleEn: "",
-                        metaTitleVi: "",
-                        metaDescriptionEn: "",
-                        metaDescriptionVi: "",
-                        metaKeywordsEn: "",
-                        metaKeywordsVi: "",
-                      });
-                    }}
-                    data-testid="button-add-article"
-                    className="min-w-[140px] justify-center"
-                  >
-                    <Plus className="mr-2 h-4 w-4" />
-                    {language === 'vi' ? 'Thêm Bài Viết' : 'Add Article'}
-                  </Button>
-                </DialogTrigger>
-              </Dialog>
+              <CardTitle>{language === 'vi' ? 'Quản Lý Bài Viết' : 'Articles Management'}</CardTitle>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsCategoryManagementDialogOpen(true)}
+                  data-testid="button-category-settings"
+                  className="h-10 px-4 min-w-[160px] justify-center"
+                >
+                  <Settings className="mr-2 h-4 w-4" />
+                  {language === 'vi' ? 'Cài Đặt Danh Mục' : 'Category Settings'}
+                </Button>
+                <Dialog open={isArticleDialogOpen} onOpenChange={setIsArticleDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button 
+                      onClick={() => {
+                        setEditingArticle(null);
+                        setArticleImagePreview('');
+                        setArticleImageFile(null);
+                        setArticleContentImages([]);
+                        articleForm.reset({
+                          titleEn: "",
+                          titleVi: "",
+                          excerptEn: "",
+                          excerptVi: "",
+                          contentEn: "",
+                          contentVi: "",
+                          slug: "",
+                          category: "news",
+                          status: "draft",
+                          featured: false,
+                          featuredImage: "",
+                          metaTitleEn: "",
+                          metaTitleVi: "",
+                          metaDescriptionEn: "",
+                          metaDescriptionVi: "",
+                          metaKeywordsEn: "",
+                          metaKeywordsVi: "",
+                        });
+                      }}
+                      data-testid="button-add-article"
+                      className="min-w-[140px] justify-center"
+                    >
+                      <Plus className="mr-2 h-4 w-4" />
+                      {language === 'vi' ? 'Thêm Bài Viết' : 'Add Article'}
+                    </Button>
+                  </DialogTrigger>
+                </Dialog>
+              </div>
             </div>
           </CardHeader>
           <CardContent>
