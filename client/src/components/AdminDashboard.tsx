@@ -8701,10 +8701,12 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           <span className="text-white text-sm">{language === 'vi' ? 'Toàn Quyền' : 'Full Access'}</span>
                         ) : Array.isArray(tableUser.permissions) && tableUser.permissions.length > 0 ? (
                           <span className="text-white text-sm">
-                            {tableUser.permissions.map((p: string) => {
-                              const perm = AVAILABLE_PERMISSIONS.find(ap => ap.id === p);
-                              return perm ? (language === 'vi' ? perm.labelVi : perm.label) : p;
-                            }).join(', ')}
+                            {tableUser.permissions.length >= AVAILABLE_PERMISSIONS.length
+                              ? (language === 'vi' ? 'Toàn Quyền' : 'Full Access')
+                              : tableUser.permissions.map((p: string) => {
+                                  const perm = AVAILABLE_PERMISSIONS.find(ap => ap.id === p);
+                                  return perm ? (language === 'vi' ? perm.labelVi : perm.label) : p;
+                                }).join(', ')}
                           </span>
                         ) : (
                           <span className="text-muted-foreground text-sm">{language === 'vi' ? 'Chưa có quyền' : 'No permissions'}</span>
