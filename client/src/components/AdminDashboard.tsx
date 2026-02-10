@@ -4350,15 +4350,14 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead>{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
+                    <TableHead>{language === 'vi' ? 'Năm' : 'Year'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Dự Án' : 'Project'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Ngôn Ngữ' : 'Language'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Địa Điểm' : 'Location'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Năm' : 'Year'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Phong Cách' : 'Style'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Diện Tích' : 'Area'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
+                    <TableHead>{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
                     <TableHead className="text-right">{language === 'vi' ? 'Thao Tác' : 'Actions'}</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -4370,6 +4369,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     const primary = (language === 'vi' ? group.find(p => p.language === 'vi') : group.find(p => p.language === 'en')) || group[0];
                     return (
                     <TableRow key={primary.id} data-testid={`row-project-${primary.id}`}>
+                      <TableCell className="capitalize">{primary.category}</TableCell>
+                      <TableCell>{primary.completionYear || "—"}</TableCell>
                       <TableCell>
                         <p className="font-light">{primary.title}</p>
                       </TableCell>
@@ -4379,11 +4380,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           {hasEn && <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-white/20 text-white/70 rounded-none">EN</Badge>}
                         </div>
                       </TableCell>
-                      <TableCell className="capitalize">{primary.category}</TableCell>
-                      <TableCell>{primary.location || "—"}</TableCell>
-                      <TableCell>{primary.completionYear || "—"}</TableCell>
                       <TableCell>{primary.style || "—"}</TableCell>
                       <TableCell>{primary.area || "—"}</TableCell>
+                      <TableCell>{formatDate(primary.createdAt)}</TableCell>
                       <TableCell>
                         <Badge variant="outline" className={`text-[10px] px-1.5 py-0 rounded-none ${
                           (primary as any).status === 'published' ? 'border-green-500/30 text-green-400' :
@@ -4395,7 +4394,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                            (language === 'vi' ? 'Bản Nháp' : 'Draft')}
                         </Badge>
                       </TableCell>
-                      <TableCell>{formatDate(primary.createdAt)}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end items-center gap-4">
                           <Pencil 
