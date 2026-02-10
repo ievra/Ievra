@@ -273,12 +273,12 @@ const transactionSchema = z.object({
 
 // Bilingual article schema for form
 const bilingualArticleSchema = z.object({
-  titleEn: z.string().min(1, "English title is required"),
-  titleVi: z.string().min(1, "Vietnamese title is required"),
+  titleEn: z.string().optional(),
+  titleVi: z.string().optional(),
   excerptEn: z.string().optional(),
   excerptVi: z.string().optional(),
-  contentEn: z.string().min(1, "English content is required"),
-  contentVi: z.string().min(1, "Vietnamese content is required"),
+  contentEn: z.string().optional(),
+  contentVi: z.string().optional(),
   slug: z.string().optional(),
   category: z.string().min(1, "Category is required"),
   status: z.enum(["draft", "published", "archived"]).default("draft"),
@@ -290,6 +290,13 @@ const bilingualArticleSchema = z.object({
   metaDescriptionVi: z.string().optional(),
   metaKeywordsEn: z.string().optional(),
   metaKeywordsVi: z.string().optional(),
+}).refine((data) => {
+  const hasEn = data.titleEn && data.titleEn.trim() && data.contentEn && data.contentEn.trim();
+  const hasVi = data.titleVi && data.titleVi.trim() && data.contentVi && data.contentVi.trim();
+  return hasEn || hasVi;
+}, {
+  message: "Cần nhập ít nhất 1 ngôn ngữ (tiêu đề + nội dung)",
+  path: ["titleEn"],
 });
 
 // Bilingual FAQ schema for form
@@ -2378,80 +2385,87 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
 
   const onArticleSubmit = async (data: BilingualArticleFormData) => {
     try {
-      // Generate slug if not provided
-      const slug = data.slug || data.titleEn
+      const hasEn = data.titleEn && data.titleEn.trim() && data.contentEn && data.contentEn.trim();
+      const hasVi = data.titleVi && data.titleVi.trim() && data.contentVi && data.contentVi.trim();
+
+      // Generate slug from whichever language is available
+      const slugSource = data.slug || (hasEn ? data.titleEn! : data.titleVi!);
+      const slug = slugSource
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-+|-+$/g, '');
 
-      // Prepare English version
-      const enArticle: InsertArticle = {
-        title: data.titleEn,
-        slug: slug,
-        excerpt: data.excerptEn,
-        content: data.contentEn,
-        category: data.category,
-        status: data.status,
-        language: 'en',
-        featured: data.featured,
-        metaTitle: data.metaTitleEn,
-        metaDescription: data.metaDescriptionEn,
-        metaKeywords: data.metaKeywordsEn,
-        tags: [],
-      };
+      const featuredImg = articleImagePreview || data.featuredImage || undefined;
 
-      // Prepare Vietnamese version
-      const viArticle: InsertArticle = {
-        title: data.titleVi,
-        slug: slug,
-        excerpt: data.excerptVi,
-        content: data.contentVi,
-        category: data.category,
-        status: data.status,
-        language: 'vi',
-        featured: data.featured,
-        metaTitle: data.metaTitleVi,
-        metaDescription: data.metaDescriptionVi,
-        metaKeywords: data.metaKeywordsVi,
-        tags: [],
-      };
+      const mutations: Promise<any>[] = [];
 
-      // Handle featured image (now uses uploaded path instead of base64)
-      if (articleImagePreview) {
-        enArticle.featuredImage = articleImagePreview; // Short path from upload
-        viArticle.featuredImage = articleImagePreview;
-      } else if (data.featuredImage) {
-        enArticle.featuredImage = data.featuredImage;
-        viArticle.featuredImage = data.featuredImage;
-      }
+      if (hasEn) {
+        const enArticle: InsertArticle = {
+          title: data.titleEn!,
+          slug: slug,
+          excerpt: data.excerptEn,
+          content: data.contentEn!,
+          category: data.category,
+          status: data.status,
+          language: 'en',
+          featured: data.featured,
+          featuredImage: featuredImg,
+          metaTitle: data.metaTitleEn,
+          metaDescription: data.metaDescriptionEn,
+          metaKeywords: data.metaKeywordsEn,
+          tags: [],
+          contentImages: articleContentImages.length > 0 ? articleContentImages as any : undefined,
+        };
 
-      // Handle content images (shared between EN and VI)
-      if (articleContentImages.length > 0) {
-        enArticle.contentImages = articleContentImages as any;
-        viArticle.contentImages = articleContentImages as any;
-      }
-
-      if (editingArticle) {
-        // Find both versions
-        const enVersion = articles.find(a => a.slug === editingArticle.slug && a.language === 'en');
-        const viVersion = articles.find(a => a.slug === editingArticle.slug && a.language === 'vi');
-
-        // Update or create both versions in parallel for better performance
-        await Promise.all([
-          enVersion 
+        if (editingArticle) {
+          const enVersion = articles.find(a => a.slug === editingArticle.slug && a.language === 'en');
+          mutations.push(enVersion 
             ? updateArticleMutation.mutateAsync({ id: enVersion.id, data: enArticle })
-            : createArticleMutation.mutateAsync(enArticle),
-          viVersion
-            ? updateArticleMutation.mutateAsync({ id: viVersion.id, data: viArticle })
-            : createArticleMutation.mutateAsync(viArticle)
-        ]);
-      } else {
-        // Create both versions in parallel
-        await Promise.all([
-          createArticleMutation.mutateAsync(enArticle),
-          createArticleMutation.mutateAsync(viArticle)
-        ]);
+            : createArticleMutation.mutateAsync(enArticle));
+        } else {
+          mutations.push(createArticleMutation.mutateAsync(enArticle));
+        }
+      } else if (editingArticle) {
+        const enVersion = articles.find(a => a.slug === editingArticle.slug && a.language === 'en');
+        if (enVersion) {
+          mutations.push(deleteArticleMutation.mutateAsync(enVersion.id));
+        }
       }
+
+      if (hasVi) {
+        const viArticle: InsertArticle = {
+          title: data.titleVi!,
+          slug: slug,
+          excerpt: data.excerptVi,
+          content: data.contentVi!,
+          category: data.category,
+          status: data.status,
+          language: 'vi',
+          featured: data.featured,
+          featuredImage: featuredImg,
+          metaTitle: data.metaTitleVi,
+          metaDescription: data.metaDescriptionVi,
+          metaKeywords: data.metaKeywordsVi,
+          tags: [],
+          contentImages: articleContentImages.length > 0 ? articleContentImages as any : undefined,
+        };
+
+        if (editingArticle) {
+          const viVersion = articles.find(a => a.slug === editingArticle.slug && a.language === 'vi');
+          mutations.push(viVersion
+            ? updateArticleMutation.mutateAsync({ id: viVersion.id, data: viArticle })
+            : createArticleMutation.mutateAsync(viArticle));
+        } else {
+          mutations.push(createArticleMutation.mutateAsync(viArticle));
+        }
+      } else if (editingArticle) {
+        const viVersion = articles.find(a => a.slug === editingArticle.slug && a.language === 'vi');
+        if (viVersion) {
+          mutations.push(deleteArticleMutation.mutateAsync(viVersion.id));
+        }
+      }
+
+      await Promise.all(mutations);
 
       // Reset form and close dialog after all mutations complete
       articleForm.reset();
@@ -7472,7 +7486,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="titleEn"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Tiêu Đề (Tiếng Anh) *' : 'Title (English) *'}</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Tiêu Đề (Tiếng Anh)' : 'Title (English)'}</FormLabel>
                           <FormControl>
                             <Input {...field} data-testid="input-article-title-en" placeholder={language === 'vi' ? 'Nhập tiêu đề tiếng Anh...' : 'Enter English title...'} />
                           </FormControl>
@@ -7486,7 +7500,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="titleVi"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Tiêu Đề (Tiếng Việt) *' : 'Title (Vietnamese) *'}</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Tiêu Đề (Tiếng Việt)' : 'Title (Vietnamese)'}</FormLabel>
                           <FormControl>
                             <Input {...field} data-testid="input-article-title-vi" placeholder="Nhập tiêu đề tiếng Việt..." />
                           </FormControl>
@@ -7534,7 +7548,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="contentEn"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Nội Dung (Tiếng Anh) *' : 'Content (English) *'}</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Nội Dung (Tiếng Anh)' : 'Content (English)'}</FormLabel>
                           <FormControl>
                             <Textarea {...field} rows={10} data-testid="textarea-article-content-en" placeholder={language === 'vi' ? 'Viết nội dung bằng tiếng Anh...' : 'Write your content in English...'} />
                           </FormControl>
@@ -7548,7 +7562,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="contentVi"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Nội Dung (Tiếng Việt) *' : 'Content (Vietnamese) *'}</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Nội Dung (Tiếng Việt)' : 'Content (Vietnamese)'}</FormLabel>
                           <FormControl>
                             <Textarea {...field} rows={10} data-testid="textarea-article-content-vi" placeholder="Viết nội dung bằng tiếng Việt..." />
                           </FormControl>
