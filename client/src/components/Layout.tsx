@@ -50,6 +50,7 @@ export default function Layout({ children }: LayoutProps) {
         setIsScrolled(false);
       }
       lastScrollY = scrollY > 0 ? scrollY : 0;
+      setLangDropdownOpen(false);
     };
     window.addEventListener("scroll", updateScrollDirection);
     return () => window.removeEventListener("scroll", updateScrollDirection);
@@ -112,7 +113,7 @@ export default function Layout({ children }: LayoutProps) {
                 </svg>
               </button>
               <div
-                className={`absolute top-full right-0 mt-2 bg-black/90 backdrop-blur-md border border-white/10 rounded-lg overflow-hidden transition-all duration-300 origin-top ${
+                className={`absolute top-full right-0 mt-2 bg-black/60 backdrop-blur-md border border-white/10 rounded-lg overflow-hidden transition-all duration-300 origin-top ${
                   langDropdownOpen ? 'opacity-100 scale-y-100 pointer-events-auto' : 'opacity-0 scale-y-0 pointer-events-none'
                 }`}
               >
