@@ -19,6 +19,7 @@ const getNavigation = (t: (key: string) => string) => {
 export default function Layout({ children }: LayoutProps) {
   const [location] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const { language, setLanguage, t } = useLanguage();
   const navigation = getNavigation(t);
@@ -99,16 +100,45 @@ export default function Layout({ children }: LayoutProps) {
           </Link>
 
           <div className="hidden lg:flex items-center gap-4">
-            <button
-              onClick={() => handleLanguageChange(language === 'vi' ? 'en' : 'vi')}
-              className="text-[13px] font-light tracking-wider text-white/70 hover:text-white transition-colors flex items-center gap-1"
-              data-testid="lang-toggle"
-            >
-              {language === 'vi' ? 'Tiếng Việt' : 'English'}
-              <svg width="10" height="6" viewBox="0 0 10 6" fill="none" className="ml-1">
-                <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-            </button>
+            <div className="relative">
+              <button
+                onClick={() => setLangDropdownOpen(!langDropdownOpen)}
+                className="text-[13px] font-light tracking-wider text-white/70 hover:text-white transition-colors flex items-center gap-1"
+                data-testid="lang-toggle"
+              >
+                {language === 'vi' ? 'Tiếng Việt' : 'English'}
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" className={`ml-1 transition-transform duration-300 ${langDropdownOpen ? 'rotate-180' : ''}`}>
+                  <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              <div
+                className={`absolute top-full right-0 mt-2 bg-black/90 backdrop-blur-md border border-white/10 rounded-lg overflow-hidden transition-all duration-300 origin-top ${
+                  langDropdownOpen ? 'opacity-100 scale-y-100 pointer-events-auto' : 'opacity-0 scale-y-0 pointer-events-none'
+                }`}
+              >
+                <button
+                  onClick={() => { handleLanguageChange('en'); setLangDropdownOpen(false); }}
+                  className={`block w-full text-left px-5 py-2.5 text-[13px] font-light tracking-wider transition-colors whitespace-nowrap ${
+                    language === 'en' ? 'text-white bg-white/10' : 'text-white/60 hover:text-white hover:bg-white/5'
+                  }`}
+                  data-testid="lang-en"
+                >
+                  English
+                </button>
+                <button
+                  onClick={() => { handleLanguageChange('vi'); setLangDropdownOpen(false); }}
+                  className={`block w-full text-left px-5 py-2.5 text-[13px] font-light tracking-wider transition-colors whitespace-nowrap ${
+                    language === 'vi' ? 'text-white bg-white/10' : 'text-white/60 hover:text-white hover:bg-white/5'
+                  }`}
+                  data-testid="lang-vi"
+                >
+                  Tiếng Việt
+                </button>
+              </div>
+              {langDropdownOpen && (
+                <div className="fixed inset-0 z-[-1]" onClick={() => setLangDropdownOpen(false)} />
+              )}
+            </div>
 
             <Link
               href="/contact"
