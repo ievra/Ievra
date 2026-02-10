@@ -16,7 +16,6 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import ImageUpload from "@/components/ImageUpload";
@@ -3442,470 +3441,419 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     )}
                   />
 
-                  <Tabs defaultValue="vi">
-                    <TabsList>
-                      <TabsTrigger value="vi">Tiếng Việt</TabsTrigger>
-                      <TabsTrigger value="en">English</TabsTrigger>
-                    </TabsList>
+                  {/* Bilingual Title */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={projectForm.control}
+                      name="titleEn"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Tiêu Đề (Tiếng Anh)' : 'Title (English)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} maxLength={100} data-testid="input-project-title-en" placeholder={language === 'vi' ? 'Nhập tiêu đề tiếng Anh...' : 'Enter English title...'} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={projectForm.control}
+                      name="titleVi"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Tiêu Đề (Tiếng Việt)' : 'Title (Vietnamese)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} maxLength={100} data-testid="input-project-title-vi" placeholder="Nhập tiêu đề tiếng Việt..." />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
-                    <TabsContent value="vi" className="space-y-4 mt-4">
+                  {/* Bilingual Description */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={projectForm.control}
+                      name="descriptionEn"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Mô Tả (Tiếng Anh)' : 'Description (English)'} <span className="text-muted-foreground text-xs font-normal">- Max 200</span></FormLabel>
+                          <FormControl>
+                            <Textarea {...field} rows={3} maxLength={200} data-testid="textarea-project-description-en" placeholder={language === 'vi' ? 'Nhập mô tả tiếng Anh...' : 'Enter English description...'} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={projectForm.control}
+                      name="descriptionVi"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Mô Tả (Tiếng Việt)' : 'Description (Vietnamese)'} <span className="text-muted-foreground text-xs font-normal">- Tối đa 200</span></FormLabel>
+                          <FormControl>
+                            <Textarea {...field} rows={3} maxLength={200} data-testid="textarea-project-description-vi" placeholder="Nhập mô tả tiếng Việt..." />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Bilingual Detailed Description */}
+                  <div className="space-y-2">
+                    <div className="text-xs text-muted-foreground">Format: *text* = bold, **text** = heading, ***text*** = heading + bold</div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <FormField
                         control={projectForm.control}
-                        name="titleVi"
+                        name="detailedDescriptionEn"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Tiêu đề <span className="text-muted-foreground text-xs font-normal">- bắt buộc nếu không có tiếng Anh (tối đa 100 ký tự)</span></FormLabel>
+                            <FormLabel>{language === 'vi' ? 'Mô Tả Chi Tiết (Tiếng Anh)' : 'Detailed Description (English)'} <span className="text-muted-foreground text-xs font-normal">- Max 1500</span></FormLabel>
                             <FormControl>
-                              <Input {...field} maxLength={100} data-testid="input-project-title-vi" placeholder="Nhập tiêu đề tiếng Việt..." />
+                              <Textarea {...field} rows={5} maxLength={1500} data-testid="textarea-project-detailed-description-en" placeholder={language === 'vi' ? 'Nhập nội dung chi tiết tiếng Anh...' : 'Enter detailed English content...'} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-
-                      <div className="space-y-1">
-                        <div className="text-xs text-muted-foreground">Format: *text* = bold, **text** = heading, ***text*** = heading + bold</div>
-                        <FormField
-                          control={projectForm.control}
-                          name="descriptionVi"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Mô tả <span className="text-muted-foreground text-xs font-normal">- Tối đa 200 ký tự</span></FormLabel>
-                              <FormControl>
-                                <Textarea {...field} rows={3} maxLength={200} data-testid="textarea-project-description-vi" placeholder="Nhập mô tả tiếng Việt..." />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
-                      <div className="space-y-1">
-                        <div className="text-xs text-muted-foreground">Format: *text* = bold, **text** = heading, ***text*** = heading + bold</div>
-                        <FormField
-                          control={projectForm.control}
-                          name="detailedDescriptionVi"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Mô tả chi tiết <span className="text-muted-foreground text-xs font-normal">- Tối đa 1500 ký tự</span></FormLabel>
-                              <FormControl>
-                                <Textarea {...field} rows={5} maxLength={1500} data-testid="textarea-project-detailed-description-vi" placeholder="Nhập nội dung chi tiết tiếng Việt..." />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
                       <FormField
                         control={projectForm.control}
-                        name="locationVi"
+                        name="detailedDescriptionVi"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Vị trí</FormLabel>
+                            <FormLabel>{language === 'vi' ? 'Mô Tả Chi Tiết (Tiếng Việt)' : 'Detailed Description (Vietnamese)'} <span className="text-muted-foreground text-xs font-normal">- Tối đa 1500</span></FormLabel>
                             <FormControl>
-                              <Input {...field} data-testid="input-project-location-vi" placeholder="Nhập vị trí..." />
+                              <Textarea {...field} rows={5} maxLength={1500} data-testid="textarea-project-detailed-description-vi" placeholder="Nhập nội dung chi tiết tiếng Việt..." />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
+                    </div>
+                  </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <FormField
-                          control={projectForm.control}
-                          name="areaVi"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Diện tích</FormLabel>
-                              <FormControl>
-                                <Input {...field} data-testid="input-project-area-vi" placeholder="Nhập diện tích..." />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                  {/* Bilingual Location */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={projectForm.control}
+                      name="locationEn"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Vị Trí (Tiếng Anh)' : 'Location (English)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-location-en" placeholder={language === 'vi' ? 'Nhập vị trí tiếng Anh...' : 'Enter location...'} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={projectForm.control}
+                      name="locationVi"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Vị Trí (Tiếng Việt)' : 'Location (Vietnamese)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-location-vi" placeholder="Nhập vị trí tiếng Việt..." />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
-                        <FormField
-                          control={projectForm.control}
-                          name="durationVi"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Thời gian</FormLabel>
-                              <FormControl>
-                                <Input {...field} data-testid="input-project-duration-vi" placeholder="Nhập thời gian..." />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
+                  {/* Bilingual Area */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={projectForm.control}
+                      name="areaEn"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Diện Tích (Tiếng Anh)' : 'Area (English)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-area-en" placeholder={language === 'vi' ? 'Nhập diện tích...' : 'Enter area...'} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={projectForm.control}
+                      name="areaVi"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Diện Tích (Tiếng Việt)' : 'Area (Vietnamese)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-area-vi" placeholder="Nhập diện tích tiếng Việt..." />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <FormField
-                          control={projectForm.control}
-                          name="styleVi"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Phong cách</FormLabel>
-                              <FormControl>
-                                <Input {...field} data-testid="input-project-style-vi" placeholder="Nhập phong cách..." />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
+                  {/* Bilingual Duration */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={projectForm.control}
+                      name="durationEn"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Thời Gian (Tiếng Anh)' : 'Duration (English)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-duration-en" placeholder={language === 'vi' ? 'Nhập thời gian...' : 'Enter duration...'} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={projectForm.control}
+                      name="durationVi"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Thời Gian (Tiếng Việt)' : 'Duration (Vietnamese)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-duration-vi" placeholder="Nhập thời gian tiếng Việt..." />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
-                        <FormField
-                          control={projectForm.control}
-                          name="designerVi"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Nhà thiết kế</FormLabel>
-                              <FormControl>
-                                <Input {...field} data-testid="input-project-designer-vi" placeholder="Nhập tên nhà thiết kế..." />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
+                  {/* Bilingual Style */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={projectForm.control}
+                      name="styleEn"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Phong Cách (Tiếng Anh)' : 'Style (English)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-style-en" placeholder={language === 'vi' ? 'Nhập phong cách...' : 'Enter style...'} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={projectForm.control}
+                      name="styleVi"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Phong Cách (Tiếng Việt)' : 'Style (Vietnamese)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-style-vi" placeholder="Nhập phong cách tiếng Việt..." />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
+                  {/* Bilingual Designer */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={projectForm.control}
+                      name="designerEn"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Nhà Thiết Kế (Tiếng Anh)' : 'Interior Designer (English)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-designer-en" placeholder={language === 'vi' ? 'Nhập tên nhà thiết kế...' : 'Enter designer name...'} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={projectForm.control}
+                      name="designerVi"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Nhà Thiết Kế (Tiếng Việt)' : 'Interior Designer (Vietnamese)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-designer-vi" placeholder="Nhập tên nhà thiết kế tiếng Việt..." />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Bilingual Completion Year */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={projectForm.control}
+                      name="completionYearEn"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Năm Hoàn Thành (Tiếng Anh)' : 'Completion Year (English)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-year-en" placeholder={language === 'vi' ? 'Nhập năm hoàn thành...' : 'Enter completion year...'} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={projectForm.control}
+                      name="completionYearVi"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Năm Hoàn Thành (Tiếng Việt)' : 'Completion Year (Vietnamese)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-year-vi" placeholder="Nhập năm hoàn thành tiếng Việt..." />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Bilingual Design Philosophy */}
+                  <div className="space-y-4 border-t pt-4">
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-light">{language === 'vi' ? 'Triết Lý Thiết Kế' : 'Design Philosophy Section'}</h4>
+                      <p className="text-xs text-muted-foreground">Format: **text** = heading, *text* = bold, ***text*** = heading + bold</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <FormField
                         control={projectForm.control}
-                        name="completionYearVi"
+                        name="designPhilosophyTitleEn"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Năm hoàn thành</FormLabel>
+                            <FormLabel>{language === 'vi' ? 'Tiêu Đề Mục (Tiếng Anh)' : 'Section Title (English)'}</FormLabel>
                             <FormControl>
-                              <Input {...field} data-testid="input-project-year-vi" placeholder="Nhập năm hoàn thành..." />
+                              <Input {...field} placeholder="Design Philosophy" data-testid="input-project-design-philosophy-title-en" />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-
-                      <div className="space-y-4 border-t pt-4">
-                        <div className="space-y-2">
-                          <h4 className="text-sm font-light">Triết lý thiết kế</h4>
-                          <p className="text-xs text-muted-foreground">Format: **text** = heading, *text* = bold, ***text*** = heading + bold</p>
-                        </div>
-                        <FormField
-                          control={projectForm.control}
-                          name="designPhilosophyTitleVi"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Tiêu đề mục</FormLabel>
-                              <FormControl>
-                                <Input {...field} placeholder="Triết lý thiết kế" data-testid="input-project-design-philosophy-title-vi" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={projectForm.control}
-                          name="designPhilosophyVi"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Nội dung <span className="text-muted-foreground text-xs font-normal">- Tối đa 800 ký tự</span></FormLabel>
-                              <FormControl>
-                                <Textarea {...field} rows={4} maxLength={800} placeholder="**Tiêu đề** Nội dung bình thường *in đậm*..." data-testid="textarea-project-design-philosophy-vi" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
-                      <div className="space-y-4 border-t pt-4">
-                        <div className="space-y-2">
-                          <h4 className="text-sm font-light">Lựa chọn vật liệu</h4>
-                          <p className="text-xs text-muted-foreground">Format: **text** = heading, *text* = bold, ***text*** = heading + bold</p>
-                        </div>
-                        <FormField
-                          control={projectForm.control}
-                          name="materialSelectionTitleVi"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Tiêu đề mục</FormLabel>
-                              <FormControl>
-                                <Input {...field} placeholder="Lựa chọn vật liệu" data-testid="input-project-material-selection-title-vi" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={projectForm.control}
-                          name="materialSelectionVi"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Nội dung <span className="text-muted-foreground text-xs font-normal">- Tối đa 800 ký tự</span></FormLabel>
-                              <FormControl>
-                                <Textarea {...field} rows={4} maxLength={800} placeholder="**Tiêu đề** Nội dung bình thường *in đậm*..." data-testid="textarea-project-material-selection-vi" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
-                      <div className="space-y-4 border-t pt-4">
-                        <h4 className="text-sm font-light">SEO</h4>
-                        <FormField
-                          control={projectForm.control}
-                          name="metaTitleVi"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Meta Title <span className="text-muted-foreground text-xs font-normal">- Tối đa 60 ký tự</span></FormLabel>
-                              <FormControl>
-                                <Input {...field} maxLength={60} placeholder="Tiêu đề SEO tiếng Việt..." data-testid="input-project-meta-title-vi" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={projectForm.control}
-                          name="metaDescriptionVi"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Meta Description <span className="text-muted-foreground text-xs font-normal">- Tối đa 160 ký tự</span></FormLabel>
-                              <FormControl>
-                                <Textarea {...field} rows={2} maxLength={160} placeholder="Mô tả SEO tiếng Việt..." data-testid="textarea-project-meta-description-vi" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={projectForm.control}
-                          name="metaKeywordsVi"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Meta Keywords <span className="text-muted-foreground text-xs font-normal">- Tối đa 200 ký tự</span></FormLabel>
-                              <FormControl>
-                                <Input {...field} maxLength={200} placeholder="từ khóa 1, từ khóa 2, từ khóa 3..." data-testid="input-project-meta-keywords-vi" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                    </TabsContent>
-
-                    <TabsContent value="en" className="space-y-4 mt-4">
                       <FormField
                         control={projectForm.control}
-                        name="titleEn"
+                        name="designPhilosophyTitleVi"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Title <span className="text-muted-foreground text-xs font-normal">- required if no Vietnamese (max 100 chars)</span></FormLabel>
+                            <FormLabel>{language === 'vi' ? 'Tiêu Đề Mục (Tiếng Việt)' : 'Section Title (Vietnamese)'}</FormLabel>
                             <FormControl>
-                              <Input {...field} maxLength={100} data-testid="input-project-title-en" placeholder="Enter English title..." />
+                              <Input {...field} placeholder="Triết lý thiết kế" data-testid="input-project-design-philosophy-title-vi" />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-
-                      <div className="space-y-1">
-                        <div className="text-xs text-muted-foreground">Format: *text* = bold, **text** = heading, ***text*** = heading + bold</div>
-                        <FormField
-                          control={projectForm.control}
-                          name="descriptionEn"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Description <span className="text-muted-foreground text-xs font-normal">- Max 200 characters</span></FormLabel>
-                              <FormControl>
-                                <Textarea {...field} rows={3} maxLength={200} data-testid="textarea-project-description-en" placeholder="Enter English description..." />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
-                      <div className="space-y-1">
-                        <div className="text-xs text-muted-foreground">Format: *text* = bold, **text** = heading, ***text*** = heading + bold</div>
-                        <FormField
-                          control={projectForm.control}
-                          name="detailedDescriptionEn"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Detailed Description <span className="text-muted-foreground text-xs font-normal">- Max 1500 characters</span></FormLabel>
-                              <FormControl>
-                                <Textarea {...field} rows={5} maxLength={1500} data-testid="textarea-project-detailed-description-en" placeholder="Enter detailed English content..." />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <FormField
                         control={projectForm.control}
-                        name="locationEn"
+                        name="designPhilosophyEn"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Location</FormLabel>
+                            <FormLabel>{language === 'vi' ? 'Nội Dung (Tiếng Anh)' : 'Content (English)'} <span className="text-muted-foreground text-xs font-normal">- Max 800</span></FormLabel>
                             <FormControl>
-                              <Input {...field} data-testid="input-project-location-en" placeholder="Enter location..." />
+                              <Textarea {...field} rows={4} maxLength={800} placeholder="**Heading** Normal text *bold text*..." data-testid="textarea-project-design-philosophy-en" />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <FormField
-                          control={projectForm.control}
-                          name="areaEn"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Area</FormLabel>
-                              <FormControl>
-                                <Input {...field} data-testid="input-project-area-en" placeholder="Enter area..." />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={projectForm.control}
-                          name="durationEn"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Duration</FormLabel>
-                              <FormControl>
-                                <Input {...field} data-testid="input-project-duration-en" placeholder="Enter duration..." />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <FormField
-                          control={projectForm.control}
-                          name="styleEn"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Style</FormLabel>
-                              <FormControl>
-                                <Input {...field} data-testid="input-project-style-en" placeholder="Enter style..." />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={projectForm.control}
-                          name="designerEn"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Interior Designer</FormLabel>
-                              <FormControl>
-                                <Input {...field} data-testid="input-project-designer-en" placeholder="Enter designer name..." />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
                       <FormField
                         control={projectForm.control}
-                        name="completionYearEn"
+                        name="designPhilosophyVi"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Completion Year</FormLabel>
+                            <FormLabel>{language === 'vi' ? 'Nội Dung (Tiếng Việt)' : 'Content (Vietnamese)'} <span className="text-muted-foreground text-xs font-normal">- Tối đa 800</span></FormLabel>
                             <FormControl>
-                              <Input {...field} data-testid="input-project-year-en" placeholder="Enter completion year..." />
+                              <Textarea {...field} rows={4} maxLength={800} placeholder="**Tiêu đề** Nội dung bình thường *in đậm*..." data-testid="textarea-project-design-philosophy-vi" />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
+                    </div>
+                  </div>
 
-                      <div className="space-y-4 border-t pt-4">
-                        <div className="space-y-2">
-                          <h4 className="text-sm font-light">Design Philosophy</h4>
-                          <p className="text-xs text-muted-foreground">Format: **text** = heading, *text* = bold, ***text*** = heading + bold</p>
-                        </div>
-                        <FormField
-                          control={projectForm.control}
-                          name="designPhilosophyTitleEn"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Section Title</FormLabel>
-                              <FormControl>
-                                <Input {...field} placeholder="Design Philosophy" data-testid="input-project-design-philosophy-title-en" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={projectForm.control}
-                          name="designPhilosophyEn"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Content <span className="text-muted-foreground text-xs font-normal">- Max 800 chars</span></FormLabel>
-                              <FormControl>
-                                <Textarea {...field} rows={4} maxLength={800} placeholder="**Heading** Normal text *bold text*..." data-testid="textarea-project-design-philosophy-en" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
+                  {/* Bilingual Material Selection */}
+                  <div className="space-y-4 border-t pt-4">
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-light">{language === 'vi' ? 'Lựa Chọn Vật Liệu' : 'Material Selection Section'}</h4>
+                      <p className="text-xs text-muted-foreground">Format: **text** = heading, *text* = bold, ***text*** = heading + bold</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={projectForm.control}
+                        name="materialSelectionTitleEn"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{language === 'vi' ? 'Tiêu Đề Mục (Tiếng Anh)' : 'Section Title (English)'}</FormLabel>
+                            <FormControl>
+                              <Input {...field} placeholder="Material Selection" data-testid="input-project-material-selection-title-en" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={projectForm.control}
+                        name="materialSelectionTitleVi"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{language === 'vi' ? 'Tiêu Đề Mục (Tiếng Việt)' : 'Section Title (Vietnamese)'}</FormLabel>
+                            <FormControl>
+                              <Input {...field} placeholder="Lựa chọn vật liệu" data-testid="input-project-material-selection-title-vi" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={projectForm.control}
+                        name="materialSelectionEn"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{language === 'vi' ? 'Nội Dung (Tiếng Anh)' : 'Content (English)'} <span className="text-muted-foreground text-xs font-normal">- Max 800</span></FormLabel>
+                            <FormControl>
+                              <Textarea {...field} rows={4} maxLength={800} placeholder="**Heading** Normal text *bold text*..." data-testid="textarea-project-material-selection-en" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={projectForm.control}
+                        name="materialSelectionVi"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{language === 'vi' ? 'Nội Dung (Tiếng Việt)' : 'Content (Vietnamese)'} <span className="text-muted-foreground text-xs font-normal">- Tối đa 800</span></FormLabel>
+                            <FormControl>
+                              <Textarea {...field} rows={4} maxLength={800} placeholder="**Tiêu đề** Nội dung bình thường *in đậm*..." data-testid="textarea-project-material-selection-vi" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
 
-                      <div className="space-y-4 border-t pt-4">
-                        <div className="space-y-2">
-                          <h4 className="text-sm font-light">Material Selection</h4>
-                          <p className="text-xs text-muted-foreground">Format: **text** = heading, *text* = bold, ***text*** = heading + bold</p>
-                        </div>
-                        <FormField
-                          control={projectForm.control}
-                          name="materialSelectionTitleEn"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Section Title</FormLabel>
-                              <FormControl>
-                                <Input {...field} placeholder="Material Selection" data-testid="input-project-material-selection-title-en" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={projectForm.control}
-                          name="materialSelectionEn"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Content <span className="text-muted-foreground text-xs font-normal">- Max 800 chars</span></FormLabel>
-                              <FormControl>
-                                <Textarea {...field} rows={4} maxLength={800} placeholder="**Heading** Normal text *bold text*..." data-testid="textarea-project-material-selection-en" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-
-                      <div className="space-y-4 border-t pt-4">
-                        <h4 className="text-sm font-light">SEO</h4>
+                  {/* Bilingual SEO Settings */}
+                  <div className="border-t pt-6">
+                    <h3 className="text-lg font-medium mb-4">{language === 'vi' ? 'Cài Đặt SEO' : 'SEO Settings'}</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-4">
+                        <h4 className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'SEO Tiếng Anh' : 'English SEO'}</h4>
                         <FormField
                           control={projectForm.control}
                           name="metaTitleEn"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Meta Title <span className="text-muted-foreground text-xs font-normal">- Max 60 chars</span></FormLabel>
+                              <FormLabel>Meta Title (EN) <span className="text-muted-foreground text-xs font-normal">- Max 60</span></FormLabel>
                               <FormControl>
                                 <Input {...field} maxLength={60} placeholder="SEO title in English..." data-testid="input-project-meta-title-en" />
                               </FormControl>
@@ -3918,7 +3866,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           name="metaDescriptionEn"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Meta Description <span className="text-muted-foreground text-xs font-normal">- Max 160 chars</span></FormLabel>
+                              <FormLabel>Meta Description (EN) <span className="text-muted-foreground text-xs font-normal">- Max 160</span></FormLabel>
                               <FormControl>
                                 <Textarea {...field} rows={2} maxLength={160} placeholder="SEO description in English..." data-testid="textarea-project-meta-description-en" />
                               </FormControl>
@@ -3931,7 +3879,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           name="metaKeywordsEn"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Meta Keywords <span className="text-muted-foreground text-xs font-normal">- Max 200 chars</span></FormLabel>
+                              <FormLabel>Meta Keywords (EN) <span className="text-muted-foreground text-xs font-normal">- Max 200</span></FormLabel>
                               <FormControl>
                                 <Input {...field} maxLength={200} placeholder="keyword1, keyword2, keyword3..." data-testid="input-project-meta-keywords-en" />
                               </FormControl>
@@ -3940,8 +3888,50 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           )}
                         />
                       </div>
-                    </TabsContent>
-                  </Tabs>
+                      <div className="space-y-4">
+                        <h4 className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'SEO Tiếng Việt' : 'Vietnamese SEO'}</h4>
+                        <FormField
+                          control={projectForm.control}
+                          name="metaTitleVi"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Meta Title (VI) <span className="text-muted-foreground text-xs font-normal">- Tối đa 60</span></FormLabel>
+                              <FormControl>
+                                <Input {...field} maxLength={60} placeholder="Tiêu đề SEO tiếng Việt..." data-testid="input-project-meta-title-vi" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={projectForm.control}
+                          name="metaDescriptionVi"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Meta Description (VI) <span className="text-muted-foreground text-xs font-normal">- Tối đa 160</span></FormLabel>
+                              <FormControl>
+                                <Textarea {...field} rows={2} maxLength={160} placeholder="Mô tả SEO tiếng Việt..." data-testid="textarea-project-meta-description-vi" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={projectForm.control}
+                          name="metaKeywordsVi"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Meta Keywords (VI) <span className="text-muted-foreground text-xs font-normal">- Tối đa 200</span></FormLabel>
+                              <FormControl>
+                                <Input {...field} maxLength={200} placeholder="từ khóa 1, từ khóa 2, từ khóa 3..." data-testid="input-project-meta-keywords-vi" />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
+                  </div>
 
                   <FormField
                     control={projectForm.control}
