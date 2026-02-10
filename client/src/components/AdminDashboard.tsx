@@ -3234,7 +3234,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   if (activeTab === 'overview') {
     // Overview is accessible to everyone
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 p-6">
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card>
@@ -3344,7 +3344,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       return <PermissionDenied feature="Projects" />;
     }
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 p-6">
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-sans font-light">{language === 'vi' ? 'Quản Lý Dự Án' : 'Projects Management'}</h2>
           <div className="flex gap-2">
@@ -4424,7 +4424,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       return <PermissionDenied feature="CRM / Clients" />;
     }
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 p-6">
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-sans font-light">{t('crm.clientManagement')}</h2>
           <div className="flex gap-2">
@@ -5708,7 +5708,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       return <PermissionDenied feature="Inquiries" />;
     }
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 p-6">
         <h2 className="text-2xl font-sans font-light">{language === 'vi' ? 'Quản Lý Yêu Cầu' : 'Inquiry Management'}</h2>
 
         <Card>
@@ -5907,7 +5907,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       return <PermissionDenied feature="Content / Services" />;
     }
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 p-6">
         <h2 className="text-2xl font-sans font-light">{language === 'vi' ? 'Quản Lý Nội Dung' : 'Content Management'}</h2>
         
         <Form {...seoSettingsForm}>
@@ -6063,7 +6063,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       return <PermissionDenied feature="Homepage Content" />;
     }
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 p-6">
         <h2 className="text-2xl font-sans font-light">{language === 'vi' ? 'Quản Lý Nội Dung Trang Chủ' : 'Homepage Content Management'}</h2>
         
         <Form {...homepageContentForm}>
@@ -7237,7 +7237,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       return <PermissionDenied feature="Articles / Blog" />;
     }
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 p-6">
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-sans font-light">{language === 'vi' ? 'Quản Lý Bài Viết' : 'Articles Management'}</h2>
           <Button
@@ -8104,7 +8104,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       return <PermissionDenied feature="Partners" />;
     }
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 p-6">
         <div className="flex justify-between items-center">
           <div>
             <h2 className="text-2xl font-sans font-light">Partners Management</h2>
@@ -8415,7 +8415,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     };
 
     return (
-      <div className="space-y-6">
+      <div className="space-y-6 p-6">
         <div className="flex justify-between items-center">
           <div>
             <h2 className="text-2xl font-sans font-light">{language === 'vi' ? 'Quản Lý Người Dùng' : 'User Management'}</h2>
