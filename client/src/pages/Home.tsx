@@ -685,16 +685,16 @@ export default function Home() {
                       className="group relative overflow-hidden cursor-pointer h-[28rem] w-72 flex-shrink-0 rounded-none project-card"
                       onClick={() => navigate(project.slug ? `/portfolio/${project.slug}` : `/project/${project.id}`)}
                     >
-                      <img
-                        src={
-                          (Array.isArray(project.images) &&
-                            project.images[0]) ||
-                          "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
-                        }
-                        alt={project.title}
-                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                        data-testid={`img-project-${project.id}`}
-                      />
+                      {Array.isArray(project.images) && project.images[0] ? (
+                        <img
+                          src={project.images[0]}
+                          alt={project.title}
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                          data-testid={`img-project-${project.id}`}
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-neutral-900" data-testid={`img-project-${project.id}`} />
+                      )}
                       <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-300" />
 
                       {/* Content Overlay */}

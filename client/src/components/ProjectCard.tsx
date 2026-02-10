@@ -7,8 +7,7 @@ interface ProjectCardProps {
 }
 
 export default function ProjectCard({ project, index = 0 }: ProjectCardProps) {
-  const defaultImage = `https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&h=400`;
-  const projectImage = Array.isArray(project.images) && project.images[0] || defaultImage;
+  const projectImage = Array.isArray(project.images) && project.images[0] || null;
 
   return (
     <div 
@@ -16,12 +15,16 @@ export default function ProjectCard({ project, index = 0 }: ProjectCardProps) {
       data-index={index}
     >
       <Link href={project.slug ? `/portfolio/${project.slug}` : `/project/${project.id}`}>
-        <img 
-          src={projectImage}
-          alt={project.title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-          data-testid={`img-project-${project.id}`}
-        />
+        {projectImage ? (
+          <img 
+            src={projectImage}
+            alt={project.title}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            data-testid={`img-project-${project.id}`}
+          />
+        ) : (
+          <div className="w-full h-full bg-neutral-900" data-testid={`img-project-${project.id}`} />
+        )}
         <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-all duration-500" />
         
         {/* Content Overlay */}
