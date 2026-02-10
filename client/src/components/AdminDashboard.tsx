@@ -8531,7 +8531,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             <SelectContent>
                               <SelectItem value="superadmin">{language === 'vi' ? 'Super Admin (Toàn Quyền)' : 'Super Admin (Full Access)'}</SelectItem>
                               <SelectItem value="admin">{language === 'vi' ? 'Admin (Quyền Tùy Chỉnh)' : 'Admin (Custom Permissions)'}</SelectItem>
-                              <SelectItem value="editor">{language === 'vi' ? 'Editor (Quyền Hạn Chế)' : 'Editor (Limited Access)'}</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
