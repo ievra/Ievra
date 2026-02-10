@@ -238,7 +238,7 @@ export default function Layout({ children }: LayoutProps) {
 
       <footer className="bg-black text-white pt-10 pb-12 border-t border-gray-800">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-20 mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-20 mb-8">
             <div>
               <h4 className="text-sm tracking-widest text-white mb-8 font-light uppercase">
                 {language === 'vi' ? 'VĂN PHÒNG CHÍNH' : 'CORPORATE OFFICE'}
@@ -358,26 +358,6 @@ export default function Layout({ children }: LayoutProps) {
                   </a>
                 </li>
               </ul>
-            </div>
-            
-            <div>
-              <h4 className="text-sm tracking-widest text-white mb-8 font-light uppercase">
-                {language === 'vi' ? 'ĐĂNG KÝ TIN TỨC' : 'JOIN OUR NEWS'}
-              </h4>
-              <p className="text-white/80 mb-6 font-light text-sm">
-                {language === 'vi' ? 'Nhận thông báo về các ưu đãi mới' : 'Receive notifications about new offers'}
-              </p>
-              <div className="flex">
-                <input
-                  type="email"
-                  placeholder={language === 'vi' ? 'Email' : 'Email'}
-                  className="bg-transparent border-0 border-b border-gray-600 text-white/80 placeholder-gray-400 focus:outline-none focus:border-white flex-grow px-0 py-3 font-light text-sm"
-                  data-testid="newsletter-email"
-                />
-                <button className="ml-3 text-white/80 hover:text-white transition-colors font-light text-base">
-                  →
-                </button>
-              </div>
             </div>
           </div>
           
