@@ -4404,7 +4404,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 <p className="text-muted-foreground">{language === 'vi' ? 'Tạo dự án đầu tiên để bắt đầu.' : 'Create your first project to get started.'}</p>
               </div>
             ) : (
-              <Table className="table-fixed [&_td]:py-2 [&_th]:py-2">
+              <Table className="table-fixed [&_td]:py-2 [&_th]:py-2 [&_th]:text-center">
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[60px] whitespace-nowrap">{language === 'vi' ? 'Năm' : 'Year'}</TableHead>
@@ -7980,14 +7980,14 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 ))}
               </div>
             ) : (
-              <Table className="table-fixed [&_td]:py-2 [&_th]:py-2">
+              <Table className="table-fixed [&_td]:py-2 [&_th]:py-2 [&_th]:text-center">
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[120px] whitespace-nowrap">{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Tiêu Đề' : 'Title'}</TableHead>
                     <TableHead className="w-[100px] whitespace-nowrap">{language === 'vi' ? 'Ngôn Ngữ' : 'Languages'}</TableHead>
                     <TableHead className="w-[120px] whitespace-nowrap">{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
-                    <TableHead className="w-[130px] whitespace-nowrap text-center">{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
+                    <TableHead className="w-[130px] whitespace-nowrap">{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
                     <TableHead className="w-[100px]"></TableHead>
                   </TableRow>
                 </TableHeader>
