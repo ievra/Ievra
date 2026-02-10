@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -105,6 +106,7 @@ export default function AboutAdminTab({
   teamMemberForm,
   hasPermission,
 }: AboutAdminTabProps) {
+  const { language } = useLanguage();
   
   const [isPrincipleDialogOpen, setIsPrincipleDialogOpen] = useState(false);
   const [editingPrinciple, setEditingPrinciple] = useState<AboutCoreValue | null>(null);
@@ -311,38 +313,38 @@ export default function AboutAdminTab({
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-sans font-light">About Page Content Management</h2>
+      <h2 className="text-2xl font-sans font-light">{language === 'vi' ? 'Quản Lý Nội Dung Trang Giới Thiệu' : 'About Page Content Management'}</h2>
       
       {/* Hero & General Content */}
       <Form {...aboutContentForm}>
         <form onSubmit={aboutContentForm.handleSubmit(onAboutContentSubmit)} className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Hero Section & Page Titles</CardTitle>
+              <CardTitle>{language === 'vi' ? 'Hero Section & Tiêu Đề Trang' : 'Hero Section & Page Titles'}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
                 {/* Hero Section */}
                 <div className="p-4">
-                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">Hero Section</h3>
+                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Phần Hero' : 'Hero Section'}</h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-4">
                       <div>
-                        <label className="text-sm font-light mb-2 block">Hero Title (English)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Hero (English)' : 'Hero Title (English)'}</label>
                         <Input {...aboutContentForm.register("heroTitleEn")} placeholder="ARCHITECTURAL & INTERIOR DESIGN" data-testid="input-hero-title-en" />
                       </div>
                       <div>
-                        <label className="text-sm font-light mb-2 block">Hero Subtitle (English)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề Hero (English)' : 'Hero Subtitle (English)'}</label>
                         <Input {...aboutContentForm.register("heroSubtitleEn")} placeholder="INNOVATION IN EVERY PROJECT" data-testid="input-hero-subtitle-en" />
                       </div>
                     </div>
                     <div className="space-y-4">
                       <div>
-                        <label className="text-sm font-light mb-2 block">Hero Title (Tiếng Việt)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Hero (Tiếng Việt)' : 'Hero Title (Tiếng Việt)'}</label>
                         <Input {...aboutContentForm.register("heroTitleVi")} placeholder="THIẾT KẾ KIẾN TRÚC VÀ NỘI THẤT" data-testid="input-hero-title-vi" />
                       </div>
                       <div>
-                        <label className="text-sm font-light mb-2 block">Hero Subtitle (Tiếng Việt)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề Hero (Tiếng Việt)' : 'Hero Subtitle (Tiếng Việt)'}</label>
                         <Input {...aboutContentForm.register("heroSubtitleVi")} placeholder="ĐỔI MỚI TRONG MỌI DỰ ÁN" data-testid="input-hero-subtitle-vi" />
                       </div>
                     </div>
@@ -351,9 +353,9 @@ export default function AboutAdminTab({
                   {/* Hero Images Upload (5 images for slider) */}
                   <div className="mt-6">
                     <div className="flex items-center justify-between mb-2">
-                      <label className="text-sm font-light">Hero Background Images (Slider)</label>
+                      <label className="text-sm font-light">{language === 'vi' ? 'Ảnh Nền Hero (Slider)' : 'Hero Background Images (Slider)'}</label>
                       <span className="text-xs text-muted-foreground">
-                        {(aboutContentForm.watch("heroImages") || []).length} / 5 images
+                        {(aboutContentForm.watch("heroImages") || []).length} / 5 {language === 'vi' ? 'ảnh' : 'images'}
                       </span>
                     </div>
                     
@@ -403,7 +405,7 @@ export default function AboutAdminTab({
                     </div>
                     
                     <p className="text-xs text-muted-foreground mb-2">
-                      Add up to 5 images for the hero slider • PNG, JPG • Max 10MB • Recommended: 1920x1080px (16:9) • Click empty slots to add, hover over images to remove.
+                      {language === 'vi' ? 'Thêm tối đa 5 ảnh cho slider hero • PNG, JPG • Tối đa 10MB • Khuyến nghị: 1920x1080px (16:9) • Nhấp vào ô trống để thêm, di chuột lên ảnh để xóa.' : 'Add up to 5 images for the hero slider • PNG, JPG • Max 10MB • Recommended: 1920x1080px (16:9) • Click empty slots to add, hover over images to remove.'}
                     </p>
                     
                     {/* URL Input */}
@@ -434,7 +436,7 @@ export default function AboutAdminTab({
                         data-testid="button-upload-hero-images"
                       >
                         <Upload className="w-4 h-4 mr-2" />
-                        Upload
+                        {language === 'vi' ? 'Tải lên' : 'Upload'}
                       </Button>
                       <input
                         id="hero-images-upload"
@@ -493,25 +495,25 @@ export default function AboutAdminTab({
 
                 {/* Principles Section Title */}
                 <div className="p-4">
-                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">Principles Section</h3>
+                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Phần Nguyên Tắc' : 'Principles Section'}</h3>
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-light mb-2 block">Section Subtitle H2 (English)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề H2 (English)' : 'Section Subtitle H2 (English)'}</label>
                         <Input {...aboutContentForm.register("principlesSubtitleEn")} placeholder="OUR PRINCIPLES" data-testid="input-principles-subtitle-en" />
                       </div>
                       <div>
-                        <label className="text-sm font-light mb-2 block">Section Subtitle H2 (Tiếng Việt)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề H2 (Tiếng Việt)' : 'Section Subtitle H2 (Tiếng Việt)'}</label>
                         <Input {...aboutContentForm.register("principlesSubtitleVi")} placeholder="NGUYÊN TẮC LÀM VIỆC" data-testid="input-principles-subtitle-vi" />
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-light mb-2 block">Main Title H3 (English)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Chính H3 (English)' : 'Main Title H3 (English)'}</label>
                         <Input {...aboutContentForm.register("principlesTitleEn")} placeholder="THE FOUNDATION OF OUR WORK" data-testid="input-principles-title-en" />
                       </div>
                       <div>
-                        <label className="text-sm font-light mb-2 block">Main Title H3 (Tiếng Việt)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Chính H3 (Tiếng Việt)' : 'Main Title H3 (Tiếng Việt)'}</label>
                         <Input {...aboutContentForm.register("principlesTitleVi")} placeholder="NỀN TẢNG CỦA CÔNG VIỆC CHÚNG TÔI" data-testid="input-principles-title-vi" />
                       </div>
                     </div>
@@ -520,25 +522,25 @@ export default function AboutAdminTab({
 
                 {/* Process Section Title */}
                 <div className="p-4">
-                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">Process Section</h3>
+                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Phần Quy Trình' : 'Process Section'}</h3>
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-light mb-2 block">Section Subtitle H2 (English)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề H2 (English)' : 'Section Subtitle H2 (English)'}</label>
                         <Input {...aboutContentForm.register("processSubtitleEn")} placeholder="OUR PROCESS" data-testid="input-process-subtitle-en" />
                       </div>
                       <div>
-                        <label className="text-sm font-light mb-2 block">Section Subtitle H2 (Tiếng Việt)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề H2 (Tiếng Việt)' : 'Section Subtitle H2 (Tiếng Việt)'}</label>
                         <Input {...aboutContentForm.register("processSubtitleVi")} placeholder="QUY TRÌNH LÀM VIỆC" data-testid="input-process-subtitle-vi" />
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-light mb-2 block">Main Title H3 (English)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Chính H3 (English)' : 'Main Title H3 (English)'}</label>
                         <Input {...aboutContentForm.register("processTitleEn")} placeholder="FROM CONCEPT TO REALITY" data-testid="input-process-title-en" />
                       </div>
                       <div>
-                        <label className="text-sm font-light mb-2 block">Main Title H3 (Tiếng Việt)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Chính H3 (Tiếng Việt)' : 'Main Title H3 (Tiếng Việt)'}</label>
                         <Input {...aboutContentForm.register("processTitleVi")} placeholder="TỪ Ý TƯỞNG ĐẾN HIỆN THỰC" data-testid="input-process-title-vi" />
                       </div>
                     </div>
@@ -547,42 +549,42 @@ export default function AboutAdminTab({
 
                 {/* Company History Section */}
                 <div className="p-4 border-t">
-                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">Company History (Lịch sử hình thành)</h3>
+                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Lịch Sử Công Ty (Lịch sử hình thành)' : 'Company History (Lịch sử hình thành)'}</h3>
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-light mb-2 block">Section Subtitle H2 (English)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề H2 (English)' : 'Section Subtitle H2 (English)'}</label>
                         <Input {...aboutContentForm.register("historySubtitleEn")} placeholder="COMPANY HISTORY" data-testid="input-history-subtitle-en" />
                       </div>
                       <div>
-                        <label className="text-sm font-light mb-2 block">Section Subtitle H2 (Tiếng Việt)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề H2 (Tiếng Việt)' : 'Section Subtitle H2 (Tiếng Việt)'}</label>
                         <Input {...aboutContentForm.register("historySubtitleVi")} placeholder="LỊCH SỬ HÌNH THÀNH" data-testid="input-history-subtitle-vi" />
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-light mb-2 block">Main Title H3 (English)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Chính H3 (English)' : 'Main Title H3 (English)'}</label>
                         <Input {...aboutContentForm.register("historyTitleEn")} placeholder="OUR STORY" data-testid="input-history-title-en" />
                       </div>
                       <div>
-                        <label className="text-sm font-light mb-2 block">Main Title H3 (Tiếng Việt)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Chính H3 (Tiếng Việt)' : 'Main Title H3 (Tiếng Việt)'}</label>
                         <Input {...aboutContentForm.register("historyTitleVi")} placeholder="CÂU CHUYỆN CỦA CHÚNG TÔI" data-testid="input-history-title-vi" />
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-light mb-2 block">Content (English)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Nội Dung (English)' : 'Content (English)'}</label>
                         <Textarea {...aboutContentForm.register("historyContentEn")} rows={5} placeholder="Company history in English..." data-testid="textarea-history-content-en" />
                       </div>
                       <div>
-                        <label className="text-sm font-light mb-2 block">Content (Tiếng Việt)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Nội Dung (Tiếng Việt)' : 'Content (Tiếng Việt)'}</label>
                         <Textarea {...aboutContentForm.register("historyContentVi")} rows={5} placeholder="Lịch sử công ty..." data-testid="textarea-history-content-vi" />
                       </div>
                     </div>
                     
                     {/* History Image */}
                     <div className="mt-4">
-                      <label className="text-sm font-light mb-2 block">Story Image (Ảnh minh họa)</label>
+                      <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Ảnh Minh Họa (Ảnh minh họa)' : 'Story Image (Ảnh minh họa)'}</label>
                       <div>
                         <div className="relative">
                           {(historyImagePreview || aboutContent?.historyImage) ? (
@@ -602,7 +604,7 @@ export default function AboutAdminTab({
                                   data-testid="button-edit-history-image"
                                 >
                                   <Edit className="h-4 w-4 mr-2" />
-                                  <span className="text-sm font-light">Edit</span>
+                                  <span className="text-sm font-light">{language === 'vi' ? 'Sửa' : 'Edit'}</span>
                                 </Button>
                                 <Button
                                   type="button"
@@ -612,7 +614,7 @@ export default function AboutAdminTab({
                                   data-testid="button-change-history-image"
                                 >
                                   <Pencil className="h-4 w-4 mr-2" />
-                                  <span className="text-sm font-light">Change</span>
+                                  <span className="text-sm font-light">{language === 'vi' ? 'Thay Đổi' : 'Change'}</span>
                                 </Button>
                                 <input
                                   id="history-image-upload"
@@ -629,9 +631,9 @@ export default function AboutAdminTab({
                             <div className="border-2 border-dashed border-muted-foreground/25 p-12 text-center">
                               <div className="flex flex-col items-center gap-4">
                                 <div>
-                                  <p className="text-sm font-medium mb-1">Upload History Image</p>
+                                  <p className="text-sm font-medium mb-1">{language === 'vi' ? 'Tải Ảnh Lịch Sử' : 'Upload History Image'}</p>
                                   <p className="text-xs text-muted-foreground">
-                                    PNG, JPG • Max 10MB • Recommended: 800x600px (4:3)
+                                    {language === 'vi' ? 'PNG, JPG • Tối đa 10MB • Khuyến nghị: 800x600px (4:3)' : 'PNG, JPG • Max 10MB • Recommended: 800x600px (4:3)'}
                                   </p>
                                 </div>
                                 <Button 
@@ -640,7 +642,7 @@ export default function AboutAdminTab({
                                   className="bg-white text-black hover:bg-white/90"
                                   onClick={() => document.getElementById('history-image-upload-initial')?.click()}
                                 >
-                                  Choose File
+                                  {language === 'vi' ? 'Chọn Tệp' : 'Choose File'}
                                 </Button>
                               </div>
                               <input
@@ -655,7 +657,7 @@ export default function AboutAdminTab({
                           )}
                         </div>
                         <p className="text-xs text-muted-foreground mt-2">
-                          Format: PNG, JPG • Max: 10MB • Recommended: 800x600px (4:3) • Auto-crop enabled
+                          {language === 'vi' ? 'Định dạng: PNG, JPG • Tối đa: 10MB • Khuyến nghị: 800x600px (4:3) • Tự động cắt' : 'Format: PNG, JPG • Max: 10MB • Recommended: 800x600px (4:3) • Auto-crop enabled'}
                         </p>
                       </div>
                     </div>
@@ -664,25 +666,25 @@ export default function AboutAdminTab({
 
                 {/* Mission Section */}
                 <div className="p-4 border-t">
-                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">Mission (Sứ mệnh)</h3>
+                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Sứ Mệnh (Sứ mệnh)' : 'Mission (Sứ mệnh)'}</h3>
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-light mb-2 block">Section Title (English)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Phần (English)' : 'Section Title (English)'}</label>
                         <Input {...aboutContentForm.register("missionTitleEn")} placeholder="OUR MISSION" data-testid="input-mission-title-en" />
                       </div>
                       <div>
-                        <label className="text-sm font-light mb-2 block">Section Title (Tiếng Việt)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Phần (Tiếng Việt)' : 'Section Title (Tiếng Việt)'}</label>
                         <Input {...aboutContentForm.register("missionTitleVi")} placeholder="SỨ MỆNH" data-testid="input-mission-title-vi" />
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-light mb-2 block">Content (English)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Nội Dung (English)' : 'Content (English)'}</label>
                         <Textarea {...aboutContentForm.register("missionContentEn")} rows={4} placeholder="Our mission in English..." data-testid="textarea-mission-content-en" />
                       </div>
                       <div>
-                        <label className="text-sm font-light mb-2 block">Content (Tiếng Việt)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Nội Dung (Tiếng Việt)' : 'Content (Tiếng Việt)'}</label>
                         <Textarea {...aboutContentForm.register("missionContentVi")} rows={4} placeholder="Sứ mệnh của chúng tôi..." data-testid="textarea-mission-content-vi" />
                       </div>
                     </div>
@@ -691,25 +693,25 @@ export default function AboutAdminTab({
 
                 {/* Vision Section */}
                 <div className="p-4 border-t">
-                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">Vision (Tầm nhìn)</h3>
+                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Tầm Nhìn (Tầm nhìn)' : 'Vision (Tầm nhìn)'}</h3>
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-light mb-2 block">Section Title (English)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Phần (English)' : 'Section Title (English)'}</label>
                         <Input {...aboutContentForm.register("visionTitleEn")} placeholder="OUR VISION" data-testid="input-vision-title-en" />
                       </div>
                       <div>
-                        <label className="text-sm font-light mb-2 block">Section Title (Tiếng Việt)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Phần (Tiếng Việt)' : 'Section Title (Tiếng Việt)'}</label>
                         <Input {...aboutContentForm.register("visionTitleVi")} placeholder="TẦM NHÌN" data-testid="input-vision-title-vi" />
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-light mb-2 block">Content (English)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Nội Dung (English)' : 'Content (English)'}</label>
                         <Textarea {...aboutContentForm.register("visionContentEn")} rows={4} placeholder="Our vision in English..." data-testid="textarea-vision-content-en" />
                       </div>
                       <div>
-                        <label className="text-sm font-light mb-2 block">Content (Tiếng Việt)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Nội Dung (Tiếng Việt)' : 'Content (Tiếng Việt)'}</label>
                         <Textarea {...aboutContentForm.register("visionContentVi")} rows={4} placeholder="Tầm nhìn của chúng tôi..." data-testid="textarea-vision-content-vi" />
                       </div>
                     </div>
@@ -718,7 +720,7 @@ export default function AboutAdminTab({
 
                 {/* Mission & Vision Image */}
                 <div className="p-4 border-t">
-                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">Mission & Vision Image</h3>
+                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Ảnh Sứ Mệnh & Tầm Nhìn' : 'Mission & Vision Image'}</h3>
                   <div>
                     <div className="relative">
                       {(missionVisionImagePreview || aboutContent?.missionVisionImageData || aboutContent?.missionVisionImage) ? (
@@ -738,7 +740,7 @@ export default function AboutAdminTab({
                               data-testid="button-edit-mission-vision-image"
                             >
                               <Edit className="h-4 w-4 mr-2" />
-                              <span className="text-sm font-light">Edit</span>
+                              <span className="text-sm font-light">{language === 'vi' ? 'Sửa' : 'Edit'}</span>
                             </Button>
                             <Button
                               type="button"
@@ -748,7 +750,7 @@ export default function AboutAdminTab({
                               data-testid="button-change-mission-vision-image"
                             >
                               <Pencil className="h-4 w-4 mr-2" />
-                              <span className="text-sm font-light">Change</span>
+                              <span className="text-sm font-light">{language === 'vi' ? 'Thay Đổi' : 'Change'}</span>
                             </Button>
                           </div>
                           <input
@@ -766,9 +768,9 @@ export default function AboutAdminTab({
                           <div className="flex flex-col items-center gap-4">
                             <Upload className="h-12 w-12 text-muted-foreground" />
                             <div>
-                              <p className="text-sm font-medium mb-1">Upload Mission & Vision Image</p>
+                              <p className="text-sm font-medium mb-1">{language === 'vi' ? 'Tải Ảnh Sứ Mệnh & Tầm Nhìn' : 'Upload Mission & Vision Image'}</p>
                               <p className="text-xs text-muted-foreground">
-                                PNG, JPG • Max 10MB • Recommended: 600x800px (3:4)
+                                {language === 'vi' ? 'PNG, JPG • Tối đa 10MB • Khuyến nghị: 600x800px (3:4)' : 'PNG, JPG • Max 10MB • Recommended: 600x800px (3:4)'}
                               </p>
                             </div>
                             <Button 
@@ -777,7 +779,7 @@ export default function AboutAdminTab({
                               className="bg-white text-black hover:bg-white/90"
                               onClick={() => document.getElementById('mission-vision-image-upload-initial')?.click()}
                             >
-                              Choose File
+                              {language === 'vi' ? 'Chọn Tệp' : 'Choose File'}
                             </Button>
                           </div>
                           <input
@@ -792,32 +794,32 @@ export default function AboutAdminTab({
                       )}
                     </div>
                     <p className="text-xs text-muted-foreground mt-2">
-                      Format: PNG, JPG • Max: 10MB • Recommended: 600x800px (3:4) • Auto-crop enabled
+                      {language === 'vi' ? 'Định dạng: PNG, JPG • Tối đa: 10MB • Khuyến nghị: 600x800px (3:4) • Tự động cắt' : 'Format: PNG, JPG • Max: 10MB • Recommended: 600x800px (3:4) • Auto-crop enabled'}
                     </p>
                   </div>
                 </div>
 
                 {/* Core Values Section Title */}
                 <div className="p-4 border-t">
-                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">Core Values Section Title</h3>
+                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Tiêu Đề Phần Giá Trị Cốt Lõi' : 'Core Values Section Title'}</h3>
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-light mb-2 block">Section Subtitle H2 (English)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề H2 (English)' : 'Section Subtitle H2 (English)'}</label>
                         <Input {...aboutContentForm.register("coreValuesSubtitleEn")} placeholder="CORE VALUES" data-testid="input-core-values-subtitle-en" />
                       </div>
                       <div>
-                        <label className="text-sm font-light mb-2 block">Section Subtitle H2 (Tiếng Việt)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề H2 (Tiếng Việt)' : 'Section Subtitle H2 (Tiếng Việt)'}</label>
                         <Input {...aboutContentForm.register("coreValuesSubtitleVi")} placeholder="GIÁ TRỊ CỐT LÕI" data-testid="input-core-values-subtitle-vi" />
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-light mb-2 block">Main Title H3 (English)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Chính H3 (English)' : 'Main Title H3 (English)'}</label>
                         <Input {...aboutContentForm.register("coreValuesTitleEn")} placeholder="CORE VALUES" data-testid="input-core-values-title-en" />
                       </div>
                       <div>
-                        <label className="text-sm font-light mb-2 block">Main Title H3 (Tiếng Việt)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Chính H3 (Tiếng Việt)' : 'Main Title H3 (Tiếng Việt)'}</label>
                         <Input {...aboutContentForm.register("coreValuesTitleVi")} placeholder="GIÁ TRỊ CỐT LÕI" data-testid="input-core-values-title-vi" />
                       </div>
                     </div>
@@ -826,25 +828,25 @@ export default function AboutAdminTab({
 
                 {/* Team Section Title */}
                 <div className="p-4 border-t">
-                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">Team Section Title</h3>
+                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Tiêu Đề Phần Đội Ngũ' : 'Team Section Title'}</h3>
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-light mb-2 block">Section Subtitle H2 (English)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề H2 (English)' : 'Section Subtitle H2 (English)'}</label>
                         <Input {...aboutContentForm.register("teamSubtitleEn")} placeholder="OUR TEAM" data-testid="input-team-subtitle-en" />
                       </div>
                       <div>
-                        <label className="text-sm font-light mb-2 block">Section Subtitle H2 (Tiếng Việt)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề H2 (Tiếng Việt)' : 'Section Subtitle H2 (Tiếng Việt)'}</label>
                         <Input {...aboutContentForm.register("teamSubtitleVi")} placeholder="ĐỘI NGŨ" data-testid="input-team-subtitle-vi" />
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-light mb-2 block">Main Title H3 (English)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Chính H3 (English)' : 'Main Title H3 (English)'}</label>
                         <Input {...aboutContentForm.register("teamTitleEn")} placeholder="OUR TEAM" data-testid="input-team-title-en" />
                       </div>
                       <div>
-                        <label className="text-sm font-light mb-2 block">Main Title H3 (Tiếng Việt)</label>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Chính H3 (Tiếng Việt)' : 'Main Title H3 (Tiếng Việt)'}</label>
                         <Input {...aboutContentForm.register("teamTitleVi")} placeholder="ĐỘI NGŨ" data-testid="input-team-title-vi" />
                       </div>
                     </div>
@@ -857,74 +859,74 @@ export default function AboutAdminTab({
           {/* Stats Section */}
           <Card>
             <CardHeader>
-              <CardTitle>Statistics Section</CardTitle>
+              <CardTitle>{language === 'vi' ? 'Phần Thống Kê' : 'Statistics Section'}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-6">
                 {/* Projects Stat */}
                 <div className="space-y-4 p-4">
-                  <h4 className="text-sm font-medium uppercase tracking-wider">Projects</h4>
+                  <h4 className="text-sm font-medium uppercase tracking-wider">{language === 'vi' ? 'Dự Án' : 'Projects'}</h4>
                   <div>
-                    <label className="text-sm font-light mb-2 block">Value</label>
+                    <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Giá Trị' : 'Value'}</label>
                     <Input {...aboutContentForm.register("statsProjectsValue")} placeholder="150+" data-testid="input-stats-projects-value" />
                   </div>
                   <div>
-                    <label className="text-sm font-light mb-2 block">Label (English)</label>
+                    <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Nhãn (English)' : 'Label (English)'}</label>
                     <Input {...aboutContentForm.register("statsProjectsLabelEn")} placeholder="Projects Completed" data-testid="input-stats-projects-label-en" />
                   </div>
                   <div>
-                    <label className="text-sm font-light mb-2 block">Label (Tiếng Việt)</label>
+                    <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Nhãn (Tiếng Việt)' : 'Label (Tiếng Việt)'}</label>
                     <Input {...aboutContentForm.register("statsProjectsLabelVi")} placeholder="Dự án hoàn thành" data-testid="input-stats-projects-label-vi" />
                   </div>
                 </div>
 
                 {/* Awards Stat */}
                 <div className="space-y-4 p-4">
-                  <h4 className="text-sm font-medium uppercase tracking-wider">Awards</h4>
+                  <h4 className="text-sm font-medium uppercase tracking-wider">{language === 'vi' ? 'Giải Thưởng' : 'Awards'}</h4>
                   <div>
-                    <label className="text-sm font-light mb-2 block">Value</label>
+                    <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Giá Trị' : 'Value'}</label>
                     <Input {...aboutContentForm.register("statsAwardsValue")} placeholder="25+" data-testid="input-stats-awards-value" />
                   </div>
                   <div>
-                    <label className="text-sm font-light mb-2 block">Label (English)</label>
+                    <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Nhãn (English)' : 'Label (English)'}</label>
                     <Input {...aboutContentForm.register("statsAwardsLabelEn")} placeholder="Design Awards" data-testid="input-stats-awards-label-en" />
                   </div>
                   <div>
-                    <label className="text-sm font-light mb-2 block">Label (Tiếng Việt)</label>
+                    <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Nhãn (Tiếng Việt)' : 'Label (Tiếng Việt)'}</label>
                     <Input {...aboutContentForm.register("statsAwardsLabelVi")} placeholder="Giải thưởng thiết kế" data-testid="input-stats-awards-label-vi" />
                   </div>
                 </div>
 
                 {/* Clients Stat */}
                 <div className="space-y-4 p-4">
-                  <h4 className="text-sm font-medium uppercase tracking-wider">Clients</h4>
+                  <h4 className="text-sm font-medium uppercase tracking-wider">{language === 'vi' ? 'Khách Hàng' : 'Clients'}</h4>
                   <div>
-                    <label className="text-sm font-light mb-2 block">Value</label>
+                    <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Giá Trị' : 'Value'}</label>
                     <Input {...aboutContentForm.register("statsClientsValue")} placeholder="200+" data-testid="input-stats-clients-value" />
                   </div>
                   <div>
-                    <label className="text-sm font-light mb-2 block">Label (English)</label>
+                    <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Nhãn (English)' : 'Label (English)'}</label>
                     <Input {...aboutContentForm.register("statsClientsLabelEn")} placeholder="Happy Clients" data-testid="input-stats-clients-label-en" />
                   </div>
                   <div>
-                    <label className="text-sm font-light mb-2 block">Label (Tiếng Việt)</label>
+                    <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Nhãn (Tiếng Việt)' : 'Label (Tiếng Việt)'}</label>
                     <Input {...aboutContentForm.register("statsClientsLabelVi")} placeholder="Khách hàng hài lòng" data-testid="input-stats-clients-label-vi" />
                   </div>
                 </div>
 
                 {/* Countries Stat */}
                 <div className="space-y-4 p-4">
-                  <h4 className="text-sm font-medium uppercase tracking-wider">Countries</h4>
+                  <h4 className="text-sm font-medium uppercase tracking-wider">{language === 'vi' ? 'Quốc Gia' : 'Countries'}</h4>
                   <div>
-                    <label className="text-sm font-light mb-2 block">Value</label>
+                    <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Giá Trị' : 'Value'}</label>
                     <Input {...aboutContentForm.register("statsCountriesValue")} placeholder="12+" data-testid="input-stats-countries-value" />
                   </div>
                   <div>
-                    <label className="text-sm font-light mb-2 block">Label (English)</label>
+                    <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Nhãn (English)' : 'Label (English)'}</label>
                     <Input {...aboutContentForm.register("statsCountriesLabelEn")} placeholder="Countries" data-testid="input-stats-countries-label-en" />
                   </div>
                   <div>
-                    <label className="text-sm font-light mb-2 block">Label (Tiếng Việt)</label>
+                    <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Nhãn (Tiếng Việt)' : 'Label (Tiếng Việt)'}</label>
                     <Input {...aboutContentForm.register("statsCountriesLabelVi")} placeholder="Quốc gia" data-testid="input-stats-countries-label-vi" />
                   </div>
                 </div>
@@ -935,7 +937,7 @@ export default function AboutAdminTab({
           {/* Showcase Banner Image */}
           <Card>
             <CardHeader>
-              <CardTitle>Showcase Banner Image</CardTitle>
+              <CardTitle>{language === 'vi' ? 'Ảnh Banner Giới Thiệu' : 'Showcase Banner Image'}</CardTitle>
             </CardHeader>
             <CardContent>
               <div>
@@ -957,7 +959,7 @@ export default function AboutAdminTab({
                           data-testid="button-edit-showcase-banner"
                         >
                           <Edit className="h-4 w-4 mr-2" />
-                          <span className="text-sm font-light">Edit</span>
+                          <span className="text-sm font-light">{language === 'vi' ? 'Sửa' : 'Edit'}</span>
                         </Button>
                         <Button
                           type="button"
@@ -967,7 +969,7 @@ export default function AboutAdminTab({
                           data-testid="button-change-showcase-banner"
                         >
                           <Pencil className="h-4 w-4 mr-2" />
-                          <span className="text-sm font-light">Change</span>
+                          <span className="text-sm font-light">{language === 'vi' ? 'Thay Đổi' : 'Change'}</span>
                         </Button>
                         <input
                           id="showcase-banner-upload"
@@ -984,9 +986,9 @@ export default function AboutAdminTab({
                     <div className="border-2 border-dashed border-muted-foreground/25 p-12 text-center">
                       <div className="flex flex-col items-center gap-4">
                         <div>
-                          <p className="text-sm font-medium mb-1">Upload Banner Image</p>
+                          <p className="text-sm font-medium mb-1">{language === 'vi' ? 'Tải Ảnh Banner' : 'Upload Banner Image'}</p>
                           <p className="text-xs text-muted-foreground">
-                            PNG, JPG • Max 10MB • Recommended: 1920x800px
+                            {language === 'vi' ? 'PNG, JPG • Tối đa 10MB • Khuyến nghị: 1920x800px' : 'PNG, JPG • Max 10MB • Recommended: 1920x800px'}
                           </p>
                         </div>
                         <Button 
@@ -995,7 +997,7 @@ export default function AboutAdminTab({
                           className="bg-white text-black hover:bg-white/90"
                           onClick={() => document.getElementById('showcase-banner-upload-initial')?.click()}
                         >
-                          Choose File
+                          {language === 'vi' ? 'Chọn Tệp' : 'Choose File'}
                         </Button>
                       </div>
                       <input
@@ -1010,7 +1012,7 @@ export default function AboutAdminTab({
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">
-                  Format: PNG, JPG • Max: 10MB • Recommended: 1920x800px • Auto-crop enabled
+                  {language === 'vi' ? 'Định dạng: PNG, JPG • Tối đa: 10MB • Khuyến nghị: 1920x800px • Tự động cắt' : 'Format: PNG, JPG • Max: 10MB • Recommended: 1920x800px • Auto-crop enabled'}
                 </p>
               </div>
             </CardContent>
@@ -1023,7 +1025,7 @@ export default function AboutAdminTab({
               disabled={(!aboutContentForm.formState.isDirty && !showcaseBannerFile && !historyImageFile && !missionVisionImageFile) || updateAboutContentMutation.isPending}
               data-testid="button-save-about-content"
             >
-              {updateAboutContentMutation.isPending ? "Saving..." : "Save About Content"}
+              {updateAboutContentMutation.isPending ? (language === 'vi' ? "Đang lưu..." : "Saving...") : (language === 'vi' ? "Lưu Nội Dung" : "Save About Content")}
             </Button>
           </div>
         </form>
@@ -1034,8 +1036,8 @@ export default function AboutAdminTab({
         <CardHeader>
           <div className="flex justify-between items-center">
             <div>
-              <CardTitle>Core Values</CardTitle>
-              <p className="text-sm text-muted-foreground mt-1">{aboutPrinciples.length} / 4 items</p>
+              <CardTitle>{language === 'vi' ? 'Giá Trị Cốt Lõi' : 'Core Values'}</CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">{aboutPrinciples.length} / 4 {language === 'vi' ? 'mục' : 'items'}</p>
             </div>
             <Button
               onClick={() => {
@@ -1055,7 +1057,7 @@ export default function AboutAdminTab({
               data-testid="button-add-principle"
             >
               <Plus className="mr-2 h-4 w-4" />
-              Add Core Value
+              {language === 'vi' ? 'Thêm Giá Trị' : 'Add Core Value'}
             </Button>
           </div>
         </CardHeader>
@@ -1063,7 +1065,7 @@ export default function AboutAdminTab({
           <Dialog open={isPrincipleDialogOpen} onOpenChange={setIsPrincipleDialogOpen}>
             <DialogContent className="max-w-2xl">
               <DialogHeader>
-                <DialogTitle>{editingPrinciple ? "Edit" : "Add"} Core Value</DialogTitle>
+                <DialogTitle>{editingPrinciple ? (language === 'vi' ? "Sửa" : "Edit") : (language === 'vi' ? "Thêm" : "Add")} {language === 'vi' ? 'Giá Trị Cốt Lõi' : 'Core Value'}</DialogTitle>
               </DialogHeader>
                 <Form {...principleForm}>
                   <form onSubmit={principleForm.handleSubmit(handlePrincipleSubmit)} className="space-y-4">
@@ -1072,7 +1074,7 @@ export default function AboutAdminTab({
                       name="icon"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Lucide Icon Name *</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Tên Icon Lucide *' : 'Lucide Icon Name *'}</FormLabel>
                           <FormControl>
                             <Input {...field} placeholder="e.g. Shield, Heart, Star, Target" data-testid="input-principle-icon" />
                           </FormControl>
@@ -1086,7 +1088,7 @@ export default function AboutAdminTab({
                         name="titleEn"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Title (English)</FormLabel>
+                            <FormLabel>{language === 'vi' ? 'Tiêu Đề (English)' : 'Title (English)'}</FormLabel>
                             <FormControl>
                               <Input {...field} data-testid="input-principle-title-en" />
                             </FormControl>
@@ -1099,7 +1101,7 @@ export default function AboutAdminTab({
                         name="titleVi"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Title (Tiếng Việt)</FormLabel>
+                            <FormLabel>{language === 'vi' ? 'Tiêu Đề (Tiếng Việt)' : 'Title (Tiếng Việt)'}</FormLabel>
                             <FormControl>
                               <Input {...field} data-testid="input-principle-title-vi" />
                             </FormControl>
@@ -1114,7 +1116,7 @@ export default function AboutAdminTab({
                         name="descriptionEn"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Description (English)</FormLabel>
+                            <FormLabel>{language === 'vi' ? 'Mô Tả (English)' : 'Description (English)'}</FormLabel>
                             <FormControl>
                               <Textarea {...field} rows={3} data-testid="textarea-principle-description-en" />
                             </FormControl>
@@ -1127,7 +1129,7 @@ export default function AboutAdminTab({
                         name="descriptionVi"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Description (Tiếng Việt)</FormLabel>
+                            <FormLabel>{language === 'vi' ? 'Mô Tả (Tiếng Việt)' : 'Description (Tiếng Việt)'}</FormLabel>
                             <FormControl>
                               <Textarea {...field} rows={3} data-testid="textarea-principle-description-vi" />
                             </FormControl>
@@ -1141,7 +1143,7 @@ export default function AboutAdminTab({
                       name="order"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Display Order</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Thứ Tự Hiển Thị' : 'Display Order'}</FormLabel>
                           <FormControl>
                             <Input {...field} type="number" onChange={e => field.onChange(parseInt(e.target.value))} data-testid="input-principle-order" />
                           </FormControl>
@@ -1150,7 +1152,7 @@ export default function AboutAdminTab({
                       )}
                     />
                     <Button type="submit" className="w-full" data-testid="button-submit-principle">
-                      {editingPrinciple ? "Update" : "Create"} Core Value
+                      {editingPrinciple ? (language === 'vi' ? "Cập Nhật" : "Update") : (language === 'vi' ? "Tạo" : "Create")} {language === 'vi' ? 'Giá Trị Cốt Lõi' : 'Core Value'}
                     </Button>
                   </form>
                 </Form>
@@ -1166,10 +1168,10 @@ export default function AboutAdminTab({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Title (EN)</TableHead>
-                  <TableHead>Title (VI)</TableHead>
-                  <TableHead>Order</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>{language === 'vi' ? 'Tiêu Đề (EN)' : 'Title (EN)'}</TableHead>
+                  <TableHead>{language === 'vi' ? 'Tiêu Đề (VI)' : 'Title (VI)'}</TableHead>
+                  <TableHead>{language === 'vi' ? 'Thứ Tự' : 'Order'}</TableHead>
+                  <TableHead className="text-right">{language === 'vi' ? 'Hành Động' : 'Actions'}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -1215,8 +1217,8 @@ export default function AboutAdminTab({
         <CardHeader>
           <div className="flex justify-between items-center">
             <div>
-              <CardTitle>Showcase Services</CardTitle>
-              <p className="text-sm text-muted-foreground mt-1">{aboutShowcaseServices.length} / 4 items</p>
+              <CardTitle>{language === 'vi' ? 'Dịch Vụ Nổi Bật' : 'Showcase Services'}</CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">{aboutShowcaseServices.length} / 4 {language === 'vi' ? 'mục' : 'items'}</p>
             </div>
             <Button
               onClick={() => {
@@ -1235,7 +1237,7 @@ export default function AboutAdminTab({
               data-testid="button-add-showcase-service"
             >
               <Plus className="mr-2 h-4 w-4" />
-              Add Service
+              {language === 'vi' ? 'Thêm Dịch Vụ' : 'Add Service'}
             </Button>
           </div>
         </CardHeader>
@@ -1243,7 +1245,7 @@ export default function AboutAdminTab({
           <Dialog open={isShowcaseServiceDialogOpen} onOpenChange={setIsShowcaseServiceDialogOpen}>
             <DialogContent className="max-w-2xl">
               <DialogHeader>
-                <DialogTitle>{editingShowcaseService ? "Edit" : "Add"} Showcase Service</DialogTitle>
+                <DialogTitle>{editingShowcaseService ? (language === 'vi' ? "Sửa" : "Edit") : (language === 'vi' ? "Thêm" : "Add")} {language === 'vi' ? 'Dịch Vụ Nổi Bật' : 'Showcase Service'}</DialogTitle>
               </DialogHeader>
               <Form {...showcaseServiceForm}>
                 <form onSubmit={showcaseServiceForm.handleSubmit(handleShowcaseServiceSubmit)} className="space-y-4">
@@ -1253,7 +1255,7 @@ export default function AboutAdminTab({
                       name="titleEn"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Title (English)</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Tiêu Đề (English)' : 'Title (English)'}</FormLabel>
                           <FormControl>
                             <Input {...field} data-testid="input-showcase-title-en" />
                           </FormControl>
@@ -1266,7 +1268,7 @@ export default function AboutAdminTab({
                       name="titleVi"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Title (Tiếng Việt)</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Tiêu Đề (Tiếng Việt)' : 'Title (Tiếng Việt)'}</FormLabel>
                           <FormControl>
                             <Input {...field} data-testid="input-showcase-title-vi" />
                           </FormControl>
@@ -1281,7 +1283,7 @@ export default function AboutAdminTab({
                       name="descriptionEn"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Description (English)</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Mô Tả (English)' : 'Description (English)'}</FormLabel>
                           <FormControl>
                             <Textarea {...field} rows={3} data-testid="textarea-showcase-description-en" />
                           </FormControl>
@@ -1294,7 +1296,7 @@ export default function AboutAdminTab({
                       name="descriptionVi"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Description (Tiếng Việt)</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Mô Tả (Tiếng Việt)' : 'Description (Tiếng Việt)'}</FormLabel>
                           <FormControl>
                             <Textarea {...field} rows={3} data-testid="textarea-showcase-description-vi" />
                           </FormControl>
@@ -1308,7 +1310,7 @@ export default function AboutAdminTab({
                     name="order"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Display Order</FormLabel>
+                        <FormLabel>{language === 'vi' ? 'Thứ Tự Hiển Thị' : 'Display Order'}</FormLabel>
                         <FormControl>
                           <Input {...field} type="number" onChange={e => field.onChange(parseInt(e.target.value))} data-testid="input-showcase-order" />
                         </FormControl>
@@ -1317,7 +1319,7 @@ export default function AboutAdminTab({
                     )}
                   />
                   <Button type="submit" className="w-full" data-testid="button-submit-showcase">
-                    {editingShowcaseService ? "Update" : "Create"} Showcase Service
+                    {editingShowcaseService ? (language === 'vi' ? "Cập Nhật" : "Update") : (language === 'vi' ? "Tạo" : "Create")} {language === 'vi' ? 'Dịch Vụ Nổi Bật' : 'Showcase Service'}
                   </Button>
                 </form>
               </Form>
@@ -1334,10 +1336,10 @@ export default function AboutAdminTab({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Title (EN)</TableHead>
-                  <TableHead>Title (VI)</TableHead>
-                  <TableHead>Order</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>{language === 'vi' ? 'Tiêu Đề (EN)' : 'Title (EN)'}</TableHead>
+                  <TableHead>{language === 'vi' ? 'Tiêu Đề (VI)' : 'Title (VI)'}</TableHead>
+                  <TableHead>{language === 'vi' ? 'Thứ Tự' : 'Order'}</TableHead>
+                  <TableHead className="text-right">{language === 'vi' ? 'Hành Động' : 'Actions'}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -1383,8 +1385,8 @@ export default function AboutAdminTab({
         <CardHeader>
           <div className="flex justify-between items-center">
             <div>
-              <CardTitle>Process Steps</CardTitle>
-              <p className="text-sm text-muted-foreground mt-1">{aboutProcessSteps.length} / 4 items</p>
+              <CardTitle>{language === 'vi' ? 'Quy Trình' : 'Process Steps'}</CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">{aboutProcessSteps.length} / 4 {language === 'vi' ? 'mục' : 'items'}</p>
             </div>
             <Button
               onClick={() => {
@@ -1403,7 +1405,7 @@ export default function AboutAdminTab({
               data-testid="button-add-process-step"
             >
               <Plus className="mr-2 h-4 w-4" />
-              Add Step
+              {language === 'vi' ? 'Thêm Bước' : 'Add Step'}
             </Button>
           </div>
         </CardHeader>
@@ -1411,7 +1413,7 @@ export default function AboutAdminTab({
           <Dialog open={isProcessStepDialogOpen} onOpenChange={setIsProcessStepDialogOpen}>
             <DialogContent className="max-w-2xl">
               <DialogHeader>
-                <DialogTitle>{editingProcessStep ? "Edit" : "Add"} Process Step</DialogTitle>
+                <DialogTitle>{editingProcessStep ? (language === 'vi' ? "Sửa" : "Edit") : (language === 'vi' ? "Thêm" : "Add")} {language === 'vi' ? 'Bước Quy Trình' : 'Process Step'}</DialogTitle>
               </DialogHeader>
               <Form {...processStepForm}>
                 <form onSubmit={processStepForm.handleSubmit(handleProcessStepSubmit)} className="space-y-4">
@@ -1420,7 +1422,7 @@ export default function AboutAdminTab({
                     name="stepNumber"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Step Number</FormLabel>
+                        <FormLabel>{language === 'vi' ? 'Số Bước' : 'Step Number'}</FormLabel>
                         <FormControl>
                           <Input {...field} type="number" onChange={e => field.onChange(parseInt(e.target.value))} data-testid="input-step-number" />
                         </FormControl>
@@ -1434,7 +1436,7 @@ export default function AboutAdminTab({
                       name="titleEn"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Title (English)</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Tiêu Đề (English)' : 'Title (English)'}</FormLabel>
                           <FormControl>
                             <Input {...field} data-testid="input-step-title-en" />
                           </FormControl>
@@ -1447,7 +1449,7 @@ export default function AboutAdminTab({
                       name="titleVi"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Title (Tiếng Việt)</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Tiêu Đề (Tiếng Việt)' : 'Title (Tiếng Việt)'}</FormLabel>
                           <FormControl>
                             <Input {...field} data-testid="input-step-title-vi" />
                           </FormControl>
@@ -1462,7 +1464,7 @@ export default function AboutAdminTab({
                       name="descriptionEn"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Description (English)</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Mô Tả (English)' : 'Description (English)'}</FormLabel>
                           <FormControl>
                             <Textarea {...field} rows={3} data-testid="textarea-step-description-en" />
                           </FormControl>
@@ -1475,7 +1477,7 @@ export default function AboutAdminTab({
                       name="descriptionVi"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Description (Tiếng Việt)</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Mô Tả (Tiếng Việt)' : 'Description (Tiếng Việt)'}</FormLabel>
                           <FormControl>
                             <Textarea {...field} rows={3} data-testid="textarea-step-description-vi" />
                           </FormControl>
@@ -1485,7 +1487,7 @@ export default function AboutAdminTab({
                     />
                   </div>
                   <Button type="submit" className="w-full" data-testid="button-submit-step">
-                    {editingProcessStep ? "Update" : "Create"} Process Step
+                    {editingProcessStep ? (language === 'vi' ? "Cập Nhật" : "Update") : (language === 'vi' ? "Tạo" : "Create")} {language === 'vi' ? 'Bước Quy Trình' : 'Process Step'}
                   </Button>
                 </form>
               </Form>
@@ -1502,10 +1504,10 @@ export default function AboutAdminTab({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Step</TableHead>
-                  <TableHead>Title (EN)</TableHead>
-                  <TableHead>Title (VI)</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>{language === 'vi' ? 'Bước' : 'Step'}</TableHead>
+                  <TableHead>{language === 'vi' ? 'Tiêu Đề (EN)' : 'Title (EN)'}</TableHead>
+                  <TableHead>{language === 'vi' ? 'Tiêu Đề (VI)' : 'Title (VI)'}</TableHead>
+                  <TableHead className="text-right">{language === 'vi' ? 'Hành Động' : 'Actions'}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -1549,13 +1551,13 @@ export default function AboutAdminTab({
       {/* Team Members Management */}
       <Card>
         <CardHeader>
-          <CardTitle>Team Members</CardTitle>
+          <CardTitle>{language === 'vi' ? 'Thành Viên' : 'Team Members'}</CardTitle>
         </CardHeader>
         <CardContent>
           <Dialog open={isTeamMemberDialogOpen} onOpenChange={setIsTeamMemberDialogOpen}>
             <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle>{editingTeamMember ? 'Edit' : 'Add'} Team Member</DialogTitle>
+                <DialogTitle>{editingTeamMember ? (language === 'vi' ? 'Sửa' : 'Edit') : (language === 'vi' ? 'Thêm' : 'Add')} {language === 'vi' ? 'Thành Viên' : 'Team Member'}</DialogTitle>
               </DialogHeader>
               <Form {...teamMemberForm}>
                 <form onSubmit={teamMemberForm.handleSubmit(handleTeamMemberSubmit)} className="space-y-4">
@@ -1564,7 +1566,7 @@ export default function AboutAdminTab({
                     name="name"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Name</FormLabel>
+                        <FormLabel>{language === 'vi' ? 'Tên' : 'Name'}</FormLabel>
                         <FormControl>
                           <Input {...field} placeholder="Sarah Chen" data-testid="input-team-member-name" />
                         </FormControl>
@@ -1578,7 +1580,7 @@ export default function AboutAdminTab({
                       name="positionEn"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Position (English)</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Chức Vụ (English)' : 'Position (English)'}</FormLabel>
                           <FormControl>
                             <Input {...field} placeholder="Lead Designer" data-testid="input-team-member-position-en" />
                           </FormControl>
@@ -1591,7 +1593,7 @@ export default function AboutAdminTab({
                       name="positionVi"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Position (Tiếng Việt)</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Chức Vụ (Tiếng Việt)' : 'Position (Tiếng Việt)'}</FormLabel>
                           <FormControl>
                             <Input {...field} placeholder="Trưởng phòng thiết kế" data-testid="input-team-member-position-vi" />
                           </FormControl>
@@ -1606,7 +1608,7 @@ export default function AboutAdminTab({
                       name="bioEn"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Bio (English)</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Tiểu Sử (English)' : 'Bio (English)'}</FormLabel>
                           <FormControl>
                             <Textarea {...field} rows={3} placeholder="Professional background..." data-testid="textarea-team-member-bio-en" />
                           </FormControl>
@@ -1619,7 +1621,7 @@ export default function AboutAdminTab({
                       name="bioVi"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Bio (Tiếng Việt)</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Tiểu Sử (Tiếng Việt)' : 'Bio (Tiếng Việt)'}</FormLabel>
                           <FormControl>
                             <Textarea {...field} rows={3} placeholder="Lý lịch chuyên môn..." data-testid="textarea-team-member-bio-vi" />
                           </FormControl>
@@ -1634,7 +1636,7 @@ export default function AboutAdminTab({
                       name="achievementsEn"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Achievements (English)</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Thành Tựu (English)' : 'Achievements (English)'}</FormLabel>
                           <FormControl>
                             <Textarea {...field} rows={3} placeholder="Awards and accomplishments..." data-testid="textarea-team-member-achievements-en" />
                           </FormControl>
@@ -1647,7 +1649,7 @@ export default function AboutAdminTab({
                       name="achievementsVi"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Achievements (Tiếng Việt)</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Thành Tựu (Tiếng Việt)' : 'Achievements (Tiếng Việt)'}</FormLabel>
                           <FormControl>
                             <Textarea {...field} rows={3} placeholder="Giải thưởng và thành tựu..." data-testid="textarea-team-member-achievements-vi" />
                           </FormControl>
@@ -1662,7 +1664,7 @@ export default function AboutAdminTab({
                       name="philosophyEn"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Philosophy (English)</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Triết Lý (English)' : 'Philosophy (English)'}</FormLabel>
                           <FormControl>
                             <Textarea {...field} rows={3} placeholder="Design philosophy..." data-testid="textarea-team-member-philosophy-en" />
                           </FormControl>
@@ -1675,7 +1677,7 @@ export default function AboutAdminTab({
                       name="philosophyVi"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Philosophy (Tiếng Việt)</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Triết Lý (Tiếng Việt)' : 'Philosophy (Tiếng Việt)'}</FormLabel>
                           <FormControl>
                             <Textarea {...field} rows={3} placeholder="Triết lý thiết kế..." data-testid="textarea-team-member-philosophy-vi" />
                           </FormControl>
@@ -1685,7 +1687,7 @@ export default function AboutAdminTab({
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Image (Max 10MB)</label>
+                    <label className="text-sm font-medium">{language === 'vi' ? 'Ảnh (Tối đa 10MB)' : 'Image (Max 10MB)'}</label>
                     {(teamMemberImagePreview || editingTeamMember?.imageData || editingTeamMember?.image) ? (
                       <div className="border bg-muted overflow-hidden mb-2 relative group">
                         <img 
@@ -1702,7 +1704,7 @@ export default function AboutAdminTab({
                             data-testid="button-edit-team-member-image"
                           >
                             <Edit className="h-4 w-4 mr-1" />
-                            Edit
+                            {language === 'vi' ? 'Sửa' : 'Edit'}
                           </Button>
                           <Button
                             type="button"
@@ -1713,7 +1715,7 @@ export default function AboutAdminTab({
                             data-testid="button-change-team-member-image"
                           >
                             <Pencil className="h-4 w-4 mr-1" />
-                            Change
+                            {language === 'vi' ? 'Thay Đổi' : 'Change'}
                           </Button>
                         </div>
                         <input
@@ -1731,9 +1733,9 @@ export default function AboutAdminTab({
                         <div className="flex flex-col items-center gap-4">
                           <Upload className="h-8 w-8 text-muted-foreground" />
                           <div>
-                            <p className="text-sm font-medium mb-1">Upload Team Member Image</p>
+                            <p className="text-sm font-medium mb-1">{language === 'vi' ? 'Tải Ảnh Thành Viên' : 'Upload Team Member Image'}</p>
                             <p className="text-xs text-muted-foreground">
-                              PNG, JPG • Max 10MB • Recommended: Square (1:1)
+                              {language === 'vi' ? 'PNG, JPG • Tối đa 10MB • Khuyến nghị: Vuông (1:1)' : 'PNG, JPG • Max 10MB • Recommended: Square (1:1)'}
                             </p>
                           </div>
                           <Button 
@@ -1742,7 +1744,7 @@ export default function AboutAdminTab({
                             onClick={() => document.getElementById('team-member-image-upload-initial')?.click()}
                             disabled={!hasPermission('about')}
                           >
-                            Choose File
+                            {language === 'vi' ? 'Chọn Tệp' : 'Choose File'}
                           </Button>
                         </div>
                         <input
@@ -1762,7 +1764,7 @@ export default function AboutAdminTab({
                     name="order"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Display Order</FormLabel>
+                        <FormLabel>{language === 'vi' ? 'Thứ Tự Hiển Thị' : 'Display Order'}</FormLabel>
                         <FormControl>
                           <Input {...field} type="number" onChange={e => field.onChange(parseInt(e.target.value))} data-testid="input-team-member-order" />
                         </FormControl>
@@ -1771,7 +1773,7 @@ export default function AboutAdminTab({
                     )}
                   />
                   <Button type="submit" className="w-full" data-testid="button-submit-team-member">
-                    {editingTeamMember ? 'Update' : 'Add'} Team Member
+                    {editingTeamMember ? (language === 'vi' ? 'Cập Nhật' : 'Update') : (language === 'vi' ? 'Thêm' : 'Add')} {language === 'vi' ? 'Thành Viên' : 'Team Member'}
                   </Button>
                 </form>
               </Form>
@@ -1801,11 +1803,11 @@ export default function AboutAdminTab({
               data-testid="button-add-team-member"
             >
               <Plus className="h-4 w-4 mr-2" />
-              Add Team Member
+              {language === 'vi' ? 'Thêm Thành Viên' : 'Add Team Member'}
             </Button>
             {aboutTeamMembers.length >= 8 && (
               <span className="text-sm text-muted-foreground">
-                Maximum limit reached (8 team members)
+                {language === 'vi' ? 'Đã đạt giới hạn tối đa (8 thành viên)' : 'Maximum limit reached (8 team members)'}
               </span>
             )}
           </div>
@@ -1820,12 +1822,12 @@ export default function AboutAdminTab({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Position (EN)</TableHead>
-                  <TableHead>Position (VI)</TableHead>
-                  <TableHead>Order</TableHead>
-                  <TableHead>Image</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>{language === 'vi' ? 'Tên' : 'Name'}</TableHead>
+                  <TableHead>{language === 'vi' ? 'Chức Vụ (EN)' : 'Position (EN)'}</TableHead>
+                  <TableHead>{language === 'vi' ? 'Chức Vụ (VI)' : 'Position (VI)'}</TableHead>
+                  <TableHead>{language === 'vi' ? 'Thứ Tự' : 'Order'}</TableHead>
+                  <TableHead>{language === 'vi' ? 'Ảnh' : 'Image'}</TableHead>
+                  <TableHead className="text-right">{language === 'vi' ? 'Hành Động' : 'Actions'}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -1845,7 +1847,7 @@ export default function AboutAdminTab({
                         />
                       ) : (
                         <div className="h-12 w-12 rounded bg-muted flex items-center justify-center text-xs text-muted-foreground">
-                          No Image
+                          {language === 'vi' ? 'Không có ảnh' : 'No Image'}
                         </div>
                       )}
                     </TableCell>
@@ -1874,15 +1876,15 @@ export default function AboutAdminTab({
                         </AlertDialogTrigger>
                         <AlertDialogContent>
                           <AlertDialogHeader>
-                            <AlertDialogTitle>Delete Team Member</AlertDialogTitle>
+                            <AlertDialogTitle>{language === 'vi' ? 'Xóa Thành Viên' : 'Delete Team Member'}</AlertDialogTitle>
                             <AlertDialogDescription>
-                              Are you sure you want to delete {member.name}? This action cannot be undone.
+                              {language === 'vi' ? `Bạn có chắc chắn muốn xóa ${member.name}? Hành động này không thể hoàn tác.` : `Are you sure you want to delete ${member.name}? This action cannot be undone.`}
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogCancel>{language === 'vi' ? 'Hủy' : 'Cancel'}</AlertDialogCancel>
                             <AlertDialogAction onClick={() => deleteTeamMemberMutation.mutate(member.id)}>
-                              Delete
+                              {language === 'vi' ? 'Xóa' : 'Delete'}
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
