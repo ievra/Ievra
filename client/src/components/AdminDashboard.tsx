@@ -4375,9 +4375,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         <p className="font-light">{primary.title}</p>
                       </TableCell>
                       <TableCell>
-                        <div className="flex gap-1">
-                          {hasVi && <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-white/20 text-white/70 rounded-none">VI</Badge>}
-                          {hasEn && <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-white/20 text-white/70 rounded-none">EN</Badge>}
+                        <div className="flex gap-2">
+                          {hasVi && <span className="text-[14px] text-white/70">VI</span>}
+                          {hasEn && <span className="text-[14px] text-white/70">EN</span>}
                         </div>
                       </TableCell>
                       <TableCell>{primary.style || "—"}</TableCell>
