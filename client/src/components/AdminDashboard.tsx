@@ -7965,28 +7965,30 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             {displayArticle.publishedAt ? formatDate(displayArticle.publishedAt) : '-'}
                           </TableCell>
                           <TableCell>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="text-sm px-3 py-1 h-auto hover:bg-white/10"
-                              data-testid={`badge-status-${slug}`}
-                              onClick={async () => {
-                                const statusOrder = ['draft', 'published', 'archived'] as const;
-                                const currentIndex = statusOrder.indexOf(displayArticle.status as any);
-                                const nextStatus = statusOrder[(currentIndex + 1) % 3];
+                            <Select
+                              value={displayArticle.status}
+                              onValueChange={async (newStatus) => {
                                 try {
                                   for (const article of articleGroup) {
                                     await updateArticleMutation.mutateAsync({ 
                                       id: article.id, 
-                                      data: { status: nextStatus } 
+                                      data: { status: newStatus } 
                                     });
                                   }
                                 } catch (error) {
                                 }
                               }}
+                              data-testid={`badge-status-${slug}`}
                             >
-                              {displayArticle.status === 'draft' ? 'Bản Nháp' : displayArticle.status === 'published' ? 'Đã Đăng' : 'Lưu Trữ'}
-                            </Button>
+                              <SelectTrigger className="h-auto py-1 px-3 text-sm bg-transparent border-none hover:bg-white/10 w-auto gap-1">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="draft">Bản Nháp</SelectItem>
+                                <SelectItem value="published">Đã Đăng</SelectItem>
+                                <SelectItem value="archived">Lưu Trữ</SelectItem>
+                              </SelectContent>
+                            </Select>
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center justify-end gap-3">
