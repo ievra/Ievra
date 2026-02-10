@@ -4379,8 +4379,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       </TableCell>
                       <TableCell>
                         <div className="flex gap-2">
-                          {hasVi && <span className="text-[14px] text-white/70">VI</span>}
-                          {hasEn && <span className="text-[14px] text-white/70">EN</span>}
+                          {hasEn && <span className="text-[14px] text-white">EN</span>}
+                          {hasVi && <span className="text-[14px] text-white">VI</span>}
                         </div>
                       </TableCell>
                       <TableCell>{primary.style || "—"}</TableCell>
@@ -7960,8 +7960,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           </TableCell>
                           <TableCell>
                             <div className="flex space-x-1">
-                              {hasEn && <span className="text-sm">EN</span>}
-                              {hasVi && <span className="text-sm">VI</span>}
+                              {hasEn && <span className="text-[14px] text-white">EN</span>}
+                              {hasVi && <span className="text-[14px] text-white">VI</span>}
                             </div>
                           </TableCell>
                           <TableCell data-testid={`text-published-${slug}`}>
