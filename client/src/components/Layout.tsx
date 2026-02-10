@@ -10,8 +10,8 @@ interface LayoutProps {
 
 const getNavigation = (t: (key: string) => string) => {
   return [
-    { name: t('nav.projects'), href: `/portfolio`, key: 'portfolio' },
     { name: t('nav.about'), href: `/about`, key: 'about' },
+    { name: t('nav.projects'), href: `/portfolio`, key: 'portfolio' },
     { name: t('nav.news'), href: `/blog`, key: 'news' },
   ];
 };
