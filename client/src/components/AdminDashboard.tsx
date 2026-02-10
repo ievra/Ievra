@@ -3419,74 +3419,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               <Form {...projectForm}>
                 <form onSubmit={projectForm.handleSubmit(onProjectSubmit)} className="space-y-6">
 
-                  {/* THÔNG TIN CHUNG */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium uppercase tracking-wide">Thông Tin Chung</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <FormField
-                        control={projectForm.control}
-                        name="slug"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Slug</FormLabel>
-                            <FormControl>
-                              <Input {...field} data-testid="input-project-slug" placeholder="tự động tạo" />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={projectForm.control}
-                        name="category"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Danh Mục *</FormLabel>
-                            <Select onValueChange={field.onChange} value={field.value}>
-                              <FormControl>
-                                <SelectTrigger data-testid="select-project-category">
-                                  <SelectValue placeholder="Chọn danh mục" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {categories
-                                  .filter(cat => cat.type === 'project' && cat.active)
-                                  .map((category) => (
-                                    <SelectItem key={category.id} value={category.slug}>
-                                      {category.name}
-                                    </SelectItem>
-                                  ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={projectForm.control}
-                        name="status"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Trạng Thái *</FormLabel>
-                            <Select onValueChange={field.onChange} value={field.value}>
-                              <FormControl>
-                                <SelectTrigger data-testid="select-project-status">
-                                  <SelectValue placeholder="Chọn trạng thái" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="draft">Bản Nháp</SelectItem>
-                                <SelectItem value="published">Đã Đăng</SelectItem>
-                                <SelectItem value="archived">Lưu Trữ</SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  </div>
-
                   {/* Bilingual Title */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
@@ -3967,6 +3899,74 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       </FormItem>
                     )}
                   />
+
+                  {/* THÔNG TIN CHUNG */}
+                  <div className="border-t pt-6">
+                    <h3 className="text-lg font-medium mb-4 uppercase tracking-wide">Thông Tin Chung</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <FormField
+                        control={projectForm.control}
+                        name="slug"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Slug</FormLabel>
+                            <FormControl>
+                              <Input {...field} data-testid="input-project-slug" placeholder="tự động tạo" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={projectForm.control}
+                        name="category"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Danh Mục *</FormLabel>
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <FormControl>
+                                <SelectTrigger data-testid="select-project-category">
+                                  <SelectValue placeholder="Chọn danh mục" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {categories
+                                  .filter(cat => cat.type === 'project' && cat.active)
+                                  .map((category) => (
+                                    <SelectItem key={category.id} value={category.slug}>
+                                      {category.name}
+                                    </SelectItem>
+                                  ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={projectForm.control}
+                        name="status"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Trạng Thái *</FormLabel>
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <FormControl>
+                                <SelectTrigger data-testid="select-project-status">
+                                  <SelectValue placeholder="Chọn trạng thái" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="draft">Bản Nháp</SelectItem>
+                                <SelectItem value="published">Đã Đăng</SelectItem>
+                                <SelectItem value="archived">Lưu Trữ</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
 
                   {/* CÀI ĐẶT SEO */}
                   <div className="border-t pt-6">
