@@ -19,7 +19,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import ImageUpload from "@/components/ImageUpload";
-import { Pencil, Trash2, Eye, Plus, Users, Briefcase, Mail, TrendingUp, Star, Check, ChevronsUpDown, X, Settings, Lock, Shield, KeyRound } from "lucide-react";
+import { Pencil, Trash2, Eye, Plus, Users, Briefcase, Mail, TrendingUp, Star, Check, ChevronsUpDown, X, Settings, Lock, Shield, KeyRound, Search } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import type { Project, Client, Inquiry, Service, HomepageContent, Article, InsertArticle, Partner, Category, Interaction, Deal, Faq, InsertFaq, JourneyStep, InsertJourneyStep, AboutPageContent, AboutCoreValue, AboutShowcaseService, AboutProcessStep, AboutTeamMember, InsertAboutPageContent, InsertAboutCoreValue, InsertAboutShowcaseService, InsertAboutProcessStep, InsertAboutTeamMember, User, Settings as SettingsType } from "@shared/schema";
 import { insertArticleSchema, insertFaqSchema, insertJourneyStepSchema, insertAboutPageContentSchema, insertAboutCoreValueSchema, insertAboutShowcaseServiceSchema, insertAboutProcessStepSchema, insertAboutTeamMemberSchema } from "@shared/schema";
@@ -625,6 +625,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     }
   }, [clients.length, currentPage, totalPages]);
 
+  // Search/filter state for Projects
+  const [projectSearchQuery, setProjectSearchQuery] = useState('');
+  const [projectYearFilter, setProjectYearFilter] = useState('all');
+
   // Pagination state for Projects - group by slug, then paginate
   const [projectsPage, setProjectsPage] = useState(1);
   const projectsPerPage = 10;
@@ -636,10 +640,27 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     acc[key].push(project);
     return acc;
   }, {} as Record<string, Project[]>);
+
+  const projectYears = [...new Set(projects.map(p => p.completionYear).filter(Boolean))].sort((a, b) => String(b).localeCompare(String(a)));
+
   const uniqueProjectSlugs = Object.keys(groupedProjectsMap).sort((a, b) => {
     const aDate = Math.max(...groupedProjectsMap[a].map(p => new Date(p.createdAt).getTime()));
     const bDate = Math.max(...groupedProjectsMap[b].map(p => new Date(p.createdAt).getTime()));
     return bDate - aDate;
+  }).filter(slug => {
+    const group = groupedProjectsMap[slug];
+    const primary = group[0];
+    const searchLower = projectSearchQuery.toLowerCase();
+    if (projectYearFilter !== 'all' && primary.completionYear !== projectYearFilter) return false;
+    if (!searchLower) return true;
+    const cat = categories.find(c => c.slug === primary.category && c.type === 'project');
+    const categoryName = cat ? `${cat.name} ${cat.nameVi || ''}`.toLowerCase() : (primary.category || '').toLowerCase();
+    return group.some(p =>
+      (p.title || '').toLowerCase().includes(searchLower) ||
+      (p.style || '').toLowerCase().includes(searchLower) ||
+      (p.completionYear || '').toLowerCase().includes(searchLower) ||
+      categoryName.includes(searchLower)
+    );
   });
   const projectsTotalPages = Math.ceil(uniqueProjectSlugs.length / projectsPerPage);
   const projectsStartIndex = (projectsPage - 1) * projectsPerPage;
@@ -4324,6 +4345,29 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             </div>
           </DialogContent>
         </Dialog>
+
+        <div className="flex items-center gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
+            <Input
+              value={projectSearchQuery}
+              onChange={(e) => { setProjectSearchQuery(e.target.value); setProjectsPage(1); }}
+              placeholder={language === 'vi' ? 'Chúng tôi có thể giúp bạn tìm gì?' : 'What can we help you find?'}
+              className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
+            />
+          </div>
+          <Select value={projectYearFilter} onValueChange={(v) => { setProjectYearFilter(v); setProjectsPage(1); }}>
+            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectValue placeholder={language === 'vi' ? 'Tất cả các năm' : 'All years'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{language === 'vi' ? 'Tất cả các năm' : 'All years'}</SelectItem>
+              {projectYears.map(year => (
+                <SelectItem key={year} value={String(year)}>{year}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
         <Card>
           <CardContent className="p-0">
