@@ -616,10 +616,16 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   const [articleSearchQuery, setArticleSearchQuery] = useState('');
   const [articleCategoryFilter, setArticleCategoryFilter] = useState('all');
   const [clientSearchQuery, setClientSearchQuery] = useState('');
+  const [clientStageFilter, setClientStageFilter] = useState('all');
+  const [clientStatusFilter, setClientStatusFilter] = useState('all');
+  const [clientTierFilter, setClientTierFilter] = useState('all');
   const [inquirySearchQuery, setInquirySearchQuery] = useState('');
   
   // Calculate pagination for Clients
   const filteredClients = clients.filter(client => {
+    if (clientStageFilter !== 'all' && (client.stage || 'lead') !== clientStageFilter) return false;
+    if (clientStatusFilter !== 'all' && (client.status || 'active') !== clientStatusFilter) return false;
+    if (clientTierFilter !== 'all' && (client.tier || 'silver') !== clientTierFilter) return false;
     if (!clientSearchQuery) return true;
     const searchLower = clientSearchQuery.toLowerCase();
     return (
@@ -5565,6 +5571,45 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
             />
           </div>
+          <Select value={clientStageFilter} onValueChange={(v) => { setClientStageFilter(v); setCurrentPage(1); }}>
+            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectValue placeholder={language === 'vi' ? 'Tất cả giai đoạn' : 'All stages'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{language === 'vi' ? 'Tất cả giai đoạn' : 'All stages'}</SelectItem>
+              {crmStages.filter(s => s.active).sort((a, b) => a.order - b.order).map(stage => (
+                <SelectItem key={stage.id} value={stage.value}>
+                  {language === 'vi' ? stage.labelVi : stage.labelEn}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={clientStatusFilter} onValueChange={(v) => { setClientStatusFilter(v); setCurrentPage(1); }}>
+            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectValue placeholder={language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'}</SelectItem>
+              {crmStatuses.filter(s => s.active).sort((a, b) => a.order - b.order).map(status => (
+                <SelectItem key={status.id} value={status.value}>
+                  {language === 'vi' ? status.labelVi : status.labelEn}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={clientTierFilter} onValueChange={(v) => { setClientTierFilter(v); setCurrentPage(1); }}>
+            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectValue placeholder={language === 'vi' ? 'Tất cả hạng' : 'All tiers'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{language === 'vi' ? 'Tất cả hạng' : 'All tiers'}</SelectItem>
+              {crmTiers.filter(t => t.active).sort((a, b) => a.order - b.order).map(tier => (
+                <SelectItem key={tier.id} value={tier.value}>
+                  {language === 'vi' ? tier.labelVi : tier.labelEn}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <Card>
