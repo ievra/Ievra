@@ -4358,7 +4358,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     <TableHead>{language === 'vi' ? 'Diện Tích' : 'Area'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
-                    <TableHead className="text-right">{language === 'vi' ? 'Thao Tác' : 'Actions'}</TableHead>
+                    <TableHead className="text-right"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -7928,7 +7928,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   <TableRow>
                     <TableHead className="w-[120px]">{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Tiêu Đề' : 'Title'}</TableHead>
-                    <TableHead className="w-[80px]">{language === 'vi' ? 'Ngôn Ngữ' : 'Languages'}</TableHead>
+                    <TableHead className="w-[100px] whitespace-nowrap">{language === 'vi' ? 'Ngôn Ngữ' : 'Languages'}</TableHead>
                     <TableHead className="w-[120px]">{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
                     <TableHead className="w-[130px]">{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
                     <TableHead className="w-[100px]"></TableHead>
