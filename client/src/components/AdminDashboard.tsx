@@ -7472,9 +7472,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="titleEn"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Title (English) *</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Tiêu Đề (Tiếng Anh) *' : 'Title (English) *'}</FormLabel>
                           <FormControl>
-                            <Input {...field} data-testid="input-article-title-en" placeholder="Enter English title..." />
+                            <Input {...field} data-testid="input-article-title-en" placeholder={language === 'vi' ? 'Nhập tiêu đề tiếng Anh...' : 'Enter English title...'} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -7486,7 +7486,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="titleVi"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Title (Vietnamese) *</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Tiêu Đề (Tiếng Việt) *' : 'Title (Vietnamese) *'}</FormLabel>
                           <FormControl>
                             <Input {...field} data-testid="input-article-title-vi" placeholder="Nhập tiêu đề tiếng Việt..." />
                           </FormControl>
@@ -7503,9 +7503,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="excerptEn"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Excerpt (English)</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Tóm Tắt (Tiếng Anh)' : 'Excerpt (English)'}</FormLabel>
                           <FormControl>
-                            <Textarea {...field} value={field.value || ''} rows={4} data-testid="textarea-article-excerpt-en" placeholder="Brief description in English..." />
+                            <Textarea {...field} value={field.value || ''} rows={4} data-testid="textarea-article-excerpt-en" placeholder={language === 'vi' ? 'Mô tả ngắn bằng tiếng Anh...' : 'Brief description in English...'} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -7517,7 +7517,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="excerptVi"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Excerpt (Vietnamese)</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Tóm Tắt (Tiếng Việt)' : 'Excerpt (Vietnamese)'}</FormLabel>
                           <FormControl>
                             <Textarea {...field} value={field.value || ''} rows={4} data-testid="textarea-article-excerpt-vi" placeholder="Mô tả ngắn bằng tiếng Việt..." />
                           </FormControl>
@@ -7534,9 +7534,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="contentEn"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Content (English) *</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Nội Dung (Tiếng Anh) *' : 'Content (English) *'}</FormLabel>
                           <FormControl>
-                            <Textarea {...field} rows={10} data-testid="textarea-article-content-en" placeholder="Write your content in English..." />
+                            <Textarea {...field} rows={10} data-testid="textarea-article-content-en" placeholder={language === 'vi' ? 'Viết nội dung bằng tiếng Anh...' : 'Write your content in English...'} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -7548,7 +7548,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="contentVi"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Content (Vietnamese) *</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Nội Dung (Tiếng Việt) *' : 'Content (Vietnamese) *'}</FormLabel>
                           <FormControl>
                             <Textarea {...field} rows={10} data-testid="textarea-article-content-vi" placeholder="Viết nội dung bằng tiếng Việt..." />
                           </FormControl>
@@ -7563,7 +7563,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     <h3 className="text-lg font-medium mb-4">{language === 'vi' ? 'Ảnh Đại Diện' : 'Featured Image'}</h3>
                     <div className="space-y-4">
                       <div>
-                        <label className="text-sm font-medium mb-2 block">Upload Image (PNG, JPG only)</label>
+                        <label className="text-sm font-medium mb-2 block">{language === 'vi' ? 'Tải Ảnh Lên (PNG, JPG)' : 'Upload Image (PNG, JPG only)'}</label>
                         <input
                           type="file"
                           accept=".jpg,.jpeg,.png"
@@ -7583,7 +7583,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         </p>
                         {articleImagePreview && (
                           <div className="mt-4">
-                            <p className="text-sm font-medium mb-2">Preview:</p>
+                            <p className="text-sm font-medium mb-2">{language === 'vi' ? 'Xem Trước:' : 'Preview:'}</p>
                             <div className="border rounded p-4 bg-muted">
                               <img 
                                 src={articleImagePreview} 
@@ -7610,7 +7610,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         name="featuredImage"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Image URL</FormLabel>
+                            <FormLabel>{language === 'vi' ? 'Đường Dẫn Ảnh' : 'Image URL'}</FormLabel>
                             <FormControl>
                               <Input {...field} value={field.value || ''} data-testid="input-article-featured-image" placeholder="https://example.com/image.jpg" />
                             </FormControl>
@@ -7715,7 +7715,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           <FormItem>
                             <FormLabel>Slug</FormLabel>
                             <FormControl>
-                              <Input {...field} data-testid="input-article-slug" placeholder="auto-generated" />
+                              <Input {...field} data-testid="input-article-slug" placeholder={language === 'vi' ? 'tự động tạo' : 'auto-generated'} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -7727,11 +7727,11 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         name="category"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Category *</FormLabel>
+                            <FormLabel>{language === 'vi' ? 'Danh Mục *' : 'Category *'}</FormLabel>
                             <Select onValueChange={field.onChange} value={field.value}>
                               <FormControl>
                                 <SelectTrigger data-testid="select-article-category">
-                                  <SelectValue placeholder="Select a category" />
+                                  <SelectValue placeholder={language === 'vi' ? 'Chọn danh mục' : 'Select a category'} />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
@@ -7754,7 +7754,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         name="status"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Status *</FormLabel>
+                            <FormLabel>{language === 'vi' ? 'Trạng Thái *' : 'Status *'}</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
                                 <SelectTrigger data-testid="select-article-status">
@@ -7762,9 +7762,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
-                                <SelectItem value="draft">Draft</SelectItem>
-                                <SelectItem value="published">Published</SelectItem>
-                                <SelectItem value="archived">Archived</SelectItem>
+                                <SelectItem value="draft">{language === 'vi' ? 'Bản Nháp' : 'Draft'}</SelectItem>
+                                <SelectItem value="published">{language === 'vi' ? 'Đã Đăng' : 'Published'}</SelectItem>
+                                <SelectItem value="archived">{language === 'vi' ? 'Lưu Trữ' : 'Archived'}</SelectItem>
                               </SelectContent>
                             </Select>
                             <FormMessage />
@@ -7777,11 +7777,11 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
 
                   {/* SEO Settings Section - Bilingual */}
                   <div className="border-t pt-6">
-                    <h3 className="text-lg font-medium mb-4">SEO Settings</h3>
+                    <h3 className="text-lg font-medium mb-4">{language === 'vi' ? 'Cài Đặt SEO' : 'SEO Settings'}</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {/* English SEO */}
                       <div className="space-y-4">
-                        <h4 className="text-sm font-medium text-muted-foreground">English SEO</h4>
+                        <h4 className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'SEO Tiếng Anh' : 'English SEO'}</h4>
                         <FormField
                           control={articleForm.control}
                           name="metaTitleEn"
@@ -7827,7 +7827,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
 
                       {/* Vietnamese SEO */}
                       <div className="space-y-4">
-                        <h4 className="text-sm font-medium text-muted-foreground">Vietnamese SEO</h4>
+                        <h4 className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'SEO Tiếng Việt' : 'Vietnamese SEO'}</h4>
                         <FormField
                           control={articleForm.control}
                           name="metaTitleVi"
@@ -7953,7 +7953,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                               className="text-white border-white/30"
                               data-testid={`badge-status-${slug}`}
                             >
-                              {displayArticle.status}
+                              {language === 'vi' 
+                                ? (displayArticle.status === 'draft' ? 'Bản Nháp' : displayArticle.status === 'published' ? 'Đã Đăng' : 'Lưu Trữ')
+                                : displayArticle.status}
                             </Badge>
                           </TableCell>
                           <TableCell>
