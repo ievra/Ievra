@@ -290,13 +290,14 @@ const bilingualArticleSchema = z.object({
   metaDescriptionVi: z.string().optional(),
   metaKeywordsEn: z.string().optional(),
   metaKeywordsVi: z.string().optional(),
-}).refine((data) => {
+}).superRefine((data, ctx) => {
   const hasEn = data.titleEn && data.titleEn.trim() && data.contentEn && data.contentEn.trim();
   const hasVi = data.titleVi && data.titleVi.trim() && data.contentVi && data.contentVi.trim();
-  return hasEn || hasVi;
-}, {
-  message: "Cần nhập ít nhất 1 ngôn ngữ (tiêu đề + nội dung)",
-  path: ["titleEn"],
+  if (!hasEn && !hasVi) {
+    const msg = "Cần nhập ít nhất 1 ngôn ngữ (tiêu đề + nội dung)";
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: msg, path: ["titleEn"] });
+    ctx.addIssue({ code: z.ZodIssueCode.custom, message: msg, path: ["titleVi"] });
+  }
 });
 
 // Bilingual FAQ schema for form
