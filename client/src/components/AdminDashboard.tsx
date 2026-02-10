@@ -4524,15 +4524,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-sans font-light">{t('crm.clientManagement')}</h2>
           <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setIsCrmSettingsDialogOpen(true)}
-              data-testid="button-crm-settings"
-              className="h-10 px-4"
-            >
-              <Settings className="mr-2 h-4 w-4" />
-              {language === 'vi' ? 'Cài Đặt' : 'Settings'}
-            </Button>
             <Dialog open={isClientDialogOpen} onOpenChange={(open) => {
             setIsClientDialogOpen(open);
             if (!open) {
@@ -5024,6 +5015,15 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               </Form>
             </DialogContent>
           </Dialog>
+            <Button
+              variant="outline"
+              onClick={() => setIsCrmSettingsDialogOpen(true)}
+              data-testid="button-crm-settings"
+              className="h-10 px-4"
+            >
+              <Settings className="mr-2 h-4 w-4" />
+              {language === 'vi' ? 'Cài Đặt' : 'Settings'}
+            </Button>
           </div>
         </div>
 
