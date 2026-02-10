@@ -716,7 +716,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       materialSelectionEn: "",
       materialSelectionVi: "",
       slug: "",
-      category: "residential",
+      category: "",
       status: "draft",
       locationEn: "",
       locationVi: "",
@@ -4369,7 +4369,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     const primary = (language === 'vi' ? group.find(p => p.language === 'vi') : group.find(p => p.language === 'en')) || group[0];
                     return (
                     <TableRow key={primary.id} data-testid={`row-project-${primary.id}`}>
-                      <TableCell className="capitalize">{primary.category}</TableCell>
+                      <TableCell>{(() => {
+                        const cat = categories.find(c => c.slug === primary.category && c.type === 'project');
+                        return cat ? (language === 'vi' && cat.nameVi ? cat.nameVi : cat.name) : primary.category;
+                      })()}</TableCell>
                       <TableCell>{primary.completionYear || "—"}</TableCell>
                       <TableCell>
                         <p className="font-light">{primary.title}</p>
@@ -7946,7 +7949,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         <TableRow key={slug} data-testid={`row-article-${slug}`}>
                           <TableCell>
                             <span className="text-sm" data-testid={`badge-category-${slug}`}>
-                              {displayArticle.category}
+                              {(() => {
+                                const cat = categories.find(c => c.slug === displayArticle.category && c.type === 'article');
+                                return cat ? (language === 'vi' && cat.nameVi ? cat.nameVi : cat.name) : displayArticle.category;
+                              })()}
                             </span>
                           </TableCell>
                           <TableCell className="font-medium">
