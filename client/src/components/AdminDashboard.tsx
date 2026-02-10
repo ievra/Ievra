@@ -7998,8 +7998,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 data-testid={`button-edit-article-${slug}`}
                               />
                               <Star 
-                                className={`h-4 w-4 cursor-pointer ${displayArticle.featured ? 'text-white fill-white' : 'text-white/50 hover:text-white'} ${togglingFeaturedSlug === slug ? "opacity-50" : ""}`}
+                                className={`h-4 w-4 ${displayArticle.status === 'published' ? 'cursor-pointer' : 'cursor-not-allowed opacity-30'} ${displayArticle.featured ? 'text-white fill-white' : 'text-white/50 hover:text-white'} ${togglingFeaturedSlug === slug ? "opacity-50" : ""}`}
                                 onClick={async () => {
+                                  if (displayArticle.status !== 'published') return;
                                   if (togglingFeaturedSlug === slug) return;
                                   const featuredCount = uniqueArticleSlugs.filter(s => 
                                     groupedArticlesMap[s].some(a => a.featured)
@@ -8026,6 +8027,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                   }
                                 }}
                                 data-testid={`button-toggle-featured-${slug}`}
+                                title={displayArticle.status !== 'published' ? (language === 'vi' ? 'Chỉ áp dụng cho trạng thái Đã Đăng' : 'Only available for published articles') : displayArticle.featured ? "Remove from featured" : "Mark as featured"}
                               />
                               <AlertDialog>
                                 <AlertDialogTrigger asChild>
