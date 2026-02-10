@@ -8007,6 +8007,17 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 className={`h-4 w-4 cursor-pointer ${displayArticle.featured ? 'text-white fill-white' : 'text-white/50 hover:text-white'} ${togglingFeaturedSlug === slug ? "opacity-50" : ""}`}
                                 onClick={async () => {
                                   if (togglingFeaturedSlug === slug) return;
+                                  const featuredCount = uniqueArticleSlugs.filter(s => 
+                                    groupedArticlesMap[s].some(a => a.featured)
+                                  ).length;
+                                  if (!displayArticle.featured && featuredCount >= 10) {
+                                    toast({
+                                      title: language === 'vi' ? 'Đã đạt giới hạn' : 'Limit reached',
+                                      description: language === 'vi' ? 'Tối đa 10 bài viết được ghim nổi bật.' : 'Maximum 10 articles can be pinned as featured.',
+                                      variant: 'destructive',
+                                    });
+                                    return;
+                                  }
                                   setTogglingFeaturedSlug(slug);
                                   try {
                                     for (const article of articleGroup) {
