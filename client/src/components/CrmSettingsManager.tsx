@@ -20,7 +20,7 @@ import { z } from "zod";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function CrmSettingsManager() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   
@@ -32,12 +32,10 @@ export default function CrmSettingsManager() {
   const [editingTier, setEditingTier] = useState<CrmCustomerTier | null>(null);
   const [editingStatus, setEditingStatus] = useState<CrmStatus | null>(null);
 
-  // Fetch data
   const { data: stages = [] } = useQuery<CrmPipelineStage[]>({ queryKey: ['/api/crm-pipeline-stages'] });
   const { data: tiers = [] } = useQuery<CrmCustomerTier[]>({ queryKey: ['/api/crm-customer-tiers'] });
   const { data: statuses = [] } = useQuery<CrmStatus[]>({ queryKey: ['/api/crm-statuses'] });
 
-  // Forms
   const stageForm = useForm<z.infer<typeof insertCrmPipelineStageSchema>>({
     resolver: zodResolver(insertCrmPipelineStageSchema),
     defaultValues: {
@@ -71,7 +69,6 @@ export default function CrmSettingsManager() {
     },
   });
 
-  // Pipeline Stage mutations
   const createStageMutation = useMutation({
     mutationFn: async (data: z.infer<typeof insertCrmPipelineStageSchema>) => {
       return await apiRequest('POST', '/api/crm-pipeline-stages', data);
@@ -80,7 +77,7 @@ export default function CrmSettingsManager() {
       queryClient.invalidateQueries({ queryKey: ['/api/crm-pipeline-stages'] });
       setIsStageDialogOpen(false);
       stageForm.reset();
-      toast({ title: "Pipeline stage created successfully" });
+      toast({ title: language === 'vi' ? 'Đã tạo giai đoạn thành công' : 'Pipeline stage created successfully' });
     },
   });
 
@@ -93,7 +90,7 @@ export default function CrmSettingsManager() {
       setIsStageDialogOpen(false);
       setEditingStage(null);
       stageForm.reset();
-      toast({ title: "Pipeline stage updated successfully" });
+      toast({ title: language === 'vi' ? 'Đã cập nhật giai đoạn thành công' : 'Pipeline stage updated successfully' });
     },
   });
 
@@ -103,11 +100,10 @@ export default function CrmSettingsManager() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/crm-pipeline-stages'] });
-      toast({ title: "Pipeline stage deleted successfully" });
+      toast({ title: language === 'vi' ? 'Đã xóa giai đoạn thành công' : 'Pipeline stage deleted successfully' });
     },
   });
 
-  // Customer Tier mutations
   const createTierMutation = useMutation({
     mutationFn: async (data: z.infer<typeof insertCrmCustomerTierSchema>) => {
       return await apiRequest('POST', '/api/crm-customer-tiers', data);
@@ -116,7 +112,7 @@ export default function CrmSettingsManager() {
       queryClient.invalidateQueries({ queryKey: ['/api/crm-customer-tiers'] });
       setIsTierDialogOpen(false);
       tierForm.reset();
-      toast({ title: "Customer tier created successfully" });
+      toast({ title: language === 'vi' ? 'Đã tạo hạng khách thành công' : 'Customer tier created successfully' });
     },
   });
 
@@ -129,7 +125,7 @@ export default function CrmSettingsManager() {
       setIsTierDialogOpen(false);
       setEditingTier(null);
       tierForm.reset();
-      toast({ title: "Customer tier updated successfully" });
+      toast({ title: language === 'vi' ? 'Đã cập nhật hạng khách thành công' : 'Customer tier updated successfully' });
     },
   });
 
@@ -139,11 +135,10 @@ export default function CrmSettingsManager() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/crm-customer-tiers'] });
-      toast({ title: "Customer tier deleted successfully" });
+      toast({ title: language === 'vi' ? 'Đã xóa hạng khách thành công' : 'Customer tier deleted successfully' });
     },
   });
 
-  // Status mutations
   const createStatusMutation = useMutation({
     mutationFn: async (data: z.infer<typeof insertCrmStatusSchema>) => {
       return await apiRequest('POST', '/api/crm-statuses', data);
@@ -152,7 +147,7 @@ export default function CrmSettingsManager() {
       queryClient.invalidateQueries({ queryKey: ['/api/crm-statuses'] });
       setIsStatusDialogOpen(false);
       statusForm.reset();
-      toast({ title: "Status created successfully" });
+      toast({ title: language === 'vi' ? 'Đã tạo trạng thái thành công' : 'Status created successfully' });
     },
   });
 
@@ -165,7 +160,7 @@ export default function CrmSettingsManager() {
       setIsStatusDialogOpen(false);
       setEditingStatus(null);
       statusForm.reset();
-      toast({ title: "Status updated successfully" });
+      toast({ title: language === 'vi' ? 'Đã cập nhật trạng thái thành công' : 'Status updated successfully' });
     },
   });
 
@@ -175,11 +170,10 @@ export default function CrmSettingsManager() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/crm-statuses'] });
-      toast({ title: "Status deleted successfully" });
+      toast({ title: language === 'vi' ? 'Đã xóa trạng thái thành công' : 'Status deleted successfully' });
     },
   });
 
-  // Handlers
   const handleStageSubmit = (data: z.infer<typeof insertCrmPipelineStageSchema>) => {
     if (editingStage) {
       updateStageMutation.mutate({ id: editingStage.id, ...data });
@@ -208,9 +202,9 @@ export default function CrmSettingsManager() {
     <div>
       <Tabs defaultValue="stages" className="w-full">
               <TabsList className="grid w-full grid-cols-3 bg-black border border-white/10">
-                <TabsTrigger value="stages">Pipeline Stages</TabsTrigger>
-                <TabsTrigger value="tiers">Customer Tiers</TabsTrigger>
-                <TabsTrigger value="statuses">Statuses</TabsTrigger>
+                <TabsTrigger value="stages">{language === 'vi' ? 'Giai Đoạn' : 'Pipeline Stages'}</TabsTrigger>
+                <TabsTrigger value="tiers">{language === 'vi' ? 'Hạng Khách' : 'Customer Tiers'}</TabsTrigger>
+                <TabsTrigger value="statuses">{language === 'vi' ? 'Trạng Thái' : 'Statuses'}</TabsTrigger>
               </TabsList>
 
               {/* Pipeline Stages */}
@@ -232,12 +226,12 @@ export default function CrmSettingsManager() {
                         data-testid="button-add-stage"
                       >
                         <Plus className="h-4 w-4 mr-2" />
-                        Add Stage
+                        {language === 'vi' ? 'Thêm' : 'Add Stage'}
                       </Button>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle>{editingStage ? "Edit" : "Add"} Pipeline Stage</DialogTitle>
+                        <DialogTitle>{editingStage ? (language === 'vi' ? 'Sửa Giai Đoạn' : 'Edit Pipeline Stage') : (language === 'vi' ? 'Thêm Giai Đoạn' : 'Add Pipeline Stage')}</DialogTitle>
                       </DialogHeader>
                       <Form {...stageForm}>
                         <form onSubmit={stageForm.handleSubmit(handleStageSubmit)} className="space-y-4">
@@ -246,7 +240,7 @@ export default function CrmSettingsManager() {
                             name="value"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Value (Internal ID)</FormLabel>
+                                <FormLabel>{language === 'vi' ? 'Giá trị (ID nội bộ)' : 'Value (Internal ID)'}</FormLabel>
                                 <FormControl>
                                   <Input {...field} placeholder="e.g., lead" data-testid="input-stage-value" />
                                 </FormControl>
@@ -259,7 +253,7 @@ export default function CrmSettingsManager() {
                             name="labelEn"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>English Label</FormLabel>
+                                <FormLabel>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</FormLabel>
                                 <FormControl>
                                   <Input {...field} placeholder="e.g., Lead" data-testid="input-stage-label-en" />
                                 </FormControl>
@@ -272,7 +266,7 @@ export default function CrmSettingsManager() {
                             name="labelVi"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Vietnamese Label</FormLabel>
+                                <FormLabel>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</FormLabel>
                                 <FormControl>
                                   <Input {...field} placeholder="e.g., Khách tiềm năng" data-testid="input-stage-label-vi" />
                                 </FormControl>
@@ -285,7 +279,7 @@ export default function CrmSettingsManager() {
                             name="order"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Order</FormLabel>
+                                <FormLabel>{language === 'vi' ? 'Thứ tự' : 'Order'}</FormLabel>
                                 <FormControl>
                                   <Input 
                                     {...field} 
@@ -304,7 +298,7 @@ export default function CrmSettingsManager() {
                             render={({ field }) => (
                               <FormItem className="flex items-center justify-between rounded-lg border p-4">
                                 <div className="space-y-0.5">
-                                  <FormLabel className="text-base">Active</FormLabel>
+                                  <FormLabel className="text-base">{language === 'vi' ? 'Kích hoạt' : 'Active'}</FormLabel>
                                 </div>
                                 <FormControl>
                                   <Switch
@@ -326,10 +320,10 @@ export default function CrmSettingsManager() {
                                 stageForm.reset();
                               }}
                             >
-                              Cancel
+                              {language === 'vi' ? 'Hủy' : 'Cancel'}
                             </Button>
                             <Button type="submit" data-testid="button-submit-stage">
-                              {editingStage ? "Update" : "Create"}
+                              {editingStage ? (language === 'vi' ? 'Cập Nhật' : 'Update') : (language === 'vi' ? 'Tạo' : 'Create')}
                             </Button>
                           </div>
                         </form>
@@ -341,12 +335,12 @@ export default function CrmSettingsManager() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Value</TableHead>
-                      <TableHead>English Label</TableHead>
-                      <TableHead>Vietnamese Label</TableHead>
-                      <TableHead>Order</TableHead>
-                      <TableHead>Active</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                      <TableHead>{language === 'vi' ? 'Giá trị' : 'Value'}</TableHead>
+                      <TableHead>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</TableHead>
+                      <TableHead>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</TableHead>
+                      <TableHead>{language === 'vi' ? 'Thứ tự' : 'Order'}</TableHead>
+                      <TableHead>{language === 'vi' ? 'Kích hoạt' : 'Active'}</TableHead>
+                      <TableHead className="text-right">{language === 'vi' ? 'Thao tác' : 'Actions'}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -358,7 +352,7 @@ export default function CrmSettingsManager() {
                         <TableCell>{stage.order}</TableCell>
                         <TableCell>
                           <Badge variant={stage.active ? "default" : "secondary"}>
-                            {stage.active ? "Active" : "Inactive"}
+                            {stage.active ? (language === 'vi' ? 'Hoạt động' : 'Active') : (language === 'vi' ? 'Tắt' : 'Inactive')}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right">
@@ -387,18 +381,18 @@ export default function CrmSettingsManager() {
                               </AlertDialogTrigger>
                               <AlertDialogContent>
                                 <AlertDialogHeader>
-                                  <AlertDialogTitle>Delete Pipeline Stage</AlertDialogTitle>
+                                  <AlertDialogTitle>{language === 'vi' ? 'Xóa Giai Đoạn' : 'Delete Pipeline Stage'}</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    Are you sure you want to delete this pipeline stage? This action cannot be undone.
+                                    {language === 'vi' ? 'Bạn có chắc chắn muốn xóa giai đoạn này? Hành động này không thể hoàn tác.' : 'Are you sure you want to delete this pipeline stage? This action cannot be undone.'}
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogCancel>{language === 'vi' ? 'Hủy' : 'Cancel'}</AlertDialogCancel>
                                   <AlertDialogAction
                                     onClick={() => deleteStageMutation.mutate(stage.id)}
                                     data-testid={`button-confirm-delete-stage-${stage.id}`}
                                   >
-                                    Delete
+                                    {language === 'vi' ? 'Xóa' : 'Delete'}
                                   </AlertDialogAction>
                                 </AlertDialogFooter>
                               </AlertDialogContent>
@@ -430,12 +424,12 @@ export default function CrmSettingsManager() {
                         data-testid="button-add-tier"
                       >
                         <Plus className="h-4 w-4 mr-2" />
-                        Add Tier
+                        {language === 'vi' ? 'Thêm' : 'Add Tier'}
                       </Button>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle>{editingTier ? "Edit" : "Add"} Customer Tier</DialogTitle>
+                        <DialogTitle>{editingTier ? (language === 'vi' ? 'Sửa Hạng Khách' : 'Edit Customer Tier') : (language === 'vi' ? 'Thêm Hạng Khách' : 'Add Customer Tier')}</DialogTitle>
                       </DialogHeader>
                       <Form {...tierForm}>
                         <form onSubmit={tierForm.handleSubmit(handleTierSubmit)} className="space-y-4">
@@ -444,7 +438,7 @@ export default function CrmSettingsManager() {
                             name="value"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Value (Internal ID)</FormLabel>
+                                <FormLabel>{language === 'vi' ? 'Giá trị (ID nội bộ)' : 'Value (Internal ID)'}</FormLabel>
                                 <FormControl>
                                   <Input {...field} placeholder="e.g., vip" data-testid="input-tier-value" />
                                 </FormControl>
@@ -457,7 +451,7 @@ export default function CrmSettingsManager() {
                             name="labelEn"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>English Label</FormLabel>
+                                <FormLabel>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</FormLabel>
                                 <FormControl>
                                   <Input {...field} placeholder="e.g., VIP" data-testid="input-tier-label-en" />
                                 </FormControl>
@@ -470,7 +464,7 @@ export default function CrmSettingsManager() {
                             name="labelVi"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Vietnamese Label</FormLabel>
+                                <FormLabel>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</FormLabel>
                                 <FormControl>
                                   <Input {...field} placeholder="e.g., VIP" data-testid="input-tier-label-vi" />
                                 </FormControl>
@@ -483,7 +477,7 @@ export default function CrmSettingsManager() {
                             name="order"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Order</FormLabel>
+                                <FormLabel>{language === 'vi' ? 'Thứ tự' : 'Order'}</FormLabel>
                                 <FormControl>
                                   <Input 
                                     {...field} 
@@ -502,7 +496,7 @@ export default function CrmSettingsManager() {
                             render={({ field }) => (
                               <FormItem className="flex items-center justify-between rounded-lg border p-4">
                                 <div className="space-y-0.5">
-                                  <FormLabel className="text-base">Active</FormLabel>
+                                  <FormLabel className="text-base">{language === 'vi' ? 'Kích hoạt' : 'Active'}</FormLabel>
                                 </div>
                                 <FormControl>
                                   <Switch
@@ -524,10 +518,10 @@ export default function CrmSettingsManager() {
                                 tierForm.reset();
                               }}
                             >
-                              Cancel
+                              {language === 'vi' ? 'Hủy' : 'Cancel'}
                             </Button>
                             <Button type="submit" data-testid="button-submit-tier">
-                              {editingTier ? "Update" : "Create"}
+                              {editingTier ? (language === 'vi' ? 'Cập Nhật' : 'Update') : (language === 'vi' ? 'Tạo' : 'Create')}
                             </Button>
                           </div>
                         </form>
@@ -539,12 +533,12 @@ export default function CrmSettingsManager() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Value</TableHead>
-                      <TableHead>English Label</TableHead>
-                      <TableHead>Vietnamese Label</TableHead>
-                      <TableHead>Order</TableHead>
-                      <TableHead>Active</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                      <TableHead>{language === 'vi' ? 'Giá trị' : 'Value'}</TableHead>
+                      <TableHead>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</TableHead>
+                      <TableHead>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</TableHead>
+                      <TableHead>{language === 'vi' ? 'Thứ tự' : 'Order'}</TableHead>
+                      <TableHead>{language === 'vi' ? 'Kích hoạt' : 'Active'}</TableHead>
+                      <TableHead className="text-right">{language === 'vi' ? 'Thao tác' : 'Actions'}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -556,7 +550,7 @@ export default function CrmSettingsManager() {
                         <TableCell>{tier.order}</TableCell>
                         <TableCell>
                           <Badge variant={tier.active ? "default" : "secondary"}>
-                            {tier.active ? "Active" : "Inactive"}
+                            {tier.active ? (language === 'vi' ? 'Hoạt động' : 'Active') : (language === 'vi' ? 'Tắt' : 'Inactive')}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right">
@@ -585,18 +579,18 @@ export default function CrmSettingsManager() {
                               </AlertDialogTrigger>
                               <AlertDialogContent>
                                 <AlertDialogHeader>
-                                  <AlertDialogTitle>Delete Customer Tier</AlertDialogTitle>
+                                  <AlertDialogTitle>{language === 'vi' ? 'Xóa Hạng Khách' : 'Delete Customer Tier'}</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    Are you sure you want to delete this customer tier? This action cannot be undone.
+                                    {language === 'vi' ? 'Bạn có chắc chắn muốn xóa hạng khách này? Hành động này không thể hoàn tác.' : 'Are you sure you want to delete this customer tier? This action cannot be undone.'}
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogCancel>{language === 'vi' ? 'Hủy' : 'Cancel'}</AlertDialogCancel>
                                   <AlertDialogAction
                                     onClick={() => deleteTierMutation.mutate(tier.id)}
                                     data-testid={`button-confirm-delete-tier-${tier.id}`}
                                   >
-                                    Delete
+                                    {language === 'vi' ? 'Xóa' : 'Delete'}
                                   </AlertDialogAction>
                                 </AlertDialogFooter>
                               </AlertDialogContent>
@@ -628,12 +622,12 @@ export default function CrmSettingsManager() {
                         data-testid="button-add-status"
                       >
                         <Plus className="h-4 w-4 mr-2" />
-                        Add Status
+                        {language === 'vi' ? 'Thêm' : 'Add Status'}
                       </Button>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle>{editingStatus ? "Edit" : "Add"} Status</DialogTitle>
+                        <DialogTitle>{editingStatus ? (language === 'vi' ? 'Sửa Trạng Thái' : 'Edit Status') : (language === 'vi' ? 'Thêm Trạng Thái' : 'Add Status')}</DialogTitle>
                       </DialogHeader>
                       <Form {...statusForm}>
                         <form onSubmit={statusForm.handleSubmit(handleStatusSubmit)} className="space-y-4">
@@ -642,7 +636,7 @@ export default function CrmSettingsManager() {
                             name="value"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Value (Internal ID)</FormLabel>
+                                <FormLabel>{language === 'vi' ? 'Giá trị (ID nội bộ)' : 'Value (Internal ID)'}</FormLabel>
                                 <FormControl>
                                   <Input {...field} placeholder="e.g., active" data-testid="input-status-value" />
                                 </FormControl>
@@ -655,7 +649,7 @@ export default function CrmSettingsManager() {
                             name="labelEn"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>English Label</FormLabel>
+                                <FormLabel>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</FormLabel>
                                 <FormControl>
                                   <Input {...field} placeholder="e.g., Active" data-testid="input-status-label-en" />
                                 </FormControl>
@@ -668,7 +662,7 @@ export default function CrmSettingsManager() {
                             name="labelVi"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Vietnamese Label</FormLabel>
+                                <FormLabel>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</FormLabel>
                                 <FormControl>
                                   <Input {...field} placeholder="e.g., Hoạt động" data-testid="input-status-label-vi" />
                                 </FormControl>
@@ -681,7 +675,7 @@ export default function CrmSettingsManager() {
                             name="order"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Order</FormLabel>
+                                <FormLabel>{language === 'vi' ? 'Thứ tự' : 'Order'}</FormLabel>
                                 <FormControl>
                                   <Input 
                                     {...field} 
@@ -700,7 +694,7 @@ export default function CrmSettingsManager() {
                             render={({ field }) => (
                               <FormItem className="flex items-center justify-between rounded-lg border p-4">
                                 <div className="space-y-0.5">
-                                  <FormLabel className="text-base">Active</FormLabel>
+                                  <FormLabel className="text-base">{language === 'vi' ? 'Kích hoạt' : 'Active'}</FormLabel>
                                 </div>
                                 <FormControl>
                                   <Switch
@@ -722,10 +716,10 @@ export default function CrmSettingsManager() {
                                 statusForm.reset();
                               }}
                             >
-                              Cancel
+                              {language === 'vi' ? 'Hủy' : 'Cancel'}
                             </Button>
                             <Button type="submit" data-testid="button-submit-status">
-                              {editingStatus ? "Update" : "Create"}
+                              {editingStatus ? (language === 'vi' ? 'Cập Nhật' : 'Update') : (language === 'vi' ? 'Tạo' : 'Create')}
                             </Button>
                           </div>
                         </form>
@@ -737,12 +731,12 @@ export default function CrmSettingsManager() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Value</TableHead>
-                      <TableHead>English Label</TableHead>
-                      <TableHead>Vietnamese Label</TableHead>
-                      <TableHead>Order</TableHead>
-                      <TableHead>Active</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                      <TableHead>{language === 'vi' ? 'Giá trị' : 'Value'}</TableHead>
+                      <TableHead>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</TableHead>
+                      <TableHead>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</TableHead>
+                      <TableHead>{language === 'vi' ? 'Thứ tự' : 'Order'}</TableHead>
+                      <TableHead>{language === 'vi' ? 'Kích hoạt' : 'Active'}</TableHead>
+                      <TableHead className="text-right">{language === 'vi' ? 'Thao tác' : 'Actions'}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -754,7 +748,7 @@ export default function CrmSettingsManager() {
                         <TableCell>{status.order}</TableCell>
                         <TableCell>
                           <Badge variant={status.active ? "default" : "secondary"}>
-                            {status.active ? "Active" : "Inactive"}
+                            {status.active ? (language === 'vi' ? 'Hoạt động' : 'Active') : (language === 'vi' ? 'Tắt' : 'Inactive')}
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right">
@@ -783,18 +777,18 @@ export default function CrmSettingsManager() {
                               </AlertDialogTrigger>
                               <AlertDialogContent>
                                 <AlertDialogHeader>
-                                  <AlertDialogTitle>Delete Status</AlertDialogTitle>
+                                  <AlertDialogTitle>{language === 'vi' ? 'Xóa Trạng Thái' : 'Delete Status'}</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    Are you sure you want to delete this status? This action cannot be undone.
+                                    {language === 'vi' ? 'Bạn có chắc chắn muốn xóa trạng thái này? Hành động này không thể hoàn tác.' : 'Are you sure you want to delete this status? This action cannot be undone.'}
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogCancel>{language === 'vi' ? 'Hủy' : 'Cancel'}</AlertDialogCancel>
                                   <AlertDialogAction
                                     onClick={() => deleteStatusMutation.mutate(status.id)}
                                     data-testid={`button-confirm-delete-status-${status.id}`}
                                   >
-                                    Delete
+                                    {language === 'vi' ? 'Xóa' : 'Delete'}
                                   </AlertDialogAction>
                                 </AlertDialogFooter>
                               </AlertDialogContent>

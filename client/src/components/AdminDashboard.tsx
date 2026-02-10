@@ -5011,7 +5011,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         <Dialog open={isCrmSettingsDialogOpen} onOpenChange={setIsCrmSettingsDialogOpen}>
           <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto bg-black border border-white/20 rounded-none">
             <DialogHeader>
-              <DialogTitle className="text-2xl font-light">CRM Settings</DialogTitle>
+              <DialogTitle className="text-2xl font-light">{language === 'vi' ? 'Cài Đặt CRM' : 'CRM Settings'}</DialogTitle>
             </DialogHeader>
             <CrmSettingsManager />
           </DialogContent>
@@ -5469,8 +5469,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               </div>
             ) : clients.length === 0 ? (
               <div className="p-12 text-center">
-                <h3 className="text-lg font-light mb-2">No clients found</h3>
-                <p className="text-muted-foreground">Add your first client to get started.</p>
+                <h3 className="text-lg font-light mb-2">{language === 'vi' ? 'Chưa có khách hàng' : 'No clients found'}</h3>
+                <p className="text-muted-foreground">{language === 'vi' ? 'Thêm khách hàng đầu tiên để bắt đầu.' : 'Add your first client to get started.'}</p>
               </div>
             ) : (
               <>
