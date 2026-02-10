@@ -7656,10 +7656,11 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                               <Button
                                 type="button"
                                 size="sm"
-                                variant="destructive"
+                                variant="outline"
+                                className="bg-transparent border-white/30 hover:bg-white/10 hover:border-white"
                                 onClick={() => removeContentImage(index)}
                               >
-                                <Trash2 className="h-4 w-4" />
+                                <Trash2 className="h-4 w-4 text-white" />
                               </Button>
                             </div>
                             <div className="absolute bottom-0 left-0 right-0 bg-black/80 px-2 py-1">
