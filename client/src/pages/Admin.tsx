@@ -93,9 +93,6 @@ export default function Admin() {
               <span className="text-sm text-white font-light" data-testid="text-current-user">
                 {user?.displayName || user?.username || 'Admin'}
               </span>
-              <Badge variant="outline" className="text-[10px] px-2 py-0.5 border-white/20 text-white/60 font-light rounded-none">
-                {user?.role === 'superadmin' ? 'Super Admin' : user?.role === 'admin' ? 'Admin' : 'Editor'}
-              </Badge>
             </div>
             <Button 
               onClick={handleLogout}
