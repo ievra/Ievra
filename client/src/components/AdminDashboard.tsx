@@ -2389,12 +2389,17 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       const hasEn = data.titleEn && data.titleEn.trim() && data.contentEn && data.contentEn.trim();
       const hasVi = data.titleVi && data.titleVi.trim() && data.contentVi && data.contentVi.trim();
 
-      // Generate slug from whichever language is available
+      const toSlug = (str: string) => {
+        return str
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/đ/g, 'd').replace(/Đ/g, 'd')
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-+|-+$/g, '');
+      };
       const slugSource = data.slug || (hasEn ? data.titleEn! : data.titleVi!);
-      const slug = slugSource
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
+      const slug = toSlug(slugSource);
 
       const featuredImg = articleImagePreview || data.featuredImage || undefined;
 

@@ -715,9 +715,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validatedData = insertArticleSchema.parse(req.body);
       
-      // Generate slug if not provided
       if (!validatedData.slug) {
         validatedData.slug = validatedData.title
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/đ/g, 'd').replace(/Đ/g, 'd')
           .toLowerCase()
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-+|-+$/g, '');
@@ -734,6 +736,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Validation error", errors: error.errors });
       }
+      console.error('Failed to create article:', error);
       res.status(500).json({ message: "Failed to create article" });
     }
   });
