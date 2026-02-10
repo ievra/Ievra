@@ -66,7 +66,7 @@ export default function Login() {
   return (
     <Layout>
       <div className="min-h-screen bg-black flex items-center justify-center py-24">
-        <div className="w-full max-w-md p-6">
+        <div className="w-full max-w-sm p-6">
           {/* Glass morphism card with subtle backdrop */}
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-white/2 backdrop-blur-xl rounded-none"></div>
