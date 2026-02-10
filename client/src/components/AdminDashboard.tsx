@@ -4350,12 +4350,12 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               <Table className="table-fixed">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[110px] whitespace-nowrap">{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
                     <TableHead className="w-[60px] whitespace-nowrap">{language === 'vi' ? 'Năm' : 'Year'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Dự Án' : 'Project'}</TableHead>
-                    <TableHead className="w-[100px] whitespace-nowrap">{language === 'vi' ? 'Ngôn Ngữ' : 'Language'}</TableHead>
+                    <TableHead className="w-[110px] whitespace-nowrap">{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
                     <TableHead className="w-[110px] whitespace-nowrap">{language === 'vi' ? 'Phong Cách' : 'Style'}</TableHead>
                     <TableHead className="w-[90px] whitespace-nowrap">{language === 'vi' ? 'Diện Tích' : 'Area'}</TableHead>
+                    <TableHead>{language === 'vi' ? 'Dự Án' : 'Project'}</TableHead>
+                    <TableHead className="w-[100px] whitespace-nowrap">{language === 'vi' ? 'Ngôn Ngữ' : 'Language'}</TableHead>
                     <TableHead className="w-[110px] whitespace-nowrap">{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
                     <TableHead className="w-[120px] whitespace-nowrap">{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
                     <TableHead className="w-[100px] text-right"></TableHead>
@@ -4369,11 +4369,13 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     const primary = (language === 'vi' ? group.find(p => p.language === 'vi') : group.find(p => p.language === 'en')) || group[0];
                     return (
                     <TableRow key={primary.id} data-testid={`row-project-${primary.id}`}>
+                      <TableCell>{primary.completionYear || "—"}</TableCell>
                       <TableCell>{(() => {
                         const cat = categories.find(c => c.slug === primary.category && c.type === 'project');
                         return cat ? (language === 'vi' && cat.nameVi ? cat.nameVi : cat.name) : primary.category;
                       })()}</TableCell>
-                      <TableCell>{primary.completionYear || "—"}</TableCell>
+                      <TableCell>{primary.style || "—"}</TableCell>
+                      <TableCell>{primary.area || "—"}</TableCell>
                       <TableCell>
                         <p className="font-light">{primary.title}</p>
                       </TableCell>
@@ -4383,8 +4385,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           {hasVi && <span className="text-[14px] text-white">VI</span>}
                         </div>
                       </TableCell>
-                      <TableCell>{primary.style || "—"}</TableCell>
-                      <TableCell>{primary.area || "—"}</TableCell>
                       <TableCell>{formatDate(primary.createdAt)}</TableCell>
                       <TableCell>
                         <Select
