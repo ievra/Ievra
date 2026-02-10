@@ -1032,16 +1032,54 @@ export default function AboutAdminTab({
       {/* Principles Management */}
       <Card>
         <CardHeader>
-          <CardTitle>Core Values (4 Items - Fixed)</CardTitle>
+          <div className="flex justify-between items-center">
+            <div>
+              <CardTitle>Core Values</CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">{aboutPrinciples.length} / 4 items</p>
+            </div>
+            <Button
+              onClick={() => {
+                if (aboutPrinciples.length >= 4) return;
+                setEditingPrinciple(null);
+                principleForm.reset({
+                  icon: "",
+                  titleEn: "",
+                  titleVi: "",
+                  descriptionEn: "",
+                  descriptionVi: "",
+                  order: aboutPrinciples.length + 1,
+                });
+                setIsPrincipleDialogOpen(true);
+              }}
+              disabled={aboutPrinciples.length >= 4}
+              data-testid="button-add-principle"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Add Core Value
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <Dialog open={isPrincipleDialogOpen} onOpenChange={setIsPrincipleDialogOpen}>
             <DialogContent className="max-w-2xl">
               <DialogHeader>
-                <DialogTitle>Edit Principle</DialogTitle>
+                <DialogTitle>{editingPrinciple ? "Edit" : "Add"} Core Value</DialogTitle>
               </DialogHeader>
                 <Form {...principleForm}>
                   <form onSubmit={principleForm.handleSubmit(handlePrincipleSubmit)} className="space-y-4">
+                    <FormField
+                      control={principleForm.control}
+                      name="icon"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Lucide Icon Name *</FormLabel>
+                          <FormControl>
+                            <Input {...field} placeholder="e.g. Shield, Heart, Star, Target" data-testid="input-principle-icon" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={principleForm.control}
@@ -1112,7 +1150,7 @@ export default function AboutAdminTab({
                       )}
                     />
                     <Button type="submit" className="w-full" data-testid="button-submit-principle">
-                      Update Principle
+                      {editingPrinciple ? "Update" : "Create"} Core Value
                     </Button>
                   </form>
                 </Form>
@@ -1141,18 +1179,28 @@ export default function AboutAdminTab({
                     <TableCell>{principle.titleVi}</TableCell>
                     <TableCell>{principle.order}</TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setEditingPrinciple(principle);
-                          principleForm.reset(principle);
-                          setIsPrincipleDialogOpen(true);
-                        }}
-                        data-testid={`button-edit-principle-${principle.id}`}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
+                      <div className="flex gap-2 justify-end">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setEditingPrinciple(principle);
+                            principleForm.reset(principle);
+                            setIsPrincipleDialogOpen(true);
+                          }}
+                          data-testid={`button-edit-principle-${principle.id}`}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => deletePrincipleMutation.mutate(principle.id)}
+                          data-testid={`button-delete-principle-${principle.id}`}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -1165,13 +1213,37 @@ export default function AboutAdminTab({
       {/* Showcase Services Management */}
       <Card>
         <CardHeader>
-          <CardTitle>Showcase Services (4 Items - Fixed)</CardTitle>
+          <div className="flex justify-between items-center">
+            <div>
+              <CardTitle>Showcase Services</CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">{aboutShowcaseServices.length} / 4 items</p>
+            </div>
+            <Button
+              onClick={() => {
+                if (aboutShowcaseServices.length >= 4) return;
+                setEditingShowcaseService(null);
+                showcaseServiceForm.reset({
+                  titleEn: "",
+                  titleVi: "",
+                  descriptionEn: "",
+                  descriptionVi: "",
+                  order: aboutShowcaseServices.length + 1,
+                });
+                setIsShowcaseServiceDialogOpen(true);
+              }}
+              disabled={aboutShowcaseServices.length >= 4}
+              data-testid="button-add-showcase-service"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Add Service
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <Dialog open={isShowcaseServiceDialogOpen} onOpenChange={setIsShowcaseServiceDialogOpen}>
             <DialogContent className="max-w-2xl">
               <DialogHeader>
-                <DialogTitle>Edit Showcase Service</DialogTitle>
+                <DialogTitle>{editingShowcaseService ? "Edit" : "Add"} Showcase Service</DialogTitle>
               </DialogHeader>
               <Form {...showcaseServiceForm}>
                 <form onSubmit={showcaseServiceForm.handleSubmit(handleShowcaseServiceSubmit)} className="space-y-4">
@@ -1245,7 +1317,7 @@ export default function AboutAdminTab({
                     )}
                   />
                   <Button type="submit" className="w-full" data-testid="button-submit-showcase">
-                    Update Showcase Service
+                    {editingShowcaseService ? "Update" : "Create"} Showcase Service
                   </Button>
                 </form>
               </Form>
@@ -1275,18 +1347,28 @@ export default function AboutAdminTab({
                     <TableCell>{service.titleVi}</TableCell>
                     <TableCell>{service.order}</TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setEditingShowcaseService(service);
-                          showcaseServiceForm.reset(service);
-                          setIsShowcaseServiceDialogOpen(true);
-                        }}
-                        data-testid={`button-edit-showcase-${service.id}`}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
+                      <div className="flex gap-2 justify-end">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setEditingShowcaseService(service);
+                            showcaseServiceForm.reset(service);
+                            setIsShowcaseServiceDialogOpen(true);
+                          }}
+                          data-testid={`button-edit-showcase-${service.id}`}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => deleteShowcaseServiceMutation.mutate(service.id)}
+                          data-testid={`button-delete-showcase-${service.id}`}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -1299,13 +1381,37 @@ export default function AboutAdminTab({
       {/* Process Steps Management */}
       <Card>
         <CardHeader>
-          <CardTitle>Process Steps (4 Items - Fixed)</CardTitle>
+          <div className="flex justify-between items-center">
+            <div>
+              <CardTitle>Process Steps</CardTitle>
+              <p className="text-sm text-muted-foreground mt-1">{aboutProcessSteps.length} / 4 items</p>
+            </div>
+            <Button
+              onClick={() => {
+                if (aboutProcessSteps.length >= 4) return;
+                setEditingProcessStep(null);
+                processStepForm.reset({
+                  stepNumber: String(aboutProcessSteps.length + 1).padStart(2, '0'),
+                  titleEn: "",
+                  titleVi: "",
+                  descriptionEn: "",
+                  descriptionVi: "",
+                });
+                setIsProcessStepDialogOpen(true);
+              }}
+              disabled={aboutProcessSteps.length >= 4}
+              data-testid="button-add-process-step"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Add Step
+            </Button>
+          </div>
         </CardHeader>
         <CardContent>
           <Dialog open={isProcessStepDialogOpen} onOpenChange={setIsProcessStepDialogOpen}>
             <DialogContent className="max-w-2xl">
               <DialogHeader>
-                <DialogTitle>Edit Process Step</DialogTitle>
+                <DialogTitle>{editingProcessStep ? "Edit" : "Add"} Process Step</DialogTitle>
               </DialogHeader>
               <Form {...processStepForm}>
                 <form onSubmit={processStepForm.handleSubmit(handleProcessStepSubmit)} className="space-y-4">
@@ -1379,7 +1485,7 @@ export default function AboutAdminTab({
                     />
                   </div>
                   <Button type="submit" className="w-full" data-testid="button-submit-step">
-                    Update Process Step
+                    {editingProcessStep ? "Update" : "Create"} Process Step
                   </Button>
                 </form>
               </Form>
@@ -1409,18 +1515,28 @@ export default function AboutAdminTab({
                     <TableCell>{step.titleEn}</TableCell>
                     <TableCell>{step.titleVi}</TableCell>
                     <TableCell className="text-right">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setEditingProcessStep(step);
-                          processStepForm.reset(step);
-                          setIsProcessStepDialogOpen(true);
-                        }}
-                        data-testid={`button-edit-step-${step.id}`}
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </Button>
+                      <div className="flex gap-2 justify-end">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setEditingProcessStep(step);
+                            processStepForm.reset(step);
+                            setIsProcessStepDialogOpen(true);
+                          }}
+                          data-testid={`button-edit-step-${step.id}`}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => deleteProcessStepMutation.mutate(step.id)}
+                          data-testid={`button-delete-step-${step.id}`}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
