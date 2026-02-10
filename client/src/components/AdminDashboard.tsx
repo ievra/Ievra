@@ -8082,6 +8082,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               </div>
             </DialogContent>
             </Dialog>
+          </CardContent>
+        </Card>
 
         <div className="flex items-center gap-4">
           <div className="relative flex-1">
