@@ -242,7 +242,7 @@ export default function CrmSettingsManager() {
                               <FormItem>
                                 <FormLabel>{language === 'vi' ? 'Giá trị (ID nội bộ)' : 'Value (Internal ID)'}</FormLabel>
                                 <FormControl>
-                                  <Input {...field} placeholder="e.g., lead" data-testid="input-stage-value" />
+                                  <Input {...field} placeholder="lead" data-testid="input-stage-value" />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -255,7 +255,7 @@ export default function CrmSettingsManager() {
                               <FormItem>
                                 <FormLabel>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</FormLabel>
                                 <FormControl>
-                                  <Input {...field} placeholder="e.g., Lead" data-testid="input-stage-label-en" />
+                                  <Input {...field} placeholder="Lead" data-testid="input-stage-label-en" />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -268,7 +268,7 @@ export default function CrmSettingsManager() {
                               <FormItem>
                                 <FormLabel>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</FormLabel>
                                 <FormControl>
-                                  <Input {...field} placeholder="e.g., Khách tiềm năng" data-testid="input-stage-label-vi" />
+                                  <Input {...field} placeholder="Khách tiềm năng" data-testid="input-stage-label-vi" />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -289,24 +289,6 @@ export default function CrmSettingsManager() {
                                   />
                                 </FormControl>
                                 <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={stageForm.control}
-                            name="active"
-                            render={({ field }) => (
-                              <FormItem className="flex items-center justify-between rounded-lg border p-4">
-                                <div className="space-y-0.5">
-                                  <FormLabel className="text-base">{language === 'vi' ? 'Kích hoạt' : 'Active'}</FormLabel>
-                                </div>
-                                <FormControl>
-                                  <Switch
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                    data-testid="switch-stage-active"
-                                  />
-                                </FormControl>
                               </FormItem>
                             )}
                           />
@@ -440,7 +422,7 @@ export default function CrmSettingsManager() {
                               <FormItem>
                                 <FormLabel>{language === 'vi' ? 'Giá trị (ID nội bộ)' : 'Value (Internal ID)'}</FormLabel>
                                 <FormControl>
-                                  <Input {...field} placeholder="e.g., vip" data-testid="input-tier-value" />
+                                  <Input {...field} placeholder="vip" data-testid="input-tier-value" />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -453,7 +435,7 @@ export default function CrmSettingsManager() {
                               <FormItem>
                                 <FormLabel>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</FormLabel>
                                 <FormControl>
-                                  <Input {...field} placeholder="e.g., VIP" data-testid="input-tier-label-en" />
+                                  <Input {...field} placeholder="VIP" data-testid="input-tier-label-en" />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -466,7 +448,7 @@ export default function CrmSettingsManager() {
                               <FormItem>
                                 <FormLabel>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</FormLabel>
                                 <FormControl>
-                                  <Input {...field} placeholder="e.g., VIP" data-testid="input-tier-label-vi" />
+                                  <Input {...field} placeholder="VIP" data-testid="input-tier-label-vi" />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -487,24 +469,6 @@ export default function CrmSettingsManager() {
                                   />
                                 </FormControl>
                                 <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={tierForm.control}
-                            name="active"
-                            render={({ field }) => (
-                              <FormItem className="flex items-center justify-between rounded-lg border p-4">
-                                <div className="space-y-0.5">
-                                  <FormLabel className="text-base">{language === 'vi' ? 'Kích hoạt' : 'Active'}</FormLabel>
-                                </div>
-                                <FormControl>
-                                  <Switch
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                    data-testid="switch-tier-active"
-                                  />
-                                </FormControl>
                               </FormItem>
                             )}
                           />
@@ -638,7 +602,7 @@ export default function CrmSettingsManager() {
                               <FormItem>
                                 <FormLabel>{language === 'vi' ? 'Giá trị (ID nội bộ)' : 'Value (Internal ID)'}</FormLabel>
                                 <FormControl>
-                                  <Input {...field} placeholder="e.g., active" data-testid="input-status-value" />
+                                  <Input {...field} placeholder="active" data-testid="input-status-value" />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -651,7 +615,7 @@ export default function CrmSettingsManager() {
                               <FormItem>
                                 <FormLabel>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</FormLabel>
                                 <FormControl>
-                                  <Input {...field} placeholder="e.g., Active" data-testid="input-status-label-en" />
+                                  <Input {...field} placeholder="Active" data-testid="input-status-label-en" />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -664,7 +628,7 @@ export default function CrmSettingsManager() {
                               <FormItem>
                                 <FormLabel>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</FormLabel>
                                 <FormControl>
-                                  <Input {...field} placeholder="e.g., Hoạt động" data-testid="input-status-label-vi" />
+                                  <Input {...field} placeholder="Hoạt động" data-testid="input-status-label-vi" />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -685,24 +649,6 @@ export default function CrmSettingsManager() {
                                   />
                                 </FormControl>
                                 <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={statusForm.control}
-                            name="active"
-                            render={({ field }) => (
-                              <FormItem className="flex items-center justify-between rounded-lg border p-4">
-                                <div className="space-y-0.5">
-                                  <FormLabel className="text-base">{language === 'vi' ? 'Kích hoạt' : 'Active'}</FormLabel>
-                                </div>
-                                <FormControl>
-                                  <Switch
-                                    checked={field.value}
-                                    onCheckedChange={field.onChange}
-                                    data-testid="switch-status-active"
-                                  />
-                                </FormControl>
                               </FormItem>
                             )}
                           />
