@@ -321,10 +321,19 @@ export default function Home() {
     queryKey: ["/api/articles", "featured", language],
     queryFn: async () => {
       const response = await fetch(
-        `/api/articles?featured=true&language=${language}`,
+        `/api/articles?featured=true&status=published`,
       );
       if (!response.ok) throw new Error("Failed fetch, not 2xx response");
-      return response.json();
+      const allFeatured: Article[] = await response.json();
+      const grouped: Record<string, Article[]> = {};
+      for (const article of allFeatured) {
+        if (!grouped[article.slug]) grouped[article.slug] = [];
+        grouped[article.slug].push(article);
+      }
+      return Object.values(grouped).map(group => {
+        const preferred = group.find(a => a.language === language);
+        return preferred || group[0];
+      });
     },
   });
 
