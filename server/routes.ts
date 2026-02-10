@@ -1143,7 +1143,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         totalProjects: allProjects.length,
         activeClients: activeClients.length,
         newInquiries: newInquiries.length,
-        revenue: "$2.4M" // This would come from project budgets in a real app
+        revenue: "2.400.000.000 ₫"
       });
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch dashboard stats" });

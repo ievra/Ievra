@@ -3241,7 +3241,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-light text-muted-foreground">Total Projects</p>
+                  <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Tổng Dự Án' : 'Total Projects'}</p>
                   <p className="text-2xl font-light" data-testid="stat-total-projects">
                     {statsLoading ? "..." : stats?.totalProjects || 0}
                   </p>
@@ -3255,7 +3255,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-light text-muted-foreground">Active Clients</p>
+                  <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Khách Hàng' : 'Active Clients'}</p>
                   <p className="text-2xl font-light" data-testid="stat-active-clients">
                     {statsLoading ? "..." : stats?.activeClients || 0}
                   </p>
@@ -3269,7 +3269,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-light text-muted-foreground">New Inquiries</p>
+                  <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Yêu Cầu Mới' : 'New Inquiries'}</p>
                   <p className="text-2xl font-light" data-testid="stat-new-inquiries">
                     {statsLoading ? "..." : stats?.newInquiries || 0}
                   </p>
@@ -3283,9 +3283,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-light text-muted-foreground">Revenue (YTD)</p>
+                  <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Doanh Thu (Năm)' : 'Revenue (YTD)'}</p>
                   <p className="text-2xl font-light" data-testid="stat-revenue">
-                    {statsLoading ? "..." : stats?.revenue || "$0"}
+                    {statsLoading ? "..." : stats?.revenue || "0 ₫"}
                   </p>
                 </div>
                 <TrendingUp className="h-8 w-8 text-white/70" />
@@ -3297,7 +3297,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         {/* Recent Activity */}
         <Card>
           <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
+            <CardTitle>{language === 'vi' ? 'Hoạt Động Gần Đây' : 'Recent Activity'}</CardTitle>
           </CardHeader>
           <CardContent>
             {inquiriesLoading ? (
@@ -3313,14 +3313,14 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 ))}
               </div>
             ) : inquiries.length === 0 ? (
-              <p className="text-muted-foreground py-8 text-center">No recent activity</p>
+              <p className="text-muted-foreground py-8 text-center">{language === 'vi' ? 'Chưa có hoạt động nào' : 'No recent activity'}</p>
             ) : (
               <div className="space-y-4">
                 {inquiries.slice(0, 5).map((inquiry) => (
                   <div key={inquiry.id} className="flex items-center justify-between py-3 border-b border-white/20">
                     <div>
                       <p className="font-light">
-                        New inquiry from {inquiry.firstName} {inquiry.lastName}
+                        {language === 'vi' ? 'Yêu cầu mới từ' : 'New inquiry from'} {inquiry.firstName} {inquiry.lastName}
                       </p>
                       <p className="text-sm text-muted-foreground">
                         {formatDate(inquiry.createdAt)} • {inquiry.projectType}
