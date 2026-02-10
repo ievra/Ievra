@@ -3411,7 +3411,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               className="h-10 px-4 min-w-[160px] justify-center"
             >
               <Settings className="mr-2 h-4 w-4" />
-              {language === 'vi' ? 'Cài Đặt Danh Mục' : 'Category Settings'}
+              {language === 'vi' ? 'Cài Đặt' : 'Settings'}
             </Button>
             <Dialog open={isProjectDialogOpen} onOpenChange={setIsProjectDialogOpen}>
               <DialogTrigger asChild>
@@ -7434,7 +7434,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               className="h-10 px-4 min-w-[160px] justify-center"
             >
               <Settings className="mr-2 h-4 w-4" />
-              {language === 'vi' ? 'Cài Đặt Danh Mục' : 'Category Settings'}
+              {language === 'vi' ? 'Cài Đặt' : 'Settings'}
             </Button>
             <Dialog open={isArticleDialogOpen} onOpenChange={setIsArticleDialogOpen}>
               <DialogTrigger asChild>
