@@ -8500,20 +8500,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     )}
                   />
 
-                  <FormField
-                    control={userForm.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email</FormLabel>
-                        <FormControl>
-                          <Input {...field} type="email" placeholder={language === 'vi' ? 'Nhập email' : 'Enter email'} data-testid="input-user-email" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
                   {/* Only super admin can see and edit role */}
                   {user.role === 'superadmin' && (
                     <FormField
@@ -8695,7 +8681,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   <TableRow>
                     <TableHead>{language === 'vi' ? 'Tên Đăng Nhập' : 'Username'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Tên Hiển Thị' : 'Display Name'}</TableHead>
-                    <TableHead>Email</TableHead>
                     <TableHead>{language === 'vi' ? 'Vai Trò' : 'Role'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Quyền Hạn' : 'Permissions'}</TableHead>
                     <TableHead className="text-right">{language === 'vi' ? 'Thao Tác' : 'Actions'}</TableHead>
@@ -8706,7 +8691,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     <TableRow key={tableUser.id} data-testid={`row-user-${tableUser.id}`}>
                       <TableCell className="font-medium">{tableUser.username}</TableCell>
                       <TableCell>{tableUser.displayName || "—"}</TableCell>
-                      <TableCell>{tableUser.email || "—"}</TableCell>
                       <TableCell>
                         <Badge
                           variant="secondary"
