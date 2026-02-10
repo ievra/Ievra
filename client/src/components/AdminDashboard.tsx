@@ -646,6 +646,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   const [projectSearchQuery, setProjectSearchQuery] = useState('');
   const [projectYearFilter, setProjectYearFilter] = useState('all');
   const [projectCategoryFilter, setProjectCategoryFilter] = useState('all');
+  const [projectLanguageFilter, setProjectLanguageFilter] = useState('all');
 
   // Pagination state for Projects - group by slug, then paginate
   const [projectsPage, setProjectsPage] = useState(1);
@@ -671,6 +672,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     const searchLower = projectSearchQuery.toLowerCase();
     if (projectYearFilter !== 'all' && primary.completionYear !== projectYearFilter) return false;
     if (projectCategoryFilter !== 'all' && primary.category !== projectCategoryFilter) return false;
+    if (projectLanguageFilter !== 'all') {
+      const hasLang = group.some(p => p.language === projectLanguageFilter);
+      if (!hasLang) return false;
+    }
     if (!searchLower) return true;
     const cat = categories.find(c => c.slug === primary.category && c.type === 'project');
     const categoryName = cat ? `${cat.name} ${cat.nameVi || ''}`.toLowerCase() : (primary.category || '').toLowerCase();
@@ -4407,6 +4412,16 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               {projectYears.map(year => (
                 <SelectItem key={year} value={String(year)}>{year}</SelectItem>
               ))}
+            </SelectContent>
+          </Select>
+          <Select value={projectLanguageFilter} onValueChange={(v) => { setProjectLanguageFilter(v); setProjectsPage(1); }}>
+            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectValue placeholder={language === 'vi' ? 'Tất cả ngôn ngữ' : 'All languages'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{language === 'vi' ? 'Tất cả ngôn ngữ' : 'All languages'}</SelectItem>
+              <SelectItem value="en">English</SelectItem>
+              <SelectItem value="vi">Tiếng Việt</SelectItem>
             </SelectContent>
           </Select>
         </div>
