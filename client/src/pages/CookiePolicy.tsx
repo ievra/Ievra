@@ -13,7 +13,7 @@ export default function CookiePolicy() {
           title: "What Are Cookies?",
           content: `Cookies are small text files that are stored on your computer or mobile device when you visit our website. They help us provide you with a better experience by remembering your preferences and understanding how you use our website.
 
-At Moderno Interiors, we use cookies to enhance your browsing experience, analyze website traffic, and provide personalized content related to our interior design services.`
+At IEVRA Design & Build, we use cookies to enhance your browsing experience, analyze website traffic, and provide personalized content related to our interior design services.`
         },
         {
           title: "Types of Cookies We Use",
@@ -52,7 +52,7 @@ At Moderno Interiors, we use cookies to enhance your browsing experience, analyz
           title: "Contact Us",
           content: `If you have any questions about our use of cookies, please contact us:
 
-Moderno Interiors Design
+IEVRA Design & Build
 1st Floor, Sabay Building
 140B Nguyen Van Troi Street
 Phu Nhuan District, Ho Chi Minh City, Vietnam
@@ -69,7 +69,7 @@ Email: info@moderno-interiors.com`
           title: "Cookie Là Gì?",
           content: `Cookie là các tệp văn bản nhỏ được lưu trữ trên máy tính hoặc thiết bị di động của bạn khi bạn truy cập trang web của chúng tôi. Chúng giúp chúng tôi cung cấp cho bạn trải nghiệm tốt hơn bằng cách ghi nhớ sở thích của bạn và hiểu cách bạn sử dụng trang web của chúng tôi.
 
-Tại Moderno Interiors, chúng tôi sử dụng cookie để nâng cao trải nghiệm duyệt web của bạn, phân tích lưu lượng truy cập trang web và cung cấp nội dung được cá nhân hóa liên quan đến các dịch vụ thiết kế nội thất của chúng tôi.`
+Tại IEVRA Design & Build, chúng tôi sử dụng cookie để nâng cao trải nghiệm duyệt web của bạn, phân tích lưu lượng truy cập trang web và cung cấp nội dung được cá nhân hóa liên quan đến các dịch vụ thiết kế nội thất của chúng tôi.`
         },
         {
           title: "Các Loại Cookie Chúng Tôi Sử Dụng",
@@ -108,7 +108,7 @@ Tại Moderno Interiors, chúng tôi sử dụng cookie để nâng cao trải n
           title: "Liên Hệ Với Chúng Tôi",
           content: `Nếu bạn có bất kỳ câu hỏi nào về việc sử dụng cookie của chúng tôi, vui lòng liên hệ với chúng tôi:
 
-Moderno Interiors Design
+IEVRA Design & Build
 Lầu 1, Tòa nhà Sabay
 140B Nguyễn Văn Trỗi
 Quận Phú Nhuận, TP. Hồ Chí Minh, Việt Nam

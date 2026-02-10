@@ -136,7 +136,7 @@ export default function BlogDetail() {
   // Update document title and meta tags for SEO
   useEffect(() => {
     if (article) {
-      document.title = article.metaTitle || `${article.title} | Moderno Interiors Design`;
+      document.title = article.metaTitle || `${article.title} | IEVRA Design & Build`;
       
       // Update meta description
       const metaDescription = document.querySelector('meta[name="description"]');
@@ -186,7 +186,7 @@ export default function BlogDetail() {
 
     return () => {
       // Reset title when leaving
-      document.title = 'Moderno Interiors Design';
+      document.title = 'IEVRA Design & Build';
     };
   }, [article]);
 
@@ -361,7 +361,7 @@ export default function BlogDetail() {
         <div className="flex items-center justify-between mt-12 mb-8 border-t border-gray-800 pt-6">
           <div className="text-sm text-muted-foreground">
             <p className="mb-1">
-              {language === 'vi' ? 'Xuất bản bởi' : 'Published by'} <span className="text-white">Moderno Team</span>
+              {language === 'vi' ? 'Xuất bản bởi' : 'Published by'} <span className="text-white">IEVRA Team</span>
             </p>
             <p>{formatDate(String(article.publishedAt || article.createdAt))}</p>
           </div>

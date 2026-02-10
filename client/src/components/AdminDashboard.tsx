@@ -812,7 +812,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     resolver: zodResolver(homepageContentSchema),
     defaultValues: {
       language: language,
-      heroTitle: "Moderno Interiors",
+      heroTitle: "IEVRA Design & Build",
       heroStudio: "STUDIO",
       heroTagline: "",
       heroArchitectureLabel: "",
@@ -1062,8 +1062,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         journeyDescriptionVi: homepageContent.journeyDescriptionVi || "TỪ Ý TƯỞNG ĐẾN HIỆN THỰC, CHÚNG TÔI ĐỒNG HÀNH CÙNG BẠN QUA MỘT QUY TRÌNH 5 BƯỚC TINH GỌN, HIỆU QUẢ VÀ ĐẦY CẢM HỨNG.",
         advantagesTitle: homepageContent.advantagesTitle || "ADVANTAGES",
         advantagesTitleVi: homepageContent.advantagesTitleVi || "LỢI THẾ CẠNH TRANH",
-        advantagesSubtitle: homepageContent.advantagesSubtitle || "Why Choose Moderno Interiors",
-        advantagesSubtitleVi: homepageContent.advantagesSubtitleVi || "Tại sao chọn Moderno Interiors",
+        advantagesSubtitle: homepageContent.advantagesSubtitle || "Why Choose IEVRA Design & Build",
+        advantagesSubtitleVi: homepageContent.advantagesSubtitleVi || "Tại sao chọn IEVRA Design & Build",
         faqSectionTitle: homepageContent.faqSectionTitle || "HAVE ANY QUESTIONS?",
         faqSectionTitleVi: homepageContent.faqSectionTitleVi || "CÓ THẮC MẮC GÌ KHÔNG?",
         partnersTitle: homepageContent.partnersTitle || "OUR PARTNERS",
@@ -5959,7 +5959,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             <FormControl>
                               <Input 
                                 {...field}
-                                placeholder="Moderno Interiors - Interior Design"
+                                placeholder="IEVRA Design & Build - Interior Design"
                                 data-testid="input-site-title-en"
                               />
                             </FormControl>
@@ -5976,7 +5976,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             <FormControl>
                               <Input 
                                 {...field}
-                                placeholder="Moderno Interiors - Thiết Kế Nội Thất"
+                                placeholder="IEVRA Design & Build - Thiết Kế Nội Thất"
                                 data-testid="input-site-title-vi"
                               />
                             </FormControl>
@@ -6295,7 +6295,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       <label className="text-sm font-light mb-2 block">Advantages Subtitle (EN)</label>
                       <Input 
                         {...homepageContentForm.register("advantagesSubtitle")}
-                        placeholder="e.g., Why Choose Moderno Interiors"
+                        placeholder="e.g., Why Choose IEVRA Design & Build"
                         data-testid="input-advantages-subtitle-en"
                       />
                     </div>
@@ -6313,7 +6313,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       <label className="text-sm font-light mb-2 block">Advantages Subtitle (VI)</label>
                       <Input 
                         {...homepageContentForm.register("advantagesSubtitleVi")}
-                        placeholder="e.g., Tại Sao Chọn Moderno Interiors"
+                        placeholder="e.g., Tại Sao Chọn IEVRA Design & Build"
                         data-testid="input-advantages-subtitle-vi"
                       />
                     </div>

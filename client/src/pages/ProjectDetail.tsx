@@ -180,8 +180,8 @@ export default function ProjectDetail() {
   // Set SEO meta tags when project data is loaded
   useEffect(() => {
     if (project) {
-      const title = project.metaTitle || `${project.title} | Moderno Interiors Design Studio`;
-      const description = project.metaDescription || project.detailedDescription || project.description || `Interior design project by Moderno Interiors Design Studio`;
+      const title = project.metaTitle || `${project.title} | IEVRA Design & Build`;
+      const description = project.metaDescription || project.detailedDescription || project.description || `Interior design project by IEVRA Design & Build`;
       
       document.title = title;
       
@@ -216,7 +216,7 @@ export default function ProjectDetail() {
     
     // Cleanup function to reset title when component unmounts
     return () => {
-      document.title = 'Moderno Interiors Design Studio';
+      document.title = 'IEVRA Design & Build';
     };
   }, [project]);
 
@@ -501,7 +501,7 @@ export default function ProjectDetail() {
         <div className="flex items-center justify-between mt-16 mb-8 border-t border-gray-800 pt-6">
           <div className="text-sm text-muted-foreground">
             <p className="mb-1">
-              {language === 'vi' ? 'Thiết kế bởi' : 'Designed by'} <span className="text-white">{project.designer || 'Moderno Team'}</span>
+              {language === 'vi' ? 'Thiết kế bởi' : 'Designed by'} <span className="text-white">{project.designer || 'IEVRA Team'}</span>
             </p>
             <p>{project.completionYear}</p>
           </div>

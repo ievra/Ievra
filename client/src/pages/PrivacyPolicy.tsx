@@ -11,7 +11,7 @@ export default function PrivacyPolicy() {
       sections: [
         {
           title: "Introduction",
-          content: `At Moderno Interiors Design, we are committed to protecting your privacy and personal information. This Privacy Policy explains how we collect, use, store, and protect your information when you visit our website or use our interior design services.
+          content: `At IEVRA Design & Build, we are committed to protecting your privacy and personal information. This Privacy Policy explains how we collect, use, store, and protect your information when you visit our website or use our interior design services.
 
 We take data protection seriously and comply with applicable privacy laws and regulations in Vietnam and internationally.`
         },
@@ -141,7 +141,7 @@ When information is no longer needed, we securely delete or anonymize it.`
           content: `If you have questions about this Privacy Policy or want to exercise your privacy rights, please contact us:
 
 **Privacy Officer**
-Moderno Interiors Design
+IEVRA Design & Build
 1st Floor, Sabay Building
 140B Nguyen Van Troi Street
 Phu Nhuan District, Ho Chi Minh City, Vietnam
@@ -161,7 +161,7 @@ We will respond to your privacy inquiries within 30 days. This Privacy Policy ma
       sections: [
         {
           title: "Giới Thiệu",
-          content: `Tại Moderno Interiors Design, chúng tôi cam kết bảo vệ quyền riêng tư và thông tin cá nhân của bạn. Chính sách Bảo mật này giải thích cách chúng tôi thu thập, sử dụng, lưu trữ và bảo vệ thông tin của bạn khi bạn truy cập trang web của chúng tôi hoặc sử dụng các dịch vụ thiết kế nội thất của chúng tôi.
+          content: `Tại IEVRA Design & Build, chúng tôi cam kết bảo vệ quyền riêng tư và thông tin cá nhân của bạn. Chính sách Bảo mật này giải thích cách chúng tôi thu thập, sử dụng, lưu trữ và bảo vệ thông tin của bạn khi bạn truy cập trang web của chúng tôi hoặc sử dụng các dịch vụ thiết kế nội thất của chúng tôi.
 
 Chúng tôi coi trọng việc bảo vệ dữ liệu và tuân thủ các luật và quy định về quyền riêng tư hiện hành tại Việt Nam và quốc tế.`
         },
@@ -291,7 +291,7 @@ Khi thông tin không còn cần thiết, chúng tôi sẽ xóa hoặc ẩn danh
           content: `Nếu bạn có câu hỏi về Chính sách Bảo mật này hoặc muốn thực hiện quyền riêng tư của mình, vui lòng liên hệ với chúng tôi:
 
 **Nhân Viên Bảo Mật**
-Moderno Interiors Design
+IEVRA Design & Build
 Lầu 1, Tòa nhà Sabay
 140B Nguyễn Văn Trỗi
 Quận Phú Nhuận, TP. Hồ Chí Minh, Việt Nam

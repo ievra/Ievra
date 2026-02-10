@@ -25,7 +25,7 @@ const translations = {
     'nav.admin': 'Admin',
     
     // Hero Section
-    'hero.studio': 'Moderno Interiors Design',
+    'hero.studio': 'IEVRA Design & Build',
     'hero.tagline': 'From concept to realization — creating structures that inspire and endure.',
     'hero.architecture': 'Architecture',
     'hero.interior': 'Interior Design',
@@ -62,7 +62,7 @@ const translations = {
     'about.title': 'About Us',
     'about.subtitle': 'Where architectural vision meets interior perfection. We are a team of passionate designers creating extraordinary spaces worldwide.',
     'about.ourStory': 'Our Story',
-    'about.storyParagraph1': 'Founded in 2015, Moderno Interiors has established itself as a premier interior design studio, creating extraordinary spaces that seamlessly blend functionality with artistic vision. Our award-winning team specializes in luxury residential and commercial projects worldwide.',
+    'about.storyParagraph1': 'Founded in 2015, IEVRA Design & Build has established itself as a premier interior design studio, creating extraordinary spaces that seamlessly blend functionality with artistic vision. Our award-winning team specializes in luxury residential and commercial projects worldwide.',
     'about.storyParagraph2': 'We believe that exceptional design has the power to transform not just spaces, but lives. Our approach combines innovative thinking with timeless elegance, resulting in interiors that are both visually stunning and perfectly suited to our clients\' lifestyles.',
     'about.storyParagraph3': 'Every project we undertake is a testament to our commitment to excellence, attention to detail, and dedication to creating environments that inspire and elevate the human experience.',
     'about.projectsCompleted': 'Projects Completed',
@@ -71,7 +71,7 @@ const translations = {
     'about.countries': 'Countries',
     'about.philosophy': 'Our Philosophy',
     'about.philosophyTitle': 'Design is not just what it looks like and feels like — design is how it works.',
-    'about.philosophyText': 'At Moderno Interiors, we believe that great design starts with understanding. Understanding our clients, their needs, their dreams, and their lifestyle. This philosophy drives every decision we make, ensuring that each project is not just beautiful, but truly functional and meaningful.',
+    'about.philosophyText': 'At IEVRA Design & Build, we believe that great design starts with understanding. Understanding our clients, their needs, their dreams, and their lifestyle. This philosophy drives every decision we make, ensuring that each project is not just beautiful, but truly functional and meaningful.',
     'about.ourTeam': 'Our Team',
     'about.teamSubtitle': 'Meet the passionate professionals who bring your vision to life',
     'about.viewFullProfile': 'View Full Profile',
@@ -257,7 +257,7 @@ const translations = {
     'nav.admin': 'Quản trị',
     
     // Hero Section
-    'hero.studio': 'Moderno Interiors Design',
+    'hero.studio': 'IEVRA Design & Build',
     'hero.tagline': 'Từ ý tưởng đến hiện thực — tạo nên những công trình truyền cảm hứng và bền vững.',
     'hero.architecture': 'Kiến trúc',
     'hero.interior': 'Thiết kế nội thất',
@@ -294,7 +294,7 @@ const translations = {
     'about.title': 'Giới Thiệu',
     'about.subtitle': 'Nơi tầm nhìn kiến trúc gặp gỡ sự hoàn hảo nội thất. Chúng tôi là đội ngũ các nhà thiết kế đam mê, tạo nên những không gian đặc biệt trên toàn thế giới.',
     'about.ourStory': 'Câu Chuyện Của Chúng Tôi',
-    'about.storyParagraph1': 'Được thành lập năm 2015, Moderno Interiors đã khẳng định mình là studio thiết kế nội thất hàng đầu, tạo ra những không gian đặc biệt kết hợp hài hòa giữa tính năng và tầm nhìn nghệ thuật. Đội ngũ đoạt giải của chúng tôi chuyên về các dự án dân cư và thương mại cao cấp trên toàn thế giới.',
+    'about.storyParagraph1': 'Được thành lập năm 2015, IEVRA Design & Build đã khẳng định mình là studio thiết kế nội thất hàng đầu, tạo ra những không gian đặc biệt kết hợp hài hòa giữa tính năng và tầm nhìn nghệ thuật. Đội ngũ đoạt giải của chúng tôi chuyên về các dự án dân cư và thương mại cao cấp trên toàn thế giới.',
     'about.storyParagraph2': 'Chúng tôi tin rằng thiết kế đặc biệt có sức mạnh biến đổi không chỉ không gian, mà cả cuộc sống. Cách tiếp cận của chúng tôi kết hợp tư duy sáng tạo với vẻ đẹp vượt thời gian, tạo ra những nội thất vừa tuyệt đẹp về mặt thị giác vừa hoàn toàn phù hợp với lối sống của khách hàng.',
     'about.storyParagraph3': 'Mỗi dự án chúng tôi thực hiện là minh chứng cho cam kết về sự xuất sắc, sự chú ý đến chi tiết, và sự cống hiến để tạo ra những môi trường truyền cảm hứng và nâng cao trải nghiệm con người.',
     'about.projectsCompleted': 'Dự Án Hoàn Thành',
@@ -303,7 +303,7 @@ const translations = {
     'about.countries': 'Quốc Gia',
     'about.philosophy': 'Triết Lý Của Chúng Tôi',
     'about.philosophyTitle': 'Thiết kế không chỉ là cách nó trông và cảm giác như thế nào — thiết kế là cách nó hoạt động.',
-    'about.philosophyText': 'Tại Moderno Interiors, chúng tôi tin rằng thiết kế tuyệt vời bắt đầu từ sự hiểu biết. Hiểu biết khách hàng, nhu cầu, ước mơ và lối sống của họ. Triết lý này thúc đẩy mọi quyết định chúng tôi đưa ra, đảm bảo rằng mỗi dự án không chỉ đẹp mà còn thực sự có chức năng và ý nghĩa.',
+    'about.philosophyText': 'Tại IEVRA Design & Build, chúng tôi tin rằng thiết kế tuyệt vời bắt đầu từ sự hiểu biết. Hiểu biết khách hàng, nhu cầu, ước mơ và lối sống của họ. Triết lý này thúc đẩy mọi quyết định chúng tôi đưa ra, đảm bảo rằng mỗi dự án không chỉ đẹp mà còn thực sự có chức năng và ý nghĩa.',
     'about.ourTeam': 'Đội Ngũ Của Chúng Tôi',
     'about.teamSubtitle': 'Gặp gỡ các chuyên gia đam mê biến tầm nhìn của bạn thành hiện thực',
     'about.viewFullProfile': 'Xem Hồ Sơ Đầy Đủ',

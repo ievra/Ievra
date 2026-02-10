@@ -1046,8 +1046,8 @@ export default function Home() {
             </h2>
             <h3 className="text-3xl md:text-4xl font-light text-white scroll-animate">
               {language === "vi"
-                ? (homepageContent?.advantagesSubtitleVi || homepageContent?.advantagesSubtitle || "Tại sao chọn Moderno Interiors")
-                : (homepageContent?.advantagesSubtitle || "Why Choose Moderno Interiors")
+                ? (homepageContent?.advantagesSubtitleVi || homepageContent?.advantagesSubtitle || "Tại sao chọn IEVRA Design & Build")
+                : (homepageContent?.advantagesSubtitle || "Why Choose IEVRA Design & Build")
               }
             </h3>
           </div>

@@ -82,10 +82,10 @@ export default function Blog() {
 
   // SEO meta tags
   useEffect(() => {
-    const title = language === 'vi' ? 'Tin tức & Blog | Moderno Interiors Design' : 'News & Blog | Moderno Interiors Design';
+    const title = language === 'vi' ? 'Tin tức & Blog | IEVRA Design & Build' : 'News & Blog | IEVRA Design & Build';
     const description = language === 'vi' 
-      ? 'Khám phá những xu hướng thiết kế mới nhất, mẹo hay và những dự án truyền cảm hứng từ Moderno Interiors Design'
-      : 'Discover the latest design trends, helpful tips, and inspiring projects from Moderno Interiors Design';
+      ? 'Khám phá những xu hướng thiết kế mới nhất, mẹo hay và những dự án truyền cảm hứng từ IEVRA Design & Build'
+      : 'Discover the latest design trends, helpful tips, and inspiring projects from IEVRA Design & Build';
       
     document.title = title;
     
@@ -120,7 +120,7 @@ export default function Blog() {
     
     return () => {
       // Reset title when leaving
-      document.title = 'Moderno Interiors Design';
+      document.title = 'IEVRA Design & Build';
     };
   }, [language]);
 
@@ -367,8 +367,8 @@ export default function Blog() {
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
             {language === 'vi' 
-              ? 'Khám phá những xu hướng thiết kế mới nhất, mẹo hay và những dự án truyền cảm hứng từ Moderno Interiors Design'
-              : 'Discover the latest design trends, helpful tips, and inspiring projects from Moderno Interiors Design'
+              ? 'Khám phá những xu hướng thiết kế mới nhất, mẹo hay và những dự án truyền cảm hứng từ IEVRA Design & Build'
+              : 'Discover the latest design trends, helpful tips, and inspiring projects from IEVRA Design & Build'
             }
           </p>
         </div>
