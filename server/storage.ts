@@ -466,9 +466,9 @@ export class DatabaseStorage implements IStorage {
       conditions.push(eq(articles.language, filters.language));
     }
     
-    // For public queries, only show published articles
     if (!filters?.status) {
       conditions.push(eq(articles.status, 'published'));
+    } else if (filters.status === 'all') {
     }
     
     const query = conditions.length > 0

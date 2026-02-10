@@ -489,7 +489,12 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   });
 
   const { data: articles = [], isLoading: articlesLoading } = useQuery<Article[]>({
-    queryKey: ['/api/articles'],
+    queryKey: ['/api/articles', 'all'],
+    queryFn: async () => {
+      const res = await fetch('/api/articles?status=all');
+      if (!res.ok) throw new Error('Failed to fetch articles');
+      return res.json();
+    },
   });
 
   const { data: homepageContent, isLoading: homepageContentLoading } = useQuery<HomepageContent>({
@@ -1273,7 +1278,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     },
     onSuccess: (newArticle) => {
       // Optimistically add to cache instead of refetching
-      queryClient.setQueryData(['/api/articles'], (old: any) => {
+      queryClient.setQueryData(['/api/articles', 'all'], (old: any) => {
         if (!old) return [newArticle];
         return [newArticle, ...old];
       });
@@ -1828,7 +1833,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     },
     onSuccess: (updatedArticle) => {
       // Optimistically update the cache instead of refetching
-      queryClient.setQueryData(['/api/articles'], (old: any) => {
+      queryClient.setQueryData(['/api/articles', 'all'], (old: any) => {
         if (!old) return old;
         return old.map((article: any) => 
           article.id === updatedArticle.id ? updatedArticle : article
@@ -1849,7 +1854,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       await apiRequest('DELETE', `/api/articles/${id}`);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/articles'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/articles', 'all'] });
       toast({ title: "Đã xóa bài viết thành công" });
     },
     onError: (error: any) => {
@@ -1868,13 +1873,11 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     },
     onMutate: async ({ id, featured }) => {
       // Cancel outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ['/api/articles'] });
+      await queryClient.cancelQueries({ queryKey: ['/api/articles', 'all'] });
       
-      // Snapshot previous value
-      const previousArticles = queryClient.getQueryData(['/api/articles']);
+      const previousArticles = queryClient.getQueryData(['/api/articles', 'all']);
       
-      // Optimistically update to the new value
-      queryClient.setQueryData(['/api/articles'], (old: any) => {
+      queryClient.setQueryData(['/api/articles', 'all'], (old: any) => {
         if (!old) return old;
         return old.map((article: any) => 
           article.id === id ? { ...article, featured } : article
@@ -1886,7 +1889,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     onError: (error: any, variables, context: any) => {
       // Rollback on error
       if (context?.previousArticles) {
-        queryClient.setQueryData(['/api/articles'], context.previousArticles);
+        queryClient.setQueryData(['/api/articles', 'all'], context.previousArticles);
       }
       toast({
         title: "Lỗi khi cập nhật bài viết",
@@ -1895,7 +1898,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       });
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['/api/articles'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/articles', 'all'] });
     },
   });
 
