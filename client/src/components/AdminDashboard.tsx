@@ -7929,15 +7929,15 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 ))}
               </div>
             ) : (
-              <Table>
+              <Table className="table-fixed">
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
+                    <TableHead className="w-[120px]">{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Tiêu Đề' : 'Title'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Ngôn Ngữ' : 'Languages'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
-                    <TableHead className="w-28"></TableHead>
+                    <TableHead className="w-[80px]">{language === 'vi' ? 'Ngôn Ngữ' : 'Languages'}</TableHead>
+                    <TableHead className="w-[120px]">{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
+                    <TableHead className="w-[130px]">{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
+                    <TableHead className="w-[100px]"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -7986,7 +7986,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                               }}
                               data-testid={`badge-status-${slug}`}
                             >
-                              <SelectTrigger className="h-auto py-1 px-3 text-sm bg-transparent border-none hover:bg-white/10 w-auto gap-1">
+                              <SelectTrigger className="h-auto py-1 px-3 text-sm bg-transparent border-none hover:bg-white/10 w-[110px] gap-1">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
