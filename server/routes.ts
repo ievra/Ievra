@@ -1152,17 +1152,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Dashboard stats
   app.get("/api/dashboard/stats", async (req, res) => {
     try {
-      const [allProjects, activeClients, newInquiries] = await Promise.all([
+      const [allProjects, activeClients, allClients, newInquiries] = await Promise.all([
         storage.getProjects(),
         storage.getClients("active"),
+        storage.getClients(),
         storage.getInquiries("new")
       ]);
+
+      const totalRevenue = allClients.reduce((sum, client) => {
+        return sum + parseFloat(client.totalSpending || "0");
+      }, 0);
+
+      const formattedRevenue = totalRevenue.toLocaleString('vi-VN') + " ₫";
 
       res.json({
         totalProjects: allProjects.length,
         activeClients: activeClients.length,
         newInquiries: newInquiries.length,
-        revenue: "2.400.000.000 ₫"
+        revenue: formattedRevenue
       });
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch dashboard stats" });
