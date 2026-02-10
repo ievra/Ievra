@@ -4413,7 +4413,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     <TableHead className="w-[90px] whitespace-nowrap">{language === 'vi' ? 'Diện Tích' : 'Area'}</TableHead>
                     <TableHead className="text-left">{language === 'vi' ? 'Dự Án' : 'Project'}</TableHead>
                     <TableHead className="w-[100px] whitespace-nowrap">{language === 'vi' ? 'Ngôn Ngữ' : 'Language'}</TableHead>
-                    <TableHead className="w-[110px] whitespace-nowrap">{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
+                    <TableHead className="w-[140px] whitespace-nowrap">{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
                     <TableHead className="w-[120px] whitespace-nowrap">{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
                     <TableHead className="w-[100px] text-right"></TableHead>
                   </TableRow>
@@ -7986,7 +7986,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     <TableHead className="w-[120px] whitespace-nowrap">{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
                     <TableHead className="text-left">{language === 'vi' ? 'Tiêu Đề' : 'Title'}</TableHead>
                     <TableHead className="w-[100px] whitespace-nowrap">{language === 'vi' ? 'Ngôn Ngữ' : 'Languages'}</TableHead>
-                    <TableHead className="w-[120px] whitespace-nowrap">{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
+                    <TableHead className="w-[140px] whitespace-nowrap">{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
                     <TableHead className="w-[130px] whitespace-nowrap">{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
                     <TableHead className="w-[100px]"></TableHead>
                   </TableRow>
