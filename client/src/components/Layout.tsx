@@ -238,7 +238,7 @@ export default function Layout({ children }: LayoutProps) {
 
       <footer className="bg-black text-white pt-10 pb-12 border-t border-gray-800">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row justify-center items-start gap-8 sm:gap-16 lg:gap-32">
+          <div className="flex flex-col sm:flex-row justify-between items-start gap-8">
             <div>
               <h4 className="text-sm tracking-widest text-white mb-8 font-light uppercase">
                 {language === 'vi' ? 'VĂN PHÒNG CHÍNH' : 'CORPORATE OFFICE'}
