@@ -7987,7 +7987,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     <TableHead>{language === 'vi' ? 'Tiêu Đề' : 'Title'}</TableHead>
                     <TableHead className="w-[100px] whitespace-nowrap">{language === 'vi' ? 'Ngôn Ngữ' : 'Languages'}</TableHead>
                     <TableHead className="w-[120px] whitespace-nowrap">{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
-                    <TableHead className="w-[130px] whitespace-nowrap">{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
+                    <TableHead className="w-[130px] whitespace-nowrap text-center">{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
                     <TableHead className="w-[100px]"></TableHead>
                   </TableRow>
                 </TableHeader>
