@@ -4357,7 +4357,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     <TableHead>{language === 'vi' ? 'Năm' : 'Year'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Phong Cách' : 'Style'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Diện Tích' : 'Area'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Ngày Tạo' : 'Created'}</TableHead>
+                    <TableHead>{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
+                    <TableHead>{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
                     <TableHead className="text-right">{language === 'vi' ? 'Thao Tác' : 'Actions'}</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -4383,6 +4384,17 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       <TableCell>{primary.completionYear || "—"}</TableCell>
                       <TableCell>{primary.style || "—"}</TableCell>
                       <TableCell>{primary.area || "—"}</TableCell>
+                      <TableCell>
+                        <Badge variant="outline" className={`text-[10px] px-1.5 py-0 rounded-none ${
+                          (primary as any).status === 'published' ? 'border-green-500/30 text-green-400' :
+                          (primary as any).status === 'archived' ? 'border-white/10 text-white/40' :
+                          'border-yellow-500/30 text-yellow-400'
+                        }`}>
+                          {(primary as any).status === 'published' ? (language === 'vi' ? 'Đã Đăng' : 'Published') :
+                           (primary as any).status === 'archived' ? (language === 'vi' ? 'Lưu Trữ' : 'Archived') :
+                           (language === 'vi' ? 'Bản Nháp' : 'Draft')}
+                        </Badge>
+                      </TableCell>
                       <TableCell>{formatDate(primary.createdAt)}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end items-center gap-4">
