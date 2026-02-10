@@ -8720,16 +8720,14 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           <span className="text-white text-sm">{language === 'vi' ? 'Toàn Quyền' : 'Full Access'}</span>
                         ) : Array.isArray(tableUser.permissions) && tableUser.permissions.length > 0 ? (
                           <div className="flex flex-wrap gap-1">
-                            {tableUser.permissions.slice(0, 3).map((p: string) => (
-                              <Badge key={p} variant="outline" className="text-xs">
-                                {p}
-                              </Badge>
-                            ))}
-                            {tableUser.permissions.length > 3 && (
-                              <Badge variant="outline" className="text-xs">
-                                +{tableUser.permissions.length - 3}
-                              </Badge>
-                            )}
+                            {tableUser.permissions.map((p: string) => {
+                              const perm = AVAILABLE_PERMISSIONS.find(ap => ap.id === p);
+                              return (
+                                <Badge key={p} variant="outline" className="text-xs">
+                                  {perm ? (language === 'vi' ? perm.labelVi : perm.label) : p}
+                                </Badge>
+                              );
+                            })}
                           </div>
                         ) : (
                           <span className="text-muted-foreground text-sm">{language === 'vi' ? 'Chưa có quyền' : 'No permissions'}</span>
