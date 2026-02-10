@@ -8692,12 +8692,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       <TableCell className="font-medium">{tableUser.username}</TableCell>
                       <TableCell>{tableUser.displayName || "—"}</TableCell>
                       <TableCell>
-                        <Badge
-                          variant="secondary"
-                          className="text-white"
-                        >
+                        <span className="text-white text-[14px]">
                           {tableUser.role === 'superadmin' ? 'Super Admin' : tableUser.role === 'admin' ? 'Admin' : 'Editor'}
-                        </Badge>
+                        </span>
                       </TableCell>
                       <TableCell>
                         {tableUser.role === 'superadmin' ? (
