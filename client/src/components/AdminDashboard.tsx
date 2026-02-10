@@ -4391,7 +4391,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 <p className="text-muted-foreground">{language === 'vi' ? 'Tạo dự án đầu tiên để bắt đầu.' : 'Create your first project to get started.'}</p>
               </div>
             ) : (
-              <Table className="table-fixed">
+              <Table className="table-fixed [&_td]:py-2 [&_th]:py-2">
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[60px] whitespace-nowrap">{language === 'vi' ? 'Năm' : 'Year'}</TableHead>
@@ -7967,7 +7967,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 ))}
               </div>
             ) : (
-              <Table className="table-fixed">
+              <Table className="table-fixed [&_td]:py-2 [&_th]:py-2">
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[120px] whitespace-nowrap">{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
