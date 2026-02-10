@@ -403,7 +403,7 @@ const translations = {
     'admin.overview': 'Tổng Quan',
     'admin.crm': 'Khách Hàng',
     'admin.seo': 'SEO',
-    'admin.users': 'Người Dùng',
+    'admin.users': 'Quản Trị',
     'admin.homepage': 'Trang Chủ',
     'admin.about': 'Giới Thiệu',
     'admin.manage': 'Quản lý dự án, khách hàng và nội dung website của bạn',
