@@ -8418,9 +8418,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <div>
-            <h2 className="text-2xl font-sans font-light">User Management</h2>
+            <h2 className="text-2xl font-sans font-light">{language === 'vi' ? 'Quản Lý Người Dùng' : 'User Management'}</h2>
             <p className="text-sm text-white/50 mt-1">
-              Manage admin accounts and permissions
+              {language === 'vi' ? 'Quản lý tài khoản admin và quyền hạn' : 'Manage admin accounts and permissions'}
             </p>
           </div>
           <Dialog open={isUserDialogOpen} onOpenChange={setIsUserDialogOpen}>
@@ -8440,13 +8440,13 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 data-testid="button-add-user"
               >
                 <Plus className="mr-2 h-4 w-4" />
-                Add User
+                {language === 'vi' ? 'Thêm Người Dùng' : 'Add User'}
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>
-                  {editingUser ? "Edit User" : "Add New User"}
+                  {editingUser ? (language === 'vi' ? 'Chỉnh Sửa Người Dùng' : 'Edit User') : (language === 'vi' ? 'Thêm Người Dùng Mới' : 'Add New User')}
                 </DialogTitle>
               </DialogHeader>
               <Form {...userForm}>
@@ -8459,9 +8459,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         name="username"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Username *</FormLabel>
+                            <FormLabel>{language === 'vi' ? 'Tên Đăng Nhập *' : 'Username *'}</FormLabel>
                             <FormControl>
-                              <Input {...field} placeholder="Enter username" data-testid="input-user-username" disabled={!!editingUser} />
+                              <Input {...field} placeholder={language === 'vi' ? 'Nhập tên đăng nhập' : 'Enter username'} data-testid="input-user-username" disabled={!!editingUser} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -8474,9 +8474,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           name="password"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Password *</FormLabel>
+                              <FormLabel>{language === 'vi' ? 'Mật Khẩu *' : 'Password *'}</FormLabel>
                               <FormControl>
-                                <Input {...field} type="password" placeholder="Enter password" data-testid="input-user-password" />
+                                <Input {...field} type="password" placeholder={language === 'vi' ? 'Nhập mật khẩu' : 'Enter password'} data-testid="input-user-password" />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -8491,9 +8491,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     name="displayName"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Display Name</FormLabel>
+                        <FormLabel>{language === 'vi' ? 'Tên Hiển Thị' : 'Display Name'}</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Enter display name" data-testid="input-user-displayname" />
+                          <Input {...field} placeholder={language === 'vi' ? 'Nhập tên hiển thị' : 'Enter display name'} data-testid="input-user-displayname" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -8507,7 +8507,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       <FormItem>
                         <FormLabel>Email</FormLabel>
                         <FormControl>
-                          <Input {...field} type="email" placeholder="Enter email" data-testid="input-user-email" />
+                          <Input {...field} type="email" placeholder={language === 'vi' ? 'Nhập email' : 'Enter email'} data-testid="input-user-email" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -8521,17 +8521,17 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="role"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Role *</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Vai Trò *' : 'Role *'}</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger data-testid="select-user-role">
-                                <SelectValue placeholder="Select role" />
+                                <SelectValue placeholder={language === 'vi' ? 'Chọn vai trò' : 'Select role'} />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="superadmin">Super Admin (Full Access)</SelectItem>
-                              <SelectItem value="admin">Admin (Custom Permissions)</SelectItem>
-                              <SelectItem value="editor">Editor (Limited Access)</SelectItem>
+                              <SelectItem value="superadmin">{language === 'vi' ? 'Super Admin (Toàn Quyền)' : 'Super Admin (Full Access)'}</SelectItem>
+                              <SelectItem value="admin">{language === 'vi' ? 'Admin (Quyền Tùy Chỉnh)' : 'Admin (Custom Permissions)'}</SelectItem>
+                              <SelectItem value="editor">{language === 'vi' ? 'Editor (Quyền Hạn Chế)' : 'Editor (Limited Access)'}</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -8547,7 +8547,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="permissions"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Permissions</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Quyền Hạn' : 'Permissions'}</FormLabel>
                           <div className="border border-white/10 rounded-none p-4 space-y-3">
                             {AVAILABLE_PERMISSIONS.map((perm) => (
                               <div key={perm.id} className="flex items-center space-x-3">
@@ -8587,14 +8587,14 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         userForm.reset();
                       }}
                     >
-                      Cancel
+                      {language === 'vi' ? 'Hủy' : 'Cancel'}
                     </Button>
                     <Button
                       type="submit"
                       disabled={createUserMutation.isPending || updateUserMutation.isPending}
                       data-testid="button-save-user"
                     >
-                      {editingUser ? "Update" : "Create"} User
+                      {editingUser ? (language === 'vi' ? 'Cập Nhật' : 'Update User') : (language === 'vi' ? 'Tạo Người Dùng' : 'Create User')}
                     </Button>
                   </div>
                 </form>
@@ -8609,37 +8609,37 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2">
                 <KeyRound className="h-5 w-5" />
-                Change Password
+                {language === 'vi' ? 'Đổi Mật Khẩu' : 'Change Password'}
               </DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <label className="text-sm font-medium mb-2 block">Current Password</label>
+                <label className="text-sm font-medium mb-2 block">{language === 'vi' ? 'Mật Khẩu Hiện Tại' : 'Current Password'}</label>
                 <Input
                   type="password"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
-                  placeholder="Enter current password"
+                  placeholder={language === 'vi' ? 'Nhập mật khẩu hiện tại' : 'Enter current password'}
                   data-testid="input-current-password"
                 />
               </div>
               <div>
-                <label className="text-sm font-medium mb-2 block">New Password</label>
+                <label className="text-sm font-medium mb-2 block">{language === 'vi' ? 'Mật Khẩu Mới' : 'New Password'}</label>
                 <Input
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="Enter new password (min 6 characters)"
+                  placeholder={language === 'vi' ? 'Nhập mật khẩu mới (tối thiểu 6 ký tự)' : 'Enter new password (min 6 characters)'}
                   data-testid="input-new-password"
                 />
               </div>
               <div>
-                <label className="text-sm font-medium mb-2 block">Confirm New Password</label>
+                <label className="text-sm font-medium mb-2 block">{language === 'vi' ? 'Xác Nhận Mật Khẩu Mới' : 'Confirm New Password'}</label>
                 <Input
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Confirm new password"
+                  placeholder={language === 'vi' ? 'Xác nhận mật khẩu mới' : 'Confirm new password'}
                   data-testid="input-confirm-password"
                 />
               </div>
@@ -8654,14 +8654,14 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     setConfirmPassword("");
                   }}
                 >
-                  Cancel
+                  {language === 'vi' ? 'Hủy' : 'Cancel'}
                 </Button>
                 <Button
                   onClick={submitPasswordChange}
                   disabled={changePasswordMutation.isPending}
                   data-testid="button-submit-password"
                 >
-                  Change Password
+                  {language === 'vi' ? 'Đổi Mật Khẩu' : 'Change Password'}
                 </Button>
               </div>
             </div>
@@ -8687,19 +8687,19 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               </div>
             ) : adminUsers.length === 0 ? (
               <div className="p-12 text-center">
-                <h3 className="text-lg font-light mb-2">No users found</h3>
-                <p className="text-muted-foreground">Create your first admin user to get started.</p>
+                <h3 className="text-lg font-light mb-2">{language === 'vi' ? 'Không tìm thấy người dùng' : 'No users found'}</h3>
+                <p className="text-muted-foreground">{language === 'vi' ? 'Tạo người dùng admin đầu tiên để bắt đầu.' : 'Create your first admin user to get started.'}</p>
               </div>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Username</TableHead>
-                    <TableHead>Display Name</TableHead>
+                    <TableHead>{language === 'vi' ? 'Tên Đăng Nhập' : 'Username'}</TableHead>
+                    <TableHead>{language === 'vi' ? 'Tên Hiển Thị' : 'Display Name'}</TableHead>
                     <TableHead>Email</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Permissions</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead>{language === 'vi' ? 'Vai Trò' : 'Role'}</TableHead>
+                    <TableHead>{language === 'vi' ? 'Quyền Hạn' : 'Permissions'}</TableHead>
+                    <TableHead className="text-right">{language === 'vi' ? 'Thao Tác' : 'Actions'}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -8718,7 +8718,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       </TableCell>
                       <TableCell>
                         {tableUser.role === 'superadmin' ? (
-                          <span className="text-white text-sm">Full Access</span>
+                          <span className="text-white text-sm">{language === 'vi' ? 'Toàn Quyền' : 'Full Access'}</span>
                         ) : Array.isArray(tableUser.permissions) && tableUser.permissions.length > 0 ? (
                           <div className="flex flex-wrap gap-1">
                             {tableUser.permissions.slice(0, 3).map((p: string) => (
@@ -8733,7 +8733,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             )}
                           </div>
                         ) : (
-                          <span className="text-muted-foreground text-sm">No permissions</span>
+                          <span className="text-muted-foreground text-sm">{language === 'vi' ? 'Chưa có quyền' : 'No permissions'}</span>
                         )}
                       </TableCell>
                       <TableCell className="text-right">
@@ -8769,17 +8769,17 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                               </AlertDialogTrigger>
                               <AlertDialogContent>
                                 <AlertDialogHeader>
-                                  <AlertDialogTitle>Delete User?</AlertDialogTitle>
+                                  <AlertDialogTitle>{language === 'vi' ? 'Xóa Người Dùng?' : 'Delete User?'}</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    This will permanently delete the user "{tableUser.username}". This action cannot be undone.
+                                    {language === 'vi' ? `Xóa vĩnh viễn người dùng "${tableUser.username}". Hành động này không thể hoàn tác.` : `This will permanently delete the user "${tableUser.username}". This action cannot be undone.`}
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                  <AlertDialogCancel>{language === 'vi' ? 'Hủy' : 'Cancel'}</AlertDialogCancel>
                                   <AlertDialogAction
                                     onClick={() => deleteUserMutation.mutate(tableUser.id)}
                                   >
-                                    Delete
+                                    {language === 'vi' ? 'Xóa' : 'Delete'}
                                   </AlertDialogAction>
                                 </AlertDialogFooter>
                               </AlertDialogContent>
@@ -8800,7 +8800,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
 
   return (
     <div className="flex items-center justify-center py-12">
-      <p className="text-muted-foreground">Select a tab to view content</p>
+      <p className="text-muted-foreground">{language === 'vi' ? 'Chọn tab để xem nội dung' : 'Select a tab to view content'}</p>
     </div>
   );
 }
