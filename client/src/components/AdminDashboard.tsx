@@ -7917,18 +7917,15 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{language === 'vi' ? 'Tiêu Đề' : 'Title'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
+                    <TableHead>{language === 'vi' ? 'Tiêu Đề' : 'Title'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Ngôn Ngữ' : 'Languages'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
-                    <TableHead>SEO</TableHead>
-                    <TableHead>{language === 'vi' ? 'Thao Tác' : 'Actions'}</TableHead>
+                    <TableHead>{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {(() => {
-                    // Use paginated slugs to display articles
                     return paginatedSlugs.map((slug) => {
                       const articleGroup = groupedArticlesMap[slug];
                       const enVersion = articleGroup.find(a => a.language === 'en');
@@ -7940,49 +7937,15 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
 
                       return (
                         <TableRow key={slug} data-testid={`row-article-${slug}`}>
-                          <TableCell className="font-medium">
-                            <div>
-                              <p>{displayArticle.title}</p>
-                              {!hasEn && <p className="text-xs text-yellow-500">Missing EN</p>}
-                              {!hasVi && <p className="text-xs text-yellow-500">Missing VI</p>}
-                            </div>
-                          </TableCell>
                           <TableCell>
                             <Badge variant="outline" data-testid={`badge-category-${slug}`}>
                               {displayArticle.category}
                             </Badge>
                           </TableCell>
-                          <TableCell>
-                            <Badge
-                              variant="outline"
-                              className="text-white border-white/30"
-                              data-testid={`badge-status-${slug}`}
-                            >
-                              {language === 'vi' 
-                                ? (displayArticle.status === 'draft' ? 'Bản Nháp' : displayArticle.status === 'published' ? 'Đã Đăng' : 'Lưu Trữ')
-                                : displayArticle.status}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex space-x-1">
-                              {hasEn && <Badge variant="outline" className="text-xs">EN</Badge>}
-                              {hasVi && <Badge variant="outline" className="text-xs">VI</Badge>}
-                            </div>
-                          </TableCell>
-                          <TableCell data-testid={`text-published-${slug}`}>
-                            {displayArticle.publishedAt ? formatDate(displayArticle.publishedAt) : '-'}
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex space-x-1">
-                              {displayArticle.metaTitle && <Badge variant="outline" className="text-xs">Title</Badge>}
-                              {displayArticle.metaDescription && <Badge variant="outline" className="text-xs">Desc</Badge>}
-                              {displayArticle.metaKeywords && <Badge variant="outline" className="text-xs">Keywords</Badge>}
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-4">
+                          <TableCell className="font-medium">
+                            <div className="flex items-center gap-3">
                               <Star 
-                                className={`h-4 w-4 cursor-pointer ${displayArticle.featured ? 'text-white fill-white' : 'text-white/50 hover:text-white'} ${togglingFeaturedSlug === slug ? "opacity-50" : ""}`}
+                                className={`h-4 w-4 cursor-pointer flex-shrink-0 ${displayArticle.featured ? 'text-white fill-white' : 'text-white/50 hover:text-white'} ${togglingFeaturedSlug === slug ? "opacity-50" : ""}`}
                                 onClick={async () => {
                                   if (togglingFeaturedSlug === slug) return;
                                   setTogglingFeaturedSlug(slug);
@@ -8000,15 +7963,13 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 }}
                                 data-testid={`button-toggle-featured-${slug}`}
                               />
-                              <Pencil 
-                                className="h-4 w-4 cursor-pointer text-white/50 hover:text-white"
-                                onClick={() => handleEditArticle(displayArticle)}
-                                data-testid={`button-edit-article-${slug}`}
-                              />
+                              <span className="cursor-pointer hover:text-white/80" onClick={() => handleEditArticle(displayArticle)} data-testid={`button-edit-article-${slug}`}>
+                                {displayArticle.title}
+                              </span>
                               <AlertDialog>
                                 <AlertDialogTrigger asChild>
                                   <Trash2 
-                                    className="h-4 w-4 cursor-pointer text-white/50 hover:text-red-400"
+                                    className="h-4 w-4 cursor-pointer flex-shrink-0 text-white/50 hover:text-white"
                                     data-testid={`button-delete-article-${slug}`}
                                   />
                                 </AlertDialogTrigger>
@@ -8024,12 +7985,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                     <AlertDialogAction
                                       onClick={async () => {
                                         try {
-                                          // Delete all versions (en and vi)
                                           for (const article of articleGroup) {
                                             await deleteArticleMutation.mutateAsync(article.id);
                                           }
                                         } catch (error) {
-                                          // Error is handled by mutation's onError handler
                                         }
                                       }}
                                     >
@@ -8039,6 +7998,26 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 </AlertDialogContent>
                               </AlertDialog>
                             </div>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex space-x-1">
+                              {hasEn && <Badge variant="outline" className="text-xs">EN</Badge>}
+                              {hasVi && <Badge variant="outline" className="text-xs">VI</Badge>}
+                            </div>
+                          </TableCell>
+                          <TableCell data-testid={`text-published-${slug}`}>
+                            {displayArticle.publishedAt ? formatDate(displayArticle.publishedAt) : '-'}
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              variant="outline"
+                              className="text-white border-white/30"
+                              data-testid={`badge-status-${slug}`}
+                            >
+                              {language === 'vi' 
+                                ? (displayArticle.status === 'draft' ? 'Bản Nháp' : displayArticle.status === 'published' ? 'Đã Đăng' : 'Lưu Trữ')
+                                : displayArticle.status}
+                            </Badge>
                           </TableCell>
                         </TableRow>
                       );
