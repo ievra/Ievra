@@ -4347,18 +4347,18 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 <p className="text-muted-foreground">{language === 'vi' ? 'Tạo dự án đầu tiên để bắt đầu.' : 'Create your first project to get started.'}</p>
               </div>
             ) : (
-              <Table>
+              <Table className="table-fixed">
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Năm' : 'Year'}</TableHead>
+                    <TableHead className="w-[110px] whitespace-nowrap">{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
+                    <TableHead className="w-[60px] whitespace-nowrap">{language === 'vi' ? 'Năm' : 'Year'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Dự Án' : 'Project'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Ngôn Ngữ' : 'Language'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Phong Cách' : 'Style'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Diện Tích' : 'Area'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
-                    <TableHead className="text-right"></TableHead>
+                    <TableHead className="w-[100px] whitespace-nowrap">{language === 'vi' ? 'Ngôn Ngữ' : 'Language'}</TableHead>
+                    <TableHead className="w-[110px] whitespace-nowrap">{language === 'vi' ? 'Phong Cách' : 'Style'}</TableHead>
+                    <TableHead className="w-[90px] whitespace-nowrap">{language === 'vi' ? 'Diện Tích' : 'Area'}</TableHead>
+                    <TableHead className="w-[110px] whitespace-nowrap">{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
+                    <TableHead className="w-[120px] whitespace-nowrap">{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
+                    <TableHead className="w-[100px] text-right"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -5754,15 +5754,15 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 <p className="text-muted-foreground">{language === 'vi' ? 'Yêu cầu mới sẽ hiển thị ở đây khi được gửi.' : 'New inquiries will appear here when submitted.'}</p>
               </div>
             ) : (
-              <Table>
+              <Table className="table-fixed">
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{language === 'vi' ? 'Liên Hệ' : 'Contact'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Loại Dự Án' : 'Project Type'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Ngân Sách' : 'Budget'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Ngày' : 'Date'}</TableHead>
-                    <TableHead className="text-right">{language === 'vi' ? 'Thao Tác' : 'Actions'}</TableHead>
+                    <TableHead className="w-[200px] whitespace-nowrap">{language === 'vi' ? 'Liên Hệ' : 'Contact'}</TableHead>
+                    <TableHead className="w-[140px] whitespace-nowrap">{language === 'vi' ? 'Loại Dự Án' : 'Project Type'}</TableHead>
+                    <TableHead className="w-[120px] whitespace-nowrap">{language === 'vi' ? 'Ngân Sách' : 'Budget'}</TableHead>
+                    <TableHead className="w-[120px] whitespace-nowrap">{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
+                    <TableHead className="w-[110px] whitespace-nowrap">{language === 'vi' ? 'Ngày' : 'Date'}</TableHead>
+                    <TableHead className="w-[100px] text-right whitespace-nowrap"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -7926,11 +7926,11 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               <Table className="table-fixed">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[120px]">{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
+                    <TableHead className="w-[120px] whitespace-nowrap">{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Tiêu Đề' : 'Title'}</TableHead>
                     <TableHead className="w-[100px] whitespace-nowrap">{language === 'vi' ? 'Ngôn Ngữ' : 'Languages'}</TableHead>
-                    <TableHead className="w-[120px]">{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
-                    <TableHead className="w-[130px]">{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
+                    <TableHead className="w-[120px] whitespace-nowrap">{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
+                    <TableHead className="w-[130px] whitespace-nowrap">{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
                     <TableHead className="w-[100px]"></TableHead>
                   </TableRow>
                 </TableHeader>
@@ -8710,14 +8710,14 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 <p className="text-muted-foreground">{language === 'vi' ? 'Tạo người dùng admin đầu tiên để bắt đầu.' : 'Create your first admin user to get started.'}</p>
               </div>
             ) : (
-              <Table>
+              <Table className="table-fixed">
                 <TableHeader>
                   <TableRow>
-                    <TableHead>{language === 'vi' ? 'Tên Đăng Nhập' : 'Username'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Tên Hiển Thị' : 'Display Name'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Vai Trò' : 'Role'}</TableHead>
+                    <TableHead className="w-[150px] whitespace-nowrap">{language === 'vi' ? 'Tên Đăng Nhập' : 'Username'}</TableHead>
+                    <TableHead className="w-[160px] whitespace-nowrap">{language === 'vi' ? 'Tên Hiển Thị' : 'Display Name'}</TableHead>
+                    <TableHead className="w-[120px] whitespace-nowrap">{language === 'vi' ? 'Vai Trò' : 'Role'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Quyền Hạn' : 'Permissions'}</TableHead>
-                    <TableHead className="text-right">{language === 'vi' ? 'Thao Tác' : 'Actions'}</TableHead>
+                    <TableHead className="w-[100px] text-right whitespace-nowrap"></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
