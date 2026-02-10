@@ -625,15 +625,26 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     }
   }, [clients.length, currentPage, totalPages]);
 
-  // Pagination state for Projects - show only English version in table
+  // Pagination state for Projects - group by slug, then paginate
   const [projectsPage, setProjectsPage] = useState(1);
   const projectsPerPage = 10;
-  // Show all projects regardless of language - the form handles bilingual versions
-  const allProjects = projects;
-  const projectsTotalPages = Math.ceil(allProjects.length / projectsPerPage);
+  const groupedProjectsMap = projects.reduce((acc, project) => {
+    const key = project.slug || project.id;
+    if (!acc[key]) {
+      acc[key] = [];
+    }
+    acc[key].push(project);
+    return acc;
+  }, {} as Record<string, Project[]>);
+  const uniqueProjectSlugs = Object.keys(groupedProjectsMap).sort((a, b) => {
+    const aDate = Math.max(...groupedProjectsMap[a].map(p => new Date(p.createdAt).getTime()));
+    const bDate = Math.max(...groupedProjectsMap[b].map(p => new Date(p.createdAt).getTime()));
+    return bDate - aDate;
+  });
+  const projectsTotalPages = Math.ceil(uniqueProjectSlugs.length / projectsPerPage);
   const projectsStartIndex = (projectsPage - 1) * projectsPerPage;
   const projectsEndIndex = projectsStartIndex + projectsPerPage;
-  const paginatedProjects = allProjects.slice(projectsStartIndex, projectsEndIndex);
+  const paginatedProjectSlugs = uniqueProjectSlugs.slice(projectsStartIndex, projectsEndIndex);
 
   // Pagination state for Articles - group by slug first, then paginate
   const [articlesPage, setArticlesPage] = useState(1);
@@ -4340,6 +4351,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 <TableHeader>
                   <TableRow>
                     <TableHead>{language === 'vi' ? 'Dự Án' : 'Project'}</TableHead>
+                    <TableHead>{language === 'vi' ? 'Ngôn Ngữ' : 'Language'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Địa Điểm' : 'Location'}</TableHead>
                     <TableHead>{language === 'vi' ? 'Năm' : 'Year'}</TableHead>
@@ -4350,52 +4362,68 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {paginatedProjects.map((project) => (
-                    <TableRow key={project.id} data-testid={`row-project-${project.id}`}>
+                  {paginatedProjectSlugs.map((slug) => {
+                    const group = groupedProjectsMap[slug];
+                    const hasVi = group.some(p => p.language === 'vi');
+                    const hasEn = group.some(p => p.language === 'en');
+                    const primary = (language === 'vi' ? group.find(p => p.language === 'vi') : group.find(p => p.language === 'en')) || group[0];
+                    return (
+                    <TableRow key={primary.id} data-testid={`row-project-${primary.id}`}>
                       <TableCell>
-                        <p className="font-light">{project.title}</p>
+                        <p className="font-light">{primary.title}</p>
                       </TableCell>
-                      <TableCell className="capitalize">{project.category}</TableCell>
-                      <TableCell>{project.location || "—"}</TableCell>
-                      <TableCell>{project.completionYear || "—"}</TableCell>
-                      <TableCell>{project.style || "—"}</TableCell>
-                      <TableCell>{project.area || "—"}</TableCell>
-                      <TableCell>{formatDate(project.createdAt)}</TableCell>
+                      <TableCell>
+                        <div className="flex gap-1">
+                          {hasVi && <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-white/20 text-white/70 rounded-none">VI</Badge>}
+                          {hasEn && <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-white/20 text-white/70 rounded-none">EN</Badge>}
+                        </div>
+                      </TableCell>
+                      <TableCell className="capitalize">{primary.category}</TableCell>
+                      <TableCell>{primary.location || "—"}</TableCell>
+                      <TableCell>{primary.completionYear || "—"}</TableCell>
+                      <TableCell>{primary.style || "—"}</TableCell>
+                      <TableCell>{primary.area || "—"}</TableCell>
+                      <TableCell>{formatDate(primary.createdAt)}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end items-center gap-4">
                           <Pencil 
                             className="h-4 w-4 cursor-pointer text-white/50 hover:text-white"
-                            onClick={() => handleEditProject(project)}
-                            data-testid={`button-edit-project-${project.id}`}
+                            onClick={() => handleEditProject(primary)}
+                            data-testid={`button-edit-project-${primary.id}`}
                           />
                           <Star 
-                            className={`h-4 w-4 cursor-pointer ${project.featured ? 'text-white fill-white' : 'text-white/50 hover:text-white'}`}
+                            className={`h-4 w-4 cursor-pointer ${primary.featured ? 'text-white fill-white' : 'text-white/50 hover:text-white'}`}
                             onClick={() => {
-                              updateProjectMutation.mutate({
-                                id: project.id,
-                                data: { featured: !project.featured }
+                              group.forEach(p => {
+                                updateProjectMutation.mutate({
+                                  id: p.id,
+                                  data: { featured: !primary.featured }
+                                });
                               });
                             }}
-                            data-testid={`button-toggle-featured-${project.id}`}
-                            title={project.featured ? "Remove from featured" : "Mark as featured"}
+                            data-testid={`button-toggle-featured-${primary.id}`}
+                            title={primary.featured ? "Remove from featured" : "Mark as featured"}
                           />
                           <Trash2 
                             className="h-4 w-4 cursor-pointer text-white/50 hover:text-red-400"
                             onClick={() => {
-                              if (window.confirm(language === 'vi' ? `Bạn có chắc chắn muốn xóa dự án "${project.title}"?` : `Are you sure you want to delete project "${project.title}"?`)) {
-                                deleteProjectMutation.mutate(project.id);
+                              if (window.confirm(language === 'vi' ? `Bạn có chắc chắn muốn xóa dự án "${primary.title}"?` : `Are you sure you want to delete project "${primary.title}"?`)) {
+                                group.forEach(p => {
+                                  deleteProjectMutation.mutate(p.id);
+                                });
                               }
                             }}
-                            data-testid={`button-delete-project-${project.id}`}
+                            data-testid={`button-delete-project-${primary.id}`}
                           />
                         </div>
                       </TableCell>
                     </TableRow>
-                  ))}
+                    );
+                  })}
                 </TableBody>
               </Table>
             )}
-            {projects.length > 10 && (
+            {uniqueProjectSlugs.length > 10 && (
               <div className="p-4 border-t border-white/10">
                   <div className="flex items-center justify-center gap-2">
                     <Button
@@ -4448,7 +4476,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   </div>
                   <div className="text-center mt-2">
                     <span className="text-xs text-muted-foreground">
-                      {language === 'vi' ? `Hiển thị ${projectsStartIndex + 1}-${Math.min(projectsEndIndex, projects.length)} trên ${projects.length} dự án` : `Showing ${projectsStartIndex + 1}-${Math.min(projectsEndIndex, projects.length)} of ${projects.length} projects`}
+                      {language === 'vi' ? `Hiển thị ${projectsStartIndex + 1}-${Math.min(projectsEndIndex, uniqueProjectSlugs.length)} trên ${uniqueProjectSlugs.length} dự án` : `Showing ${projectsStartIndex + 1}-${Math.min(projectsEndIndex, uniqueProjectSlugs.length)} of ${uniqueProjectSlugs.length} projects`}
                     </span>
                   </div>
                 </div>
