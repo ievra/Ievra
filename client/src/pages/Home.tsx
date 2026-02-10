@@ -608,7 +608,7 @@ export default function Home() {
             <div className="mb-8">
               <img
                 src="/api/assets/logo.white.png"
-                alt="Moderno Interiors"
+                alt="IEVRA Design & Build"
                 className="h-24 md:h-32 w-auto mx-auto"
               />
             </div>

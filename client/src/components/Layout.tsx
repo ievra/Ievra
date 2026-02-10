@@ -165,7 +165,7 @@ export default function Layout({ children }: LayoutProps) {
           >
             <img 
               src={logoSrc} 
-              alt="MODERNO INTERIORS DESIGN" 
+              alt="IEVRA Design & Build" 
               className="h-8 md:h-10 w-auto hover:opacity-80 transition-opacity"
             />
           </Link>
@@ -350,7 +350,7 @@ export default function Layout({ children }: LayoutProps) {
                 >
                   <img 
                     src={logoSrc} 
-                    alt="Moderno Interiors" 
+                    alt="IEVRA Design & Build" 
                     className="h-12 w-auto hover:opacity-80 transition-opacity"
                   />
                 </Link>
@@ -557,7 +557,7 @@ export default function Layout({ children }: LayoutProps) {
           
           <div className="mt-5 pt-5 text-center border-t border-gray-800">
             <p className="text-white/60 text-base font-light">
-              © 2025 Moderno Interiors Design
+              © 2025 IEVRA Design & Build
             </p>
           </div>
         </div>
