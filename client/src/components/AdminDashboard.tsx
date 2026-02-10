@@ -207,7 +207,6 @@ const AVAILABLE_PERMISSIONS = [
   { id: 'homepage', label: 'Homepage', labelVi: 'Trang Chủ' },
   { id: 'about', label: 'About', labelVi: 'Giới Thiệu' },
   { id: 'content', label: 'SEO', labelVi: 'SEO' },
-  { id: 'partners', label: 'Partners', labelVi: 'Đối Tác' },
 ];
 
 const faqSchema = z.object({
