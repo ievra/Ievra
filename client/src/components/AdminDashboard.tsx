@@ -8061,6 +8061,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           </Select>
         </div>
 
+        <Card>
+          <CardContent className="p-0">
             {articlesLoading ? (
               <div className="space-y-2">
                 {[1, 2, 3].map((i) => (
