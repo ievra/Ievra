@@ -7476,7 +7476,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         </div>
 
         <Card>
-          <CardContent className="pt-6">
+          <CardContent className="p-0">
             <Dialog open={isArticleDialogOpen} onOpenChange={setIsArticleDialogOpen}>
             <DialogContent className="max-w-4xl max-h-[85vh] flex flex-col">
               <DialogHeader>
