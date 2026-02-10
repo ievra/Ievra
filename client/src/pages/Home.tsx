@@ -857,15 +857,18 @@ export default function Home() {
                       onClick={() => navigate(`/blog/${article.slug}`)}
                     >
                       <div className="relative">
-                        <img
-                          src={
-                            article.featuredImage || article.featuredImageData ||
-                            "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600"
-                          }
-                          alt={article.title}
-                          className="w-full h-48 object-cover"
-                          data-testid={`img-article-${article.id}`}
-                        />
+                        {(article.featuredImage || article.featuredImageData) ? (
+                          <img
+                            src={article.featuredImage || article.featuredImageData || ''}
+                            alt={article.title}
+                            className="w-full h-48 object-cover"
+                            data-testid={`img-article-${article.id}`}
+                          />
+                        ) : (
+                          <div className="w-full h-48 bg-black flex items-center justify-center">
+                            <div className="text-6xl font-sans font-light text-primary/30">N</div>
+                          </div>
+                        )}
                         <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       </div>
                       <CardContent className="p-6">
