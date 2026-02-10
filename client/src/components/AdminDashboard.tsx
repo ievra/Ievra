@@ -7421,6 +7421,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   <Button 
                     onClick={() => {
                       setEditingArticle(null);
+                      setArticleImagePreview('');
+                      setArticleImageFile(null);
+                      setArticleContentImages([]);
                       articleForm.reset({
                         titleEn: "",
                         titleVi: "",
@@ -7877,6 +7880,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       onClick={() => {
                         setIsArticleDialogOpen(false);
                         setEditingArticle(null);
+                        setArticleImagePreview('');
+                        setArticleImageFile(null);
+                        setArticleContentImages([]);
                         articleForm.reset();
                       }}
                       data-testid="button-cancel-article"
