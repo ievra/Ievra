@@ -3346,7 +3346,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     return (
       <div className="space-y-6">
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-sans font-light">Projects Management</h2>
+          <h2 className="text-2xl font-sans font-light">{language === 'vi' ? 'Quản Lý Dự Án' : 'Projects Management'}</h2>
           <div className="flex gap-2">
             <Button
               variant="outline"
@@ -3355,19 +3355,19 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               className="h-10 px-4"
             >
               <Settings className="mr-2 h-4 w-4" />
-              Category Settings
+              {language === 'vi' ? 'Cài Đặt Danh Mục' : 'Category Settings'}
             </Button>
             <Dialog open={isProjectDialogOpen} onOpenChange={setIsProjectDialogOpen}>
               <DialogTrigger asChild>
                 <Button data-testid="button-add-project" className="h-10 px-4">
                   <Plus className="mr-2 h-4 w-4" />
-                  Add Project
+                  {language === 'vi' ? 'Thêm Dự Án' : 'Add Project'}
                 </Button>
               </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>
-                  {editingProject ? "Edit Project" : "Add New Project"}
+                  {editingProject ? (language === 'vi' ? 'Chỉnh Sửa Dự Án' : 'Edit Project') : (language === 'vi' ? 'Thêm Dự Án Mới' : 'Add New Project')}
                 </DialogTitle>
               </DialogHeader>
               <Form {...projectForm}>
@@ -4292,21 +4292,21 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               </div>
             ) : projects.length === 0 ? (
               <div className="p-12 text-center">
-                <h3 className="text-lg font-light mb-2">No projects found</h3>
-                <p className="text-muted-foreground">Create your first project to get started.</p>
+                <h3 className="text-lg font-light mb-2">{language === 'vi' ? 'Không tìm thấy dự án nào' : 'No projects found'}</h3>
+                <p className="text-muted-foreground">{language === 'vi' ? 'Tạo dự án đầu tiên để bắt đầu.' : 'Create your first project to get started.'}</p>
               </div>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Project</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead>Location</TableHead>
-                    <TableHead>Year</TableHead>
-                    <TableHead>Style</TableHead>
-                    <TableHead>Area</TableHead>
-                    <TableHead>Created</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead>{language === 'vi' ? 'Dự Án' : 'Project'}</TableHead>
+                    <TableHead>{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
+                    <TableHead>{language === 'vi' ? 'Địa Điểm' : 'Location'}</TableHead>
+                    <TableHead>{language === 'vi' ? 'Năm' : 'Year'}</TableHead>
+                    <TableHead>{language === 'vi' ? 'Phong Cách' : 'Style'}</TableHead>
+                    <TableHead>{language === 'vi' ? 'Diện Tích' : 'Area'}</TableHead>
+                    <TableHead>{language === 'vi' ? 'Ngày Tạo' : 'Created'}</TableHead>
+                    <TableHead className="text-right">{language === 'vi' ? 'Thao Tác' : 'Actions'}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -5709,7 +5709,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     }
     return (
       <div className="space-y-6">
-        <h2 className="text-2xl font-sans font-light">Inquiry Management</h2>
+        <h2 className="text-2xl font-sans font-light">{language === 'vi' ? 'Quản Lý Yêu Cầu' : 'Inquiry Management'}</h2>
 
         <Card>
           <CardContent className="p-0">
@@ -5729,19 +5729,19 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               </div>
             ) : inquiries.length === 0 ? (
               <div className="p-12 text-center">
-                <h3 className="text-lg font-light mb-2">No inquiries found</h3>
-                <p className="text-muted-foreground">New inquiries will appear here when submitted.</p>
+                <h3 className="text-lg font-light mb-2">{language === 'vi' ? 'Không có yêu cầu nào' : 'No inquiries found'}</h3>
+                <p className="text-muted-foreground">{language === 'vi' ? 'Yêu cầu mới sẽ hiển thị ở đây khi được gửi.' : 'New inquiries will appear here when submitted.'}</p>
               </div>
             ) : (
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Contact</TableHead>
-                    <TableHead>Project Type</TableHead>
-                    <TableHead>Budget</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead>{language === 'vi' ? 'Liên Hệ' : 'Contact'}</TableHead>
+                    <TableHead>{language === 'vi' ? 'Loại Dự Án' : 'Project Type'}</TableHead>
+                    <TableHead>{language === 'vi' ? 'Ngân Sách' : 'Budget'}</TableHead>
+                    <TableHead>{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
+                    <TableHead>{language === 'vi' ? 'Ngày' : 'Date'}</TableHead>
+                    <TableHead className="text-right">{language === 'vi' ? 'Thao Tác' : 'Actions'}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -5766,10 +5766,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="new">New</SelectItem>
-                            <SelectItem value="reviewed">Reviewed</SelectItem>
-                            <SelectItem value="contacted">Contacted</SelectItem>
-                            <SelectItem value="converted">Converted</SelectItem>
+                            <SelectItem value="new">{language === 'vi' ? 'Mới' : 'New'}</SelectItem>
+                            <SelectItem value="reviewed">{language === 'vi' ? 'Đã Xem' : 'Reviewed'}</SelectItem>
+                            <SelectItem value="contacted">{language === 'vi' ? 'Đã Liên Hệ' : 'Contacted'}</SelectItem>
+                            <SelectItem value="converted">{language === 'vi' ? 'Đã Chuyển Đổi' : 'Converted'}</SelectItem>
                           </SelectContent>
                         </Select>
                       </TableCell>
@@ -5784,22 +5784,22 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             </DialogTrigger>
                             <DialogContent>
                               <DialogHeader>
-                                <DialogTitle>Inquiry Details</DialogTitle>
+                                <DialogTitle>{language === 'vi' ? 'Chi Tiết Yêu Cầu' : 'Inquiry Details'}</DialogTitle>
                               </DialogHeader>
                               <div className="space-y-4">
                                 <div>
-                                  <h4 className="font-light mb-1">Contact Information</h4>
+                                  <h4 className="font-light mb-1">{language === 'vi' ? 'Thông Tin Liên Hệ' : 'Contact Information'}</h4>
                                   <p>{inquiry.firstName} {inquiry.lastName}</p>
                                   <p className="text-muted-foreground">{inquiry.email}</p>
                                   {inquiry.phone && <p className="text-muted-foreground">{inquiry.phone}</p>}
                                 </div>
                                 <div>
-                                  <h4 className="font-light mb-1">Project Details</h4>
-                                  <p>Type: {inquiry.projectType}</p>
-                                  {inquiry.budget && <p>Budget: {inquiry.budget}</p>}
+                                  <h4 className="font-light mb-1">{language === 'vi' ? 'Chi Tiết Dự Án' : 'Project Details'}</h4>
+                                  <p>{language === 'vi' ? 'Loại:' : 'Type:'} {inquiry.projectType}</p>
+                                  {inquiry.budget && <p>{language === 'vi' ? 'Ngân sách:' : 'Budget:'} {inquiry.budget}</p>}
                                 </div>
                                 <div>
-                                  <h4 className="font-light mb-1">Message</h4>
+                                  <h4 className="font-light mb-1">{language === 'vi' ? 'Tin Nhắn' : 'Message'}</h4>
                                   <p className="text-muted-foreground">{inquiry.message}</p>
                                 </div>
                               </div>
@@ -5814,23 +5814,23 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             </AlertDialogTrigger>
                             <AlertDialogContent className="bg-black/95 backdrop-blur-xl border border-white/20 rounded-none">
                               <AlertDialogHeader>
-                                <AlertDialogTitle>Delete Inquiry</AlertDialogTitle>
+                                <AlertDialogTitle>{language === 'vi' ? 'Xóa Yêu Cầu' : 'Delete Inquiry'}</AlertDialogTitle>
                                 <AlertDialogDescription>
-                                  Are you sure you want to delete this inquiry from <strong>{inquiry.firstName} {inquiry.lastName}</strong>?
+                                  {language === 'vi' ? 'Bạn có chắc chắn muốn xóa yêu cầu từ' : 'Are you sure you want to delete this inquiry from'} <strong>{inquiry.firstName} {inquiry.lastName}</strong>?
                                   <br />
-                                  This action cannot be undone.
+                                  {language === 'vi' ? 'Hành động này không thể hoàn tác.' : 'This action cannot be undone.'}
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
                                 <AlertDialogCancel className="bg-black border-white/30 hover:border-white hover:bg-white/10 rounded-none">
-                                  Cancel
+                                  {language === 'vi' ? 'Hủy' : 'Cancel'}
                                 </AlertDialogCancel>
                                 <AlertDialogAction
                                   onClick={() => deleteInquiryMutation.mutate(inquiry.id)}
                                   className="bg-white hover:bg-white/90 text-black rounded-none"
                                   disabled={deleteInquiryMutation.isPending}
                                 >
-                                  {deleteInquiryMutation.isPending ? "Deleting..." : "Delete"}
+                                  {deleteInquiryMutation.isPending ? (language === 'vi' ? 'Đang xóa...' : 'Deleting...') : (language === 'vi' ? 'Xóa' : 'Delete')}
                                 </AlertDialogAction>
                               </AlertDialogFooter>
                             </AlertDialogContent>
@@ -6064,13 +6064,13 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     }
     return (
       <div className="space-y-6">
-        <h2 className="text-2xl font-sans font-light">Homepage Content Management</h2>
+        <h2 className="text-2xl font-sans font-light">{language === 'vi' ? 'Quản Lý Nội Dung Trang Chủ' : 'Homepage Content Management'}</h2>
         
         <Form {...homepageContentForm}>
           <form onSubmit={homepageContentForm.handleSubmit(onHomepageContentSubmit)} className="space-y-6">
             <Card>
           <CardHeader>
-            <CardTitle>Section Titles Management</CardTitle>
+            <CardTitle>{language === 'vi' ? 'Quản Lý Tiêu Đề Mục' : 'Section Titles Management'}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
