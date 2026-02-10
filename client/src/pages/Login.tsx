@@ -83,7 +83,6 @@ export default function Login() {
                   />
                 </div>
                 
-                <div className="w-12 h-px bg-white/20 mx-auto mb-4"></div>
               </div>
               
               {/* Form Section */}
