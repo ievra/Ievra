@@ -74,7 +74,7 @@ export default function Layout({ children }: LayoutProps) {
               <Link
                 key={item.key}
                 href={item.href}
-                className={`text-[13px] font-light tracking-widest uppercase transition-colors ${
+                className={`text-[13px] font-light tracking-widest uppercase transition-colors nav-link-underline ${
                   isActive(item.href)
                     ? 'text-white'
                     : 'text-white/70 hover:text-white'
