@@ -4074,7 +4074,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         <Dialog open={isCategoryManagementDialogOpen} onOpenChange={setIsCategoryManagementDialogOpen}>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-black border border-white/20 rounded-none">
             <DialogHeader>
-              <DialogTitle className="text-2xl font-light">Project Categories Management</DialogTitle>
+              <DialogTitle className="text-2xl font-light">{language === 'vi' ? 'Quản Lý Danh Mục Dự Án' : 'Project Categories Management'}</DialogTitle>
             </DialogHeader>
             <div className="space-y-6">
               <div className="flex justify-end">
@@ -4082,25 +4082,25 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   <DialogTrigger asChild>
                     <Button data-testid="button-add-category">
                       <Plus className="mr-2 h-4 w-4" />
-                      Add Project Category
+                      {language === 'vi' ? 'Thêm Danh Mục' : 'Add Project Category'}
                     </Button>
                   </DialogTrigger>
                   <DialogContent>
                     <DialogHeader>
-                      <DialogTitle>Add New Project Category</DialogTitle>
+                      <DialogTitle>{language === 'vi' ? 'Thêm Danh Mục Mới' : 'Add New Project Category'}</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-4">
                       <div>
-                        <label className="text-sm font-medium">Category Name (English)</label>
+                        <label className="text-sm font-medium">{language === 'vi' ? 'Tên Danh Mục (Tiếng Anh)' : 'Category Name (English)'}</label>
                         <Input
                           value={newCategoryName}
                           onChange={(e) => setNewCategoryName(e.target.value)}
-                          placeholder="Enter category name in English"
+                          placeholder={language === 'vi' ? 'Nhập tên danh mục tiếng Anh' : 'Enter category name in English'}
                           data-testid="input-category-name"
                         />
                       </div>
                       <div>
-                        <label className="text-sm font-medium">Category Name (Vietnamese)</label>
+                        <label className="text-sm font-medium">{language === 'vi' ? 'Tên Danh Mục (Tiếng Việt)' : 'Category Name (Vietnamese)'}</label>
                         <Input
                           value={newCategoryNameVi}
                           onChange={(e) => setNewCategoryNameVi(e.target.value)}
@@ -4117,7 +4117,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             setNewCategoryNameVi("");
                           }}
                         >
-                          Cancel
+                          {language === 'vi' ? 'Hủy' : 'Cancel'}
                         </Button>
                         <Button
                           onClick={() => {
@@ -4137,7 +4137,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           disabled={!newCategoryName.trim() || createCategoryMutation.isPending}
                           data-testid="button-save-category"
                         >
-                          Create Category
+                          {language === 'vi' ? 'Tạo Danh Mục' : 'Create Category'}
                         </Button>
                       </div>
                     </div>
@@ -4146,10 +4146,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               </div>
 
               <div>
-                <h3 className="text-sm font-medium mb-2 uppercase tracking-wide">Project Categories</h3>
+                <h3 className="text-sm font-medium mb-2 uppercase tracking-wide">{language === 'vi' ? 'Danh Mục Dự Án' : 'Project Categories'}</h3>
                 <div className="space-y-2">
                   {categories.filter(cat => cat.type === 'project' && cat.active).length === 0 ? (
-                    <p className="text-sm text-muted-foreground">No project categories</p>
+                    <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Chưa có danh mục' : 'No project categories'}</p>
                   ) : (
                     categories
                       .filter(cat => cat.type === 'project' && cat.active)
@@ -4198,11 +4198,12 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         <AlertDialog open={isDeleteCategoryAlertOpen} onOpenChange={setIsDeleteCategoryAlertOpen}>
           <AlertDialogContent className="bg-black border border-white/20 rounded-none">
             <AlertDialogHeader>
-              <AlertDialogTitle className="text-xl font-light">Confirm Category Deletion</AlertDialogTitle>
+              <AlertDialogTitle className="text-xl font-light">{language === 'vi' ? 'Xác Nhận Xóa Danh Mục' : 'Confirm Category Deletion'}</AlertDialogTitle>
               <AlertDialogDescription className="text-white/70">
-                Are you sure you want to delete the category <span className="font-medium text-white">"{deleteCategoryData?.name}"</span>?
-                <br /><br />
-                <span className="text-red-400">This action cannot be undone.</span> Please confirm to proceed.
+                {language === 'vi' 
+                  ? <>Bạn có chắc chắn muốn xóa danh mục <span className="font-medium text-white">"{deleteCategoryData?.name}"</span>?<br /><br /><span className="text-red-400">Hành động này không thể hoàn tác.</span></>
+                  : <>Are you sure you want to delete the category <span className="font-medium text-white">"{deleteCategoryData?.name}"</span>?<br /><br /><span className="text-red-400">This action cannot be undone.</span> Please confirm to proceed.</>
+                }
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -4213,7 +4214,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   setIsDeleteCategoryAlertOpen(false);
                 }}
               >
-                Cancel
+                {language === 'vi' ? 'Hủy' : 'Cancel'}
               </AlertDialogCancel>
               <AlertDialogAction
                 className="bg-red-600 hover:bg-red-700 text-white rounded-none"
@@ -4226,7 +4227,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 }}
                 data-testid="button-confirm-delete-category"
               >
-                Delete Category
+                {language === 'vi' ? 'Xóa Danh Mục' : 'Delete Category'}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -4239,20 +4240,20 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         }}>
           <DialogContent className="bg-black border border-white/20 rounded-none">
             <DialogHeader>
-              <DialogTitle>Edit Project Category</DialogTitle>
+              <DialogTitle>{language === 'vi' ? 'Sửa Danh Mục Dự Án' : 'Edit Project Category'}</DialogTitle>
             </DialogHeader>
             <div className="space-y-4">
               <div>
-                <label className="text-sm font-medium">Category Name (English)</label>
+                <label className="text-sm font-medium">{language === 'vi' ? 'Tên Danh Mục (Tiếng Anh)' : 'Category Name (English)'}</label>
                 <Input
                   value={editingCategory?.name || ""}
                   onChange={(e) => setEditingCategory(prev => prev ? { ...prev, name: e.target.value } : null)}
-                  placeholder="Enter category name in English"
+                  placeholder={language === 'vi' ? 'Nhập tên danh mục tiếng Anh' : 'Enter category name in English'}
                   data-testid="input-edit-category-name"
                 />
               </div>
               <div>
-                <label className="text-sm font-medium">Category Name (Vietnamese)</label>
+                <label className="text-sm font-medium">{language === 'vi' ? 'Tên Danh Mục (Tiếng Việt)' : 'Category Name (Vietnamese)'}</label>
                 <Input
                   value={editingCategory?.nameVi || ""}
                   onChange={(e) => setEditingCategory(prev => prev ? { ...prev, nameVi: e.target.value } : null)}
@@ -4268,7 +4269,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     setEditingCategory(null);
                   }}
                 >
-                  Cancel
+                  {language === 'vi' ? 'Hủy' : 'Cancel'}
                 </Button>
                 <Button
                   onClick={() => {
@@ -4283,7 +4284,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   disabled={!editingCategory?.name.trim() || updateCategoryMutation.isPending}
                   data-testid="button-update-category"
                 >
-                  Update Category
+                  {language === 'vi' ? 'Cập Nhật' : 'Update Category'}
                 </Button>
               </div>
             </div>
@@ -4381,7 +4382,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       disabled={projectsPage === 1}
                       className="text-xs"
                     >
-                      FIRST
+                      {language === 'vi' ? 'ĐẦU' : 'FIRST'}
                     </Button>
                     <Button
                       variant="ghost"
@@ -4390,7 +4391,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       disabled={projectsPage === 1}
                       className="text-xs"
                     >
-                      PREV
+                      {language === 'vi' ? 'TRƯỚC' : 'PREV'}
                     </Button>
                     {Array.from({ length: projectsTotalPages }, (_, i) => i + 1).map((page) => (
                       <Button
@@ -4410,7 +4411,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       disabled={projectsPage === projectsTotalPages}
                       className="text-xs"
                     >
-                      NEXT
+                      {language === 'vi' ? 'SAU' : 'NEXT'}
                     </Button>
                     <Button
                       variant="ghost"
@@ -4419,12 +4420,12 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       disabled={projectsPage === projectsTotalPages}
                       className="text-xs"
                     >
-                      LAST
+                      {language === 'vi' ? 'CUỐI' : 'LAST'}
                     </Button>
                   </div>
                   <div className="text-center mt-2">
                     <span className="text-xs text-muted-foreground">
-                      Showing {projectsStartIndex + 1}-{Math.min(projectsEndIndex, projects.length)} of {projects.length} projects
+                      {language === 'vi' ? `Hiển thị ${projectsStartIndex + 1}-${Math.min(projectsEndIndex, projects.length)} trên ${projects.length} dự án` : `Showing ${projectsStartIndex + 1}-${Math.min(projectsEndIndex, projects.length)} of ${projects.length} projects`}
                     </span>
                   </div>
                 </div>
@@ -4451,7 +4452,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               className="h-10 px-4"
             >
               <Settings className="mr-2 h-4 w-4" />
-              CRM Settings
+              {language === 'vi' ? 'Cài Đặt CRM' : 'CRM Settings'}
             </Button>
             <Dialog open={isClientDialogOpen} onOpenChange={(open) => {
             setIsClientDialogOpen(open);
