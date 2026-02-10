@@ -639,7 +639,13 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     return acc;
   }, {} as Record<string, Article[]>);
   
-  const uniqueArticleSlugs = Object.keys(groupedArticlesMap);
+  const uniqueArticleSlugs = Object.keys(groupedArticlesMap).sort((a, b) => {
+    const aFeatured = groupedArticlesMap[a].some(article => article.featured);
+    const bFeatured = groupedArticlesMap[b].some(article => article.featured);
+    if (aFeatured && !bFeatured) return -1;
+    if (!aFeatured && bFeatured) return 1;
+    return 0;
+  });
   const articlesTotalPages = Math.ceil(uniqueArticleSlugs.length / articlesPerPage);
   const articlesStartIndex = (articlesPage - 1) * articlesPerPage;
   const articlesEndIndex = articlesStartIndex + articlesPerPage;
