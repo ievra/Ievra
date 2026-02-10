@@ -458,17 +458,14 @@ export class DatabaseStorage implements IStorage {
       conditions.push(eq(articles.featured, filters.featured));
     }
     
-    if (filters?.status) {
+    if (filters?.status && filters.status !== 'all') {
       conditions.push(eq(articles.status, filters.status));
+    } else if (!filters?.status) {
+      conditions.push(eq(articles.status, 'published'));
     }
     
     if (filters?.language) {
       conditions.push(eq(articles.language, filters.language));
-    }
-    
-    if (!filters?.status) {
-      conditions.push(eq(articles.status, 'published'));
-    } else if (filters.status === 'all') {
     }
     
     const query = conditions.length > 0
