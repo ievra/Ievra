@@ -4416,8 +4416,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             data-testid={`button-edit-project-${primary.id}`}
                           />
                           <Star 
-                            className={`h-4 w-4 cursor-pointer ${primary.featured ? 'text-white fill-white' : 'text-white/50 hover:text-white'}`}
+                            className={`h-4 w-4 ${(primary as any).status === 'published' ? 'cursor-pointer' : 'cursor-not-allowed opacity-30'} ${primary.featured ? 'text-white fill-white' : 'text-white/50 hover:text-white'}`}
                             onClick={() => {
+                              if ((primary as any).status !== 'published') return;
                               group.forEach(p => {
                                 updateProjectMutation.mutate({
                                   id: p.id,
@@ -4426,7 +4427,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                               });
                             }}
                             data-testid={`button-toggle-featured-${primary.id}`}
-                            title={primary.featured ? "Remove from featured" : "Mark as featured"}
+                            title={(primary as any).status !== 'published' ? (language === 'vi' ? 'Chỉ áp dụng cho trạng thái Đã Đăng' : 'Only available for published projects') : primary.featured ? "Remove from featured" : "Mark as featured"}
                           />
                           <Trash2 
                             className="h-4 w-4 cursor-pointer text-white/50 hover:text-red-400"
