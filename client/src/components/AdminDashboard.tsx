@@ -8759,8 +8759,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             <AlertDialog>
                               <AlertDialogTrigger asChild>
                                 <Button
-                                  variant="destructive"
+                                  variant="outline"
                                   size="sm"
+                                  className="bg-transparent border-white/30 hover:bg-white/10 hover:border-white"
                                   disabled={tableUser.role === 'superadmin' && adminUsers.filter((u: any) => u.role === 'superadmin').length === 1}
                                   data-testid={`button-delete-user-${tableUser.id}`}
                                 >
