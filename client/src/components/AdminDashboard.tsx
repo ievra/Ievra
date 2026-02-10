@@ -5355,7 +5355,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Tổng khách hàng</p>
+                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Tổng khách hàng' : 'Total Clients'}</p>
                   <p className="text-2xl font-semibold mt-1">{clients.length}</p>
                 </div>
                 <Users className="h-8 w-8 text-muted-foreground" />
@@ -5367,7 +5367,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Tổng doanh thu</p>
+                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Tổng doanh thu' : 'Total Revenue'}</p>
                   <p className="text-2xl font-semibold mt-1">
                     {allTransactions.reduce((sum, t) => {
                       if (t.status !== "completed") return sum;
@@ -5387,7 +5387,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Còn bảo hành</p>
+                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Còn bảo hành' : 'Active Warranty'}</p>
                   <p className="text-2xl font-semibold mt-1">
                     {clients.filter(c => c.warrantyStatus === 'active').length}
                   </p>
@@ -5401,7 +5401,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Hết hạn bảo hành</p>
+                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Hết hạn bảo hành' : 'Expired Warranty'}</p>
                   <p className="text-2xl font-semibold mt-1">
                     {clients.filter(c => c.warrantyStatus === 'expired').length}
                   </p>
