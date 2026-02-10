@@ -503,6 +503,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.delete("/api/clients/:id", requirePermission('clients'), requirePermission('crm'), async (req, res) => {
     try {
+      const client = await storage.getClient(req.params.id);
+      if (!client) {
+        return res.status(404).json({ message: "Client not found" });
+      }
+
+      const totalSpending = parseFloat(client.totalSpending || "0");
+      if (totalSpending > 0) {
+        return res.status(400).json({ 
+          message: "Không thể xóa khách hàng đã phát sinh giao dịch. Tổng chi tiêu: " + totalSpending.toLocaleString('vi-VN') + " đ"
+        });
+      }
+
+      const referrals = await storage.getClientReferrals(req.params.id);
+      if (referrals && referrals.length > 0) {
+        return res.status(400).json({ 
+          message: "Không thể xóa khách hàng có người được giới thiệu (" + referrals.length + " referral)"
+        });
+      }
+
       await storage.deleteClient(req.params.id);
       res.status(200).json({ message: "Client deleted successfully" });
     } catch (error) {
