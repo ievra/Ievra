@@ -4384,15 +4384,29 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       <TableCell>{primary.area || "—"}</TableCell>
                       <TableCell>{formatDate(primary.createdAt)}</TableCell>
                       <TableCell>
-                        <Badge variant="outline" className={`text-[10px] px-1.5 py-0 rounded-none ${
-                          (primary as any).status === 'published' ? 'border-green-500/30 text-green-400' :
-                          (primary as any).status === 'archived' ? 'border-white/10 text-white/40' :
-                          'border-yellow-500/30 text-yellow-400'
-                        }`}>
-                          {(primary as any).status === 'published' ? (language === 'vi' ? 'Đã Đăng' : 'Published') :
-                           (primary as any).status === 'archived' ? (language === 'vi' ? 'Lưu Trữ' : 'Archived') :
-                           (language === 'vi' ? 'Bản Nháp' : 'Draft')}
-                        </Badge>
+                        <Select
+                          value={(primary as any).status || 'draft'}
+                          onValueChange={async (newStatus) => {
+                            try {
+                              for (const p of group) {
+                                await updateProjectMutation.mutateAsync({
+                                  id: p.id,
+                                  data: { status: newStatus }
+                                });
+                              }
+                            } catch (error) {
+                            }
+                          }}
+                        >
+                          <SelectTrigger className="h-auto py-1 px-3 text-sm bg-transparent border-none hover:bg-white/10 w-[110px] gap-1">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="draft">Bản Nháp</SelectItem>
+                            <SelectItem value="published">Đã Đăng</SelectItem>
+                            <SelectItem value="archived">Lưu Trữ</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end items-center gap-4">
