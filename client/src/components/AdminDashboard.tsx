@@ -7939,9 +7939,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       return (
                         <TableRow key={slug} data-testid={`row-article-${slug}`}>
                           <TableCell>
-                            <Badge variant="outline" data-testid={`badge-category-${slug}`}>
+                            <span className="text-sm" data-testid={`badge-category-${slug}`}>
                               {displayArticle.category}
-                            </Badge>
+                            </span>
                           </TableCell>
                           <TableCell className="font-medium">
                             <div className="flex items-center gap-3">
