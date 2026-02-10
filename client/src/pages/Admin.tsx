@@ -7,7 +7,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { LogOut, User, BarChart3, Briefcase, Users, Mail, Newspaper, Edit3, Home, Image, Shield } from "lucide-react";
 import AdminDashboard from "@/components/AdminDashboard";
-import Layout from "@/components/Layout";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 // Map tab IDs to required permissions
@@ -85,7 +84,6 @@ export default function Admin() {
   };
 
   return (
-    <Layout>
       <div className="min-h-screen bg-black">
         <div className="max-w-[1600px] mx-auto py-24 px-6 md:px-10 lg:px-16">
           {/* Header Section with Glass Morphism */}
@@ -170,6 +168,5 @@ export default function Admin() {
           </div>
         </div>
       </div>
-    </Layout>
   );
 }
