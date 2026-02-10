@@ -135,45 +135,35 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
         data-testid="hero-slider"
       >
         {projects.map((project) => {
-          // Fallback images for different project types
-          const getFallbackImage = (category: string) => {
-            switch (category) {
-              case 'residential':
-                return 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080';
-              case 'commercial':
-                return 'https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080';
-              case 'architecture':
-                return 'https://images.unsplash.com/photo-1487958449943-2429e8be8625?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080';
-              default:
-                return 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080';
-            }
-          };
-
           const backgroundImage = Array.isArray(project.coverImages) && project.coverImages[0] ||
                 Array.isArray(project.contentImages) && project.contentImages[0] ||
                 Array.isArray(project.galleryImages) && project.galleryImages[0] ||
                 project.heroImage ||
                 (Array.isArray(project.images) && project.images[0]) ||
-                getFallbackImage(project.category);
-
+                '';
 
           return (
             <SwiperSlide key={project.id} data-testid={`slide-${project.id}`}>
               <div className="wrapper relative h-screen px-6 md:px-10 lg:px-16">
                 <div className="absolute inset-0">
-                  
-                  <img 
-                    src={backgroundImage} 
-                    alt={project.title}
-                    className="absolute inset-0 w-full h-full object-cover"
-                    data-testid={`slide-bg-${project.id}`}
-                    style={{ zIndex: 1 }}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = getFallbackImage(project.category);
-                    }}
-                  />
-                  <div className="absolute inset-0 bg-black/40" style={{ zIndex: 2 }}></div>
+                  {backgroundImage ? (
+                    <>
+                      <img 
+                        src={backgroundImage} 
+                        alt={project.title}
+                        className="absolute inset-0 w-full h-full object-cover"
+                        data-testid={`slide-bg-${project.id}`}
+                        style={{ zIndex: 1 }}
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-black/40" style={{ zIndex: 2 }}></div>
+                    </>
+                  ) : (
+                    <div className="absolute inset-0 bg-neutral-900" style={{ zIndex: 1 }}></div>
+                  )}
                 </div>
                 
                 <div className="relative h-full flex flex-col justify-between" style={{ zIndex: 10 }}>
