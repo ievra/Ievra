@@ -86,44 +86,22 @@ export default function Admin() {
   return (
       <div className="min-h-screen bg-black">
         <div className="max-w-[1600px] mx-auto py-24 px-6 md:px-10 lg:px-16">
-          {/* Header Section with Glass Morphism */}
-          <div className="mb-12">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-white/5 to-white/2 backdrop-blur-xl rounded-none"></div>
-              <div className="relative bg-black/40 backdrop-blur-md border border-white/10 rounded-none p-8">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-10 h-10 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full flex items-center justify-center">
-                        <Home className="w-5 h-5 text-white" />
-                      </div>
-                      <h1 className="text-4xl font-light text-white tracking-wider" data-testid="heading-admin">
-                        {t('admin.dashboard').toUpperCase()}
-                      </h1>
-                    </div>
-                    <p className="text-gray-400 font-light tracking-wide">
-                      {t('admin.manage')}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-3 px-4 py-2 bg-white/5 border border-white/10 rounded-none backdrop-blur-sm">
-                      <User className="h-4 w-4 text-white/70" />
-                      <span className="text-sm text-white font-light" data-testid="text-current-user">
-                        {user?.username || 'Admin'}
-                      </span>
-                    </div>
-                    <Button 
-                      onClick={handleLogout}
-                      className="bg-transparent border border-white/30 text-white hover:border-white hover:bg-white/10 px-4 py-2 font-light tracking-wide transition-all duration-300 ease-in-out rounded-none"
-                      data-testid="button-logout"
-                    >
-                      <LogOut className="h-4 w-4 mr-2" />
-                      {t('admin.logout')}
-                    </Button>
-                  </div>
-                </div>
-              </div>
+          {/* Admin & Logout */}
+          <div className="mb-8 flex items-center justify-end gap-4">
+            <div className="flex items-center gap-3 px-4 py-2 bg-white/5 border border-white/10 rounded-none backdrop-blur-sm">
+              <User className="h-4 w-4 text-white/70" />
+              <span className="text-sm text-white font-light" data-testid="text-current-user">
+                {user?.username || 'Admin'}
+              </span>
             </div>
+            <Button 
+              onClick={handleLogout}
+              className="bg-transparent border border-white/30 text-white hover:border-white hover:bg-white/10 px-4 py-2 font-light tracking-wide transition-all duration-300 ease-in-out rounded-none"
+              data-testid="button-logout"
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              {t('admin.logout')}
+            </Button>
           </div>
 
           {/* Navigation Tabs with Modern Design */}
