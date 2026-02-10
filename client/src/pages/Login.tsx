@@ -79,7 +79,7 @@ export default function Login() {
                   <img 
                     src="/api/assets/logo.white.png" 
                     alt="IEVRA Design & Build" 
-                    className="h-12 w-auto mx-auto opacity-90"
+                    className="h-20 w-auto mx-auto opacity-90"
                   />
                 </div>
                 
