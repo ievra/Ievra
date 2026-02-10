@@ -6546,10 +6546,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             disabled={!hasPermission(user, 'partners')}
                             className="block w-full text-sm text-foreground
                               file:mr-4 file:py-2 file:px-4
-                              file:rounded-none file:border-0
+                              file:rounded-none file:border file:border-white/30
                               file:text-sm file:font-medium
-                              file:bg-primary file:text-primary-foreground
-                              hover:file:bg-primary/90 cursor-pointer
+                              file:bg-transparent file:text-white
+                              hover:file:bg-white/10 hover:file:border-white cursor-pointer
                               disabled:opacity-50 disabled:cursor-not-allowed"
                             data-testid="input-partner-logo-file"
                           />
@@ -7568,10 +7568,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           disabled={!hasPermission(user, 'articles')}
                           className="block w-full text-sm text-foreground
                             file:mr-4 file:py-2 file:px-4
-                            file:rounded-none file:border-0
+                            file:rounded-none file:border file:border-white/30
                             file:text-sm file:font-medium
-                            file:bg-primary file:text-primary-foreground
-                            hover:file:bg-primary/90 cursor-pointer
+                            file:bg-transparent file:text-white
+                            hover:file:bg-white/10 hover:file:border-white cursor-pointer
                             disabled:opacity-50 disabled:cursor-not-allowed"
                           data-testid="input-article-image-file"
                         />
@@ -8171,10 +8171,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         onChange={handlePartnerLogoFileChange}
                         className="block w-full text-sm text-foreground
                           file:mr-4 file:py-2 file:px-4
-                          file:rounded-none file:border-0
+                          file:rounded-none file:border file:border-white/30
                           file:text-sm file:font-medium
-                          file:bg-primary file:text-primary-foreground
-                          hover:file:bg-primary/90 cursor-pointer"
+                          file:bg-transparent file:text-white
+                          hover:file:bg-white/10 hover:file:border-white cursor-pointer"
                         data-testid="input-partner-logo-file"
                       />
                       <p className="text-xs text-muted-foreground mt-2">
