@@ -3404,15 +3404,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-sans font-light min-h-[36px]">{language === 'vi' ? 'Quản Lý Dự Án' : 'Projects Management'}</h2>
           <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setIsCategoryManagementDialogOpen(true)}
-              data-testid="button-category-settings-projects"
-              className="h-10 px-4 min-w-[160px] justify-center"
-            >
-              <Settings className="mr-2 h-4 w-4" />
-              {language === 'vi' ? 'Cài Đặt' : 'Settings'}
-            </Button>
             <Dialog open={isProjectDialogOpen} onOpenChange={setIsProjectDialogOpen}>
               <DialogTrigger asChild>
                 <Button data-testid="button-add-project" className="h-10 px-4 min-w-[140px] justify-center">
@@ -4101,6 +4092,15 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               </div>
             </DialogContent>
           </Dialog>
+            <Button
+              variant="outline"
+              onClick={() => setIsCategoryManagementDialogOpen(true)}
+              data-testid="button-category-settings-projects"
+              className="h-10 px-4 min-w-[160px] justify-center"
+            >
+              <Settings className="mr-2 h-4 w-4" />
+              {language === 'vi' ? 'Cài Đặt' : 'Settings'}
+            </Button>
           </div>
         </div>
 
@@ -7427,15 +7427,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         <div className="flex justify-between items-center">
           <h2 className="text-2xl font-sans font-light min-h-[36px]">{language === 'vi' ? 'Quản Lý Bài Viết' : 'Articles Management'}</h2>
           <div className="flex gap-2">
-            <Button
-              variant="outline"
-              onClick={() => setIsCategoryManagementDialogOpen(true)}
-              data-testid="button-category-settings"
-              className="h-10 px-4 min-w-[160px] justify-center"
-            >
-              <Settings className="mr-2 h-4 w-4" />
-              {language === 'vi' ? 'Cài Đặt' : 'Settings'}
-            </Button>
             <Dialog open={isArticleDialogOpen} onOpenChange={setIsArticleDialogOpen}>
               <DialogTrigger asChild>
                 <Button 
@@ -7472,6 +7463,15 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 </Button>
               </DialogTrigger>
             </Dialog>
+            <Button
+              variant="outline"
+              onClick={() => setIsCategoryManagementDialogOpen(true)}
+              data-testid="button-category-settings"
+              className="h-10 px-4 min-w-[160px] justify-center"
+            >
+              <Settings className="mr-2 h-4 w-4" />
+              {language === 'vi' ? 'Cài Đặt' : 'Settings'}
+            </Button>
           </div>
         </div>
 
