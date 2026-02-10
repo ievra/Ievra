@@ -6688,7 +6688,25 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         {/* FAQ Management Section */}
         <Card className="bg-black border-white/10">
           <CardHeader>
-            <CardTitle className="text-white">FAQ Management</CardTitle>
+            <div className="flex justify-between items-center">
+              <CardTitle className="text-white">FAQ Management</CardTitle>
+              <Button
+                onClick={() => {
+                  setEditingFaq(null);
+                  faqForm.reset({
+                    questionEn: "",
+                    answerEn: "",
+                    questionVi: "",
+                    answerVi: "",
+                  });
+                  setIsFaqDialogOpen(true);
+                }}
+                data-testid="button-add-faq"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add FAQ
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             <Dialog open={isFaqDialogOpen} onOpenChange={setIsFaqDialogOpen}>
@@ -6831,13 +6849,26 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                               </div>
                             </TableCell>
                             <TableCell>
-                              <Button
-                                variant="outline"
-                                onClick={() => handleEditFaq(group)}
-                                data-testid={`button-edit-faq-${index}`}
-                              >
-                                <Pencil className="h-4 w-4" />
-                              </Button>
+                              <div className="flex gap-2">
+                                <Button
+                                  variant="outline"
+                                  onClick={() => handleEditFaq(group)}
+                                  data-testid={`button-edit-faq-${index}`}
+                                >
+                                  <Pencil className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="destructive"
+                                  size="icon"
+                                  onClick={() => {
+                                    if (enFaq) deleteFaqMutation.mutate(enFaq.id);
+                                    if (viFaq) deleteFaqMutation.mutate(viFaq.id);
+                                  }}
+                                  data-testid={`button-delete-faq-${index}`}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
                             </TableCell>
                           </TableRow>
                         );
@@ -6852,7 +6883,27 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         {/* Advantages Management Section */}
         <Card>
           <CardHeader>
-            <CardTitle>Advantages Management (Why Choose Us)</CardTitle>
+            <div className="flex justify-between items-center">
+              <CardTitle>Advantages Management (Why Choose Us)</CardTitle>
+              <Button
+                onClick={() => {
+                  setEditingAdvantage(null);
+                  advantageForm.reset({
+                    icon: "",
+                    titleEn: "",
+                    titleVi: "",
+                    descriptionEn: "",
+                    descriptionVi: "",
+                    active: true,
+                  });
+                  setIsAdvantageDialogOpen(true);
+                }}
+                data-testid="button-add-advantage"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add Advantage
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             <Dialog open={isAdvantageDialogOpen} onOpenChange={(open) => {
@@ -6985,13 +7036,23 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Button
-                            variant="outline"
-                            onClick={() => handleEditAdvantage(advantage)}
-                            data-testid={`button-edit-advantage-${index}`}
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
+                          <div className="flex gap-2">
+                            <Button
+                              variant="outline"
+                              onClick={() => handleEditAdvantage(advantage)}
+                              data-testid={`button-edit-advantage-${index}`}
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              size="icon"
+                              onClick={() => deleteAdvantageMutation.mutate(advantage.id)}
+                              data-testid={`button-delete-advantage-${index}`}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -7004,7 +7065,26 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         {/* Journey Steps Management Section */}
         <Card>
           <CardHeader>
-            <CardTitle>Journey Steps Management (Design Process)</CardTitle>
+            <div className="flex justify-between items-center">
+              <CardTitle>Journey Steps Management (Design Process)</CardTitle>
+              <Button
+                onClick={() => {
+                  setEditingJourneyStep(null);
+                  journeyStepForm.reset({
+                    titleEn: "",
+                    titleVi: "",
+                    descriptionEn: "",
+                    descriptionVi: "",
+                    active: true,
+                  });
+                  setIsJourneyStepDialogOpen(true);
+                }}
+                data-testid="button-add-journey-step"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                Add Journey Step
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             <Dialog open={isJourneyStepDialogOpen} onOpenChange={(open) => {
@@ -7123,13 +7203,23 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Button
-                            variant="outline"
-                            onClick={() => handleEditJourneyStep(journeyStep)}
-                            data-testid={`button-edit-journey-step-${index}`}
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </Button>
+                          <div className="flex gap-2">
+                            <Button
+                              variant="outline"
+                              onClick={() => handleEditJourneyStep(journeyStep)}
+                              data-testid={`button-edit-journey-step-${index}`}
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="destructive"
+                              size="icon"
+                              onClick={() => deleteJourneyStepMutation.mutate(journeyStep.id)}
+                              data-testid={`button-delete-journey-step-${index}`}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
