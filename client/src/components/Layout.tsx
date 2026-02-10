@@ -65,7 +65,7 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-screen relative">
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ${
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-700 ease-in-out ${
         isScrolled ? '-translate-y-full' : 'translate-y-0'
       }`}>
         <div className="flex items-center justify-between py-4 px-6 md:py-5 md:px-10 lg:px-16">
