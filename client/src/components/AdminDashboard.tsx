@@ -201,12 +201,12 @@ type UserFormData = z.infer<typeof userSchema>;
 // Available permissions for dashboard sections
 const AVAILABLE_PERMISSIONS = [
   { id: 'projects', label: 'Projects', labelVi: 'Dự Án' },
-  { id: 'clients', label: 'CRM / Clients', labelVi: 'CRM / Khách Hàng' },
-  { id: 'inquiries', label: 'Inquiries', labelVi: 'Liên Hệ' },
-  { id: 'articles', label: 'Articles / Blog', labelVi: 'Bài Viết' },
-  { id: 'homepage', label: 'Homepage Content', labelVi: 'Nội Dung Trang Chủ' },
-  { id: 'about', label: 'About Page', labelVi: 'Trang Giới Thiệu' },
-  { id: 'content', label: 'Services / Content', labelVi: 'Dịch Vụ / Nội Dung' },
+  { id: 'clients', label: 'Clients', labelVi: 'Khách Hàng' },
+  { id: 'inquiries', label: 'Inquiries', labelVi: 'Yêu Cầu' },
+  { id: 'articles', label: 'Articles', labelVi: 'Bài Viết' },
+  { id: 'homepage', label: 'Homepage', labelVi: 'Trang Chủ' },
+  { id: 'about', label: 'About', labelVi: 'Giới Thiệu' },
+  { id: 'content', label: 'SEO', labelVi: 'SEO' },
   { id: 'partners', label: 'Partners', labelVi: 'Đối Tác' },
 ];
 
