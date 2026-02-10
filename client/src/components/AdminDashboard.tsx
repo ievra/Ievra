@@ -628,6 +628,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   // Search/filter state for Projects
   const [projectSearchQuery, setProjectSearchQuery] = useState('');
   const [projectYearFilter, setProjectYearFilter] = useState('all');
+  const [projectCategoryFilter, setProjectCategoryFilter] = useState('all');
 
   // Pagination state for Projects - group by slug, then paginate
   const [projectsPage, setProjectsPage] = useState(1);
@@ -652,6 +653,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     const primary = group[0];
     const searchLower = projectSearchQuery.toLowerCase();
     if (projectYearFilter !== 'all' && primary.completionYear !== projectYearFilter) return false;
+    if (projectCategoryFilter !== 'all' && primary.category !== projectCategoryFilter) return false;
     if (!searchLower) return true;
     const cat = categories.find(c => c.slug === primary.category && c.type === 'project');
     const categoryName = cat ? `${cat.name} ${cat.nameVi || ''}`.toLowerCase() : (primary.category || '').toLowerCase();
@@ -4356,6 +4358,17 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
             />
           </div>
+          <Select value={projectCategoryFilter} onValueChange={(v) => { setProjectCategoryFilter(v); setProjectsPage(1); }}>
+            <SelectTrigger className="w-[180px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectValue placeholder={language === 'vi' ? 'Tất cả danh mục' : 'All categories'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{language === 'vi' ? 'Tất cả danh mục' : 'All categories'}</SelectItem>
+              {categories.filter(c => c.type === 'project' && c.active).map(cat => (
+                <SelectItem key={cat.id} value={cat.slug}>{language === 'vi' && cat.nameVi ? cat.nameVi : cat.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Select value={projectYearFilter} onValueChange={(v) => { setProjectYearFilter(v); setProjectsPage(1); }}>
             <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
               <SelectValue placeholder={language === 'vi' ? 'Tất cả các năm' : 'All years'} />
