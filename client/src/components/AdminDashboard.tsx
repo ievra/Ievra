@@ -7949,60 +7949,65 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             </span>
                           </TableCell>
                           <TableCell className="font-medium">
-                            <div className="flex items-center gap-3">
-                              <Star 
-                                className={`h-4 w-4 cursor-pointer flex-shrink-0 ${displayArticle.featured ? 'text-white fill-white' : 'text-white/50 hover:text-white'} ${togglingFeaturedSlug === slug ? "opacity-50" : ""}`}
-                                onClick={async () => {
-                                  if (togglingFeaturedSlug === slug) return;
-                                  setTogglingFeaturedSlug(slug);
-                                  try {
-                                    for (const article of articleGroup) {
-                                      await toggleArticleFeaturedMutation.mutateAsync({ 
-                                        id: article.id, 
-                                        featured: !displayArticle.featured 
-                                      });
+                            <div className="flex items-center justify-between">
+                              <span className="truncate">{displayArticle.title}</span>
+                              <div className="flex items-center gap-3 ml-3 flex-shrink-0">
+                                <Pencil 
+                                  className="h-4 w-4 cursor-pointer text-white/50 hover:text-white"
+                                  onClick={() => handleEditArticle(displayArticle)}
+                                  data-testid={`button-edit-article-${slug}`}
+                                />
+                                <Star 
+                                  className={`h-4 w-4 cursor-pointer ${displayArticle.featured ? 'text-white fill-white' : 'text-white/50 hover:text-white'} ${togglingFeaturedSlug === slug ? "opacity-50" : ""}`}
+                                  onClick={async () => {
+                                    if (togglingFeaturedSlug === slug) return;
+                                    setTogglingFeaturedSlug(slug);
+                                    try {
+                                      for (const article of articleGroup) {
+                                        await toggleArticleFeaturedMutation.mutateAsync({ 
+                                          id: article.id, 
+                                          featured: !displayArticle.featured 
+                                        });
+                                      }
+                                    } catch (error) {
+                                    } finally {
+                                      setTogglingFeaturedSlug(null);
                                     }
-                                  } catch (error) {
-                                  } finally {
-                                    setTogglingFeaturedSlug(null);
-                                  }
-                                }}
-                                data-testid={`button-toggle-featured-${slug}`}
-                              />
-                              <span className="cursor-pointer hover:text-white/80" onClick={() => handleEditArticle(displayArticle)} data-testid={`button-edit-article-${slug}`}>
-                                {displayArticle.title}
-                              </span>
-                              <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                  <Trash2 
-                                    className="h-4 w-4 cursor-pointer flex-shrink-0 text-white/50 hover:text-white"
-                                    data-testid={`button-delete-article-${slug}`}
-                                  />
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                  <AlertDialogHeader>
-                                    <AlertDialogTitle>{language === 'vi' ? 'Xóa Bài Viết?' : 'Delete Article?'}</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                      {language === 'vi' ? `Thao tác này sẽ xóa vĩnh viễn "${displayArticle.title}" (cả phiên bản EN và VI). Hành động này không thể hoàn tác.` : `This will permanently delete "${displayArticle.title}" (both EN and VI versions). This action cannot be undone.`}
-                                    </AlertDialogDescription>
-                                  </AlertDialogHeader>
-                                  <AlertDialogFooter>
-                                    <AlertDialogCancel>{language === 'vi' ? 'Hủy' : 'Cancel'}</AlertDialogCancel>
-                                    <AlertDialogAction
-                                      onClick={async () => {
-                                        try {
-                                          for (const article of articleGroup) {
-                                            await deleteArticleMutation.mutateAsync(article.id);
+                                  }}
+                                  data-testid={`button-toggle-featured-${slug}`}
+                                />
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <Trash2 
+                                      className="h-4 w-4 cursor-pointer text-white/50 hover:text-white"
+                                      data-testid={`button-delete-article-${slug}`}
+                                    />
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>{language === 'vi' ? 'Xóa Bài Viết?' : 'Delete Article?'}</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        {language === 'vi' ? `Thao tác này sẽ xóa vĩnh viễn "${displayArticle.title}" (cả phiên bản EN và VI). Hành động này không thể hoàn tác.` : `This will permanently delete "${displayArticle.title}" (both EN and VI versions). This action cannot be undone.`}
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>{language === 'vi' ? 'Hủy' : 'Cancel'}</AlertDialogCancel>
+                                      <AlertDialogAction
+                                        onClick={async () => {
+                                          try {
+                                            for (const article of articleGroup) {
+                                              await deleteArticleMutation.mutateAsync(article.id);
+                                            }
+                                          } catch (error) {
                                           }
-                                        } catch (error) {
-                                        }
-                                      }}
-                                    >
-                                      {language === 'vi' ? 'Xóa' : 'Delete'}
-                                    </AlertDialogAction>
-                                  </AlertDialogFooter>
-                                </AlertDialogContent>
-                              </AlertDialog>
+                                        }}
+                                      >
+                                        {language === 'vi' ? 'Xóa' : 'Delete'}
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </div>
                             </div>
                           </TableCell>
                           <TableCell>
