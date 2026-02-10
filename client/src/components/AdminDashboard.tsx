@@ -8002,8 +8002,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           </TableCell>
                           <TableCell>
                             <div className="flex space-x-1">
-                              {hasEn && <Badge variant="outline" className="text-xs">EN</Badge>}
-                              {hasVi && <Badge variant="outline" className="text-xs">VI</Badge>}
+                              {hasEn && <span className="text-sm">EN</span>}
+                              {hasVi && <span className="text-sm">VI</span>}
                             </div>
                           </TableCell>
                           <TableCell data-testid={`text-published-${slug}`}>
