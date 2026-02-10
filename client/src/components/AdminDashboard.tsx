@@ -611,12 +611,29 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   // Pagination state for Clients
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
+
+  // Search/filter state for Articles, Clients, Inquiries
+  const [articleSearchQuery, setArticleSearchQuery] = useState('');
+  const [articleCategoryFilter, setArticleCategoryFilter] = useState('all');
+  const [clientSearchQuery, setClientSearchQuery] = useState('');
+  const [inquirySearchQuery, setInquirySearchQuery] = useState('');
   
   // Calculate pagination for Clients
-  const totalPages = Math.ceil(clients.length / itemsPerPage);
+  const filteredClients = clients.filter(client => {
+    if (!clientSearchQuery) return true;
+    const searchLower = clientSearchQuery.toLowerCase();
+    return (
+      (`${client.firstName} ${client.lastName}`).toLowerCase().includes(searchLower) ||
+      (client.email || '').toLowerCase().includes(searchLower) ||
+      (client.phone || '').toLowerCase().includes(searchLower) ||
+      (client.company || '').toLowerCase().includes(searchLower) ||
+      (client.address || '').toLowerCase().includes(searchLower)
+    );
+  });
+  const totalPages = Math.ceil(filteredClients.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const paginatedClients = clients.slice(startIndex, endIndex);
+  const paginatedClients = filteredClients.slice(startIndex, endIndex);
 
   // Reset to page 1 when clients change
   useEffect(() => {
@@ -688,6 +705,18 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     if (aFeatured && !bFeatured) return -1;
     if (!aFeatured && bFeatured) return 1;
     return 0;
+  }).filter(slug => {
+    const group = groupedArticlesMap[slug];
+    const display = group[0];
+    const searchLower = articleSearchQuery.toLowerCase();
+    if (articleCategoryFilter !== 'all' && display.category !== articleCategoryFilter) return false;
+    if (!searchLower) return true;
+    const cat = categories.find(c => c.slug === display.category && c.type === 'article');
+    const categoryName = cat ? `${cat.name} ${cat.nameVi || ''}`.toLowerCase() : (display.category || '').toLowerCase();
+    return group.some(a =>
+      (a.title || '').toLowerCase().includes(searchLower) ||
+      categoryName.includes(searchLower)
+    );
   });
   const articlesTotalPages = Math.ceil(uniqueArticleSlugs.length / articlesPerPage);
   const articlesStartIndex = (articlesPage - 1) * articlesPerPage;
@@ -5525,6 +5554,18 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           </Card>
         </div>
 
+        <div className="flex items-center gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
+            <Input
+              value={clientSearchQuery}
+              onChange={(e) => { setClientSearchQuery(e.target.value); setCurrentPage(1); }}
+              placeholder={language === 'vi' ? 'Chúng tôi có thể giúp bạn tìm gì?' : 'What can we help you find?'}
+              className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
+            />
+          </div>
+        </div>
+
         <Card>
           <CardContent className="p-0">
             {clientsLoading ? (
@@ -5792,6 +5833,18 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       <div className="space-y-6 p-6">
         <h2 className="text-2xl font-sans font-light min-h-[36px]">{language === 'vi' ? 'Quản Lý Yêu Cầu' : 'Inquiry Management'}</h2>
 
+        <div className="flex items-center gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
+            <Input
+              value={inquirySearchQuery}
+              onChange={(e) => { setInquirySearchQuery(e.target.value); }}
+              placeholder={language === 'vi' ? 'Chúng tôi có thể giúp bạn tìm gì?' : 'What can we help you find?'}
+              className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
+            />
+          </div>
+        </div>
+
         <Card>
           <CardContent className="p-0">
             {inquiriesLoading ? (
@@ -5826,7 +5879,17 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {inquiries.map((inquiry) => (
+                  {inquiries.filter(inquiry => {
+                    if (!inquirySearchQuery) return true;
+                    const searchLower = inquirySearchQuery.toLowerCase();
+                    return (
+                      (`${inquiry.firstName} ${inquiry.lastName}`).toLowerCase().includes(searchLower) ||
+                      (inquiry.email || '').toLowerCase().includes(searchLower) ||
+                      (inquiry.projectType || '').toLowerCase().includes(searchLower) ||
+                      (inquiry.budget || '').toLowerCase().includes(searchLower) ||
+                      (inquiry.message || '').toLowerCase().includes(searchLower)
+                    );
+                  }).map((inquiry) => (
                     <TableRow key={inquiry.id} data-testid={`row-inquiry-${inquiry.id}`}>
                       <TableCell>
                         <div>
@@ -7973,6 +8036,30 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               </div>
             </DialogContent>
             </Dialog>
+
+        <div className="flex items-center gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
+            <Input
+              value={articleSearchQuery}
+              onChange={(e) => { setArticleSearchQuery(e.target.value); setArticlesPage(1); }}
+              placeholder={language === 'vi' ? 'Chúng tôi có thể giúp bạn tìm gì?' : 'What can we help you find?'}
+              className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
+            />
+          </div>
+          <Select value={articleCategoryFilter} onValueChange={(v) => { setArticleCategoryFilter(v); setArticlesPage(1); }}>
+            <SelectTrigger className="w-[180px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectValue placeholder={language === 'vi' ? 'Tất cả danh mục' : 'All categories'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{language === 'vi' ? 'Tất cả danh mục' : 'All categories'}</SelectItem>
+              {categories.filter(c => c.type === 'article' && c.active).map(cat => (
+                <SelectItem key={cat.id} value={cat.slug}>{language === 'vi' && cat.nameVi ? cat.nameVi : cat.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
             {articlesLoading ? (
               <div className="space-y-2">
                 {[1, 2, 3].map((i) => (
