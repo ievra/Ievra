@@ -84,12 +84,10 @@ export default function Login() {
                 </div>
                 
                 {/* Clean typography */}
-                <div className="space-y-2">
-                  <div className="w-12 h-px bg-white/20 mx-auto mb-4"></div>
-                  <p className="text-sm text-gray-400 font-light tracking-wide">
-                    {language === 'vi' ? 'Quyền Truy Cập Quản Trị' : 'Administration Access'}
-                  </p>
-                </div>
+                <div className="w-12 h-px bg-white/20 mx-auto mb-4"></div>
+                <p className="text-sm text-gray-400 font-light tracking-wide">
+                  {language === 'vi' ? 'Quyền Truy Cập Quản Trị' : 'Administration Access'}
+                </p>
               </div>
               
               {/* Form Section */}
