@@ -174,27 +174,32 @@ export default function CrmSettingsManager() {
     },
   });
 
+  const toValue = (label: string) => label.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+
   const handleStageSubmit = (data: z.infer<typeof insertCrmPipelineStageSchema>) => {
+    const submitData = { ...data, value: editingStage ? data.value : toValue(data.labelEn) };
     if (editingStage) {
-      updateStageMutation.mutate({ id: editingStage.id, ...data });
+      updateStageMutation.mutate({ id: editingStage.id, ...submitData });
     } else {
-      createStageMutation.mutate(data);
+      createStageMutation.mutate(submitData);
     }
   };
 
   const handleTierSubmit = (data: z.infer<typeof insertCrmCustomerTierSchema>) => {
+    const submitData = { ...data, value: editingTier ? data.value : toValue(data.labelEn) };
     if (editingTier) {
-      updateTierMutation.mutate({ id: editingTier.id, ...data });
+      updateTierMutation.mutate({ id: editingTier.id, ...submitData });
     } else {
-      createTierMutation.mutate(data);
+      createTierMutation.mutate(submitData);
     }
   };
 
   const handleStatusSubmit = (data: z.infer<typeof insertCrmStatusSchema>) => {
+    const submitData = { ...data, value: editingStatus ? data.value : toValue(data.labelEn) };
     if (editingStatus) {
-      updateStatusMutation.mutate({ id: editingStatus.id, ...data });
+      updateStatusMutation.mutate({ id: editingStatus.id, ...submitData });
     } else {
-      createStatusMutation.mutate(data);
+      createStatusMutation.mutate(submitData);
     }
   };
 
@@ -235,19 +240,6 @@ export default function CrmSettingsManager() {
                       </DialogHeader>
                       <Form {...stageForm}>
                         <form onSubmit={stageForm.handleSubmit(handleStageSubmit)} className="space-y-4">
-                          <FormField
-                            control={stageForm.control}
-                            name="value"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>{language === 'vi' ? 'Giá trị (ID nội bộ)' : 'Value (Internal ID)'}</FormLabel>
-                                <FormControl>
-                                  <Input {...field} placeholder="lead" data-testid="input-stage-value" />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
                           <FormField
                             control={stageForm.control}
                             name="labelEn"
@@ -317,7 +309,6 @@ export default function CrmSettingsManager() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{language === 'vi' ? 'Giá trị' : 'Value'}</TableHead>
                       <TableHead>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</TableHead>
                       <TableHead>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</TableHead>
                       <TableHead>{language === 'vi' ? 'Thứ tự' : 'Order'}</TableHead>
@@ -328,7 +319,6 @@ export default function CrmSettingsManager() {
                   <TableBody>
                     {stages.sort((a, b) => a.order - b.order).map((stage) => (
                       <TableRow key={stage.id} data-testid={`row-stage-${stage.id}`}>
-                        <TableCell>{stage.value}</TableCell>
                         <TableCell>{stage.labelEn}</TableCell>
                         <TableCell>{stage.labelVi}</TableCell>
                         <TableCell>{stage.order}</TableCell>
@@ -417,19 +407,6 @@ export default function CrmSettingsManager() {
                         <form onSubmit={tierForm.handleSubmit(handleTierSubmit)} className="space-y-4">
                           <FormField
                             control={tierForm.control}
-                            name="value"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>{language === 'vi' ? 'Giá trị (ID nội bộ)' : 'Value (Internal ID)'}</FormLabel>
-                                <FormControl>
-                                  <Input {...field} placeholder="vip" data-testid="input-tier-value" />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={tierForm.control}
                             name="labelEn"
                             render={({ field }) => (
                               <FormItem>
@@ -497,7 +474,6 @@ export default function CrmSettingsManager() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{language === 'vi' ? 'Giá trị' : 'Value'}</TableHead>
                       <TableHead>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</TableHead>
                       <TableHead>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</TableHead>
                       <TableHead>{language === 'vi' ? 'Thứ tự' : 'Order'}</TableHead>
@@ -508,7 +484,6 @@ export default function CrmSettingsManager() {
                   <TableBody>
                     {tiers.sort((a, b) => a.order - b.order).map((tier) => (
                       <TableRow key={tier.id} data-testid={`row-tier-${tier.id}`}>
-                        <TableCell>{tier.value}</TableCell>
                         <TableCell>{tier.labelEn}</TableCell>
                         <TableCell>{tier.labelVi}</TableCell>
                         <TableCell>{tier.order}</TableCell>
@@ -597,19 +572,6 @@ export default function CrmSettingsManager() {
                         <form onSubmit={statusForm.handleSubmit(handleStatusSubmit)} className="space-y-4">
                           <FormField
                             control={statusForm.control}
-                            name="value"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>{language === 'vi' ? 'Giá trị (ID nội bộ)' : 'Value (Internal ID)'}</FormLabel>
-                                <FormControl>
-                                  <Input {...field} placeholder="active" data-testid="input-status-value" />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={statusForm.control}
                             name="labelEn"
                             render={({ field }) => (
                               <FormItem>
@@ -677,7 +639,6 @@ export default function CrmSettingsManager() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>{language === 'vi' ? 'Giá trị' : 'Value'}</TableHead>
                       <TableHead>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</TableHead>
                       <TableHead>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</TableHead>
                       <TableHead>{language === 'vi' ? 'Thứ tự' : 'Order'}</TableHead>
@@ -688,7 +649,6 @@ export default function CrmSettingsManager() {
                   <TableBody>
                     {statuses.sort((a, b) => a.order - b.order).map((status) => (
                       <TableRow key={status.id} data-testid={`row-status-${status.id}`}>
-                        <TableCell>{status.value}</TableCell>
                         <TableCell>{status.labelEn}</TableCell>
                         <TableCell>{status.labelVi}</TableCell>
                         <TableCell>{status.order}</TableCell>
