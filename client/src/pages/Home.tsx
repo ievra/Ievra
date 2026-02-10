@@ -224,9 +224,9 @@ export default function Home() {
   );
 
   const { data: featuredProjects, isLoading } = useQuery<Project[]>({
-    queryKey: ["/api/projects", "featured"],
+    queryKey: ["/api/projects", "featured", language],
     queryFn: async () => {
-      const response = await fetch(`/api/projects?featured=true`);
+      const response = await fetch(`/api/projects?featured=true&language=${language}`);
       if (!response.ok) throw new Error("Failed fetch, not 2xx response");
       return response.json();
     },
