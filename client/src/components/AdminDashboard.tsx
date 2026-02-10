@@ -4456,7 +4456,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         </Select>
                       </TableCell>
                       <TableCell className="text-right">
-                        <div className="flex justify-end items-center gap-4">
+                        <div className="flex justify-end items-center gap-3">
                           <Pencil 
                             className="h-4 w-4 cursor-pointer text-white/50 hover:text-white"
                             onClick={() => handleEditProject(primary)}
