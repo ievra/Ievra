@@ -120,9 +120,6 @@ export default function Admin() {
                       <LogOut className="h-4 w-4 mr-2" />
                       {t('admin.logout')}
                     </Button>
-                    <div className="px-3 py-1 bg-white/10 border border-white/20 rounded-none backdrop-blur-sm">
-                      <span className="text-xs text-white/80 font-light tracking-wide">{t('admin.access')}</span>
-                    </div>
                   </div>
                 </div>
               </div>
