@@ -5368,12 +5368,12 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground">Tổng số lần thanh toán</p>
+                  <p className="text-sm text-muted-foreground">Hết hạn bảo hành</p>
                   <p className="text-2xl font-semibold mt-1">
-                    {allTransactions.length}
+                    {clients.filter(c => c.warrantyStatus === 'expired').length}
                   </p>
                 </div>
-                <Star className="h-8 w-8 text-muted-foreground" />
+                <Shield className="h-8 w-8 text-muted-foreground" />
               </div>
             </CardContent>
           </Card>
