@@ -3283,9 +3283,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-6 min-h-[90px]">
               <div className="flex items-center justify-between">
-                <div>
+                <div className="min-w-[120px]">
                   <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Tổng Dự Án' : 'Total Projects'}</p>
                   <p className="text-2xl font-light" data-testid="stat-total-projects">
                     {statsLoading ? "..." : stats?.totalProjects || 0}
@@ -3297,9 +3297,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-6 min-h-[90px]">
               <div className="flex items-center justify-between">
-                <div>
+                <div className="min-w-[120px]">
                   <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Khách Hàng' : 'Active Clients'}</p>
                   <p className="text-2xl font-light" data-testid="stat-active-clients">
                     {statsLoading ? "..." : stats?.activeClients || 0}
@@ -3311,9 +3311,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-6 min-h-[90px]">
               <div className="flex items-center justify-between">
-                <div>
+                <div className="min-w-[120px]">
                   <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Yêu Cầu Mới' : 'New Inquiries'}</p>
                   <p className="text-2xl font-light" data-testid="stat-new-inquiries">
                     {statsLoading ? "..." : stats?.newInquiries || 0}
@@ -3325,9 +3325,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           </Card>
 
           <Card>
-            <CardContent className="p-6">
+            <CardContent className="p-6 min-h-[90px]">
               <div className="flex items-center justify-between">
-                <div>
+                <div className="min-w-[120px]">
                   <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Doanh Thu (Năm)' : 'Revenue (YTD)'}</p>
                   <p className="text-2xl font-light" data-testid="stat-revenue">
                     {statsLoading ? "..." : stats?.revenue || "0 ₫"}
@@ -3391,20 +3391,20 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     return (
       <div className="space-y-6 p-6">
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-sans font-light">{language === 'vi' ? 'Quản Lý Dự Án' : 'Projects Management'}</h2>
+          <h2 className="text-2xl font-sans font-light min-h-[36px]">{language === 'vi' ? 'Quản Lý Dự Án' : 'Projects Management'}</h2>
           <div className="flex gap-2">
             <Button
               variant="outline"
               onClick={() => setIsCategoryManagementDialogOpen(true)}
               data-testid="button-category-settings-projects"
-              className="h-10 px-4"
+              className="h-10 px-4 min-w-[160px] justify-center"
             >
               <Settings className="mr-2 h-4 w-4" />
               {language === 'vi' ? 'Cài Đặt Danh Mục' : 'Category Settings'}
             </Button>
             <Dialog open={isProjectDialogOpen} onOpenChange={setIsProjectDialogOpen}>
               <DialogTrigger asChild>
-                <Button data-testid="button-add-project" className="h-10 px-4">
+                <Button data-testid="button-add-project" className="h-10 px-4 min-w-[140px] justify-center">
                   <Plus className="mr-2 h-4 w-4" />
                   {language === 'vi' ? 'Thêm Dự Án' : 'Add Project'}
                 </Button>
@@ -5352,9 +5352,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         {/* Summary Cards */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <Card className="bg-black border-white/10 rounded-none">
-            <CardContent className="p-6">
+            <CardContent className="p-6 min-h-[90px]">
               <div className="flex items-center justify-between">
-                <div>
+                <div className="min-w-[120px]">
                   <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Tổng khách hàng' : 'Total Clients'}</p>
                   <p className="text-2xl font-semibold mt-1">{clients.length}</p>
                 </div>
@@ -5364,9 +5364,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           </Card>
           
           <Card className="bg-black border-white/10 rounded-none">
-            <CardContent className="p-6">
+            <CardContent className="p-6 min-h-[90px]">
               <div className="flex items-center justify-between">
-                <div>
+                <div className="min-w-[120px]">
                   <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Tổng doanh thu' : 'Total Revenue'}</p>
                   <p className="text-2xl font-semibold mt-1">
                     {allTransactions.reduce((sum, t) => {
@@ -5384,9 +5384,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           </Card>
           
           <Card className="bg-black border-white/10 rounded-none">
-            <CardContent className="p-6">
+            <CardContent className="p-6 min-h-[90px]">
               <div className="flex items-center justify-between">
-                <div>
+                <div className="min-w-[120px]">
                   <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Còn bảo hành' : 'Active Warranty'}</p>
                   <p className="text-2xl font-semibold mt-1">
                     {clients.filter(c => c.warrantyStatus === 'active').length}
@@ -5398,9 +5398,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           </Card>
           
           <Card className="bg-black border-white/10 rounded-none">
-            <CardContent className="p-6">
+            <CardContent className="p-6 min-h-[90px]">
               <div className="flex items-center justify-between">
-                <div>
+                <div className="min-w-[120px]">
                   <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Hết hạn bảo hành' : 'Expired Warranty'}</p>
                   <p className="text-2xl font-semibold mt-1">
                     {clients.filter(c => c.warrantyStatus === 'expired').length}
@@ -5614,7 +5614,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       size="sm"
                       onClick={() => setCurrentPage(1)}
                       disabled={currentPage === 1}
-                      className="text-xs"
+                      className="text-xs min-w-[60px]"
                     >
                       FIRST
                     </Button>
@@ -5623,7 +5623,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       size="sm"
                       onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                       disabled={currentPage === 1}
-                      className="text-xs"
+                      className="text-xs min-w-[60px]"
                     >
                       PREV
                     </Button>
@@ -5643,7 +5643,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       size="sm"
                       onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
                       disabled={currentPage === totalPages}
-                      className="text-xs"
+                      className="text-xs min-w-[60px]"
                     >
                       NEXT
                     </Button>
@@ -5652,14 +5652,14 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       size="sm"
                       onClick={() => setCurrentPage(totalPages)}
                       disabled={currentPage === totalPages}
-                      className="text-xs"
+                      className="text-xs min-w-[60px]"
                     >
                       LAST
                     </Button>
                   </div>
                   <div className="text-center mt-2">
                     <span className="text-xs text-muted-foreground">
-                      Showing {startIndex + 1}-{Math.min(endIndex, clients.length)} of {clients.length} clients
+                      {language === 'vi' ? `Hiển thị ${startIndex + 1}-${Math.min(endIndex, clients.length)} / ${clients.length} khách hàng` : `Showing ${startIndex + 1}-${Math.min(endIndex, clients.length)} of ${clients.length} clients`}
                     </span>
                   </div>
                 </div>
@@ -5677,7 +5677,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     }
     return (
       <div className="space-y-6 p-6">
-        <h2 className="text-2xl font-sans font-light">{language === 'vi' ? 'Quản Lý Yêu Cầu' : 'Inquiry Management'}</h2>
+        <h2 className="text-2xl font-sans font-light min-h-[36px]">{language === 'vi' ? 'Quản Lý Yêu Cầu' : 'Inquiry Management'}</h2>
 
         <Card>
           <CardContent className="p-0">
@@ -5876,7 +5876,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     }
     return (
       <div className="space-y-6 p-6">
-        <h2 className="text-2xl font-sans font-light">{language === 'vi' ? 'Quản Lý Nội Dung' : 'Content Management'}</h2>
+        <h2 className="text-2xl font-sans font-light min-h-[36px]">{language === 'vi' ? 'Quản Lý Nội Dung' : 'Content Management'}</h2>
         
         <Form {...seoSettingsForm}>
           <form onSubmit={seoSettingsForm.handleSubmit(onSeoSettingsSubmit)} className="space-y-6">
@@ -6032,7 +6032,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     }
     return (
       <div className="space-y-6 p-6">
-        <h2 className="text-2xl font-sans font-light">{language === 'vi' ? 'Quản Lý Nội Dung Trang Chủ' : 'Homepage Content Management'}</h2>
+        <h2 className="text-2xl font-sans font-light min-h-[36px]">{language === 'vi' ? 'Quản Lý Nội Dung Trang Chủ' : 'Homepage Content Management'}</h2>
         
         <Form {...homepageContentForm}>
           <form onSubmit={homepageContentForm.handleSubmit(onHomepageContentSubmit)} className="space-y-6">
@@ -7207,12 +7207,12 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     return (
       <div className="space-y-6 p-6">
         <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-sans font-light">{language === 'vi' ? 'Quản Lý Bài Viết' : 'Articles Management'}</h2>
+          <h2 className="text-2xl font-sans font-light min-h-[36px]">{language === 'vi' ? 'Quản Lý Bài Viết' : 'Articles Management'}</h2>
           <Button
             variant="outline"
             onClick={() => setIsCategoryManagementDialogOpen(true)}
             data-testid="button-category-settings"
-            className="h-10 px-4"
+            className="h-10 px-4 min-w-[160px] justify-center"
           >
             <Settings className="mr-2 h-4 w-4" />
             {language === 'vi' ? 'Cài Đặt Danh Mục' : 'Category Settings'}
@@ -7414,6 +7414,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       });
                     }}
                     data-testid="button-add-article"
+                    className="min-w-[140px] justify-center"
                   >
                     <Plus className="mr-2 h-4 w-4" />
                     {language === 'vi' ? 'Thêm Bài Viết' : 'Add Article'}
@@ -8396,7 +8397,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       <div className="space-y-6 p-6">
         <div className="flex justify-between items-center">
           <div>
-            <h2 className="text-2xl font-sans font-light">{language === 'vi' ? 'Quản Lý Người Dùng' : 'User Management'}</h2>
+            <h2 className="text-2xl font-sans font-light min-h-[36px]">{language === 'vi' ? 'Quản Lý Người Dùng' : 'User Management'}</h2>
             <p className="text-sm text-white/50 mt-1">
               {language === 'vi' ? 'Quản lý tài khoản admin và quyền hạn' : 'Manage admin accounts and permissions'}
             </p>
