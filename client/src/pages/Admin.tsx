@@ -47,9 +47,9 @@ function hasPermission(user: any, permission: string): boolean {
 function getTabs(t: (key: string) => string) {
   return [
     { id: 'overview', label: t('admin.overview'), icon: BarChart3 },
-    { id: 'projects', label: t('admin.projects'), icon: Briefcase },
-    { id: 'clients', label: t('admin.crm'), icon: Users },
     { id: 'inquiries', label: t('admin.inquiries'), icon: Mail },
+    { id: 'clients', label: t('admin.crm'), icon: Users },
+    { id: 'projects', label: t('admin.projects'), icon: Briefcase },
     { id: 'articles', label: t('admin.articles'), icon: Newspaper },
     { id: 'homepage', label: t('admin.homepage'), icon: Home },
     { id: 'about', label: t('admin.about'), icon: Image },
