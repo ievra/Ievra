@@ -3280,7 +3280,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
 
   const formatDate = (date: string | Date) => {
     const dateObj = typeof date === 'string' ? new Date(date) : date;
-    return dateObj.toLocaleDateString('en-US', {
+    return dateObj.toLocaleDateString(language === 'vi' ? 'vi-VN' : 'en-US', {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
