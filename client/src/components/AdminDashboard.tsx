@@ -4531,7 +4531,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               className="h-10 px-4"
             >
               <Settings className="mr-2 h-4 w-4" />
-              {language === 'vi' ? 'Cài Đặt CRM' : 'CRM Settings'}
+              {language === 'vi' ? 'Cài Đặt' : 'Settings'}
             </Button>
             <Dialog open={isClientDialogOpen} onOpenChange={(open) => {
             setIsClientDialogOpen(open);
@@ -5031,7 +5031,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         <Dialog open={isCrmSettingsDialogOpen} onOpenChange={setIsCrmSettingsDialogOpen}>
           <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto bg-black border border-white/20 rounded-none">
             <DialogHeader>
-              <DialogTitle className="text-2xl font-light">{language === 'vi' ? 'Cài Đặt CRM' : 'CRM Settings'}</DialogTitle>
+              <DialogTitle className="text-2xl font-light">{language === 'vi' ? 'Cài Đặt' : 'Settings'}</DialogTitle>
             </DialogHeader>
             <CrmSettingsManager />
           </DialogContent>
