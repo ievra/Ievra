@@ -71,6 +71,7 @@ const bilingualProjectSchema = z.object({
   materialSelectionVi: z.string().optional(),
   slug: z.string().optional(),
   category: z.string().min(1, "Category is required"),
+  status: z.enum(["draft", "published", "archived"]).default("draft"),
   locationEn: z.string().optional(),
   locationVi: z.string().optional(),
   areaEn: z.string().optional(),
@@ -705,6 +706,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       materialSelectionVi: "",
       slug: "",
       category: "residential",
+      status: "draft",
       locationEn: "",
       locationVi: "",
       areaEn: "",
@@ -2085,6 +2087,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       metaKeywordsVi: viVersion?.metaKeywords || "",
       slug: project.slug || "",
       category: project.category,
+      status: (project as any).status || "draft",
       locationEn: enVersion?.location || "",
       locationVi: viVersion?.location || "",
       areaEn: enVersion?.area || "",
@@ -2177,6 +2180,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           materialSelectionTitle: data.materialSelectionTitleEn,
           materialSelection: data.materialSelectionEn,
           category: data.category,
+          status: data.status,
           location: data.locationEn,
           area: data.areaEn,
           duration: data.durationEn,
@@ -2221,6 +2225,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           materialSelectionTitle: data.materialSelectionTitleVi,
           materialSelection: data.materialSelectionVi,
           category: data.category,
+          status: data.status,
           location: data.locationVi,
           area: data.areaVi,
           duration: data.durationVi,
@@ -3414,32 +3419,73 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               <Form {...projectForm}>
                 <form onSubmit={projectForm.handleSubmit(onProjectSubmit)} className="space-y-6">
 
-                  <FormField
-                    control={projectForm.control}
-                    name="category"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{language === 'vi' ? 'Danh mục' : 'Category'} *</FormLabel>
-                        <Select onValueChange={field.onChange} value={field.value}>
-                          <FormControl>
-                            <SelectTrigger data-testid="select-project-category">
-                              <SelectValue placeholder={language === 'vi' ? 'Chọn danh mục' : 'Select a category'} />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {categories
-                              .filter(cat => cat.type === 'project' && cat.active)
-                              .map((category) => (
-                                <SelectItem key={category.id} value={category.slug}>
-                                  {category.name}
-                                </SelectItem>
-                              ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  {/* THÔNG TIN CHUNG */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium uppercase tracking-wide">Thông Tin Chung</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <FormField
+                        control={projectForm.control}
+                        name="slug"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Slug</FormLabel>
+                            <FormControl>
+                              <Input {...field} data-testid="input-project-slug" placeholder="tự động tạo" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={projectForm.control}
+                        name="category"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Danh Mục *</FormLabel>
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <FormControl>
+                                <SelectTrigger data-testid="select-project-category">
+                                  <SelectValue placeholder="Chọn danh mục" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {categories
+                                  .filter(cat => cat.type === 'project' && cat.active)
+                                  .map((category) => (
+                                    <SelectItem key={category.id} value={category.slug}>
+                                      {category.name}
+                                    </SelectItem>
+                                  ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={projectForm.control}
+                        name="status"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Trạng Thái *</FormLabel>
+                            <Select onValueChange={field.onChange} value={field.value}>
+                              <FormControl>
+                                <SelectTrigger data-testid="select-project-status">
+                                  <SelectValue placeholder="Chọn trạng thái" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem value="draft">Bản Nháp</SelectItem>
+                                <SelectItem value="published">Đã Đăng</SelectItem>
+                                <SelectItem value="archived">Lưu Trữ</SelectItem>
+                              </SelectContent>
+                            </Select>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
 
                   {/* Bilingual Title */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -3842,20 +3888,100 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     </div>
                   </div>
 
-                  {/* Bilingual SEO Settings */}
+                  {/* Hình Ảnh */}
+                  <FormField
+                    control={projectForm.control}
+                    name="images"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Hình Ảnh Card (Hiển thị trên Card dự án)</FormLabel>
+                        <FormControl>
+                          <ImageUpload
+                            value={field.value}
+                            onChange={field.onChange}
+                            multiple={false}
+                            maxImages={1}
+                            disabled={!hasPermission(user, 'projects')}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={projectForm.control}
+                    name="coverImages"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Ảnh Bìa (Tối đa 2 ảnh, tỷ lệ 3:4)</FormLabel>
+                        <FormControl>
+                          <ImageUpload
+                            value={field.value}
+                            onChange={field.onChange}
+                            multiple
+                            maxImages={2}
+                            disabled={!hasPermission(user, 'projects')}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={projectForm.control}
+                    name="contentImages"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Ảnh Nội Dung (2 ảnh, tỷ lệ 16:9 hoặc 1:1)</FormLabel>
+                        <FormControl>
+                          <ImageUpload
+                            value={field.value}
+                            onChange={field.onChange}
+                            multiple
+                            maxImages={2}
+                            disabled={!hasPermission(user, 'projects')}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={projectForm.control}
+                    name="galleryImages"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Thư Viện Ảnh (Tối đa 10 ảnh, tỷ lệ 16:9 hoặc 1:1)</FormLabel>
+                        <FormControl>
+                          <ImageUpload
+                            value={field.value}
+                            onChange={field.onChange}
+                            multiple
+                            disabled={!hasPermission(user, 'projects')}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* CÀI ĐẶT SEO */}
                   <div className="border-t pt-6">
-                    <h3 className="text-lg font-medium mb-4">{language === 'vi' ? 'Cài Đặt SEO' : 'SEO Settings'}</h3>
+                    <h3 className="text-lg font-medium mb-4 uppercase tracking-wide">Cài Đặt SEO</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-4">
-                        <h4 className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'SEO Tiếng Anh' : 'English SEO'}</h4>
+                        <h4 className="text-sm font-medium text-muted-foreground uppercase">SEO Tiếng Anh</h4>
                         <FormField
                           control={projectForm.control}
                           name="metaTitleEn"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Meta Title (EN) <span className="text-muted-foreground text-xs font-normal">- Max 60</span></FormLabel>
+                              <FormLabel>Meta Title (EN) <span className="text-muted-foreground text-xs font-normal">- Tối đa 60</span></FormLabel>
                               <FormControl>
-                                <Input {...field} maxLength={60} placeholder="SEO title in English..." data-testid="input-project-meta-title-en" />
+                                <Input {...field} maxLength={60} placeholder="Tiêu đề SEO tiếng Anh..." data-testid="input-project-meta-title-en" />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -3866,9 +3992,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           name="metaDescriptionEn"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Meta Description (EN) <span className="text-muted-foreground text-xs font-normal">- Max 160</span></FormLabel>
+                              <FormLabel>Meta Description (EN) <span className="text-muted-foreground text-xs font-normal">- Tối đa 160</span></FormLabel>
                               <FormControl>
-                                <Textarea {...field} rows={2} maxLength={160} placeholder="SEO description in English..." data-testid="textarea-project-meta-description-en" />
+                                <Textarea {...field} rows={2} maxLength={160} placeholder="Mô tả SEO tiếng Anh..." data-testid="textarea-project-meta-description-en" />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -3879,9 +4005,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           name="metaKeywordsEn"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>Meta Keywords (EN) <span className="text-muted-foreground text-xs font-normal">- Max 200</span></FormLabel>
+                              <FormLabel>Meta Keywords (EN) <span className="text-muted-foreground text-xs font-normal">- Tối đa 200</span></FormLabel>
                               <FormControl>
-                                <Input {...field} maxLength={200} placeholder="keyword1, keyword2, keyword3..." data-testid="input-project-meta-keywords-en" />
+                                <Input {...field} maxLength={200} placeholder="từ khóa 1, từ khóa 2, từ khóa 3..." data-testid="input-project-meta-keywords-en" />
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -3889,7 +4015,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         />
                       </div>
                       <div className="space-y-4">
-                        <h4 className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'SEO Tiếng Việt' : 'Vietnamese SEO'}</h4>
+                        <h4 className="text-sm font-medium text-muted-foreground uppercase">SEO Tiếng Việt</h4>
                         <FormField
                           control={projectForm.control}
                           name="metaTitleVi"
@@ -3933,99 +4059,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     </div>
                   </div>
 
-                  <FormField
-                    control={projectForm.control}
-                    name="images"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Card Image (Hình ảnh hiển thị trên Card dự án)</FormLabel>
-                        <FormControl>
-                          <ImageUpload
-                            value={field.value}
-                            onChange={field.onChange}
-                            multiple={false}
-                            maxImages={1}
-                            disabled={!hasPermission(user, 'projects')}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={projectForm.control}
-                    name="coverImages"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Cover Images (Maximum 2, 3:4 Aspect Ratio)</FormLabel>
-                        <FormControl>
-                          <ImageUpload
-                            value={field.value}
-                            onChange={field.onChange}
-                            multiple
-                            maxImages={2}
-                            disabled={!hasPermission(user, 'projects')}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={projectForm.control}
-                    name="contentImages"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Content Images (2 Images, 16:9 or 1:1 Aspect Ratio)</FormLabel>
-                        <FormControl>
-                          <ImageUpload
-                            value={field.value}
-                            onChange={field.onChange}
-                            multiple
-                            maxImages={2}
-                            disabled={!hasPermission(user, 'projects')}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={projectForm.control}
-                    name="galleryImages"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Gallery Images (Maximum 10, 16:9 or 1:1 Aspect Ratio)</FormLabel>
-                        <FormControl>
-                          <ImageUpload
-                            value={field.value}
-                            onChange={field.onChange}
-                            multiple
-                            disabled={!hasPermission(user, 'projects')}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={projectForm.control}
-                    name="slug"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>URL Slug</FormLabel>
-                        <FormControl>
-                          <Input {...field} data-testid="input-project-slug" placeholder={language === 'vi' ? 'tự động tạo từ tiêu đề nếu để trống' : 'auto-generated from title if left empty'} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
                   <p className="text-xs text-muted-foreground">
                     * Cần nhập ít nhất 1 ngôn ngữ (tiêu đề bắt buộc)
                   </p>
@@ -4041,7 +4074,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       }}
                       className="h-10 px-4"
                     >
-                      {language === 'vi' ? 'Hủy' : 'Cancel'}
+                      Hủy
                     </Button>
                     <Button 
                       type="submit"
@@ -4049,7 +4082,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       data-testid="button-save-project"
                       className="h-10 px-4"
                     >
-                      {language === 'vi' ? (editingProject ? 'Cập Nhật' : 'Tạo Mới') : (editingProject ? 'Update' : 'Create')}
+                      {editingProject ? 'Cập Nhật' : 'Tạo Mới'}
                     </Button>
                   </div>
                 </form>

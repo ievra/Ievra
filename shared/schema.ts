@@ -45,6 +45,7 @@ export const projects = pgTable("projects", {
   coverImages: jsonb("cover_images").default([]), // Max 2 images, 3:4 aspect ratio
   contentImages: jsonb("content_images").default([]), // 2 images, 16:9 or 1:1 aspect ratio  
   galleryImages: jsonb("gallery_images").default([]), // Max 10 images, 16:9 or 1:1 aspect ratio
+  status: varchar("status", { length: 20 }).notNull().default("draft"), // draft, published, archived
   featured: boolean("featured").notNull().default(false),
   // Legacy fields for backward compatibility
   heroImage: text("hero_image"), // Legacy: Main project hero image
