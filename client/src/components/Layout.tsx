@@ -113,7 +113,7 @@ export default function Layout({ children }: LayoutProps) {
                 </svg>
               </button>
               <div
-                className={`absolute top-full right-0 mt-2 bg-black/40 backdrop-blur-md border border-white/10 rounded-lg overflow-hidden transition-all duration-300 origin-top ${
+                className={`absolute top-full right-0 mt-2 bg-black/40 backdrop-blur-md border border-white/10 rounded-lg overflow-hidden transition-all duration-700 ease-in-out origin-top ${
                   langDropdownOpen ? 'opacity-100 scale-y-100 pointer-events-auto' : 'opacity-0 scale-y-0 pointer-events-none'
                 }`}
               >
