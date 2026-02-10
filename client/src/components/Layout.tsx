@@ -104,7 +104,7 @@ export default function Layout({ children }: LayoutProps) {
             <div className="relative">
               <button
                 onClick={() => setLangDropdownOpen(!langDropdownOpen)}
-                className="text-[13px] font-light tracking-wider text-white/70 hover:text-white transition-colors flex items-center gap-1"
+                className="text-[13px] font-light tracking-wider uppercase text-white/70 hover:text-white transition-colors flex items-center gap-1"
                 data-testid="lang-toggle"
               >
                 {language === 'vi' ? 'TIẾNG VIỆT' : 'ENGLISH'}
@@ -119,7 +119,7 @@ export default function Layout({ children }: LayoutProps) {
               >
                 <button
                   onClick={() => { handleLanguageChange('en'); setLangDropdownOpen(false); }}
-                  className={`block w-full text-left px-5 py-2.5 text-[13px] font-light tracking-wider transition-colors whitespace-nowrap ${
+                  className={`block w-full text-left px-5 py-2.5 text-[13px] font-light tracking-wider uppercase transition-colors whitespace-nowrap ${
                     language === 'en' ? 'text-white bg-white/10' : 'text-white/60 hover:text-white hover:bg-white/5'
                   }`}
                   data-testid="lang-en"
@@ -128,7 +128,7 @@ export default function Layout({ children }: LayoutProps) {
                 </button>
                 <button
                   onClick={() => { handleLanguageChange('vi'); setLangDropdownOpen(false); }}
-                  className={`block w-full text-left px-5 py-2.5 text-[13px] font-light tracking-wider transition-colors whitespace-nowrap ${
+                  className={`block w-full text-left px-5 py-2.5 text-[13px] font-light tracking-wider uppercase transition-colors whitespace-nowrap ${
                     language === 'vi' ? 'text-white bg-white/10' : 'text-white/60 hover:text-white hover:bg-white/5'
                   }`}
                   data-testid="lang-vi"
@@ -215,7 +215,7 @@ export default function Layout({ children }: LayoutProps) {
               <div className="flex gap-4">
                 <button
                   onClick={() => { handleLanguageChange('en'); }}
-                  className={`text-sm font-light tracking-wider transition-colors ${language === 'en' ? 'text-white' : 'text-white/40'}`}
+                  className={`text-sm font-light tracking-wider uppercase transition-colors ${language === 'en' ? 'text-white' : 'text-white/40'}`}
                   data-testid="lang-en"
                 >
                   ENGLISH
@@ -223,7 +223,7 @@ export default function Layout({ children }: LayoutProps) {
                 <span className="text-white/20">|</span>
                 <button
                   onClick={() => { handleLanguageChange('vi'); }}
-                  className={`text-sm font-light tracking-wider transition-colors ${language === 'vi' ? 'text-white' : 'text-white/40'}`}
+                  className={`text-sm font-light tracking-wider uppercase transition-colors ${language === 'vi' ? 'text-white' : 'text-white/40'}`}
                   data-testid="lang-vi"
                 >
                   TIẾNG VIỆT
