@@ -790,7 +790,6 @@ export class DatabaseStorage implements IStorage {
       })
       .where(eq(clients.id, clientId));
     
-    await this.updateClientTier(clientId);
   }
 
   // CRM: Analytics & Reporting
