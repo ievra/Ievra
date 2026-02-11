@@ -85,7 +85,7 @@ export default function LookupAdminTab() {
 
   const [phoneSearch, setPhoneSearch] = useState("");
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
-  const [activeSubTab, setActiveSubTab] = useState<"interactions" | "construction_progress" | "design_progress" | "transactions" | "warranty">("interactions");
+  const [activeSubTab, setActiveSubTab] = useState<"interactions" | "construction_progress" | "design_progress" | "transactions" | "warranty">("design_progress");
   const [isInteractionDialogOpen, setIsInteractionDialogOpen] = useState(false);
   const [isDealDialogOpen, setIsDealDialogOpen] = useState(false);
   const [editingInteraction, setEditingInteraction] = useState<Interaction | null>(null);
@@ -166,7 +166,7 @@ export default function LookupAdminTab() {
       setSelectedClient(found);
       setWarrantyExpiry(found.warrantyExpiry ? new Date(found.warrantyExpiry).toISOString().split("T")[0] : "");
       setWarrantyStatus(found.warrantyStatus || "none");
-      setActiveSubTab("interactions");
+      setActiveSubTab("design_progress");
     } else {
       toast({ title: isVi ? "Không tìm thấy" : "Not found", description: isVi ? "Không tìm thấy khách hàng với số điện thoại này" : "No client found with this phone number", variant: "destructive" });
       setSelectedClient(null);
@@ -658,6 +658,7 @@ export default function LookupAdminTab() {
                               <p className="text-xs font-normal text-white/30">{isVi ? "Tiêu đề" : "Title"}</p>
                             </div>
                           </TableHead>
+                          <TableHead className="text-white/60 text-right">{isVi ? "Số tiền" : "Amount"}</TableHead>
                           <TableHead className="text-white/60">{isVi ? "Ghi chú" : "Notes"}</TableHead>
                           <TableHead className="text-white/60">
                             <div>
@@ -665,7 +666,6 @@ export default function LookupAdminTab() {
                               <p className="text-xs font-normal text-white/30">{isVi ? "Trạng thái" : "Status"}</p>
                             </div>
                           </TableHead>
-                          <TableHead className="text-white/60 text-right">{isVi ? "Số tiền" : "Amount"}</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -677,7 +677,10 @@ export default function LookupAdminTab() {
                                 <p className="text-sm text-white/50">{tx.title}</p>
                               </div>
                             </TableCell>
-                            <TableCell className="text-white/60 max-w-[200px] truncate">{tx.description || "—"}</TableCell>
+                            <TableCell className={`text-right font-light ${tx.type === "refund" ? "text-red-400" : "text-white"}`}>
+                              {tx.type === "refund" ? "-" : "+"}{formatCurrency(tx.amount)}
+                            </TableCell>
+                            <TableCell className="text-white/60 max-w-[200px] truncate">{tx.notes || tx.description || "—"}</TableCell>
                             <TableCell>
                               <div className="space-y-1">
                                 <Badge variant="outline" className={`rounded-none ${tx.type === "refund" ? "border-red-500/40 text-red-400" : tx.type === "commission" ? "border-yellow-500/40 text-yellow-400" : "border-white/20 text-white/60"}`}>
@@ -687,9 +690,6 @@ export default function LookupAdminTab() {
                                   {tx.status === "completed" ? (isVi ? "Hoàn tất" : "Completed") : tx.status === "cancelled" ? (isVi ? "Đã hủy" : "Cancelled") : (isVi ? "Chờ xử lý" : "Pending")}
                                 </Badge>
                               </div>
-                            </TableCell>
-                            <TableCell className={`text-right font-light ${tx.type === "refund" ? "text-red-400" : "text-white"}`}>
-                              {tx.type === "refund" ? "-" : "+"}{formatCurrency(tx.amount)}
                             </TableCell>
                           </TableRow>
                         ))}
