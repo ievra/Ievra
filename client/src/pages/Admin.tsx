@@ -115,23 +115,11 @@ export default function Admin() {
                   {tabs.map((tab) => {
                     const IconComponent = tab.icon;
                     const isActive = activeTab === tab.id;
-                    const tabWidths: Record<string, string> = {
-                      overview: 'w-[130px]',
-                      projects: 'w-[110px]',
-                      clients: 'w-[130px]',
-                      lookup: 'w-[115px]',
-                      inquiries: 'w-[115px]',
-                      articles: 'w-[115px]',
-                      homepage: 'w-[125px]',
-                      about: 'w-[125px]',
-                      content: 'w-[90px]',
-                      users: 'w-[135px]',
-                    };
                     return (
                       <Button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`${tabWidths[tab.id] || ''} justify-start px-4 py-3 font-light tracking-wide transition-all duration-300 ease-in-out rounded-none ${
+                        className={`w-[135px] justify-start px-4 py-3 font-light tracking-wide transition-all duration-300 ease-in-out rounded-none ${
                           isActive 
                             ? 'bg-white/20 border border-white/30 text-white backdrop-blur-sm' 
                             : 'bg-transparent border border-white/30 text-white/70 hover:bg-white/10 hover:text-white hover:border-white'
