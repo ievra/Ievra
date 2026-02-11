@@ -4479,7 +4479,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               <Table className="table-fixed [&_td]:py-2 [&_th]:py-2">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[50px] whitespace-nowrap text-center">STT</TableHead>
+                    <TableHead className="w-[50px] whitespace-nowrap text-center">{language === 'vi' ? 'STT' : 'NO'}</TableHead>
                     <TableHead className="w-[60px] whitespace-nowrap text-left">{language === 'vi' ? 'Năm' : 'Year'}</TableHead>
                     <TableHead className="w-[110px] whitespace-nowrap text-left">{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
                     <TableHead className="w-[110px] whitespace-nowrap text-left">{language === 'vi' ? 'Phong Cách' : 'Style'}</TableHead>
@@ -5651,7 +5651,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   <Table className="table-fixed w-full">
                     <TableHeader>
                       <TableRow>
-                        <TableHead className="w-[4%] whitespace-nowrap text-center">STT</TableHead>
+                        <TableHead className="w-[4%] whitespace-nowrap text-center">{language === 'vi' ? 'STT' : 'NO'}</TableHead>
                         <TableHead className="w-[5%] whitespace-nowrap text-center">{language === 'vi' ? 'Hạng' : 'Rank'}</TableHead>
                         <TableHead className="w-[14%] whitespace-nowrap">
                           <div>{t('admin.clients')}</div>
@@ -5882,7 +5882,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               <Table className="table-fixed">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[50px] whitespace-nowrap text-center">STT</TableHead>
+                    <TableHead className="w-[50px] whitespace-nowrap text-center">{language === 'vi' ? 'STT' : 'NO'}</TableHead>
                     <TableHead className="w-[200px] whitespace-nowrap">
                       <div>
                         <span>{language === 'vi' ? 'Họ Tên' : 'Full Name'}</span>
@@ -8188,7 +8188,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               <Table className="table-fixed [&_td]:py-2 [&_th]:py-2">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[50px] whitespace-nowrap text-center">STT</TableHead>
+                    <TableHead className="w-[50px] whitespace-nowrap text-center">{language === 'vi' ? 'STT' : 'NO'}</TableHead>
                     <TableHead className="w-[120px] whitespace-nowrap text-left">{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
                     <TableHead className="text-left">{language === 'vi' ? 'Tiêu Đề' : 'Title'}</TableHead>
                     <TableHead className="w-[80px] whitespace-nowrap text-left">{language === 'vi' ? 'Ngôn Ngữ' : 'Lang'}</TableHead>
