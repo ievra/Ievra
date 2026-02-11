@@ -660,7 +660,7 @@ export default function LookupAdminTab() {
                           </TableHead>
                           <TableHead className="text-white/60 w-[20%]">{isVi ? "Số tiền" : "Amount"}</TableHead>
                           <TableHead className="text-white/60 w-[30%]">{isVi ? "Ghi chú" : "Notes"}</TableHead>
-                          <TableHead className="text-white/60 w-[25%]">
+                          <TableHead className="text-white/60 w-[25%] text-right">
                             <div>
                               <span>{isVi ? "Loại" : "Type"}</span>
                               <p className="text-xs font-normal text-white/30">{isVi ? "Trạng thái" : "Status"}</p>
@@ -681,12 +681,12 @@ export default function LookupAdminTab() {
                               {tx.type === "refund" ? "-" : "+"}{formatCurrency(tx.amount)}
                             </TableCell>
                             <TableCell className="text-white/60 truncate">{tx.notes || tx.description || "—"}</TableCell>
-                            <TableCell>
-                              <div className="space-y-1">
+                            <TableCell className="text-right">
+                              <div className="space-y-1 flex flex-col items-end">
                                 <Badge variant="outline" className={`rounded-none ${tx.type === "refund" ? "border-red-500/40 text-red-400" : tx.type === "commission" ? "border-yellow-500/40 text-yellow-400" : "border-white/20 text-white/60"}`}>
                                   {tx.type === "refund" ? (isVi ? "Hoàn trả" : "Refund") : tx.type === "commission" ? (isVi ? "Hoa hồng" : "Commission") : (isVi ? "Thanh toán" : "Payment")}
                                 </Badge>
-                                <Badge variant="outline" className={`rounded-none block w-fit ${tx.status === "completed" ? "border-white/20 text-white/60" : tx.status === "cancelled" ? "border-red-500/40 text-red-400" : "border-white/20 text-white/60"}`}>
+                                <Badge variant="outline" className={`rounded-none ${tx.status === "completed" ? "border-white/20 text-white/60" : tx.status === "cancelled" ? "border-red-500/40 text-red-400" : "border-white/20 text-white/60"}`}>
                                   {tx.status === "completed" ? (isVi ? "Hoàn tất" : "Completed") : tx.status === "cancelled" ? (isVi ? "Đã hủy" : "Cancelled") : (isVi ? "Chờ xử lý" : "Pending")}
                                 </Badge>
                               </div>
