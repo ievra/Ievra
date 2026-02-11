@@ -5606,7 +5606,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">{t('crm.company')}</div>
                         </TableHead>
                         <TableHead className="w-[110px]">
-                          <div>{t('crm.totalSpending')}</div>
+                          <div>{language === 'vi' ? 'Đã Thanh Toán' : 'Paid'}</div>
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">Hoa hồng</div>
                         </TableHead>
                         <TableHead className="w-[110px] text-center">{t('crm.warrantyStatus')}</TableHead>
