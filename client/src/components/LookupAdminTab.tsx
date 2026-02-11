@@ -461,18 +461,17 @@ export default function LookupAdminTab() {
           <div className="border border-white/20">
             <div className="flex border-b border-white/20 overflow-x-auto">
               {([
-                { key: "interactions" as const, vi: "Nhật ký thi công", en: "Construction Log", icon: Clock },
-                { key: "construction_progress" as const, vi: "Tiến độ công trình", en: "Construction Progress", icon: HardHat },
-                { key: "design_progress" as const, vi: "Tiến độ thiết kế", en: "Design Progress", icon: PenTool },
-                { key: "transactions" as const, vi: "Giao dịch", en: "Transactions", icon: CreditCard },
-                { key: "warranty" as const, vi: "Bảo hành", en: "Warranty", icon: Shield },
+                { key: "interactions" as const, vi: "Nhật ký thi công", en: "Construction Log" },
+                { key: "construction_progress" as const, vi: "Tiến độ công trình", en: "Construction Progress" },
+                { key: "design_progress" as const, vi: "Tiến độ thiết kế", en: "Design Progress" },
+                { key: "transactions" as const, vi: "Giao dịch", en: "Transactions" },
+                { key: "warranty" as const, vi: "Bảo hành", en: "Warranty" },
               ]).map((tab) => (
                 <button
                   key={tab.key}
                   onClick={() => setActiveSubTab(tab.key)}
                   className={`flex items-center gap-2 px-5 py-3 text-sm font-light tracking-wider whitespace-nowrap transition-colors ${activeSubTab === tab.key ? "text-white border-b-2 border-white -mb-[1px]" : "text-white/40 hover:text-white/70"}`}
                 >
-                  <tab.icon className="w-4 h-4" />
                   {isVi ? tab.vi : tab.en}
                 </button>
               ))}
