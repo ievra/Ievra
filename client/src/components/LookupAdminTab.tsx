@@ -416,7 +416,7 @@ export default function LookupAdminTab() {
                 className="bg-transparent border-white/20 text-white pl-10 rounded-none h-10"
               />
             </div>
-            <Button onClick={handleSearch} className="h-10 px-6 rounded-none bg-white text-black hover:bg-white/90">
+            <Button onClick={handleSearch} className="h-10 px-6 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10">
               <Search className="w-4 h-4 mr-2" />
               {isVi ? "Tìm kiếm" : "Search"}
             </Button>
