@@ -90,28 +90,21 @@ export default function Lookup() {
   const placeholderText = language === "vi" ? "Nhập số điện thoại của bạn..." : "Enter your phone number...";
 
   useEffect(() => {
-    if (isFocused || phone) return;
-    let idx = 0;
-    let forward = true;
-    setTypedPlaceholder("");
+    const text = placeholderText;
+    let index = 0;
+    setTypedPlaceholder('');
+
     const interval = setInterval(() => {
-      if (forward) {
-        idx++;
-        setTypedPlaceholder(placeholderText.slice(0, idx));
-        if (idx >= placeholderText.length) {
-          forward = false;
-          setTimeout(() => {}, 1500);
-        }
+      if (index <= text.length) {
+        setTypedPlaceholder(text.slice(0, index));
+        index++;
       } else {
-        idx--;
-        setTypedPlaceholder(placeholderText.slice(0, idx));
-        if (idx <= 0) {
-          forward = true;
-        }
+        clearInterval(interval);
       }
-    }, 80);
+    }, 50);
+
     return () => clearInterval(interval);
-  }, [language, isFocused, phone]);
+  }, [language]);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -179,33 +172,25 @@ export default function Lookup() {
               : "Enter your phone number to check project progress, activity log and warranty information."}
           </p>
 
-          <form onSubmit={handleSearch} className="relative">
-            <div className="relative">
-              <input
+          <form onSubmit={handleSearch}>
+            <div className="flex items-end gap-8 pb-4">
+              <Input
                 ref={inputRef}
                 type="tel"
+                placeholder={typedPlaceholder}
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-                className="w-full bg-transparent border-0 border-b border-white/20 text-white text-lg md:text-xl font-light py-4 pr-16 focus:outline-none focus:border-white/50 transition-colors placeholder-transparent"
-                placeholder={placeholderText}
+                className="bg-transparent text-white placeholder-white/60 px-0 py-0 text-lg font-light rounded-none focus-visible:ring-0 flex-1"
               />
-              {!phone && (
-                <span className="absolute left-0 top-4 text-white/30 text-lg md:text-xl font-light pointer-events-none">
-                  {typedPlaceholder}
-                  <span className="inline-block w-[2px] h-5 bg-white/40 ml-[1px] align-middle animate-pulse" />
-                </span>
-              )}
               <button
                 type="submit"
                 disabled={loading || phone.trim().length < 6}
-                className="absolute right-0 top-1/2 -translate-y-1/2 text-white/30 hover:text-white transition-colors disabled:opacity-30"
+                className="text-white/40 hover:text-white transition-colors disabled:opacity-30 pb-0.5"
               >
                 {loading ? (
                   <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 ) : (
-                  <ArrowRight className="w-6 h-6" />
+                  <ArrowRight className="w-5 h-5" />
                 )}
               </button>
             </div>
