@@ -627,32 +627,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/inquiries", requirePermission('inquiries'), requirePermission('crm'), async (req, res) => {
+  app.post("/api/inquiries", async (req, res) => {
     try {
       const validatedData = insertInquirySchema.parse(req.body);
-      
-      // Check if client already exists by email
-      let clientId = null;
-      const existingClient = await storage.getClientByEmail(validatedData.email);
-      
-      if (existingClient) {
-        clientId = existingClient.id;
-      } else {
-        // Create new client from inquiry data
-        const newClient = await storage.createClient({
-          firstName: validatedData.firstName,
-          lastName: validatedData.lastName,
-          email: validatedData.email,
-          phone: validatedData.phone || null,
-          status: "lead"
-        });
-        clientId = newClient.id;
-      }
 
-      const inquiry = await storage.createInquiry({
-        ...validatedData,
-        clientId
-      });
+      const inquiry = await storage.createInquiry(validatedData);
       
       res.status(201).json(inquiry);
     } catch (error) {
