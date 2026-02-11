@@ -125,6 +125,7 @@ const clientSchema = z.object({
   referredById: z.string().optional(),
   referralCount: z.number().optional(),
   referralRevenue: z.string().optional(),
+  intakeDate: z.string().optional(),
   warrantyStatus: z.enum(["none", "active", "expired"]).default("none"),
   warrantyExpiry: z.string().optional(),
   tags: z.array(z.string()).default([]),
@@ -823,6 +824,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       phone: "",
       company: "",
       address: "",
+      intakeDate: "",
       warrantyExpiry: "",
       stage: "lead",
       status: "active",
@@ -2205,6 +2207,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       phone: client.phone || "",
       company: client.company || "",
       address: client.address || "",
+      intakeDate: formatDateForInput(client.intakeDate),
       stage: client.stage || "lead",
       status: client.status || "active",
       totalSpending: client.totalSpending || "0",
@@ -2365,6 +2368,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       const cleanedData = {
         ...data,
         warrantyStatus, // Auto-set based on expiry date
+        intakeDate: data.intakeDate && data.intakeDate.trim() !== "" ? data.intakeDate : undefined,
         warrantyExpiry: data.warrantyExpiry && data.warrantyExpiry.trim() !== "" ? data.warrantyExpiry : undefined,
         phone: data.phone && data.phone.trim() !== "" ? data.phone : undefined,
         company: data.company && data.company.trim() !== "" ? data.company : undefined,
@@ -4781,6 +4785,20 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     )}
                   />
 
+                  <FormField
+                    control={clientForm.control}
+                    name="intakeDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{language === 'vi' ? 'Khởi tạo (Ngày tiếp nhận)' : 'Intake Date'}</FormLabel>
+                        <FormControl>
+                          <Input {...field} type="date" maxLength={10} data-testid="input-client-intake-date" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
                   <div className="grid grid-cols-2 gap-4">
                     <FormField
                       control={clientForm.control}
@@ -5156,6 +5174,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             return status ? (language === 'vi' ? status.labelVi : status.labelEn) : viewingClient.status;
                           })()}
                         </p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Khởi tạo' : 'Intake Date'}</label>
+                        <p className="text-base mt-1">{viewingClient.intakeDate ? new Date(viewingClient.intakeDate).toLocaleDateString('vi-VN') : "—"}</p>
                       </div>
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">{t('crm.created')}</label>
@@ -5606,6 +5628,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       <TableRow>
                         <TableHead className="w-[160px]">
                           <div>{t('admin.clients')}</div>
+                          <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Khởi tạo' : 'Intake'}</div>
                         </TableHead>
                         <TableHead className="w-[120px]">
                           <div>{t('crm.phone')}</div>
@@ -5631,6 +5654,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           <TableCell className="align-middle">
                             <div className="font-light whitespace-nowrap">
                               {client.firstName} {client.lastName}
+                            </div>
+                            <div className="text-xs text-muted-foreground mt-1">
+                              {client.intakeDate ? new Date(client.intakeDate).toLocaleDateString('vi-VN') : "—"}
                             </div>
                           </TableCell>
                           <TableCell className="align-middle">

@@ -81,6 +81,8 @@ export const clients = pgTable("clients", {
   referredById: varchar("referred_by_id").references(() => clients.id),
   referralCount: integer("referral_count").notNull().default(0),
   referralRevenue: decimal("referral_revenue", { precision: 12, scale: 2 }).notNull().default("0"),
+  // Intake date (thời gian tiếp nhận khách hàng)
+  intakeDate: timestamp("intake_date"),
   // Warranty & Additional Info
   warrantyStatus: varchar("warranty_status", { length: 30 }).default("none"), // none, active, expired
   warrantyExpiry: timestamp("warranty_expiry"), // Ngày hết hạn bảo hành
@@ -362,6 +364,7 @@ export const insertClientSchema = createInsertSchema(clients).omit({
   updatedAt: true,
 }).extend({
   dateOfBirth: z.union([z.string(), z.date()]).optional().transform(val => val ? (typeof val === 'string' ? new Date(val) : val) : undefined),
+  intakeDate: z.union([z.string(), z.date()]).optional().transform(val => val ? (typeof val === 'string' ? new Date(val) : val) : undefined),
   warrantyExpiry: z.union([z.string(), z.date()]).optional().transform(val => val ? (typeof val === 'string' ? new Date(val) : val) : undefined),
 });
 
