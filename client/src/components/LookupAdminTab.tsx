@@ -437,18 +437,6 @@ export default function LookupAdminTab() {
                       <span className="flex items-center gap-1.5"><Mail className="w-3.5 h-3.5" />{selectedClient.email}</span>
                     )}
                   </div>
-                  <div className="flex items-center gap-2 mt-2">
-                    <Badge variant="outline" className="rounded-none border-white/20 text-white/70">
-                      {stageLabels[selectedClient.stage]?.[language] || selectedClient.stage}
-                    </Badge>
-                    <Badge variant="outline" className="rounded-none border-white/20 text-white/70">
-                      {tierLabels[selectedClient.tier]?.[language] || selectedClient.tier}
-                    </Badge>
-                    <Badge variant="outline" className={`rounded-none ${selectedClient.warrantyStatus === "active" ? "border-white/20 text-white/60" : selectedClient.warrantyStatus === "expired" ? "border-red-500/40 text-red-400" : "border-white/20 text-white/40"}`}>
-                      <Shield className="w-3 h-3 mr-1" />
-                      {selectedClient.warrantyStatus === "active" ? (isVi ? "Bảo hành" : "Warranty") : selectedClient.warrantyStatus === "expired" ? (isVi ? "Hết hạn" : "Expired") : (isVi ? "Chưa có" : "None")}
-                    </Badge>
-                  </div>
                 </div>
                 <Button variant="ghost" size="icon" onClick={() => setSelectedClient(null)} className="text-white/40 hover:text-white">
                   <X className="w-5 h-5" />
