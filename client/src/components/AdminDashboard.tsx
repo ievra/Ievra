@@ -6025,7 +6025,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               const inquiriesTotalPages = Math.ceil(filtered.length / inquiriesPerPage);
               const inquiriesStartIdx = (inquiriesPage - 1) * inquiriesPerPage;
               const inquiriesEndIdx = inquiriesStartIdx + inquiriesPerPage;
-              if (filtered.length <= 10) return null;
+              if (filtered.length === 0) return null;
               return (
                 <div className="p-4 border-t border-white/10">
                   <div className="flex items-center justify-center gap-2">
