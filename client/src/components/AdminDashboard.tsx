@@ -5872,8 +5872,18 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               <Table className="table-fixed">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[200px] whitespace-nowrap">{language === 'vi' ? 'Họ Tên' : 'Full Name'}</TableHead>
-                    <TableHead className="w-[180px] whitespace-nowrap">{language === 'vi' ? 'Số Điện Thoại' : 'Phone'}</TableHead>
+                    <TableHead className="w-[200px] whitespace-nowrap">
+                      <div>
+                        <span>{language === 'vi' ? 'Họ Tên' : 'Full Name'}</span>
+                        <p className="text-xs font-normal text-muted-foreground">{language === 'vi' ? 'Ngày Tiếp Nhận' : 'Received Date'}</p>
+                      </div>
+                    </TableHead>
+                    <TableHead className="w-[180px] whitespace-nowrap">
+                      <div>
+                        <span>{language === 'vi' ? 'Số Điện Thoại' : 'Phone'}</span>
+                        <p className="text-xs font-normal text-muted-foreground">Email</p>
+                      </div>
+                    </TableHead>
                     <TableHead className="w-[140px] whitespace-nowrap">{language === 'vi' ? 'Loại Dự Án' : 'Project Type'}</TableHead>
                     <TableHead className="w-[140px] text-right whitespace-nowrap">{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
                     <TableHead className="w-[100px] text-right whitespace-nowrap"></TableHead>
