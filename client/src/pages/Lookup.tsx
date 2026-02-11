@@ -167,7 +167,7 @@ export default function Lookup() {
   };
 
   return (
-    <div className="min-h-screen bg-black pt-40 pb-16">
+    <div className="min-h-screen bg-black pt-52 pb-16">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-3xl mx-auto mb-16">
           <h1 className="text-4xl md:text-5xl font-light text-white mb-4 tracking-wide">
