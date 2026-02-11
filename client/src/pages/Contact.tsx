@@ -296,11 +296,7 @@ export default function Contact() {
               <div className="text-red-500 text-center py-8">
                 Error loading FAQs
               </div>
-            ) : faqs.length === 0 ? (
-              <div className="text-white/50 text-center py-8">
-                No FAQs available
-              </div>
-            ) : (
+            ) : faqs.length === 0 ? null : (
               faqs.map((faq, index) => (
                 <div
                   key={faq.id}

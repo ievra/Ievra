@@ -41,11 +41,7 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
 
   if (!projects || projects.length === 0) {
     return (
-      <div className="bg-black text-white min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <p className="text-lg text-white/80">No projects available</p>
-        </div>
-      </div>
+      <div className="bg-background min-h-screen"></div>
     );
   }
 
