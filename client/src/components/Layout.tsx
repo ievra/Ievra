@@ -68,15 +68,20 @@ export default function Layout({ children }: LayoutProps) {
     };
 
     const handleActivity = () => {
+      setIsScrolled(false);
       resetIdleTimer();
     };
 
     window.addEventListener("scroll", updateScrollDirection);
+    window.addEventListener("mousemove", handleActivity);
+    window.addEventListener("touchstart", handleActivity);
 
     resetIdleTimer();
 
     return () => {
       window.removeEventListener("scroll", updateScrollDirection);
+      window.removeEventListener("mousemove", handleActivity);
+      window.removeEventListener("touchstart", handleActivity);
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
     };
   }, []);
