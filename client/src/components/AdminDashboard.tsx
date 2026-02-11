@@ -4978,16 +4978,18 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                     {transaction.type === "payment" ? (language === 'vi' ? "Thanh toán" : "Payment") : transaction.type === "refund" ? (language === 'vi' ? "Hoàn tiền" : "Refund") : "—"}
                                   </span>
                                 </div>
-                                <div className="flex items-center gap-3">
+                                <div className="flex items-center justify-between">
                                   <span className="text-sm font-semibold text-white">{Math.round(parseFloat(transaction.amount)).toLocaleString('vi-VN')} đ</span>
-                                  <span className="text-[10px] text-white/50">
-                                    {transaction.status === "pending" ? (language === 'vi' ? "Đang chờ" : "Pending") : transaction.status === "completed" ? (language === 'vi' ? "Hoàn thành" : "Completed") : transaction.status === "cancelled" ? (language === 'vi' ? "Đã hủy" : "Cancelled") : "—"}
-                                  </span>
-                                  {transaction.status === "completed" && transaction.paymentDate && (
+                                  <div className="flex items-center gap-2">
                                     <span className="text-[10px] text-white/50">
-                                      {new Date(transaction.paymentDate).toLocaleDateString('vi-VN')}
+                                      {transaction.status === "pending" ? (language === 'vi' ? "Đang chờ" : "Pending") : transaction.status === "completed" ? (language === 'vi' ? "Hoàn thành" : "Completed") : transaction.status === "cancelled" ? (language === 'vi' ? "Đã hủy" : "Cancelled") : "—"}
                                     </span>
-                                  )}
+                                    {transaction.status === "completed" && transaction.paymentDate && (
+                                      <span className="text-[10px] text-white/50">
+                                        {new Date(transaction.paymentDate).toLocaleDateString('vi-VN')}
+                                      </span>
+                                    )}
+                                  </div>
                                 </div>
                                 {transaction.description && (
                                   <p className="text-[10px] text-white/50">{transaction.description}</p>
@@ -5306,16 +5308,18 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                   {transaction.type === "payment" ? (language === 'vi' ? "Thanh toán" : "Payment") : transaction.type === "refund" ? (language === 'vi' ? "Hoàn tiền" : "Refund") : "—"}
                                 </span>
                               </div>
-                              <div className="flex items-center gap-3">
+                              <div className="flex items-center justify-between">
                                 <span className="text-sm font-semibold text-white">{Math.round(parseFloat(transaction.amount)).toLocaleString('vi-VN')} đ</span>
-                                <span className="text-[10px] text-white/50">
-                                  {transaction.status === "pending" ? (language === 'vi' ? "Đang chờ" : "Pending") : transaction.status === "completed" ? (language === 'vi' ? "Hoàn thành" : "Completed") : transaction.status === "cancelled" ? (language === 'vi' ? "Đã hủy" : "Cancelled") : "—"}
-                                </span>
-                                {transaction.status === "completed" && transaction.paymentDate && (
+                                <div className="flex items-center gap-2">
                                   <span className="text-[10px] text-white/50">
-                                    {new Date(transaction.paymentDate).toLocaleDateString('vi-VN')}
+                                    {transaction.status === "pending" ? (language === 'vi' ? "Đang chờ" : "Pending") : transaction.status === "completed" ? (language === 'vi' ? "Hoàn thành" : "Completed") : transaction.status === "cancelled" ? (language === 'vi' ? "Đã hủy" : "Cancelled") : "—"}
                                   </span>
-                                )}
+                                  {transaction.status === "completed" && transaction.paymentDate && (
+                                    <span className="text-[10px] text-white/50">
+                                      {new Date(transaction.paymentDate).toLocaleDateString('vi-VN')}
+                                    </span>
+                                  )}
+                                </div>
                               </div>
                               {transaction.description && (
                                 <p className="text-[10px] text-white/50">{transaction.description}</p>
