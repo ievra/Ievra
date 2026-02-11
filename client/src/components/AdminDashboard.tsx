@@ -5299,20 +5299,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     )}
                   />
 
-                  <FormField
-                    control={transactionForm.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Mô tả chi tiết</FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder="VD: Thanh toán thiết kế nội thất phòng khách" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
                   <div className="grid grid-cols-2 gap-4">
                     <FormField
                       control={transactionForm.control}
@@ -5343,7 +5329,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             <SelectContent>
                               <SelectItem value="payment">Thanh toán</SelectItem>
                               <SelectItem value="refund">Hoàn tiền</SelectItem>
-                              <SelectItem value="commission">Hoa hồng</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
