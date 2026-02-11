@@ -5585,7 +5585,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         <TableHead className="w-[110px] text-center">{t('crm.warrantyStatus')}</TableHead>
                         <TableHead className="w-[110px] text-center">{t('crm.pipelineStage')}</TableHead>
                         <TableHead className="w-[100px] text-center">{t('crm.status')}</TableHead>
-                        <TableHead className="text-right w-[70px]">{t('crm.actions')}</TableHead>
+                        <TableHead className="text-right w-[70px]"></TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -5678,8 +5678,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             </div>
                           </TableCell>
                           <TableCell className="align-middle text-right">
-                            <div className="flex flex-col items-end gap-1">
-                              <div className="flex gap-1">
+                            <div className="flex flex-col items-end">
+                              <div className="flex gap-0">
                                 <Button
                                   variant="ghost"
                                   size="sm"
