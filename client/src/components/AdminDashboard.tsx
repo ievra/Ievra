@@ -5588,7 +5588,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   <Table className="table-fixed w-full">
                     <TableHeader>
                       <TableRow>
-                        <TableHead className="w-[5%] whitespace-nowrap text-center">#</TableHead>
+                        <TableHead className="w-[5%] whitespace-nowrap text-center">{language === 'vi' ? 'Hạng' : 'Rank'}</TableHead>
                         <TableHead className="w-[14%] whitespace-nowrap">
                           <div>{t('admin.clients')}</div>
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Khởi tạo' : 'Intake'}</div>
