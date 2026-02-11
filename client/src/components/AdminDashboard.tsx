@@ -4823,7 +4823,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         <span className="text-sm text-white/70">
                           {(() => {
                             const warrantyDate = clientForm.watch('warrantyExpiry');
-                            if (!warrantyDate) return t('crm.warranty.none');
+                            if (!warrantyDate) return '';
                             const expiry = new Date(warrantyDate);
                             const now = new Date();
                             return expiry < now ? t('crm.warranty.expired') : t('crm.warranty.active');
