@@ -1,6 +1,6 @@
 import { 
   users, clients, projects, inquiries, services, articles, homepageContent, partners, categories,
-  interactions, deals, transactions, settings, faqs, advantages, journeySteps,
+  interactions, deals, transactions, warrantyLogs, settings, faqs, advantages, journeySteps,
   aboutPageContent, aboutShowcaseServices, aboutProcessSteps, aboutCoreValues, aboutTeamMembers,
   crmPipelineStages, crmCustomerTiers, crmStatuses,
   type User, type InsertUser,
@@ -15,6 +15,7 @@ import {
   type Interaction, type InsertInteraction,
   type Deal, type InsertDeal,
   type Transaction, type InsertTransaction,
+  type WarrantyLog, type InsertWarrantyLog,
   type Settings, type InsertSettings,
   type Faq, type InsertFaq,
   type Advantage, type InsertAdvantage,
@@ -124,6 +125,13 @@ export interface IStorage {
   createTransaction(transaction: InsertTransaction): Promise<Transaction>;
   updateTransaction(id: string, transaction: Partial<InsertTransaction>): Promise<Transaction>;
   deleteTransaction(id: string): Promise<void>;
+
+  // Warranty Logs
+  getWarrantyLogs(clientId?: string): Promise<WarrantyLog[]>;
+  getWarrantyLog(id: string): Promise<WarrantyLog | undefined>;
+  createWarrantyLog(log: InsertWarrantyLog): Promise<WarrantyLog>;
+  updateWarrantyLog(id: string, log: Partial<InsertWarrantyLog>): Promise<WarrantyLog>;
+  deleteWarrantyLog(id: string): Promise<void>;
 
   // CRM: Analytics & Reporting
   getClientReferrals(clientId: string): Promise<Client[]>;
@@ -1226,6 +1234,37 @@ export class DatabaseStorage implements IStorage {
 
   async deleteCrmStatus(id: string): Promise<void> {
     await db.delete(crmStatuses).where(eq(crmStatuses.id, id));
+  }
+
+  // Warranty Logs
+  async getWarrantyLogs(clientId?: string): Promise<WarrantyLog[]> {
+    const query = clientId
+      ? db.select().from(warrantyLogs).where(eq(warrantyLogs.clientId, clientId))
+      : db.select().from(warrantyLogs);
+    return await query.orderBy(desc(warrantyLogs.date));
+  }
+
+  async getWarrantyLog(id: string): Promise<WarrantyLog | undefined> {
+    const [log] = await db.select().from(warrantyLogs).where(eq(warrantyLogs.id, id));
+    return log || undefined;
+  }
+
+  async createWarrantyLog(log: InsertWarrantyLog): Promise<WarrantyLog> {
+    const [created] = await db.insert(warrantyLogs).values(log).returning();
+    return created;
+  }
+
+  async updateWarrantyLog(id: string, log: Partial<InsertWarrantyLog>): Promise<WarrantyLog> {
+    const [updated] = await db
+      .update(warrantyLogs)
+      .set({ ...log, updatedAt: new Date() })
+      .where(eq(warrantyLogs.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteWarrantyLog(id: string): Promise<void> {
+    await db.delete(warrantyLogs).where(eq(warrantyLogs.id, id));
   }
 }
 
