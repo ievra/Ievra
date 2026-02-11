@@ -652,7 +652,7 @@ export default function LookupAdminTab() {
                               <p className="text-xs font-normal text-white/30">{isVi ? "Tiêu đề" : "Title"}</p>
                             </div>
                           </TableHead>
-                          <TableHead className="text-white/60">{isVi ? "Mô tả" : "Description"}</TableHead>
+                          <TableHead className="text-white/60">{isVi ? "Ghi chú" : "Notes"}</TableHead>
                           <TableHead className="text-white/60">
                             <div>
                               <span>{isVi ? "Loại" : "Type"}</span>
