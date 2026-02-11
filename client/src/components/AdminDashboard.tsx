@@ -4981,14 +4981,14 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 <div className="flex items-center justify-between">
                                   <span className="text-sm font-semibold text-white">{Math.round(parseFloat(transaction.amount)).toLocaleString('vi-VN')} đ</span>
                                   <div className="flex items-center gap-2">
-                                    <span className="text-[10px] text-white/50">
-                                      {transaction.status === "pending" ? (language === 'vi' ? "Đang chờ" : "Pending") : transaction.status === "completed" ? (language === 'vi' ? "Hoàn thành" : "Completed") : transaction.status === "cancelled" ? (language === 'vi' ? "Đã hủy" : "Cancelled") : "—"}
-                                    </span>
                                     {transaction.status === "completed" && transaction.paymentDate && (
                                       <span className="text-[10px] text-white/50">
                                         {new Date(transaction.paymentDate).toLocaleDateString('vi-VN')}
                                       </span>
                                     )}
+                                    <span className="text-[10px] text-white/50">
+                                      {transaction.status === "pending" ? (language === 'vi' ? "Đang chờ" : "Pending") : transaction.status === "completed" ? (language === 'vi' ? "Hoàn thành" : "Completed") : transaction.status === "cancelled" ? (language === 'vi' ? "Đã hủy" : "Cancelled") : "—"}
+                                    </span>
                                   </div>
                                 </div>
                                 {transaction.description && (
@@ -5311,14 +5311,14 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                               <div className="flex items-center justify-between">
                                 <span className="text-sm font-semibold text-white">{Math.round(parseFloat(transaction.amount)).toLocaleString('vi-VN')} đ</span>
                                 <div className="flex items-center gap-2">
-                                  <span className="text-[10px] text-white/50">
-                                    {transaction.status === "pending" ? (language === 'vi' ? "Đang chờ" : "Pending") : transaction.status === "completed" ? (language === 'vi' ? "Hoàn thành" : "Completed") : transaction.status === "cancelled" ? (language === 'vi' ? "Đã hủy" : "Cancelled") : "—"}
-                                  </span>
                                   {transaction.status === "completed" && transaction.paymentDate && (
                                     <span className="text-[10px] text-white/50">
                                       {new Date(transaction.paymentDate).toLocaleDateString('vi-VN')}
                                     </span>
                                   )}
+                                  <span className="text-[10px] text-white/50">
+                                    {transaction.status === "pending" ? (language === 'vi' ? "Đang chờ" : "Pending") : transaction.status === "completed" ? (language === 'vi' ? "Hoàn thành" : "Completed") : transaction.status === "cancelled" ? (language === 'vi' ? "Đã hủy" : "Cancelled") : "—"}
+                                  </span>
                                 </div>
                               </div>
                               {transaction.description && (
