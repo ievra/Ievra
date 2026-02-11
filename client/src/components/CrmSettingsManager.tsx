@@ -312,7 +312,6 @@ export default function CrmSettingsManager() {
                       <TableHead>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</TableHead>
                       <TableHead>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</TableHead>
                       <TableHead>{language === 'vi' ? 'Thứ tự' : 'Order'}</TableHead>
-                      <TableHead>{language === 'vi' ? 'Kích hoạt' : 'Active'}</TableHead>
                       <TableHead className="text-right">{language === 'vi' ? 'Thao tác' : 'Actions'}</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -322,11 +321,6 @@ export default function CrmSettingsManager() {
                         <TableCell>{stage.labelEn}</TableCell>
                         <TableCell>{stage.labelVi}</TableCell>
                         <TableCell>{stage.order}</TableCell>
-                        <TableCell>
-                          <Badge variant={stage.active ? "default" : "secondary"}>
-                            {stage.active ? (language === 'vi' ? 'Hoạt động' : 'Active') : (language === 'vi' ? 'Tắt' : 'Inactive')}
-                          </Badge>
-                        </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">
                             <Button
@@ -477,7 +471,6 @@ export default function CrmSettingsManager() {
                       <TableHead>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</TableHead>
                       <TableHead>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</TableHead>
                       <TableHead>{language === 'vi' ? 'Thứ tự' : 'Order'}</TableHead>
-                      <TableHead>{language === 'vi' ? 'Kích hoạt' : 'Active'}</TableHead>
                       <TableHead className="text-right">{language === 'vi' ? 'Thao tác' : 'Actions'}</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -487,11 +480,6 @@ export default function CrmSettingsManager() {
                         <TableCell>{tier.labelEn}</TableCell>
                         <TableCell>{tier.labelVi}</TableCell>
                         <TableCell>{tier.order}</TableCell>
-                        <TableCell>
-                          <Badge variant={tier.active ? "default" : "secondary"}>
-                            {tier.active ? (language === 'vi' ? 'Hoạt động' : 'Active') : (language === 'vi' ? 'Tắt' : 'Inactive')}
-                          </Badge>
-                        </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">
                             <Button
@@ -642,7 +630,6 @@ export default function CrmSettingsManager() {
                       <TableHead>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</TableHead>
                       <TableHead>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</TableHead>
                       <TableHead>{language === 'vi' ? 'Thứ tự' : 'Order'}</TableHead>
-                      <TableHead>{language === 'vi' ? 'Kích hoạt' : 'Active'}</TableHead>
                       <TableHead className="text-right">{language === 'vi' ? 'Thao tác' : 'Actions'}</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -652,11 +639,6 @@ export default function CrmSettingsManager() {
                         <TableCell>{status.labelEn}</TableCell>
                         <TableCell>{status.labelVi}</TableCell>
                         <TableCell>{status.order}</TableCell>
-                        <TableCell>
-                          <Badge variant={status.active ? "default" : "secondary"}>
-                            {status.active ? (language === 'vi' ? 'Hoạt động' : 'Active') : (language === 'vi' ? 'Tắt' : 'Inactive')}
-                          </Badge>
-                        </TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-2">
                             <Button
