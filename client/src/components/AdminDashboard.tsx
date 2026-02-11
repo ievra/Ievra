@@ -2219,6 +2219,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       referralRevenue: client.referralRevenue || "0",
       warrantyStatus: (client.warrantyStatus as "none" | "active" | "expired") || "none",
       warrantyExpiry: formatDateForInput(client.warrantyExpiry),
+      tier: client.tier || "silver",
       tags: (client.tags as string[]) || [],
       notes: client.notes || "",
     });
@@ -4654,6 +4655,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 address: "",
                 stage: "lead",
                 status: "active",
+                tier: "silver",
                 orderCount: 0,
                 referredById: "",
                 referralCount: 0,
@@ -4678,6 +4680,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     address: "",
                     stage: "lead",
                     status: "active",
+                    tier: "silver",
                     orderCount: 0,
                     referredById: "",
                     referralCount: 0,
@@ -4868,34 +4871,65 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
 
                   </div>
 
-                  <FormField
-                    control={clientForm.control}
-                    name="status"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t('crm.status')}</FormLabel>
-                        <Select onValueChange={field.onChange} defaultValue={field.value}>
-                          <FormControl>
-                            <SelectTrigger data-testid="select-client-status">
-                              <SelectValue />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {crmStatuses
-                              .filter((status: any) => status.active)
-                              .sort((a: any, b: any) => a.order - b.order)
-                              .map((status: any) => (
-                                <SelectItem key={status.id} value={status.value}>
-                                  {language === 'vi' ? status.labelVi : status.labelEn}
-                                </SelectItem>
-                              ))
-                            }
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={clientForm.control}
+                      name="status"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('crm.status')}</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger data-testid="select-client-status">
+                                <SelectValue />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {crmStatuses
+                                .filter((status: any) => status.active)
+                                .sort((a: any, b: any) => a.order - b.order)
+                                .map((status: any) => (
+                                  <SelectItem key={status.id} value={status.value}>
+                                    {language === 'vi' ? status.labelVi : status.labelEn}
+                                  </SelectItem>
+                                ))
+                              }
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={clientForm.control}
+                      name="tier"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Hạng Khách' : 'Customer Tier'}</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger data-testid="select-client-tier">
+                                <SelectValue />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {crmTiers
+                                .filter((tier: any) => tier.active)
+                                .sort((a: any, b: any) => a.order - b.order)
+                                .map((tier: any) => (
+                                  <SelectItem key={tier.id} value={tier.value}>
+                                    {language === 'vi' ? tier.labelVi : tier.labelEn}
+                                  </SelectItem>
+                                ))
+                              }
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
 
                   {/* Transaction Management - Only show when editing */}
@@ -5613,13 +5647,13 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     </TableHeader>
                     <TableBody>
                       {paginatedClients.map((client) => {
-                        const clientRanking = [...filteredClients]
-                          .sort((a, b) => (clientFinances[b.id]?.totalSpending || 0) - (clientFinances[a.id]?.totalSpending || 0))
-                          .findIndex(c => c.id === client.id) + 1;
+                        const clientTier = crmTiers.find((t: any) => t.value === client.tier);
                         return (
                         <TableRow key={client.id} data-testid={`row-client-${client.id}`} className="relative h-16">
                           <TableCell className="align-middle text-center">
-                            <span className="text-sm font-medium text-white/70">{clientRanking}</span>
+                            <span className="text-sm font-medium text-white/70">
+                              {clientTier ? (language === 'vi' ? clientTier.labelVi : clientTier.labelEn) : '—'}
+                            </span>
                           </TableCell>
                           <TableCell className="align-middle">
                             <div className="font-light whitespace-nowrap">
