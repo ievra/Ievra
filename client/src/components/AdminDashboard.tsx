@@ -5120,9 +5120,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         <Dialog open={isClientViewDialogOpen} onOpenChange={setIsClientViewDialogOpen}>
             <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-black border border-white/20 rounded-none">
               <DialogHeader>
-                <DialogTitle className="text-2xl font-light">
-                  {t('crm.clientDetails')}
-                </DialogTitle>
               </DialogHeader>
               {viewingClient && (
                 <div className="space-y-6">
