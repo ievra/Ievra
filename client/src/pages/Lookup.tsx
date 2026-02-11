@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Search, Phone, User, Shield, Calendar, FileText, ArrowRight, Clock, CheckCircle, AlertCircle, XCircle, Briefcase, CreditCard } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -83,6 +83,35 @@ export default function Lookup() {
   const [error, setError] = useState<string | null>(null);
   const [searched, setSearched] = useState(false);
   const [activeTab, setActiveTab] = useState<"timeline" | "deals" | "transactions">("timeline");
+  const [typedPlaceholder, setTypedPlaceholder] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const placeholderText = language === "vi" ? "Nhập số điện thoại của bạn..." : "Enter your phone number...";
+
+  useEffect(() => {
+    if (isFocused || phone) return;
+    let idx = 0;
+    let forward = true;
+    setTypedPlaceholder("");
+    const interval = setInterval(() => {
+      if (forward) {
+        idx++;
+        setTypedPlaceholder(placeholderText.slice(0, idx));
+        if (idx >= placeholderText.length) {
+          forward = false;
+          setTimeout(() => {}, 1500);
+        }
+      } else {
+        idx--;
+        setTypedPlaceholder(placeholderText.slice(0, idx));
+        if (idx <= 0) {
+          forward = true;
+        }
+      }
+    }, 80);
+    return () => clearInterval(interval);
+  }, [language, isFocused, phone]);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -150,31 +179,36 @@ export default function Lookup() {
               : "Enter your phone number to check project progress, activity log and warranty information."}
           </p>
 
-          <form onSubmit={handleSearch} className="flex gap-3">
-            <div className="relative flex-1">
-              <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/30" />
-              <Input
+          <form onSubmit={handleSearch} className="relative">
+            <div className="relative">
+              <input
+                ref={inputRef}
                 type="tel"
-                placeholder={language === "vi" ? "Nhập số điện thoại..." : "Enter phone number..."}
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="pl-12 py-6 bg-transparent border border-white/20 rounded-none text-white placeholder-white/30 focus:border-white/50 focus-visible:ring-0 text-base"
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                className="w-full bg-transparent border-0 border-b border-white/20 text-white text-lg md:text-xl font-light py-4 pr-16 focus:outline-none focus:border-white/50 transition-colors placeholder-transparent"
+                placeholder={placeholderText}
               />
-            </div>
-            <Button
-              type="submit"
-              disabled={loading || phone.trim().length < 6}
-              className="px-8 py-6 bg-white text-black hover:bg-white/90 rounded-none font-light tracking-wider text-sm"
-            >
-              {loading ? (
-                <div className="w-5 h-5 border-2 border-black/30 border-t-black rounded-full animate-spin" />
-              ) : (
-                <>
-                  <Search className="w-4 h-4 mr-2" />
-                  {language === "vi" ? "TRA CỨU" : "SEARCH"}
-                </>
+              {!phone && (
+                <span className="absolute left-0 top-4 text-white/30 text-lg md:text-xl font-light pointer-events-none">
+                  {typedPlaceholder}
+                  <span className="inline-block w-[2px] h-5 bg-white/40 ml-[1px] align-middle animate-pulse" />
+                </span>
               )}
-            </Button>
+              <button
+                type="submit"
+                disabled={loading || phone.trim().length < 6}
+                className="absolute right-0 top-1/2 -translate-y-1/2 text-white/30 hover:text-white transition-colors disabled:opacity-30"
+              >
+                {loading ? (
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <ArrowRight className="w-6 h-6" />
+                )}
+              </button>
+            </div>
           </form>
         </div>
 
