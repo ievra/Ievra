@@ -16,6 +16,7 @@ import About from "@/pages/About";
 import Contact from "@/pages/Contact";
 import Login from "@/pages/Login";
 import Admin from "@/pages/Admin";
+import Lookup from "@/pages/Lookup";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -34,6 +35,7 @@ function Router() {
             <Route path="/blog/:slug" component={BlogDetail} />
             <Route path="/about" component={About} />
             <Route path="/contact" component={Contact} />
+            <Route path="/lookup" component={Lookup} />
             <Route path="/admin">
               <ProtectedRoute>
                 <Admin />

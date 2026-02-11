@@ -13,6 +13,7 @@ const getNavigation = (t: (key: string) => string) => {
     { name: t('nav.about'), href: `/about`, key: 'about' },
     { name: t('nav.projects'), href: `/portfolio`, key: 'portfolio' },
     { name: t('nav.news'), href: `/blog`, key: 'news' },
+    { name: t('nav.lookup'), href: `/lookup`, key: 'lookup' },
   ];
 };
 
@@ -305,6 +306,15 @@ export default function Layout({ children }: LayoutProps) {
                     onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                   >
                     {language === 'vi' ? 'LIÊN HỆ' : 'CONTACTS'}
+                  </Link>
+                </li>
+                <li>
+                  <Link 
+                    href="/lookup" 
+                    className="text-white/80 hover:text-white transition-colors font-light text-sm"
+                    onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                  >
+                    {language === 'vi' ? 'TRA CỨU' : 'LOOKUP'}
                   </Link>
                 </li>
               </ul>
