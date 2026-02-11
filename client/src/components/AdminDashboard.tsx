@@ -630,6 +630,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   const [clientWarrantyFilter, setClientWarrantyFilter] = useState('all');
   const [clientTierFilter, setClientTierFilter] = useState('all');
   const [inquirySearchQuery, setInquirySearchQuery] = useState('');
+  const [inquiriesPage, setInquiriesPage] = useState(1);
+  const inquiriesPerPage = 10;
   
   // Calculate pagination for Clients
   const filteredClients = clients.filter(client => {
@@ -3465,9 +3467,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         </p>
                       )}
                     </div>
-                    <Badge variant="outline" className="text-sm px-3 py-1 text-white border-white/30">
-                      {inquiry.status}
-                    </Badge>
                   </div>
                 ))}
               </div>
@@ -5895,17 +5894,23 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {inquiries.filter(inquiry => {
-                    if (!inquirySearchQuery) return true;
-                    const searchLower = inquirySearchQuery.toLowerCase();
-                    return (
-                      (`${inquiry.firstName} ${inquiry.lastName}`).toLowerCase().includes(searchLower) ||
-                      (inquiry.email || '').toLowerCase().includes(searchLower) ||
-                      (inquiry.projectType || '').toLowerCase().includes(searchLower) ||
-                      (inquiry.budget || '').toLowerCase().includes(searchLower) ||
-                      (inquiry.message || '').toLowerCase().includes(searchLower)
-                    );
-                  }).map((inquiry) => (
+                  {(() => {
+                    const filtered = inquiries.filter(inquiry => {
+                      if (!inquirySearchQuery) return true;
+                      const searchLower = inquirySearchQuery.toLowerCase();
+                      return (
+                        (`${inquiry.firstName} ${inquiry.lastName}`).toLowerCase().includes(searchLower) ||
+                        (inquiry.email || '').toLowerCase().includes(searchLower) ||
+                        (inquiry.projectType || '').toLowerCase().includes(searchLower) ||
+                        (inquiry.budget || '').toLowerCase().includes(searchLower) ||
+                        (inquiry.message || '').toLowerCase().includes(searchLower)
+                      );
+                    });
+                    const inquiriesTotalPages = Math.ceil(filtered.length / inquiriesPerPage);
+                    const inquiriesStartIdx = (inquiriesPage - 1) * inquiriesPerPage;
+                    const inquiriesEndIdx = inquiriesStartIdx + inquiriesPerPage;
+                    const paginated = filtered.slice(inquiriesStartIdx, inquiriesEndIdx);
+                    return paginated.map((inquiry) => (
                     <TableRow key={inquiry.id} data-testid={`row-inquiry-${inquiry.id}`}>
                       <TableCell>
                         <div>
