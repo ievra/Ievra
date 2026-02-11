@@ -116,10 +116,8 @@ const clientSchema = z.object({
   phone: z.string().optional(),
   company: z.string().optional(),
   address: z.string().optional(),
-  dateOfBirth: z.string().optional(),
-  stage: z.enum(["lead", "prospect", "contract", "delivery", "aftercare"]).default("lead"),
-  status: z.enum(["active", "inactive", "archived"]).default("active"),
-  tier: z.enum(["vip", "silver", "gold", "platinum"]).default("silver"),
+  stage: z.string().default("lead"),
+  status: z.string().default("active"),
   totalSpending: z.string().optional(),
   refundAmount: z.string().optional(),
   commission: z.string().optional(),
@@ -625,7 +623,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   const [clientSearchQuery, setClientSearchQuery] = useState('');
   const [clientStageFilter, setClientStageFilter] = useState('all');
   const [clientStatusFilter, setClientStatusFilter] = useState('all');
-  const [clientTierFilter, setClientTierFilter] = useState('all');
   const [clientWarrantyFilter, setClientWarrantyFilter] = useState('all');
   const [inquirySearchQuery, setInquirySearchQuery] = useState('');
   
@@ -633,7 +630,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   const filteredClients = clients.filter(client => {
     if (clientStageFilter !== 'all' && (client.stage || 'lead') !== clientStageFilter) return false;
     if (clientStatusFilter !== 'all' && (client.status || 'active') !== clientStatusFilter) return false;
-    if (clientTierFilter !== 'all' && (client.tier || 'silver') !== clientTierFilter) return false;
     if (clientWarrantyFilter !== 'all' && (client.warrantyStatus || 'none') !== clientWarrantyFilter) return false;
     if (!clientSearchQuery) return true;
     const searchLower = clientSearchQuery.toLowerCase();
@@ -827,11 +823,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       phone: "",
       company: "",
       address: "",
-      dateOfBirth: "",
       warrantyExpiry: "",
       stage: "lead",
       status: "active",
-      tier: "silver",
       totalSpending: "0",
       refundAmount: "0",
       commission: "0",
@@ -2211,10 +2205,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       phone: client.phone || "",
       company: client.company || "",
       address: client.address || "",
-      dateOfBirth: formatDateForInput(client.dateOfBirth),
-      stage: client.stage as "lead" | "prospect" | "contract" | "delivery" | "aftercare",
-      status: client.status as "active" | "inactive" | "archived",
-      tier: client.tier as "silver" | "gold" | "platinum" | "vip",
+      stage: client.stage || "lead",
+      status: client.status || "active",
       totalSpending: client.totalSpending || "0",
       refundAmount: client.refundAmount || "0",
       commission: client.commission || "0",
@@ -2373,7 +2365,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       const cleanedData = {
         ...data,
         warrantyStatus, // Auto-set based on expiry date
-        dateOfBirth: data.dateOfBirth && data.dateOfBirth.trim() !== "" ? data.dateOfBirth : undefined,
         warrantyExpiry: data.warrantyExpiry && data.warrantyExpiry.trim() !== "" ? data.warrantyExpiry : undefined,
         phone: data.phone && data.phone.trim() !== "" ? data.phone : undefined,
         company: data.company && data.company.trim() !== "" ? data.company : undefined,
@@ -4651,8 +4642,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 phone: "",
                 company: "",
                 address: "",
-                dateOfBirth: "",
-                tier: "silver",
                 stage: "lead",
                 status: "active",
                 orderCount: 0,
@@ -4677,8 +4666,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     phone: "",
                     company: "",
                     address: "",
-                    dateOfBirth: "",
-                    tier: "silver",
                     stage: "lead",
                     status: "active",
                     orderCount: 0,
@@ -4794,20 +4781,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     )}
                   />
 
-                  <FormField
-                    control={clientForm.control}
-                    name="dateOfBirth"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t('crm.dateOfBirth')}</FormLabel>
-                        <FormControl>
-                          <Input {...field} type="date" maxLength={10} data-testid="input-client-dob" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
                   <div className="grid grid-cols-2 gap-4">
                     <FormField
                       control={clientForm.control}
@@ -4869,34 +4842,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       )}
                     />
 
-                    <FormField
-                      control={clientForm.control}
-                      name="tier"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t('crm.customerTier')}</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger data-testid="select-client-tier">
-                                <SelectValue />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {crmTiers
-                                .filter((tier: any) => tier.active)
-                                .sort((a: any, b: any) => a.order - b.order)
-                                .map((tier: any) => (
-                                  <SelectItem key={tier.id} value={tier.value}>
-                                    {language === 'vi' ? tier.labelVi : tier.labelEn}
-                                  </SelectItem>
-                                ))
-                              }
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
                   </div>
 
                   <FormField
@@ -5180,12 +5125,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         <p className="text-base mt-1">{viewingClient.phone || "—"}</p>
                       </div>
                       <div>
-                        <label className="text-sm font-medium text-muted-foreground">{t('crm.dateOfBirth')}</label>
-                        <p className="text-base mt-1">
-                          {viewingClient.dateOfBirth ? new Date(viewingClient.dateOfBirth).toLocaleDateString('vi-VN') : "—"}
-                        </p>
-                      </div>
-                      <div>
                         <label className="text-sm font-medium text-muted-foreground">{t('crm.company')}</label>
                         <p className="text-base mt-1">{viewingClient.company || "—"}</p>
                       </div>
@@ -5203,10 +5142,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">{t('crm.pipelineStage')}</label>
                         <p className="text-base mt-1 capitalize">{t(`crm.stage.${viewingClient.stage}`)}</p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-muted-foreground">{t('crm.customerTier')}</label>
-                        <p className="text-base mt-1 capitalize">{t(`crm.tier.${viewingClient.tier}`)}</p>
                       </div>
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">{t('crm.status')}</label>
@@ -5620,19 +5555,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               ))}
             </SelectContent>
           </Select>
-          <Select value={clientTierFilter} onValueChange={(v) => { setClientTierFilter(v); setCurrentPage(1); }}>
-            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
-              <SelectValue placeholder={language === 'vi' ? 'Tất cả hạng' : 'All tiers'} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{language === 'vi' ? 'Tất cả hạng' : 'All tiers'}</SelectItem>
-              {crmTiers.filter(t => t.active).sort((a, b) => a.order - b.order).map(tier => (
-                <SelectItem key={tier.id} value={tier.value}>
-                  {language === 'vi' ? tier.labelVi : tier.labelEn}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
           <Select value={clientWarrantyFilter} onValueChange={(v) => { setClientWarrantyFilter(v); setCurrentPage(1); }}>
             <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
               <SelectValue placeholder={language === 'vi' ? 'Tất cả bảo hành' : 'All warranty'} />
@@ -5678,7 +5600,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         </TableHead>
                         <TableHead className="w-[120px]">
                           <div>{t('crm.phone')}</div>
-                          <div className="text-xs font-normal text-muted-foreground mt-0.5">{t('crm.dateOfBirth')}</div>
                         </TableHead>
                         <TableHead className="w-[130px]">
                           <div>{t('crm.address')}</div>
@@ -5690,7 +5611,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         </TableHead>
                         <TableHead className="w-[110px] text-center">{t('crm.warrantyStatus')}</TableHead>
                         <TableHead className="w-[110px] text-center">{t('crm.pipelineStage')}</TableHead>
-                        <TableHead className="w-[100px] text-center">{t('crm.customerTier')}</TableHead>
                         <TableHead className="w-[100px] text-center">{t('crm.status')}</TableHead>
                         <TableHead className="text-right w-[70px]">{t('crm.actions')}</TableHead>
                       </TableRow>
@@ -5708,9 +5628,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           </TableCell>
                           <TableCell className="align-middle">
                             <div className="text-sm">{client.phone || "—"}</div>
-                            <div className="text-xs text-muted-foreground mt-1">
-                              {client.dateOfBirth ? new Date(client.dateOfBirth).toLocaleDateString('vi-VN') : "—"}
-                            </div>
                           </TableCell>
                           <TableCell className="align-middle">
                             <div className="text-sm truncate max-w-[110px]" title={client.address || ""}>
@@ -5755,29 +5672,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                   {crmStages.filter(s => s.active).sort((a, b) => a.order - b.order).map(stage => (
                                     <SelectItem key={stage.id} value={stage.value}>
                                       {language === 'vi' ? stage.labelVi : stage.labelEn}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </div>
-                          </TableCell>
-                          <TableCell className="align-middle text-center">
-                            <div className="inline-block w-full">
-                              <Select
-                                value={client.tier || crmTiers.find(t => t.active)?.value || "silver"}
-                                onValueChange={(value) => updateClientMutation.mutate({ 
-                                  id: client.id, 
-                                  tier: value as any,
-                                  showToast: false
-                                })}
-                              >
-                                <SelectTrigger className="w-full" data-testid={`select-client-tier-${client.id}`}>
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {crmTiers.filter(t => t.active).sort((a, b) => a.order - b.order).map(tier => (
-                                    <SelectItem key={tier.id} value={tier.value}>
-                                      {language === 'vi' ? tier.labelVi : tier.labelEn}
                                     </SelectItem>
                                   ))}
                                 </SelectContent>
