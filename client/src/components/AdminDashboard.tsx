@@ -5873,10 +5873,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[200px] whitespace-nowrap">{language === 'vi' ? 'Liên Hệ' : 'Contact'}</TableHead>
+                    <TableHead className="w-[180px] whitespace-nowrap">{language === 'vi' ? 'Số Điện Thoại' : 'Phone'}</TableHead>
                     <TableHead className="w-[140px] whitespace-nowrap">{language === 'vi' ? 'Loại Dự Án' : 'Project Type'}</TableHead>
-                    <TableHead className="w-[120px] whitespace-nowrap">{language === 'vi' ? 'Ngân Sách' : 'Budget'}</TableHead>
-                    <TableHead className="w-[120px] whitespace-nowrap">{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
-                    <TableHead className="w-[110px] whitespace-nowrap">{language === 'vi' ? 'Ngày' : 'Date'}</TableHead>
+                    <TableHead className="w-[140px] text-right whitespace-nowrap">{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
                     <TableHead className="w-[100px] text-right whitespace-nowrap"></TableHead>
                   </TableRow>
                 </TableHeader>
@@ -5898,17 +5897,22 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           <p className="font-light">
                             {inquiry.firstName} {inquiry.lastName}
                           </p>
+                          <p className="text-sm text-muted-foreground">{formatDate(inquiry.createdAt)}</p>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div>
+                          <p className="font-light">{inquiry.phone || "—"}</p>
                           <p className="text-sm text-muted-foreground">{inquiry.email}</p>
                         </div>
                       </TableCell>
                       <TableCell className="capitalize">{inquiry.projectType || "—"}</TableCell>
-                      <TableCell>{inquiry.budget || "—"}</TableCell>
-                      <TableCell>
+                      <TableCell className="text-right">
                         <Select
                           value={inquiry.status}
                           onValueChange={(value) => updateInquiryMutation.mutate({ id: inquiry.id, status: value })}
                         >
-                          <SelectTrigger className="w-32" data-testid={`select-inquiry-status-${inquiry.id}`}>
+                          <SelectTrigger className="w-32 ml-auto" data-testid={`select-inquiry-status-${inquiry.id}`}>
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
@@ -5918,7 +5922,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           </SelectContent>
                         </Select>
                       </TableCell>
-                      <TableCell>{formatDate(inquiry.createdAt)}</TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end gap-2">
                           <Dialog>
@@ -5940,8 +5943,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 </div>
                                 <div>
                                   <h4 className="font-light mb-1">{language === 'vi' ? 'Chi Tiết Dự Án' : 'Project Details'}</h4>
-                                  <p>{language === 'vi' ? 'Loại:' : 'Type:'} {inquiry.projectType}</p>
-                                  {inquiry.budget && <p>{language === 'vi' ? 'Ngân sách:' : 'Budget:'} {inquiry.budget}</p>}
+                                  <p>{language === 'vi' ? 'Loại:' : 'Type:'} {inquiry.projectType || "—"}</p>
                                 </div>
                                 <div>
                                   <h4 className="font-light mb-1">{language === 'vi' ? 'Tin Nhắn' : 'Message'}</h4>
