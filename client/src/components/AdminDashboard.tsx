@@ -5588,15 +5588,16 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   <Table className="table-fixed w-full">
                     <TableHeader>
                       <TableRow>
-                        <TableHead className="w-[15%] whitespace-nowrap">
+                        <TableHead className="w-[5%] whitespace-nowrap text-center">#</TableHead>
+                        <TableHead className="w-[14%] whitespace-nowrap">
                           <div>{t('admin.clients')}</div>
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Khởi tạo' : 'Intake'}</div>
                         </TableHead>
-                        <TableHead className="w-[14%] whitespace-nowrap">
+                        <TableHead className="w-[13%] whitespace-nowrap">
                           <div>{t('crm.phone')}</div>
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">{t('crm.email')}</div>
                         </TableHead>
-                        <TableHead className="w-[14%] whitespace-nowrap">
+                        <TableHead className="w-[13%] whitespace-nowrap">
                           <div>{t('crm.address')}</div>
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">{t('crm.company')}</div>
                         </TableHead>
@@ -5604,15 +5605,22 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           <div>{language === 'vi' ? 'Đã Thanh Toán' : 'Paid'}</div>
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Hoàn Trả' : 'Refund'}</div>
                         </TableHead>
-                        <TableHead className="w-[12%] text-center whitespace-nowrap">{t('crm.warrantyStatus')}</TableHead>
-                        <TableHead className="w-[13%] text-center whitespace-nowrap">{t('crm.pipelineStage')}</TableHead>
+                        <TableHead className="w-[11%] text-center whitespace-nowrap">{t('crm.warrantyStatus')}</TableHead>
+                        <TableHead className="w-[12%] text-center whitespace-nowrap">{t('crm.pipelineStage')}</TableHead>
                         <TableHead className="w-[13%] text-center whitespace-nowrap">{t('crm.status')}</TableHead>
                         <TableHead className="w-[7%] text-right"></TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {paginatedClients.map((client) => (
+                      {paginatedClients.map((client) => {
+                        const clientRanking = [...filteredClients]
+                          .sort((a, b) => (clientFinances[b.id]?.totalSpending || 0) - (clientFinances[a.id]?.totalSpending || 0))
+                          .findIndex(c => c.id === client.id) + 1;
+                        return (
                         <TableRow key={client.id} data-testid={`row-client-${client.id}`} className="relative h-16">
+                          <TableCell className="align-middle text-center">
+                            <span className="text-sm font-medium text-white/70">{clientRanking}</span>
+                          </TableCell>
                           <TableCell className="align-middle">
                             <div className="font-light whitespace-nowrap">
                               {client.firstName} {client.lastName}
@@ -5725,7 +5733,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             </div>
                           </TableCell>
                         </TableRow>
-                      ))}
+                        );
+                      })}
                     </TableBody>
                   </Table>
                 </div>
