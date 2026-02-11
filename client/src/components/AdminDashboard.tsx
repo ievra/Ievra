@@ -3463,7 +3463,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       </p>
                       {(inquiry.phone || inquiry.email) && (
                         <p className="text-sm text-muted-foreground">
-                          {inquiry.phone}{inquiry.phone && inquiry.email ? ' ' : ''}{inquiry.email}
+                          {inquiry.phone}{inquiry.phone && inquiry.email ? ' - ' : ''}{inquiry.email}
                         </p>
                       )}
                     </div>
