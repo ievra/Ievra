@@ -503,8 +503,12 @@ export default function LookupAdminTab() {
                     <Table>
                       <TableHeader>
                         <TableRow className="border-white/10">
-                          <TableHead className="text-white/60">{isVi ? "Ngày" : "Date"}</TableHead>
-                          <TableHead className="text-white/60">{isVi ? "Loại" : "Type"}</TableHead>
+                          <TableHead className="text-white/60">
+                            <div>
+                              <span>{isVi ? "Ngày" : "Date"}</span>
+                              <p className="text-xs font-normal text-white/30">{isVi ? "Loại" : "Type"}</p>
+                            </div>
+                          </TableHead>
                           <TableHead className="text-white/60">{isVi ? "Tiêu đề" : "Title"}</TableHead>
                           <TableHead className="text-white/60">{isVi ? "Kết quả" : "Outcome"}</TableHead>
                           <TableHead className="text-white/60">{isVi ? "Thao tác" : "Actions"}</TableHead>
@@ -513,11 +517,13 @@ export default function LookupAdminTab() {
                       <TableBody>
                         {interactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction) => (
                           <TableRow key={interaction.id} className="border-white/10">
-                            <TableCell className="text-white/70">{formatDate(interaction.date)}</TableCell>
                             <TableCell>
-                              <Badge variant="outline" className="rounded-none border-white/20 text-white/60">
-                                {interactionTypeLabels[interaction.type]?.[language] || interaction.type}
-                              </Badge>
+                              <div>
+                                <p className="text-white/70">{formatDate(interaction.date)}</p>
+                                <Badge variant="outline" className="rounded-none border-white/20 text-white/60 mt-1">
+                                  {interactionTypeLabels[interaction.type]?.[language] || interaction.type}
+                                </Badge>
+                              </div>
                             </TableCell>
                             <TableCell className="text-white">{interaction.title}</TableCell>
                             <TableCell className="text-white/60 max-w-[200px] truncate">{interaction.outcome || "—"}</TableCell>
@@ -572,18 +578,30 @@ export default function LookupAdminTab() {
                     <Table>
                       <TableHeader>
                         <TableRow className="border-white/10">
-                          <TableHead className="text-white/60">{isVi ? "Tiêu đề" : "Title"}</TableHead>
-                          <TableHead className="text-white/60">{isVi ? "Giá trị" : "Value"}</TableHead>
+                          <TableHead className="text-white/60">
+                            <div>
+                              <span>{isVi ? "Tiêu đề" : "Title"}</span>
+                              <p className="text-xs font-normal text-white/30">{isVi ? "Giá trị" : "Value"}</p>
+                            </div>
+                          </TableHead>
                           <TableHead className="text-white/60">{isVi ? "Giai đoạn" : "Stage"}</TableHead>
-                          <TableHead className="text-white/60">{isVi ? "Ngày dự kiến" : "Expected Date"}</TableHead>
+                          <TableHead className="text-white/60">
+                            <div>
+                              <span>{isVi ? "Ngày dự kiến" : "Expected Date"}</span>
+                            </div>
+                          </TableHead>
                           <TableHead className="text-white/60">{isVi ? "Thao tác" : "Actions"}</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {deals.map((deal) => (
                           <TableRow key={deal.id} className="border-white/10">
-                            <TableCell className="text-white">{deal.title}</TableCell>
-                            <TableCell className="text-white/70">{formatCurrency(deal.value)}</TableCell>
+                            <TableCell>
+                              <div>
+                                <p className="text-white">{deal.title}</p>
+                                <p className="text-sm text-white/50">{formatCurrency(deal.value)}</p>
+                              </div>
+                            </TableCell>
                             <TableCell>
                               <Badge variant="outline" className={`rounded-none ${deal.stage === "completed" ? "border-green-500/40 text-green-400" : deal.stage === "lost" ? "border-red-500/40 text-red-400" : "border-white/20 text-white/60"}`}>
                                 {dealStageLabels[deal.stage]?.[language] || deal.stage}
@@ -635,29 +653,41 @@ export default function LookupAdminTab() {
                     <Table>
                       <TableHeader>
                         <TableRow className="border-white/10">
-                          <TableHead className="text-white/60">{isVi ? "Ngày" : "Date"}</TableHead>
-                          <TableHead className="text-white/60">{isVi ? "Tiêu đề" : "Title"}</TableHead>
+                          <TableHead className="text-white/60">
+                            <div>
+                              <span>{isVi ? "Ngày" : "Date"}</span>
+                              <p className="text-xs font-normal text-white/30">{isVi ? "Tiêu đề" : "Title"}</p>
+                            </div>
+                          </TableHead>
                           <TableHead className="text-white/60">{isVi ? "Mô tả" : "Description"}</TableHead>
-                          <TableHead className="text-white/60">{isVi ? "Loại" : "Type"}</TableHead>
-                          <TableHead className="text-white/60">{isVi ? "Trạng thái" : "Status"}</TableHead>
+                          <TableHead className="text-white/60">
+                            <div>
+                              <span>{isVi ? "Loại" : "Type"}</span>
+                              <p className="text-xs font-normal text-white/30">{isVi ? "Trạng thái" : "Status"}</p>
+                            </div>
+                          </TableHead>
                           <TableHead className="text-white/60 text-right">{isVi ? "Số tiền" : "Amount"}</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {transactions.map((tx) => (
                           <TableRow key={tx.id} className="border-white/10">
-                            <TableCell className="text-white/70">{formatDate(tx.paymentDate)}</TableCell>
-                            <TableCell className="text-white">{tx.title}</TableCell>
+                            <TableCell>
+                              <div>
+                                <p className="text-white/70">{formatDate(tx.paymentDate)}</p>
+                                <p className="text-sm text-white/50">{tx.title}</p>
+                              </div>
+                            </TableCell>
                             <TableCell className="text-white/60 max-w-[200px] truncate">{tx.description || "—"}</TableCell>
                             <TableCell>
-                              <Badge variant="outline" className={`rounded-none ${tx.type === "refund" ? "border-red-500/40 text-red-400" : tx.type === "commission" ? "border-yellow-500/40 text-yellow-400" : "border-white/20 text-white/60"}`}>
-                                {tx.type === "refund" ? (isVi ? "Hoàn trả" : "Refund") : tx.type === "commission" ? (isVi ? "Hoa hồng" : "Commission") : (isVi ? "Thanh toán" : "Payment")}
-                              </Badge>
-                            </TableCell>
-                            <TableCell>
-                              <Badge variant="outline" className={`rounded-none ${tx.status === "completed" ? "border-green-500/40 text-green-400" : tx.status === "cancelled" ? "border-red-500/40 text-red-400" : "border-white/20 text-white/60"}`}>
-                                {tx.status === "completed" ? (isVi ? "Hoàn tất" : "Completed") : tx.status === "cancelled" ? (isVi ? "Đã hủy" : "Cancelled") : (isVi ? "Chờ xử lý" : "Pending")}
-                              </Badge>
+                              <div className="space-y-1">
+                                <Badge variant="outline" className={`rounded-none ${tx.type === "refund" ? "border-red-500/40 text-red-400" : tx.type === "commission" ? "border-yellow-500/40 text-yellow-400" : "border-white/20 text-white/60"}`}>
+                                  {tx.type === "refund" ? (isVi ? "Hoàn trả" : "Refund") : tx.type === "commission" ? (isVi ? "Hoa hồng" : "Commission") : (isVi ? "Thanh toán" : "Payment")}
+                                </Badge>
+                                <Badge variant="outline" className={`rounded-none block w-fit ${tx.status === "completed" ? "border-green-500/40 text-green-400" : tx.status === "cancelled" ? "border-red-500/40 text-red-400" : "border-white/20 text-white/60"}`}>
+                                  {tx.status === "completed" ? (isVi ? "Hoàn tất" : "Completed") : tx.status === "cancelled" ? (isVi ? "Đã hủy" : "Cancelled") : (isVi ? "Chờ xử lý" : "Pending")}
+                                </Badge>
+                              </div>
                             </TableCell>
                             <TableCell className={`text-right font-light ${tx.type === "refund" ? "text-red-400" : "text-white"}`}>
                               {tx.type === "refund" ? "-" : "+"}{formatCurrency(tx.amount)}
