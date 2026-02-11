@@ -363,9 +363,10 @@ export const insertClientSchema = createInsertSchema(clients).omit({
   createdAt: true,
   updatedAt: true,
 }).extend({
-  dateOfBirth: z.union([z.string(), z.date()]).optional().transform(val => val ? (typeof val === 'string' ? new Date(val) : val) : undefined),
-  intakeDate: z.union([z.string(), z.date()]).optional().transform(val => val ? (typeof val === 'string' ? new Date(val) : val) : undefined),
-  warrantyExpiry: z.union([z.string(), z.date()]).optional().transform(val => val ? (typeof val === 'string' ? new Date(val) : val) : undefined),
+  dateOfBirth: z.union([z.string(), z.date()]).optional().transform(val => val ? (typeof val === 'string' && val.trim() !== '' ? new Date(val) : typeof val === 'object' ? val : undefined) : undefined),
+  intakeDate: z.union([z.string(), z.date()]).optional().transform(val => val ? (typeof val === 'string' && val.trim() !== '' ? new Date(val) : typeof val === 'object' ? val : undefined) : undefined),
+  warrantyExpiry: z.union([z.string(), z.date()]).optional().transform(val => val ? (typeof val === 'string' && val.trim() !== '' ? new Date(val) : typeof val === 'object' ? val : undefined) : undefined),
+  tags: z.array(z.string()).optional().default([]),
 });
 
 export const insertInquirySchema = createInsertSchema(inquiries).omit({
