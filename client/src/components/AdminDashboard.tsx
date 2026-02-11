@@ -4736,19 +4736,50 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     />
                   </div>
 
-                  <FormField
-                    control={clientForm.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t('crm.email')} *</FormLabel>
-                        <FormControl>
-                          <Input {...field} type="email" placeholder="email@example.com" data-testid="input-client-email" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={clientForm.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('crm.email')} *</FormLabel>
+                          <FormControl>
+                            <Input {...field} type="email" placeholder="email@example.com" data-testid="input-client-email" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={clientForm.control}
+                      name="tier"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Hạng Khách' : 'Customer Tier'}</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger data-testid="select-client-tier">
+                                <SelectValue />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {crmTiers
+                                .filter((tier: any) => tier.active)
+                                .sort((a: any, b: any) => a.order - b.order)
+                                .map((tier: any) => (
+                                  <SelectItem key={tier.id} value={tier.value}>
+                                    {language === 'vi' ? tier.labelVi : tier.labelEn}
+                                  </SelectItem>
+                                ))
+                              }
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <FormField
@@ -4869,9 +4900,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       )}
                     />
 
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
                     <FormField
                       control={clientForm.control}
                       name="status"
@@ -4891,35 +4919,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 .map((status: any) => (
                                   <SelectItem key={status.id} value={status.value}>
                                     {language === 'vi' ? status.labelVi : status.labelEn}
-                                  </SelectItem>
-                                ))
-                              }
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={clientForm.control}
-                      name="tier"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Hạng Khách' : 'Customer Tier'}</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger data-testid="select-client-tier">
-                                <SelectValue />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {crmTiers
-                                .filter((tier: any) => tier.active)
-                                .sort((a: any, b: any) => a.order - b.order)
-                                .map((tier: any) => (
-                                  <SelectItem key={tier.id} value={tier.value}>
-                                    {language === 'vi' ? tier.labelVi : tier.labelEn}
                                   </SelectItem>
                                 ))
                               }
