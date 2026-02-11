@@ -4976,7 +4976,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                   </span>
                                 </div>
                                 <div className="flex items-center gap-3">
-                                  <span className="text-sm font-semibold text-white">{parseFloat(transaction.amount).toLocaleString('vi-VN')} đ</span>
+                                  <span className="text-sm font-semibold text-white">{Math.round(parseFloat(transaction.amount)).toLocaleString('vi-VN')} đ</span>
                                   <span className="text-[10px] text-white/50">
                                     {transaction.status === "pending" ? (language === 'vi' ? "Đang chờ" : "Pending") : transaction.status === "completed" ? (language === 'vi' ? "Hoàn thành" : "Completed") : transaction.status === "cancelled" ? (language === 'vi' ? "Đã hủy" : "Cancelled") : "—"}
                                   </span>
@@ -5253,13 +5253,13 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Đã Thanh Toán' : 'Total Revenue'}</label>
                         <p className="text-base mt-1 font-semibold">
-                          {(clientFinances[viewingClient.id]?.totalSpending || 0).toLocaleString('vi-VN')} đ
+                          {Math.round(clientFinances[viewingClient.id]?.totalSpending || 0).toLocaleString('vi-VN')} đ
                         </p>
                       </div>
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Hoàn Trả' : 'Refund'}</label>
                         <p className="text-base mt-1 font-semibold">
-                          {(clientFinances[viewingClient.id]?.refundAmount || 0).toLocaleString('vi-VN')} đ
+                          {Math.round(clientFinances[viewingClient.id]?.refundAmount || 0).toLocaleString('vi-VN')} đ
                         </p>
                       </div>
                     </div>
@@ -5304,7 +5304,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 </span>
                               </div>
                               <div className="flex items-center gap-3">
-                                <span className="text-sm font-semibold text-white">{parseFloat(transaction.amount).toLocaleString('vi-VN')} đ</span>
+                                <span className="text-sm font-semibold text-white">{Math.round(parseFloat(transaction.amount)).toLocaleString('vi-VN')} đ</span>
                                 <span className="text-[10px] text-white/50">
                                   {transaction.status === "pending" ? (language === 'vi' ? "Đang chờ" : "Pending") : transaction.status === "completed" ? (language === 'vi' ? "Hoàn thành" : "Completed") : transaction.status === "cancelled" ? (language === 'vi' ? "Đã hủy" : "Cancelled") : "—"}
                                 </span>
@@ -5509,7 +5509,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       if (t.type === "payment") return sum + amount;
                       if (t.type === "refund") return sum - amount;
                       return sum;
-                    }, 0).toLocaleString('vi-VN')} đ
+                    }, 0).toLocaleString('vi-VN', {maximumFractionDigits: 0})} đ
                   </p>
                 </div>
                 <TrendingUp className="h-8 w-8 text-muted-foreground" />
@@ -5678,10 +5678,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           </TableCell>
                           <TableCell className="align-middle">
                             <div className="text-sm whitespace-nowrap">
-                              {(clientFinances[client.id]?.totalSpending || 0).toLocaleString('vi-VN')} đ
+                              {Math.round(clientFinances[client.id]?.totalSpending || 0).toLocaleString('vi-VN')} đ
                             </div>
                             <div className="text-xs text-muted-foreground mt-1 whitespace-nowrap">
-                              {(clientFinances[client.id]?.refundAmount || 0).toLocaleString('vi-VN')} đ
+                              {Math.round(clientFinances[client.id]?.refundAmount || 0).toLocaleString('vi-VN')} đ
                             </div>
                           </TableCell>
                           <TableCell className="align-middle text-center">

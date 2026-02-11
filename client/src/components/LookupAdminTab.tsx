@@ -391,7 +391,7 @@ export default function LookupAdminTab() {
   };
 
   const formatCurrency = (amount: string) => {
-    return parseFloat(amount).toLocaleString("vi-VN") + " đ";
+    return Math.round(parseFloat(amount)).toLocaleString("vi-VN") + " đ";
   };
 
   return (
