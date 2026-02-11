@@ -162,7 +162,7 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
                       <div className="absolute inset-0 bg-black/40" style={{ zIndex: 2 }}></div>
                     </>
                   ) : (
-                    <div className="absolute inset-0 bg-neutral-900" style={{ zIndex: 1 }}></div>
+                    <div className="absolute inset-0 bg-background" style={{ zIndex: 1 }}></div>
                   )}
                 </div>
                 
