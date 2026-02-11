@@ -17,7 +17,7 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient as qc } from "@/lib/queryClient";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Search, Plus, Pencil, Trash2, Phone, Mail, User, Shield, Calendar, Clock, Briefcase, CreditCard, X, HardHat, PenTool } from "lucide-react";
-import type { Client, Interaction, Deal, Transaction } from "@shared/schema";
+import type { Client, Interaction, Deal, Transaction, WarrantyLog } from "@shared/schema";
 
 const interactionFormSchema = z.object({
   type: z.enum(["visit", "meeting", "site_survey", "design", "acceptance", "call", "email"]),
@@ -40,8 +40,16 @@ const dealFormSchema = z.object({
   expectedCloseDate: z.string().optional(),
 });
 
+const warrantyLogFormSchema = z.object({
+  title: z.string().min(1, "Tiêu đề bắt buộc"),
+  description: z.string().optional(),
+  date: z.string().min(1, "Ngày bắt buộc"),
+  status: z.enum(["pending", "in_progress", "completed"]).default("pending"),
+});
+
 type InteractionFormData = z.infer<typeof interactionFormSchema>;
 type DealFormData = z.infer<typeof dealFormSchema>;
+type WarrantyLogFormData = z.infer<typeof warrantyLogFormSchema>;
 
 const interactionTypeLabels: Record<string, { vi: string; en: string }> = {
   visit: { vi: "Khảo sát", en: "Site Visit" },
@@ -88,8 +96,10 @@ export default function LookupAdminTab() {
   const [activeSubTab, setActiveSubTab] = useState<"interactions" | "construction_progress" | "design_progress" | "transactions" | "warranty">("design_progress");
   const [isInteractionDialogOpen, setIsInteractionDialogOpen] = useState(false);
   const [isDealDialogOpen, setIsDealDialogOpen] = useState(false);
+  const [isWarrantyLogDialogOpen, setIsWarrantyLogDialogOpen] = useState(false);
   const [editingInteraction, setEditingInteraction] = useState<Interaction | null>(null);
   const [editingDeal, setEditingDeal] = useState<Deal | null>(null);
+  const [editingWarrantyLog, setEditingWarrantyLog] = useState<WarrantyLog | null>(null);
   const [warrantyExpiry, setWarrantyExpiry] = useState("");
   const [warrantyStatus, setWarrantyStatus] = useState("none");
 
@@ -127,6 +137,16 @@ export default function LookupAdminTab() {
     enabled: !!selectedClient?.id,
   });
 
+  const { data: warrantyLogs = [], isLoading: warrantyLogsLoading } = useQuery<WarrantyLog[]>({
+    queryKey: ['/api/warranty-logs', selectedClient?.id],
+    queryFn: async () => {
+      if (!selectedClient?.id) return [];
+      const res = await fetch(`/api/warranty-logs?clientId=${selectedClient.id}`, { credentials: "include" });
+      return res.json();
+    },
+    enabled: !!selectedClient?.id,
+  });
+
   const interactionForm = useForm<InteractionFormData>({
     resolver: zodResolver(interactionFormSchema),
     defaultValues: {
@@ -151,6 +171,16 @@ export default function LookupAdminTab() {
       stage: "proposal",
       description: "",
       expectedCloseDate: "",
+    },
+  });
+
+  const warrantyLogForm = useForm<WarrantyLogFormData>({
+    resolver: zodResolver(warrantyLogFormSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      date: new Date().toISOString().split("T")[0],
+      status: "pending",
     },
   });
 
@@ -312,6 +342,87 @@ export default function LookupAdminTab() {
       toast({ title: isVi ? "Lỗi" : "Error", description: err.message, variant: "destructive" });
     },
   });
+
+  const createWarrantyLogMutation = useMutation({
+    mutationFn: async (data: WarrantyLogFormData) => {
+      await apiRequest("POST", "/api/warranty-logs", {
+        clientId: selectedClient!.id,
+        title: data.title,
+        description: data.description || undefined,
+        date: data.date,
+        status: data.status,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/warranty-logs', selectedClient?.id] });
+      setIsWarrantyLogDialogOpen(false);
+      warrantyLogForm.reset();
+      toast({ title: isVi ? "Thành công" : "Success", description: isVi ? "Đã thêm nhật ký bảo hành" : "Warranty log added" });
+    },
+    onError: (err: Error) => {
+      toast({ title: isVi ? "Lỗi" : "Error", description: err.message, variant: "destructive" });
+    },
+  });
+
+  const updateWarrantyLogMutation = useMutation({
+    mutationFn: async (data: WarrantyLogFormData) => {
+      await apiRequest("PUT", `/api/warranty-logs/${editingWarrantyLog!.id}`, {
+        title: data.title,
+        description: data.description || undefined,
+        date: data.date,
+        status: data.status,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/warranty-logs', selectedClient?.id] });
+      setIsWarrantyLogDialogOpen(false);
+      setEditingWarrantyLog(null);
+      warrantyLogForm.reset();
+      toast({ title: isVi ? "Thành công" : "Success", description: isVi ? "Đã cập nhật nhật ký bảo hành" : "Warranty log updated" });
+    },
+    onError: (err: Error) => {
+      toast({ title: isVi ? "Lỗi" : "Error", description: err.message, variant: "destructive" });
+    },
+  });
+
+  const deleteWarrantyLogMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiRequest("DELETE", `/api/warranty-logs/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/warranty-logs', selectedClient?.id] });
+      toast({ title: isVi ? "Đã xóa" : "Deleted", description: isVi ? "Đã xóa nhật ký bảo hành" : "Warranty log deleted" });
+    },
+  });
+
+  const openWarrantyLogDialog = (log?: WarrantyLog) => {
+    if (log) {
+      setEditingWarrantyLog(log);
+      warrantyLogForm.reset({
+        title: log.title,
+        description: log.description || "",
+        date: log.date ? new Date(log.date).toISOString().split("T")[0] : "",
+        status: (log.status as any) || "pending",
+      });
+    } else {
+      setEditingWarrantyLog(null);
+      warrantyLogForm.reset({
+        title: "",
+        description: "",
+        date: new Date().toISOString().split("T")[0],
+        status: "pending",
+      });
+    }
+    setIsWarrantyLogDialogOpen(true);
+  };
+
+  const onWarrantyLogSubmit = (data: WarrantyLogFormData) => {
+    if (editingWarrantyLog) {
+      updateWarrantyLogMutation.mutate(data);
+    } else {
+      createWarrantyLogMutation.mutate(data);
+    }
+  };
 
   const openInteractionDialog = (interaction?: Interaction) => {
     if (interaction) {
@@ -696,24 +807,84 @@ export default function LookupAdminTab() {
               )}
 
               {activeSubTab === "warranty" && (
-                <div className="max-w-lg space-y-4 py-4">
-                  <div className="border border-white/10 p-5 space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-white/60">{isVi ? "Trạng thái bảo hành" : "Warranty Status"}</span>
-                      <span className={`text-sm font-light ${selectedClient.warrantyStatus === "active" ? "text-white/60" : selectedClient.warrantyStatus === "expired" ? "text-red-400" : "text-white/40"}`}>
-                        {selectedClient.warrantyStatus === "active" ? (isVi ? "Đang hiệu lực" : "Active") : selectedClient.warrantyStatus === "expired" ? (isVi ? "Hết hạn" : "Expired") : (isVi ? "Chưa có" : "None")}
-                      </span>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-6">
+                      <div>
+                        <span className="text-xs text-white/40">{isVi ? "Trạng thái" : "Status"}</span>
+                        <p className={`text-sm font-light ${selectedClient.warrantyStatus === "active" ? "text-white/60" : selectedClient.warrantyStatus === "expired" ? "text-red-400" : "text-white/40"}`}>
+                          {selectedClient.warrantyStatus === "active" ? (isVi ? "Đang hiệu lực" : "Active") : selectedClient.warrantyStatus === "expired" ? (isVi ? "Hết hạn" : "Expired") : (isVi ? "Chưa có" : "None")}
+                        </p>
+                      </div>
+                      <div>
+                        <span className="text-xs text-white/40">{isVi ? "Hết hạn" : "Expiry"}</span>
+                        <p className="text-sm text-white font-light">
+                          {selectedClient.warrantyExpiry ? formatDate(selectedClient.warrantyExpiry) : "—"}
+                        </p>
+                      </div>
                     </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-white/60">{isVi ? "Ngày hết hạn" : "Expiry Date"}</span>
-                      <span className="text-sm text-white font-light">
-                        {selectedClient.warrantyExpiry ? formatDate(selectedClient.warrantyExpiry) : "—"}
-                      </span>
-                    </div>
+                    <Button onClick={() => openWarrantyLogDialog()} className="h-10 px-4 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10">
+                      <Plus className="w-4 h-4 mr-2" />
+                      {isVi ? "Thêm nhật ký" : "Add Log"}
+                    </Button>
                   </div>
-                  <p className="text-xs text-white/30 font-light">
-                    {isVi ? "Thông tin bảo hành được quản lý từ mục Quản lý Khách hàng." : "Warranty information is managed from the Client Management section."}
-                  </p>
+                  {warrantyLogsLoading ? (
+                    <div className="text-center py-8 text-white/40">{isVi ? "Đang tải..." : "Loading..."}</div>
+                  ) : warrantyLogs.length === 0 ? (
+                    <div className="text-center py-12">
+                      <p className="text-white/30 font-light">{isVi ? "Chưa có nhật ký bảo hành" : "No warranty logs yet"}</p>
+                    </div>
+                  ) : (
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="border-white/10">
+                          <TableHead className="text-white/60 w-[25%]">{isVi ? "Ngày" : "Date"}</TableHead>
+                          <TableHead className="text-white/60 w-[30%]">{isVi ? "Tiêu đề" : "Title"}</TableHead>
+                          <TableHead className="text-white/60 w-[20%]">{isVi ? "Mô tả" : "Description"}</TableHead>
+                          <TableHead className="text-white/60 w-[15%] text-right">{isVi ? "Trạng thái" : "Status"}</TableHead>
+                          <TableHead className="text-white/60 w-[10%]">{isVi ? "Thao tác" : "Actions"}</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {warrantyLogs.map((log) => (
+                          <TableRow key={log.id} className="border-white/10">
+                            <TableCell className="text-white/70">{formatDate(log.date)}</TableCell>
+                            <TableCell className="text-white">{log.title}</TableCell>
+                            <TableCell className="text-white/60 truncate max-w-[200px]">{log.description || "—"}</TableCell>
+                            <TableCell className="text-right">
+                              <Badge variant="outline" className={`rounded-none ${log.status === "completed" ? "border-white/20 text-white/60" : log.status === "in_progress" ? "border-white/20 text-white/60" : "border-white/20 text-white/60"}`}>
+                                {log.status === "completed" ? (isVi ? "Hoàn tất" : "Completed") : log.status === "in_progress" ? (isVi ? "Đang xử lý" : "In Progress") : (isVi ? "Chờ xử lý" : "Pending")}
+                              </Badge>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex gap-1">
+                                <Button variant="ghost" size="icon" onClick={() => openWarrantyLogDialog(log)} className="h-8 w-8 text-white/40 hover:text-white">
+                                  <Pencil className="w-3.5 h-3.5" />
+                                </Button>
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-red-400/60 hover:text-red-400">
+                                      <Trash2 className="w-3.5 h-3.5" />
+                                    </Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent className="bg-black border border-white/20 rounded-none">
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle className="text-white">{isVi ? "Xác nhận xóa" : "Confirm Delete"}</AlertDialogTitle>
+                                      <AlertDialogDescription>{isVi ? "Bạn có chắc muốn xóa nhật ký này?" : "Are you sure you want to delete this log?"}</AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel className="rounded-none">{isVi ? "Hủy" : "Cancel"}</AlertDialogCancel>
+                                      <AlertDialogAction onClick={() => deleteWarrantyLogMutation.mutate(log.id)} className="rounded-none bg-red-600 hover:bg-red-700">{isVi ? "Xóa" : "Delete"}</AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  )}
                 </div>
               )}
             </div>
@@ -840,6 +1011,72 @@ export default function LookupAdminTab() {
                 </Button>
                 <Button type="submit" disabled={createInteractionMutation.isPending || updateInteractionMutation.isPending} className="h-10 px-6 rounded-none bg-white text-black hover:bg-white/90">
                   {(createInteractionMutation.isPending || updateInteractionMutation.isPending) ? (isVi ? "Đang lưu..." : "Saving...") : editingInteraction ? (isVi ? "Cập nhật" : "Update") : (isVi ? "Thêm" : "Add")}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={isWarrantyLogDialogOpen} onOpenChange={setIsWarrantyLogDialogOpen}>
+        <DialogContent className="bg-black border border-white/20 rounded-none max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-white font-light">
+              {editingWarrantyLog ? (isVi ? "Sửa nhật ký bảo hành" : "Edit Warranty Log") : (isVi ? "Thêm nhật ký bảo hành" : "Add Warranty Log")}
+            </DialogTitle>
+          </DialogHeader>
+          <Form {...warrantyLogForm}>
+            <form onSubmit={warrantyLogForm.handleSubmit(onWarrantyLogSubmit)} className="space-y-4">
+              <FormField control={warrantyLogForm.control} name="date" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white/60">{isVi ? "Ngày" : "Date"}</FormLabel>
+                  <FormControl>
+                    <Input type="date" {...field} className="bg-transparent border-white/20 text-white rounded-none h-10" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+              <FormField control={warrantyLogForm.control} name="title" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white/60">{isVi ? "Tiêu đề" : "Title"}</FormLabel>
+                  <FormControl>
+                    <Input {...field} className="bg-transparent border-white/20 text-white rounded-none h-10" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+              <FormField control={warrantyLogForm.control} name="description" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white/60">{isVi ? "Mô tả" : "Description"}</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} className="bg-transparent border-white/20 text-white rounded-none min-h-[80px]" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+              <FormField control={warrantyLogForm.control} name="status" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white/60">{isVi ? "Trạng thái" : "Status"}</FormLabel>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger className="bg-transparent border-white/20 text-white rounded-none h-10">
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="bg-black border-white/20 rounded-none">
+                      <SelectItem value="pending">{isVi ? "Chờ xử lý" : "Pending"}</SelectItem>
+                      <SelectItem value="in_progress">{isVi ? "Đang xử lý" : "In Progress"}</SelectItem>
+                      <SelectItem value="completed">{isVi ? "Hoàn tất" : "Completed"}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )} />
+              <div className="flex justify-end gap-3 pt-2">
+                <Button type="button" variant="outline" onClick={() => setIsWarrantyLogDialogOpen(false)} className="h-10 px-4 rounded-none border-white/20 text-white hover:bg-white/10">
+                  {isVi ? "Hủy" : "Cancel"}
+                </Button>
+                <Button type="submit" disabled={createWarrantyLogMutation.isPending || updateWarrantyLogMutation.isPending} className="h-10 px-6 rounded-none bg-white text-black hover:bg-white/90">
+                  {(createWarrantyLogMutation.isPending || updateWarrantyLogMutation.isPending) ? (isVi ? "Đang lưu..." : "Saving...") : editingWarrantyLog ? (isVi ? "Cập nhật" : "Update") : (isVi ? "Thêm" : "Add")}
                 </Button>
               </div>
             </form>
