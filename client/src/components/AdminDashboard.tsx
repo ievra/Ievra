@@ -5751,7 +5751,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         variant={currentPage === page ? "default" : "ghost"}
                         size="sm"
                         onClick={() => setCurrentPage(page)}
-                        className="text-xs min-w-[32px]"
+                        className="text-xs min-w-[32px] border-0"
                       >
                         {page}
                       </Button>
