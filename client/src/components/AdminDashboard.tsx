@@ -271,7 +271,10 @@ const seoSettingsSchema = z.object({
 
 const transactionSchema = z.object({
   clientId: z.string().min(1, "Client is required"),
-  amount: z.string().min(1, "Amount is required"),
+  amount: z.string().min(1, "Amount is required").refine((val) => {
+    const num = parseFloat(val);
+    return !isNaN(num) && num > 0 && num <= 100000000000;
+  }, "Số tiền phải từ 1 đến 100.000.000.000 đ"),
   title: z.string().min(1, "Title is required"),
   description: z.string().optional(),
   type: z.string().optional(),
@@ -5372,7 +5375,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         <FormItem>
                           <FormLabel>{language === 'vi' ? 'Số tiền (đ)' : 'Amount (đ)'}</FormLabel>
                           <FormControl>
-                            <Input {...field} type="text" placeholder="VD: 50000000" />
+                            <Input {...field} type="text" placeholder="VD: 50000000" maxLength={12} onKeyDown={(e) => { if (!/[0-9]/.test(e.key) && !['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(e.key)) e.preventDefault(); }} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
