@@ -26,6 +26,7 @@ import { insertArticleSchema, insertFaqSchema, insertJourneyStepSchema, insertAb
 import { useLanguage } from "@/contexts/LanguageContext";
 import AboutAdminTab from "@/components/AboutAdminTab";
 import CrmSettingsManager from "@/components/CrmSettingsManager";
+import LookupAdminTab from "@/components/LookupAdminTab";
 
 const projectSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -9043,6 +9044,13 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         </Card>
       </div>
     );
+  }
+
+  if (activeTab === 'lookup') {
+    if (!hasPermission(user, 'crm')) {
+      return <PermissionDenied feature="Tra Cứu / Lookup" />;
+    }
+    return <LookupAdminTab />;
   }
 
   return (

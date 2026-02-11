@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, User, BarChart3, Briefcase, Users, Mail, Newspaper, Edit3, Home, Image, Shield } from "lucide-react";
+import { LogOut, User, BarChart3, Briefcase, Users, Mail, Newspaper, Edit3, Home, Image, Shield, Search } from "lucide-react";
 import AdminDashboard from "@/components/AdminDashboard";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -14,6 +14,7 @@ const TAB_PERMISSIONS: Record<string, string> = {
   overview: 'overview',
   projects: 'projects',
   clients: 'crm',
+  lookup: 'crm',
   inquiries: 'inquiries',
   articles: 'articles',
   homepage: 'homepage',
@@ -44,11 +45,12 @@ function hasPermission(user: any, permission: string): boolean {
   return user.permissions && Array.isArray(user.permissions) && user.permissions.includes(permission);
 }
 
-function getTabs(t: (key: string) => string) {
+function getTabs(t: (key: string) => string, language: string) {
   return [
     { id: 'overview', label: t('admin.overview'), icon: BarChart3 },
     { id: 'inquiries', label: t('admin.inquiries'), icon: Mail },
     { id: 'clients', label: t('admin.crm'), icon: Users },
+    { id: 'lookup', label: language === 'vi' ? 'Tra Cứu' : 'Lookup', icon: Search },
     { id: 'projects', label: t('admin.projects'), icon: Briefcase },
     { id: 'articles', label: t('admin.articles'), icon: Newspaper },
     { id: 'homepage', label: t('admin.homepage'), icon: Home },
@@ -59,13 +61,13 @@ function getTabs(t: (key: string) => string) {
 }
 
 export default function Admin() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [activeTab, setActiveTab] = useState('overview');
   const [, navigate] = useLocation();
   const { user, logout } = useAuth();
   const { toast } = useToast();
   
-  const allTabs = getTabs(t);
+  const allTabs = getTabs(t, language);
   
   // Filter tabs based on user permissions
   const tabs = allTabs.filter(tab => {
@@ -117,6 +119,7 @@ export default function Admin() {
                       overview: 'w-[130px]',
                       projects: 'w-[110px]',
                       clients: 'w-[130px]',
+                      lookup: 'w-[115px]',
                       inquiries: 'w-[115px]',
                       articles: 'w-[115px]',
                       homepage: 'w-[125px]',
