@@ -5665,7 +5665,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                   showToast: false
                                 })}
                               >
-                                <SelectTrigger className="w-full" data-testid={`select-client-stage-${client.id}`}>
+                                <SelectTrigger className="w-full border-0" data-testid={`select-client-stage-${client.id}`}>
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -5688,7 +5688,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                   showToast: false
                                 })}
                               >
-                                <SelectTrigger className="w-full" data-testid={`select-client-status-${client.id}`}>
+                                <SelectTrigger className="w-full border-0" data-testid={`select-client-status-${client.id}`}>
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
