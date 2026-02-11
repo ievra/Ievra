@@ -16,7 +16,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient as qc } from "@/lib/queryClient";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Search, Plus, Pencil, Trash2, Phone, Mail, User, Shield, Calendar, Clock, Briefcase, CreditCard, X } from "lucide-react";
+import { Search, Plus, Pencil, Trash2, Phone, Mail, User, Shield, Calendar, Clock, Briefcase, CreditCard, X, HardHat, PenTool } from "lucide-react";
 import type { Client, Interaction, Deal, Transaction } from "@shared/schema";
 
 const interactionFormSchema = z.object({
@@ -85,7 +85,7 @@ export default function LookupAdminTab() {
 
   const [phoneSearch, setPhoneSearch] = useState("");
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
-  const [activeSubTab, setActiveSubTab] = useState<"interactions" | "deals" | "transactions" | "warranty">("interactions");
+  const [activeSubTab, setActiveSubTab] = useState<"interactions" | "construction_progress" | "design_progress" | "transactions" | "warranty">("interactions");
   const [isInteractionDialogOpen, setIsInteractionDialogOpen] = useState(false);
   const [isDealDialogOpen, setIsDealDialogOpen] = useState(false);
   const [editingInteraction, setEditingInteraction] = useState<Interaction | null>(null);
@@ -461,7 +461,8 @@ export default function LookupAdminTab() {
             <div className="flex border-b border-white/20 overflow-x-auto">
               {([
                 { key: "interactions" as const, vi: "Nhật ký thi công", en: "Construction Log", icon: Clock },
-                { key: "deals" as const, vi: "Hợp đồng", en: "Deals", icon: Briefcase },
+                { key: "construction_progress" as const, vi: "Tiến độ công trình", en: "Construction Progress", icon: HardHat },
+                { key: "design_progress" as const, vi: "Tiến độ thiết kế", en: "Design Progress", icon: PenTool },
                 { key: "transactions" as const, vi: "Giao dịch", en: "Transactions", icon: CreditCard },
                 { key: "warranty" as const, vi: "Bảo hành", en: "Warranty", icon: Shield },
               ]).map((tab) => (
@@ -552,84 +553,93 @@ export default function LookupAdminTab() {
                 </div>
               )}
 
-              {activeSubTab === "deals" && (
-                <div className="space-y-4">
-                  <div className="flex justify-end">
-                    <Button onClick={() => openDealDialog()} className="h-10 px-4 rounded-none bg-white text-black hover:bg-white/90">
-                      <Plus className="w-4 h-4 mr-2" />
-                      {isVi ? "Thêm hợp đồng" : "Add Deal"}
-                    </Button>
-                  </div>
-                  {dealsLoading ? (
+              {activeSubTab === "construction_progress" && (
+                <div>
+                  {interactionsLoading ? (
                     <div className="text-center py-8 text-white/40">{isVi ? "Đang tải..." : "Loading..."}</div>
-                  ) : deals.length === 0 ? (
-                    <div className="text-center py-12">
-                      <Briefcase className="w-10 h-10 text-white/10 mx-auto mb-3" />
-                      <p className="text-white/30 font-light">{isVi ? "Chưa có hợp đồng nào" : "No deals yet"}</p>
-                    </div>
-                  ) : (
-                    <Table>
-                      <TableHeader>
-                        <TableRow className="border-white/10">
-                          <TableHead className="text-white/60">
-                            <div>
-                              <span>{isVi ? "Tiêu đề" : "Title"}</span>
-                              <p className="text-xs font-normal text-white/30">{isVi ? "Giá trị" : "Value"}</p>
-                            </div>
-                          </TableHead>
-                          <TableHead className="text-white/60">{isVi ? "Giai đoạn" : "Stage"}</TableHead>
-                          <TableHead className="text-white/60">
-                            <div>
-                              <span>{isVi ? "Ngày dự kiến" : "Expected Date"}</span>
-                            </div>
-                          </TableHead>
-                          <TableHead className="text-white/60">{isVi ? "Thao tác" : "Actions"}</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {deals.map((deal) => (
-                          <TableRow key={deal.id} className="border-white/10">
-                            <TableCell>
-                              <div>
-                                <p className="text-white">{deal.title}</p>
-                                <p className="text-sm text-white/50">{formatCurrency(deal.value)}</p>
+                  ) : (() => {
+                    const constructionItems = interactions.filter(i => ["visit", "site_survey", "acceptance", "meeting"].includes(i.type)).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                    return constructionItems.length === 0 ? (
+                      <div className="text-center py-12">
+                        <HardHat className="w-10 h-10 text-white/10 mx-auto mb-3" />
+                        <p className="text-white/30 font-light">{isVi ? "Chưa có tiến độ công trình" : "No construction progress yet"}</p>
+                      </div>
+                    ) : (
+                      <div className="relative">
+                        <div className="absolute left-[7px] top-3 bottom-3 w-[1px] bg-white/10" />
+                        <div className="space-y-6">
+                          {constructionItems.map((item) => (
+                            <div key={item.id} className="flex gap-6 relative">
+                              <div className="relative z-10 mt-1.5">
+                                <div className="w-[15px] h-[15px] rounded-full border-2 border-white/30 bg-black" />
                               </div>
-                            </TableCell>
-                            <TableCell>
-                              <Badge variant="outline" className={`rounded-none ${deal.stage === "completed" ? "border-white/20 text-white/60" : deal.stage === "lost" ? "border-red-500/40 text-red-400" : "border-white/20 text-white/60"}`}>
-                                {dealStageLabels[deal.stage]?.[language] || deal.stage}
-                              </Badge>
-                            </TableCell>
-                            <TableCell className="text-white/60">{formatDate(deal.expectedCloseDate)}</TableCell>
-                            <TableCell>
-                              <div className="flex gap-1">
-                                <Button variant="ghost" size="icon" onClick={() => openDealDialog(deal)} className="h-8 w-8 text-white/40 hover:text-white">
-                                  <Pencil className="w-3.5 h-3.5" />
-                                </Button>
-                                <AlertDialog>
-                                  <AlertDialogTrigger asChild>
-                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-red-400/60 hover:text-red-400">
-                                      <Trash2 className="w-3.5 h-3.5" />
-                                    </Button>
-                                  </AlertDialogTrigger>
-                                  <AlertDialogContent className="bg-black border border-white/20 rounded-none">
-                                    <AlertDialogHeader>
-                                      <AlertDialogTitle className="text-white">{isVi ? "Xác nhận xóa" : "Confirm Delete"}</AlertDialogTitle>
-                                      <AlertDialogDescription>{isVi ? "Bạn có chắc muốn xóa hợp đồng này?" : "Are you sure you want to delete this deal?"}</AlertDialogDescription>
-                                    </AlertDialogHeader>
-                                    <AlertDialogFooter>
-                                      <AlertDialogCancel className="rounded-none">{isVi ? "Hủy" : "Cancel"}</AlertDialogCancel>
-                                      <AlertDialogAction onClick={() => deleteDealMutation.mutate(deal.id)} className="rounded-none bg-red-600 hover:bg-red-700">{isVi ? "Xóa" : "Delete"}</AlertDialogAction>
-                                    </AlertDialogFooter>
-                                  </AlertDialogContent>
-                                </AlertDialog>
+                              <div className="flex-1 pb-2">
+                                <div className="flex items-center gap-3 mb-1">
+                                  <Badge variant="outline" className="rounded-none border-white/20 text-white/60">
+                                    {interactionTypeLabels[item.type]?.[language] || item.type}
+                                  </Badge>
+                                  <span className="text-xs text-white/30">{formatDate(item.date)}</span>
+                                </div>
+                                <h4 className="text-white font-light text-base mb-1">{item.title}</h4>
+                                {item.description && <p className="text-white/50 text-sm font-light">{item.description}</p>}
+                                {item.outcome && (
+                                  <p className="text-white/40 text-sm font-light mt-1">{isVi ? "Kết quả:" : "Outcome:"} {item.outcome}</p>
+                                )}
+                                {item.nextAction && (
+                                  <p className="text-white/30 text-xs mt-1">{isVi ? "Bước tiếp theo:" : "Next:"} {item.nextAction}</p>
+                                )}
                               </div>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+              )}
+
+              {activeSubTab === "design_progress" && (
+                <div>
+                  {interactionsLoading ? (
+                    <div className="text-center py-8 text-white/40">{isVi ? "Đang tải..." : "Loading..."}</div>
+                  ) : (() => {
+                    const designItems = interactions.filter(i => ["design"].includes(i.type)).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                    return designItems.length === 0 ? (
+                      <div className="text-center py-12">
+                        <PenTool className="w-10 h-10 text-white/10 mx-auto mb-3" />
+                        <p className="text-white/30 font-light">{isVi ? "Chưa có tiến độ thiết kế" : "No design progress yet"}</p>
+                      </div>
+                    ) : (
+                      <div className="relative">
+                        <div className="absolute left-[7px] top-3 bottom-3 w-[1px] bg-white/10" />
+                        <div className="space-y-6">
+                          {designItems.map((item) => (
+                            <div key={item.id} className="flex gap-6 relative">
+                              <div className="relative z-10 mt-1.5">
+                                <div className="w-[15px] h-[15px] rounded-full border-2 border-white/30 bg-black" />
+                              </div>
+                              <div className="flex-1 pb-2">
+                                <div className="flex items-center gap-3 mb-1">
+                                  <Badge variant="outline" className="rounded-none border-white/20 text-white/60">
+                                    {interactionTypeLabels[item.type]?.[language] || item.type}
+                                  </Badge>
+                                  <span className="text-xs text-white/30">{formatDate(item.date)}</span>
+                                </div>
+                                <h4 className="text-white font-light text-base mb-1">{item.title}</h4>
+                                {item.description && <p className="text-white/50 text-sm font-light">{item.description}</p>}
+                                {item.outcome && (
+                                  <p className="text-white/40 text-sm font-light mt-1">{isVi ? "Kết quả:" : "Outcome:"} {item.outcome}</p>
+                                )}
+                                {item.nextAction && (
+                                  <p className="text-white/30 text-xs mt-1">{isVi ? "Bước tiếp theo:" : "Next:"} {item.nextAction}</p>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
               )}
 
@@ -846,83 +856,6 @@ export default function LookupAdminTab() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={isDealDialogOpen} onOpenChange={setIsDealDialogOpen}>
-        <DialogContent className="bg-black border border-white/20 rounded-none max-w-lg">
-          <DialogHeader>
-            <DialogTitle className="text-white font-light">
-              {editingDeal ? (isVi ? "Sửa hợp đồng" : "Edit Deal") : (isVi ? "Thêm hợp đồng" : "Add Deal")}
-            </DialogTitle>
-          </DialogHeader>
-          <Form {...dealForm}>
-            <form onSubmit={dealForm.handleSubmit(onDealSubmit)} className="space-y-4">
-              <FormField control={dealForm.control} name="title" render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-white/60">{isVi ? "Tiêu đề" : "Title"}</FormLabel>
-                  <FormControl>
-                    <Input {...field} className="bg-transparent border-white/20 text-white rounded-none h-10" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
-              <div className="grid grid-cols-2 gap-4">
-                <FormField control={dealForm.control} name="value" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-white/60">{isVi ? "Giá trị (VNĐ)" : "Value (VND)"}</FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} className="bg-transparent border-white/20 text-white rounded-none h-10" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                <FormField control={dealForm.control} name="stage" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-white/60">{isVi ? "Giai đoạn" : "Stage"}</FormLabel>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <FormControl>
-                        <SelectTrigger className="bg-transparent border-white/20 text-white rounded-none h-10">
-                          <SelectValue />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent className="bg-black border-white/20 rounded-none">
-                        {Object.entries(dealStageLabels).map(([key, label]) => (
-                          <SelectItem key={key} value={key}>{isVi ? label.vi : label.en}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-              </div>
-              <FormField control={dealForm.control} name="description" render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-white/60">{isVi ? "Mô tả" : "Description"}</FormLabel>
-                  <FormControl>
-                    <Textarea {...field} className="bg-transparent border-white/20 text-white rounded-none min-h-[80px]" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
-              <FormField control={dealForm.control} name="expectedCloseDate" render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-white/60">{isVi ? "Ngày dự kiến hoàn thành" : "Expected Close Date"}</FormLabel>
-                  <FormControl>
-                    <Input type="date" {...field} className="bg-transparent border-white/20 text-white rounded-none h-10" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )} />
-              <div className="flex justify-end gap-3 pt-2">
-                <Button type="button" variant="outline" onClick={() => setIsDealDialogOpen(false)} className="h-10 px-4 rounded-none border-white/20 text-white hover:bg-white/10">
-                  {isVi ? "Hủy" : "Cancel"}
-                </Button>
-                <Button type="submit" disabled={createDealMutation.isPending || updateDealMutation.isPending} className="h-10 px-6 rounded-none bg-white text-black hover:bg-white/90">
-                  {(createDealMutation.isPending || updateDealMutation.isPending) ? (isVi ? "Đang lưu..." : "Saving...") : editingDeal ? (isVi ? "Cập nhật" : "Update") : (isVi ? "Thêm" : "Add")}
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }
