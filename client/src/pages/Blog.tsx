@@ -461,7 +461,7 @@ export default function Blog() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {articles.map((article) => (
                 <Link key={article.id} href={`/blog/${article.slug}`}>
-                  <Card className="article-card group overflow-hidden hover-scale project-hover rounded-none cursor-pointer h-[28rem] flex flex-col border border-white/10 hover:bg-white/[0.02] transition-all duration-300" data-testid={`card-article-${article.id}`}>
+                  <Card className="article-card group overflow-hidden hover-scale project-hover rounded-none cursor-pointer h-[28rem] flex flex-col border border-white/10 hover:bg-white/[0.04] transition-all duration-300" data-testid={`card-article-${article.id}`}>
                     <div className="relative">
                       {(article.featuredImage || article.featuredImageData) ? (
                         <OptimizedImage
