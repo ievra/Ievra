@@ -3457,8 +3457,13 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         {language === 'vi' ? 'Yêu cầu mới từ' : 'New inquiry from'} {inquiry.firstName} {inquiry.lastName}
                       </p>
                       <p className="text-sm text-muted-foreground">
-                        {formatDate(inquiry.createdAt)} • {inquiry.projectType}
+                        {formatDate(inquiry.createdAt)} {inquiry.projectType ? ` ${inquiry.projectType}` : ''}
                       </p>
+                      {(inquiry.phone || inquiry.email) && (
+                        <p className="text-sm text-muted-foreground">
+                          {inquiry.phone}{inquiry.phone && inquiry.email ? ' ' : ''}{inquiry.email}
+                        </p>
+                      )}
                     </div>
                     <Badge variant="outline" className="text-sm px-3 py-1 text-white border-white/30">
                       {inquiry.status}

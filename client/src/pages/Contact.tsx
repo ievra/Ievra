@@ -166,7 +166,7 @@ export default function Contact() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.name || !formData.email || !formData.phone) {
+    if (!formData.name || !formData.phone) {
       toast({
         title: t('contact.form.error'),
         description: t('contact.form.required'),
