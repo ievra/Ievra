@@ -276,7 +276,7 @@ const transactionSchema = z.object({
   description: z.string().optional(),
   type: z.string().optional(),
   status: z.string().optional(),
-  paymentDate: z.string().min(1, "Date is required"),
+  paymentDate: z.string().optional(),
   notes: z.string().optional(),
 });
 
@@ -5368,19 +5368,21 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       )}
                     />
 
-                    <FormField
-                      control={transactionForm.control}
-                      name="paymentDate"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Ngày thanh toán' : 'Payment Date'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} type="date" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    {transactionForm.watch("status") === "completed" && (
+                      <FormField
+                        control={transactionForm.control}
+                        name="paymentDate"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{language === 'vi' ? 'Ngày thanh toán' : 'Payment Date'}</FormLabel>
+                            <FormControl>
+                              <Input {...field} type="date" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
                   </div>
 
                   <FormField
