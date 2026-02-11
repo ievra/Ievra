@@ -422,11 +422,11 @@ export default function LookupAdminTab() {
           <Card className="bg-black border border-white/20 rounded-none">
             <CardContent className="p-6">
               <div className="flex items-start justify-between">
-                <div className="space-y-3">
+                <div className="space-y-2">
                   <h3 className="text-2xl font-light text-white">
                     {selectedClient.lastName} {selectedClient.firstName}
                   </h3>
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-white/60">
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-white/60 pl-0.5">
                     {selectedClient.phone && (
                       <span>{selectedClient.phone}</span>
                     )}
@@ -438,7 +438,7 @@ export default function LookupAdminTab() {
                     )}
                   </div>
                   {(selectedClient.company || selectedClient.address) && (
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-white/40">
+                    <div className="flex flex-wrap items-center gap-4 text-sm text-white/40 pl-0.5">
                       {selectedClient.company && (
                         <span>{selectedClient.company}</span>
                       )}
