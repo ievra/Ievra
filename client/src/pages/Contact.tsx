@@ -178,7 +178,7 @@ export default function Contact() {
     const inquiryData = {
       firstName: formData.name.split(' ')[0] || formData.name,
       lastName: formData.name.split(' ').slice(1).join(' ') || '',
-      email: formData.email,
+      email: formData.email || undefined,
       phone: formData.phone,
       projectType: formData.projectType || undefined,
       budget: formData.budget || undefined,

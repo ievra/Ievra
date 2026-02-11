@@ -96,7 +96,7 @@ export const inquiries = pgTable("inquiries", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   firstName: text("first_name").notNull(),
   lastName: text("last_name").notNull(),
-  email: text("email").notNull(),
+  email: text("email"),
   phone: text("phone"),
   projectType: varchar("project_type", { length: 50 }),
   budget: varchar("budget", { length: 50 }),
