@@ -351,6 +351,24 @@ export const transactionsRelations = relations(transactions, ({ one }) => ({
   }),
 }));
 
+export const warrantyLogs = pgTable("warranty_logs", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  clientId: varchar("client_id").notNull().references(() => clients.id),
+  date: timestamp("date").notNull().defaultNow(),
+  title: text("title").notNull(),
+  description: text("description"),
+  status: varchar("status", { length: 20 }).notNull().default("pending"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const warrantyLogsRelations = relations(warrantyLogs, ({ one }) => ({
+  client: one(clients, {
+    fields: [warrantyLogs.clientId],
+    references: [clients.id],
+  }),
+}));
+
 // Insert schemas
 export const insertProjectSchema = createInsertSchema(projects).omit({
   id: true,
@@ -425,6 +443,17 @@ export const insertTransactionSchema = createInsertSchema(transactions).omit({
   ])
 });
 
+export const insertWarrantyLogSchema = createInsertSchema(warrantyLogs).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+}).extend({
+  date: z.union([
+    z.string().transform((str) => new Date(str)),
+    z.date()
+  ])
+});
+
 // Types
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -461,6 +490,9 @@ export type Deal = typeof deals.$inferSelect;
 
 export type InsertTransaction = z.infer<typeof insertTransactionSchema>;
 export type Transaction = typeof transactions.$inferSelect;
+
+export type InsertWarrantyLog = z.infer<typeof insertWarrantyLogSchema>;
+export type WarrantyLog = typeof warrantyLogs.$inferSelect;
 
 // Settings/Branding table
 export const settings = pgTable("settings", {
