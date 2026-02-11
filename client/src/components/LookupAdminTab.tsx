@@ -402,7 +402,7 @@ export default function LookupAdminTab() {
         </h2>
       </div>
 
-      <Card className="bg-black border border-white/20 rounded-none">
+      <Card className="bg-black border-0 rounded-none shadow-none">
         <CardContent className="p-4">
           <div className="flex gap-3">
             <div className="relative flex-1">
