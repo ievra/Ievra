@@ -128,6 +128,7 @@ const clientSchema = z.object({
   intakeDate: z.string().optional(),
   warrantyStatus: z.enum(["none", "active", "expired"]).default("none"),
   warrantyExpiry: z.string().optional(),
+  tier: z.string().default("silver"),
   tags: z.array(z.string()).default([]),
   notes: z.string().optional(),
 });
@@ -835,6 +836,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       warrantyExpiry: "",
       stage: "lead",
       status: "active",
+      tier: "silver",
       totalSpending: "0",
       refundAmount: "0",
       commission: "0",
@@ -4768,7 +4770,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>{language === 'vi' ? 'Hạng Khách' : 'Customer Tier'}</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select onValueChange={field.onChange} value={field.value}>
                             <FormControl>
                               <SelectTrigger data-testid="select-client-tier">
                                 <SelectValue />
@@ -4888,7 +4890,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>{t('crm.pipelineStage')}</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select onValueChange={field.onChange} value={field.value}>
                             <FormControl>
                               <SelectTrigger data-testid="select-client-stage">
                                 <SelectValue />
@@ -4917,7 +4919,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>{t('crm.status')}</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select onValueChange={field.onChange} value={field.value}>
                             <FormControl>
                               <SelectTrigger data-testid="select-client-status">
                                 <SelectValue />
