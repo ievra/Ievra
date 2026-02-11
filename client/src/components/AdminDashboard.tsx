@@ -5155,7 +5155,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
 
                   {/* CRM Status */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium border-b pb-2">{t('crm.crmStatus')}</h3>
+                    <h3 className="text-lg font-medium border-b pb-2">{language === 'vi' ? 'Trạng Thái' : 'Status'}</h3>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">{t('crm.pipelineStage')}</label>
