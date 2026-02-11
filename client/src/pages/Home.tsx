@@ -853,7 +853,7 @@ export default function Home() {
                   {featuredArticles?.slice(0, 10).map((article, index) => (
                     <Card
                       key={article.id}
-                      className="group overflow-hidden cursor-pointer h-[28rem] w-72 flex-shrink-0 rounded-none article-card"
+                      className="group overflow-hidden cursor-pointer h-[28rem] w-72 flex-shrink-0 rounded-none border border-white/10 hover:bg-white/5 transition-all duration-300 article-card"
                       onClick={() => navigate(`/blog/${article.slug}`)}
                     >
                       <div className="relative">
@@ -865,9 +865,7 @@ export default function Home() {
                             data-testid={`img-article-${article.id}`}
                           />
                         ) : (
-                          <div className="w-full h-48 bg-black flex items-center justify-center">
-                            <div className="text-6xl font-sans font-light text-primary/30">N</div>
-                          </div>
+                          <div className="w-full h-48 bg-transparent" />
                         )}
                         <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       </div>
