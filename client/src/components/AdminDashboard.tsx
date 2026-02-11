@@ -631,6 +631,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   const [clientWarrantyFilter, setClientWarrantyFilter] = useState('all');
   const [clientTierFilter, setClientTierFilter] = useState('all');
   const [inquirySearchQuery, setInquirySearchQuery] = useState('');
+  const [inquiryStatusFilter, setInquiryStatusFilter] = useState('all');
   const [inquiriesPage, setInquiriesPage] = useState(1);
   const inquiriesPerPage = 10;
   
@@ -5850,11 +5851,22 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
             <Input
               value={inquirySearchQuery}
-              onChange={(e) => { setInquirySearchQuery(e.target.value); }}
+              onChange={(e) => { setInquirySearchQuery(e.target.value); setInquiriesPage(1); }}
               placeholder={language === 'vi' ? 'Chúng tôi có thể giúp bạn tìm gì?' : 'What can we help you find?'}
               className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
             />
           </div>
+          <Select value={inquiryStatusFilter} onValueChange={(val) => { setInquiryStatusFilter(val); setInquiriesPage(1); }}>
+            <SelectTrigger className="w-40">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{language === 'vi' ? 'Tất Cả' : 'All'}</SelectItem>
+              <SelectItem value="new">{language === 'vi' ? 'Mới' : 'New'}</SelectItem>
+              <SelectItem value="contacted">{language === 'vi' ? 'Đã Liên Hệ' : 'Contacted'}</SelectItem>
+              <SelectItem value="converted">{language === 'vi' ? 'Đã Chuyển Đổi' : 'Converted'}</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <Card>
@@ -5903,6 +5915,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 <TableBody>
                   {(() => {
                     const filtered = inquiries.filter(inquiry => {
+                      if (inquiryStatusFilter !== 'all' && inquiry.status !== inquiryStatusFilter) return false;
                       if (!inquirySearchQuery) return true;
                       const searchLower = inquirySearchQuery.toLowerCase();
                       return (
@@ -6020,6 +6033,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             )}
             {(() => {
               const filtered = inquiries.filter(inquiry => {
+                if (inquiryStatusFilter !== 'all' && inquiry.status !== inquiryStatusFilter) return false;
                 if (!inquirySearchQuery) return true;
                 const searchLower = inquirySearchQuery.toLowerCase();
                 return (
