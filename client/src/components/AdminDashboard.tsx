@@ -5290,7 +5290,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     name="title"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Tiêu đề *</FormLabel>
+                        <FormLabel>Tiêu đề</FormLabel>
                         <FormControl>
                           <Input {...field} placeholder="VD: Thanh toán đợt 1" />
                         </FormControl>
@@ -5305,7 +5305,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="amount"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Số tiền (đ) *</FormLabel>
+                          <FormLabel>Số tiền (đ)</FormLabel>
                           <FormControl>
                             <Input {...field} type="text" placeholder="VD: 50000000" />
                           </FormControl>
@@ -5366,7 +5366,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="paymentDate"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Ngày thanh toán *</FormLabel>
+                          <FormLabel>Ngày thanh toán</FormLabel>
                           <FormControl>
                             <Input {...field} type="date" />
                           </FormControl>
