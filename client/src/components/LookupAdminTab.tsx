@@ -694,44 +694,24 @@ export default function LookupAdminTab() {
               )}
 
               {activeSubTab === "warranty" && (
-                <div className="max-w-lg space-y-6 py-4">
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm text-white/60 mb-2 block">{isVi ? "Trạng thái bảo hành" : "Warranty Status"}</label>
-                      <Select value={warrantyStatus} onValueChange={setWarrantyStatus}>
-                        <SelectTrigger className="bg-transparent border-white/20 text-white rounded-none h-10">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent className="bg-black border-white/20 rounded-none">
-                          <SelectItem value="none">{isVi ? "Chưa có" : "None"}</SelectItem>
-                          <SelectItem value="active">{isVi ? "Đang hiệu lực" : "Active"}</SelectItem>
-                          <SelectItem value="expired">{isVi ? "Hết hạn" : "Expired"}</SelectItem>
-                        </SelectContent>
-                      </Select>
+                <div className="max-w-lg space-y-4 py-4">
+                  <div className="border border-white/10 p-5 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-white/60">{isVi ? "Trạng thái bảo hành" : "Warranty Status"}</span>
+                      <span className={`text-sm font-light ${selectedClient.warrantyStatus === "active" ? "text-green-400" : selectedClient.warrantyStatus === "expired" ? "text-red-400" : "text-white/40"}`}>
+                        {selectedClient.warrantyStatus === "active" ? (isVi ? "Đang hiệu lực" : "Active") : selectedClient.warrantyStatus === "expired" ? (isVi ? "Hết hạn" : "Expired") : (isVi ? "Chưa có" : "None")}
+                      </span>
                     </div>
-                    <div>
-                      <label className="text-sm text-white/60 mb-2 block">{isVi ? "Ngày hết hạn bảo hành" : "Warranty Expiry Date"}</label>
-                      <Input
-                        type="date"
-                        value={warrantyExpiry}
-                        onChange={(e) => setWarrantyExpiry(e.target.value)}
-                        className="bg-transparent border-white/20 text-white rounded-none h-10"
-                      />
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm text-white/60">{isVi ? "Ngày hết hạn" : "Expiry Date"}</span>
+                      <span className="text-sm text-white font-light">
+                        {selectedClient.warrantyExpiry ? formatDate(selectedClient.warrantyExpiry) : "—"}
+                      </span>
                     </div>
-                    <Button
-                      onClick={() => updateWarrantyMutation.mutate()}
-                      disabled={updateWarrantyMutation.isPending}
-                      className="h-10 px-6 rounded-none bg-white text-black hover:bg-white/90"
-                    >
-                      {updateWarrantyMutation.isPending ? (isVi ? "Đang lưu..." : "Saving...") : (isVi ? "Cập nhật bảo hành" : "Update Warranty")}
-                    </Button>
                   </div>
-                  {selectedClient.warrantyExpiry && (
-                    <div className="border border-white/10 p-4">
-                      <p className="text-white/40 text-sm">{isVi ? "Hết hạn hiện tại:" : "Current expiry:"}</p>
-                      <p className="text-white font-light">{formatDate(selectedClient.warrantyExpiry)}</p>
-                    </div>
-                  )}
+                  <p className="text-xs text-white/30 font-light">
+                    {isVi ? "Thông tin bảo hành được quản lý từ mục Quản lý Khách hàng." : "Warranty information is managed from the Client Management section."}
+                  </p>
                 </div>
               )}
             </div>
