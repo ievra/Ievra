@@ -29,7 +29,7 @@ import {
   type CrmStatus, type InsertCrmStatus
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, desc, like, and, or, sql } from "drizzle-orm";
+import { eq, ne, desc, like, and, or, sql } from "drizzle-orm";
 
 export interface IStorage {
   // Users
@@ -250,7 +250,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Projects
-  async getProjects(filters?: { category?: string; featured?: boolean; language?: string }): Promise<Project[]> {
+  async getProjects(filters?: { category?: string; featured?: boolean; language?: string; status?: string }): Promise<Project[]> {
     const conditions = [];
     
     if (filters?.category) {
@@ -263,6 +263,12 @@ export class DatabaseStorage implements IStorage {
     
     if (filters?.language) {
       conditions.push(eq(projects.language, filters.language));
+    }
+
+    if (filters?.status && filters.status !== 'all') {
+      conditions.push(eq(projects.status, filters.status));
+    } else if (!filters?.status) {
+      conditions.push(eq(projects.status, 'published'));
     }
     
     const query = conditions.length > 0

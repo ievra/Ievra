@@ -378,12 +378,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Projects routes
   app.get("/api/projects", async (req, res) => {
     try {
-      const { category, featured, language } = req.query;
+      const { category, featured, language, status } = req.query;
       const filters: any = {};
       
       if (category) filters.category = category as string;
       if (featured) filters.featured = featured === 'true';
       if (language) filters.language = language as string;
+      if (status) filters.status = status as string;
       
       const projects = await storage.getProjects(filters);
       res.json(projects);

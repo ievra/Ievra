@@ -482,7 +482,12 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   });
 
   const { data: projects = [], isLoading: projectsLoading } = useQuery<Project[]>({
-    queryKey: ['/api/projects'],
+    queryKey: ['/api/projects', 'all'],
+    queryFn: async () => {
+      const res = await fetch('/api/projects?status=all');
+      if (!res.ok) throw new Error('Failed to fetch projects');
+      return res.json();
+    },
   });
 
   const { data: clients = [], isLoading: clientsLoading } = useQuery<Client[]>({
