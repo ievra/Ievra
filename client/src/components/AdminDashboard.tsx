@@ -5715,7 +5715,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             <div className="flex flex-col items-end gap-1">
                               <div className="flex gap-1">
                                 <Button
-                                  variant="outline"
+                                  variant="ghost"
                                   size="sm"
                                   onClick={() => {
                                     setViewingClient(client);
@@ -5726,7 +5726,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                   <Eye className="h-4 w-4" />
                                 </Button>
                                 <Button
-                                  variant="outline"
+                                  variant="ghost"
                                   size="sm"
                                   onClick={() => handleEditClient(client)}
                                   data-testid={`button-edit-client-${client.id}`}
