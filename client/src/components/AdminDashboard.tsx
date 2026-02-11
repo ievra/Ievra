@@ -5191,25 +5191,15 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     <h3 className="text-lg font-medium border-b pb-2">{t('crm.financialInfo')}</h3>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-medium text-muted-foreground">Total Revenue</label>
+                        <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Đã Thanh Toán' : 'Total Revenue'}</label>
                         <p className="text-base mt-1 font-semibold">
                           {(clientFinances[viewingClient.id]?.totalSpending || 0).toLocaleString('vi-VN')} đ
                         </p>
                       </div>
                       <div>
-                        <label className="text-sm font-medium text-muted-foreground">Hoàn Trả</label>
+                        <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Hoàn Trả' : 'Refund'}</label>
                         <p className="text-base mt-1 font-semibold">
                           {(clientFinances[viewingClient.id]?.refundAmount || 0).toLocaleString('vi-VN')} đ
-                        </p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-muted-foreground">Order Count</label>
-                        <p className="text-base mt-1">{viewingClient.orderCount || 0}</p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-muted-foreground">Refund Amount</label>
-                        <p className="text-base mt-1 font-semibold text-white">
-                          {viewingClient.refundAmount ? `${parseFloat(String(viewingClient.refundAmount)).toLocaleString('vi-VN')} đ` : "0 đ"}
                         </p>
                       </div>
                     </div>
