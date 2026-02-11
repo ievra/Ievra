@@ -68,10 +68,10 @@ export const clients = pgTable("clients", {
   address: text("address"),
   dateOfBirth: timestamp("date_of_birth"), // Ngày tháng năm sinh
   // CRM Pipeline Stage
-  stage: varchar("stage", { length: 20 }).notNull().default("lead"), // lead, prospect, contract, delivery, aftercare
-  status: varchar("status", { length: 20 }).notNull().default("active"), // active, inactive, archived
+  stage: varchar("stage", { length: 50 }).notNull().default("lead"),
+  status: varchar("status", { length: 50 }).notNull().default("active"),
   // Customer Tier
-  tier: varchar("tier", { length: 20 }).notNull().default("silver"), // vip, silver, gold, platinum
+  tier: varchar("tier", { length: 50 }).notNull().default("silver"),
   // Financial tracking
   totalSpending: decimal("total_spending", { precision: 12, scale: 2 }).notNull().default("0"),
   refundAmount: decimal("refund_amount", { precision: 12, scale: 2 }).notNull().default("0"),
