@@ -442,7 +442,7 @@ export default function LookupAdminTab() {
                         <span>{selectedClient.company}</span>
                       )}
                       {selectedClient.company && selectedClient.address && (
-                        <span className="text-white/20">—</span>
+                        <span className="text-white/20">-</span>
                       )}
                       {selectedClient.address && (
                         <span>{selectedClient.address}</span>
