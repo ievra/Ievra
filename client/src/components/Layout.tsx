@@ -259,7 +259,7 @@ export default function Layout({ children }: LayoutProps) {
         </div>
       )}
 
-      <main className="pb-8 md:pb-6 mb-4">{children}</main>
+      <main>{children}</main>
     </div>
   );
 }
