@@ -4902,7 +4902,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   {editingClient && (
                     <div className="border-t border-white/30 pt-6 mt-6">
                       <div className="flex justify-between items-center mb-4">
-                        <h3 className="text-lg font-medium">Lịch sử giao dịch</h3>
+                        <h3 className="text-lg font-medium">{language === 'vi' ? 'Lịch sử giao dịch' : 'Transaction History'}</h3>
                         <Button
                           type="button"
                           variant="outline"
@@ -4928,9 +4928,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       </div>
                       
                       {transactionsLoading ? (
-                        <div className="text-sm text-white/50">Đang tải...</div>
+                        <div className="text-sm text-white/50">{language === 'vi' ? 'Đang tải...' : 'Loading...'}</div>
                       ) : !Array.isArray(transactions) || transactions.length === 0 ? (
-                        <div className="text-sm text-white/50">Chưa có giao dịch nào</div>
+                        <div className="text-sm text-white/50">{language === 'vi' ? 'Chưa có giao dịch nào' : 'No transactions yet'}</div>
                       ) : (
                         <div className="border border-white/30 rounded-none max-h-48 overflow-y-auto bg-black">
                           {transactions.map((transaction: any) => (
@@ -4939,7 +4939,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 <div className="flex items-center gap-2">
                                   <span className="text-sm font-medium text-white">{transaction.title}</span>
                                   <span className="text-[10px] px-1.5 py-0.5 bg-white/10 text-white/70 rounded-none">
-                                    {transaction.type === "payment" ? "Thanh toán" : transaction.type === "refund" ? "Hoàn tiền" : transaction.type === "commission" ? "Hoa hồng" : "—"}
+                                    {transaction.type === "payment" ? (language === 'vi' ? "Thanh toán" : "Payment") : transaction.type === "refund" ? (language === 'vi' ? "Hoàn tiền" : "Refund") : "—"}
                                   </span>
                                 </div>
                                 <div className="flex items-center gap-3">
@@ -4948,7 +4948,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                     {new Date(transaction.paymentDate).toLocaleDateString('vi-VN')}
                                   </span>
                                   <span className="text-[10px] text-white/50">
-                                    {transaction.status === "pending" ? "Đang chờ" : transaction.status === "completed" ? "Hoàn thành" : transaction.status === "cancelled" ? "Đã hủy" : "—"}
+                                    {transaction.status === "pending" ? (language === 'vi' ? "Đang chờ" : "Pending") : transaction.status === "completed" ? (language === 'vi' ? "Hoàn thành" : "Completed") : transaction.status === "cancelled" ? (language === 'vi' ? "Đã hủy" : "Cancelled") : "—"}
                                   </span>
                                 </div>
                                 {transaction.description && (
@@ -4967,8 +4967,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                       amount: transaction.amount,
                                       title: transaction.title,
                                       description: transaction.description || "",
-                                      type: transaction.type || "",
-                                      status: transaction.status || "",
+                                      type: transaction.type || "payment",
+                                      status: transaction.status || "completed",
                                       paymentDate: transaction.paymentDate ? new Date(transaction.paymentDate).toISOString().split('T')[0] : "",
                                       notes: transaction.notes || "",
                                     });
@@ -4983,7 +4983,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                   variant="ghost"
                                   size="icon"
                                   onClick={() => {
-                                    if (confirm(`Xóa giao dịch "${transaction.title}"?`)) {
+                                    if (confirm(language === 'vi' ? `Xóa giao dịch "${transaction.title}"?` : `Delete transaction "${transaction.title}"?`)) {
                                       deleteTransactionMutation.mutate(transaction.id);
                                     }
                                   }}
@@ -5051,23 +5051,24 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         </AlertDialogTrigger>
                         <AlertDialogContent className="bg-black/95 backdrop-blur-xl border border-white/20 rounded-none">
                           <AlertDialogHeader>
-                            <AlertDialogTitle>Xác nhận xóa khách hàng</AlertDialogTitle>
+                            <AlertDialogTitle>{language === 'vi' ? 'Xác nhận xóa khách hàng' : 'Confirm Delete Client'}</AlertDialogTitle>
                             <AlertDialogDescription>
-                              Bạn có chắc chắn muốn xóa khách hàng <strong>{editingClient.firstName} {editingClient.lastName}</strong>?
-                              <br />
-                              Hành động này không thể hoàn tác và sẽ xóa toàn bộ dữ liệu liên quan.
+                              {language === 'vi' 
+                                ? <>Bạn có chắc chắn muốn xóa khách hàng <strong>{editingClient.firstName} {editingClient.lastName}</strong>?<br />Hành động này không thể hoàn tác và sẽ xóa toàn bộ dữ liệu liên quan.</>
+                                : <>Are you sure you want to delete client <strong>{editingClient.firstName} {editingClient.lastName}</strong>?<br />This action cannot be undone and will delete all related data.</>
+                              }
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
                             <AlertDialogCancel className="bg-black border-white/30 hover:border-white hover:bg-white/10 rounded-none h-10 px-4">
-                              Hủy
+                              {language === 'vi' ? 'Hủy' : 'Cancel'}
                             </AlertDialogCancel>
                             <AlertDialogAction
                               onClick={() => deleteClientMutation.mutate(editingClient.id)}
                               className="bg-white hover:bg-white/90 text-black rounded-none h-10 px-4"
                               disabled={deleteClientMutation.isPending}
                             >
-                              {deleteClientMutation.isPending ? "Đang xóa..." : "Xóa"}
+                              {deleteClientMutation.isPending ? (language === 'vi' ? "Đang xóa..." : "Deleting...") : (language === 'vi' ? "Xóa" : "Delete")}
                             </AlertDialogAction>
                           </AlertDialogFooter>
                         </AlertDialogContent>
@@ -5230,11 +5231,11 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
 
                   {/* Transaction History */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium border-b pb-2">Lịch sử giao dịch</h3>
+                    <h3 className="text-lg font-medium border-b pb-2">{language === 'vi' ? 'Lịch sử giao dịch' : 'Transaction History'}</h3>
                     {viewTransactionsLoading ? (
-                      <div className="text-sm text-white/50">Đang tải...</div>
+                      <div className="text-sm text-white/50">{language === 'vi' ? 'Đang tải...' : 'Loading...'}</div>
                     ) : !Array.isArray(viewTransactions) || viewTransactions.length === 0 ? (
-                      <div className="text-sm text-white/50">Chưa có giao dịch nào</div>
+                      <div className="text-sm text-white/50">{language === 'vi' ? 'Chưa có giao dịch nào' : 'No transactions yet'}</div>
                     ) : (
                       <div className="border border-white/30 rounded-none max-h-64 overflow-y-auto bg-black">
                         {viewTransactions.map((transaction: any) => (
@@ -5243,7 +5244,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                               <div className="flex items-center gap-2">
                                 <span className="text-sm font-medium text-white">{transaction.title}</span>
                                 <span className="text-[10px] px-1.5 py-0.5 bg-white/10 text-white/70 rounded-none">
-                                  {transaction.type === "payment" ? "Thanh toán" : transaction.type === "refund" ? "Hoàn tiền" : transaction.type === "commission" ? "Hoa hồng" : "—"}
+                                  {transaction.type === "payment" ? (language === 'vi' ? "Thanh toán" : "Payment") : transaction.type === "refund" ? (language === 'vi' ? "Hoàn tiền" : "Refund") : "—"}
                                 </span>
                               </div>
                               <div className="flex items-center gap-3">
@@ -5252,7 +5253,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                   {new Date(transaction.paymentDate).toLocaleDateString('vi-VN')}
                                 </span>
                                 <span className="text-[10px] text-white/50">
-                                  {transaction.status === "pending" ? "Đang chờ" : transaction.status === "completed" ? "Hoàn thành" : transaction.status === "cancelled" ? "Đã hủy" : "—"}
+                                  {transaction.status === "pending" ? (language === 'vi' ? "Đang chờ" : "Pending") : transaction.status === "completed" ? (language === 'vi' ? "Hoàn thành" : "Completed") : transaction.status === "cancelled" ? (language === 'vi' ? "Đã hủy" : "Cancelled") : "—"}
                                 </span>
                               </div>
                               {transaction.description && (
@@ -5286,7 +5287,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <DialogContent className="max-w-md bg-black border border-white/20 rounded-none">
               <DialogHeader>
                 <DialogTitle>
-                  {editingTransaction ? "Chỉnh sửa giao dịch" : "Thêm giao dịch mới"}
+                  {editingTransaction ? (language === 'vi' ? "Chỉnh sửa giao dịch" : "Edit Transaction") : (language === 'vi' ? "Thêm giao dịch mới" : "Add New Transaction")}
                 </DialogTitle>
               </DialogHeader>
               <Form {...transactionForm}>
@@ -5296,9 +5297,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     name="title"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Tiêu đề</FormLabel>
+                        <FormLabel>{language === 'vi' ? 'Tiêu đề' : 'Title'}</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="VD: Thanh toán đợt 1" />
+                          <Input {...field} placeholder={language === 'vi' ? "VD: Thanh toán đợt 1" : "E.g.: Payment phase 1"} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -5311,7 +5312,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="amount"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Số tiền (đ)</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Số tiền (đ)' : 'Amount (đ)'}</FormLabel>
                           <FormControl>
                             <Input {...field} type="text" placeholder="VD: 50000000" />
                           </FormControl>
@@ -5325,16 +5326,16 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="type"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Loại</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Loại' : 'Type'}</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger className="border-t-0 border-l-0 border-r-0 border-b border-white/30 rounded-none">
-                                <SelectValue placeholder="Chọn loại" />
+                                <SelectValue placeholder={language === 'vi' ? "Chọn loại" : "Select type"} />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="payment">Thanh toán</SelectItem>
-                              <SelectItem value="refund">Hoàn tiền</SelectItem>
+                              <SelectItem value="payment">{language === 'vi' ? 'Thanh toán' : 'Payment'}</SelectItem>
+                              <SelectItem value="refund">{language === 'vi' ? 'Hoàn tiền' : 'Refund'}</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -5349,17 +5350,17 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="status"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Trạng thái</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Trạng thái' : 'Status'}</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger className="border-t-0 border-l-0 border-r-0 border-b border-white/30 rounded-none">
-                                <SelectValue placeholder="Chọn trạng thái" />
+                                <SelectValue placeholder={language === 'vi' ? "Chọn trạng thái" : "Select status"} />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="pending">Đang chờ</SelectItem>
-                              <SelectItem value="completed">Hoàn thành</SelectItem>
-                              <SelectItem value="cancelled">Đã hủy</SelectItem>
+                              <SelectItem value="pending">{language === 'vi' ? 'Đang chờ' : 'Pending'}</SelectItem>
+                              <SelectItem value="completed">{language === 'vi' ? 'Hoàn thành' : 'Completed'}</SelectItem>
+                              <SelectItem value="cancelled">{language === 'vi' ? 'Đã hủy' : 'Cancelled'}</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -5372,7 +5373,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="paymentDate"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Ngày thanh toán</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Ngày thanh toán' : 'Payment Date'}</FormLabel>
                           <FormControl>
                             <Input {...field} type="date" />
                           </FormControl>
@@ -5387,9 +5388,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     name="notes"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Ghi chú</FormLabel>
+                        <FormLabel>{language === 'vi' ? 'Ghi chú' : 'Notes'}</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder="Ghi chú thêm (optional)" />
+                          <Input {...field} placeholder={language === 'vi' ? "Ghi chú thêm (tùy chọn)" : "Additional notes (optional)"} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -5407,14 +5408,14 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       }}
                       className="h-10 px-4"
                     >
-                      Hủy
+                      {language === 'vi' ? 'Hủy' : 'Cancel'}
                     </Button>
                     <Button 
                       type="submit"
                       disabled={createTransactionMutation.isPending || updateTransactionMutation.isPending}
                       className="h-10 px-4"
                     >
-                      {editingTransaction ? "Cập nhật" : "Thêm"}
+                      {editingTransaction ? (language === 'vi' ? "Cập nhật" : "Update") : (language === 'vi' ? "Thêm" : "Add")}
                     </Button>
                   </div>
                 </form>
