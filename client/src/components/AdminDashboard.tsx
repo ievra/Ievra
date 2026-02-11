@@ -5003,28 +5003,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
 
                   <FormField
                     control={clientForm.control}
-                    name="tags"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t('crm.tags')}</FormLabel>
-                        <FormControl>
-                          <Input 
-                            value={field.value?.join(', ') || ''} 
-                            onChange={(e) => {
-                              const tagsArray = e.target.value.split(',').map(tag => tag.trim()).filter(tag => tag !== '');
-                              field.onChange(tagsArray);
-                            }}
-                            placeholder="VD: VIP, Ưu tiên, Khách hàng thân thiết..." 
-                            data-testid="input-client-tags" 
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={clientForm.control}
                     name="notes"
                     render={({ field }) => (
                       <FormItem>
