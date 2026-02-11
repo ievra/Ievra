@@ -5050,27 +5050,48 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           </Button>
                         </AlertDialogTrigger>
                         <AlertDialogContent className="bg-black/95 backdrop-blur-xl border border-white/20 rounded-none">
-                          <AlertDialogHeader>
-                            <AlertDialogTitle>{language === 'vi' ? 'Xác nhận xóa khách hàng' : 'Confirm Delete Client'}</AlertDialogTitle>
-                            <AlertDialogDescription>
-                              {language === 'vi' 
-                                ? <>Bạn có chắc chắn muốn xóa khách hàng <strong>{editingClient.firstName} {editingClient.lastName}</strong>?<br />Hành động này không thể hoàn tác và sẽ xóa toàn bộ dữ liệu liên quan.</>
-                                : <>Are you sure you want to delete client <strong>{editingClient.firstName} {editingClient.lastName}</strong>?<br />This action cannot be undone and will delete all related data.</>
-                              }
-                            </AlertDialogDescription>
-                          </AlertDialogHeader>
-                          <AlertDialogFooter>
-                            <AlertDialogCancel className="bg-black border-white/30 hover:border-white hover:bg-white/10 rounded-none h-10 px-4">
-                              {language === 'vi' ? 'Hủy' : 'Cancel'}
-                            </AlertDialogCancel>
-                            <AlertDialogAction
-                              onClick={() => deleteClientMutation.mutate(editingClient.id)}
-                              className="bg-white hover:bg-white/90 text-black rounded-none h-10 px-4"
-                              disabled={deleteClientMutation.isPending}
-                            >
-                              {deleteClientMutation.isPending ? (language === 'vi' ? "Đang xóa..." : "Deleting...") : (language === 'vi' ? "Xóa" : "Delete")}
-                            </AlertDialogAction>
-                          </AlertDialogFooter>
+                          {Array.isArray(transactions) && transactions.length > 0 ? (
+                            <>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>{language === 'vi' ? 'Không thể xóa khách hàng' : 'Cannot Delete Client'}</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  {language === 'vi'
+                                    ? <>Khách hàng <strong>{editingClient.firstName} {editingClient.lastName}</strong> hiện có <strong>{transactions.length}</strong> giao dịch. Vui lòng xóa tất cả giao dịch trước khi xóa khách hàng.</>
+                                    : <>Client <strong>{editingClient.firstName} {editingClient.lastName}</strong> currently has <strong>{transactions.length}</strong> transaction(s). Please delete all transactions before deleting this client.</>
+                                  }
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel className="bg-white hover:bg-white/90 text-black rounded-none h-10 px-4">
+                                  {language === 'vi' ? 'Đã hiểu' : 'Understood'}
+                                </AlertDialogCancel>
+                              </AlertDialogFooter>
+                            </>
+                          ) : (
+                            <>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>{language === 'vi' ? 'Xác nhận xóa khách hàng' : 'Confirm Delete Client'}</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  {language === 'vi' 
+                                    ? <>Bạn có chắc chắn muốn xóa khách hàng <strong>{editingClient.firstName} {editingClient.lastName}</strong>?<br />Hành động này không thể hoàn tác và sẽ xóa toàn bộ dữ liệu liên quan.</>
+                                    : <>Are you sure you want to delete client <strong>{editingClient.firstName} {editingClient.lastName}</strong>?<br />This action cannot be undone and will delete all related data.</>
+                                  }
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel className="bg-black border-white/30 hover:border-white hover:bg-white/10 rounded-none h-10 px-4">
+                                  {language === 'vi' ? 'Hủy' : 'Cancel'}
+                                </AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => deleteClientMutation.mutate(editingClient.id)}
+                                  className="bg-white hover:bg-white/90 text-black rounded-none h-10 px-4"
+                                  disabled={deleteClientMutation.isPending}
+                                >
+                                  {deleteClientMutation.isPending ? (language === 'vi' ? "Đang xóa..." : "Deleting...") : (language === 'vi' ? "Xóa" : "Delete")}
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </>
+                          )}
                         </AlertDialogContent>
                       </AlertDialog>
                     )}
