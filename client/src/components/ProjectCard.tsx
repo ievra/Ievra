@@ -27,7 +27,7 @@ export default function ProjectCard({ project, index = 0 }: ProjectCardProps) {
 
   return (
     <div 
-      className="project-card group relative overflow-hidden cursor-pointer h-[28rem] w-full flex-shrink-0 rounded-none transition-all duration-500 ease-out hover:shadow-2xl hover:shadow-white/10"
+      className="project-card group relative overflow-hidden cursor-pointer h-[28rem] w-full flex-shrink-0 rounded-none border border-white/10 hover:bg-white/5 transition-all duration-500 ease-out hover:shadow-2xl hover:shadow-white/10"
       data-index={index}
     >
       <Link href={project.slug ? `/portfolio/${project.slug}` : `/project/${project.id}`}>
@@ -39,7 +39,7 @@ export default function ProjectCard({ project, index = 0 }: ProjectCardProps) {
             data-testid={`img-project-${project.id}`}
           />
         ) : (
-          <div className="w-full h-full bg-neutral-900" data-testid={`img-project-${project.id}`} />
+          <div className="w-full h-full bg-transparent" data-testid={`img-project-${project.id}`} />
         )}
         <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-all duration-500" />
         
