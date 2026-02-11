@@ -5710,7 +5710,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     </TableBody>
                   </Table>
                 </div>
-                <div className="p-4 border-t border-white/10">
+                <div className="p-4">
                   <div className="flex items-center justify-center gap-2">
                     <Button
                       variant="ghost"
@@ -5719,7 +5719,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       disabled={currentPage === 1}
                       className="text-xs min-w-[60px]"
                     >
-                      FIRST
+                      {language === 'vi' ? 'ĐẦU' : 'FIRST'}
                     </Button>
                     <Button
                       variant="ghost"
@@ -5728,7 +5728,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       disabled={currentPage === 1}
                       className="text-xs min-w-[60px]"
                     >
-                      PREV
+                      {language === 'vi' ? 'TRƯỚC' : 'PREV'}
                     </Button>
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                       <Button
@@ -5748,7 +5748,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       disabled={currentPage === totalPages}
                       className="text-xs min-w-[60px]"
                     >
-                      NEXT
+                      {language === 'vi' ? 'SAU' : 'NEXT'}
                     </Button>
                     <Button
                       variant="ghost"
@@ -5757,7 +5757,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       disabled={currentPage === totalPages}
                       className="text-xs min-w-[60px]"
                     >
-                      LAST
+                      {language === 'vi' ? 'CUỐI' : 'LAST'}
                     </Button>
                   </div>
                   <div className="text-center mt-2">
