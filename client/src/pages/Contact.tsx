@@ -252,35 +252,16 @@ export default function Contact() {
                 </div>
               </div>
               
-              {/* Third row - Budget and Project Type */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Input
-                    type="text"
-                    placeholder={placeholders.budget}
-                    title={language === 'vi' ? 'VD: 100.000.000' : 'E.g.: 100.000.000'}
-                    value={formData.budget}
-                    onChange={(e) => {
-                      const raw = e.target.value.replace(/\./g, '');
-                      if (raw === '' || /^\d+$/.test(raw)) {
-                        const formatted = raw ? Number(raw).toLocaleString('vi-VN') : '';
-                        setFormData(prev => ({ ...prev, budget: formatted }));
-                      }
-                    }}
-                    className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
-                    data-testid="input-budget"
-                  />
-                </div>
-                <div>
-                  <Input
-                    type="text"
-                    placeholder={placeholders.projectType}
-                    value={formData.projectType}
-                    onChange={(e) => setFormData(prev => ({ ...prev, projectType: e.target.value }))}
-                    className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
-                    data-testid="input-project-type"
-                  />
-                </div>
+              {/* Third row - Project Type */}
+              <div>
+                <Input
+                  type="text"
+                  placeholder={placeholders.projectType}
+                  value={formData.projectType}
+                  onChange={(e) => setFormData(prev => ({ ...prev, projectType: e.target.value }))}
+                  className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
+                  data-testid="input-project-type"
+                />
               </div>
               
               {/* Fourth row - Requirements */}
