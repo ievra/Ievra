@@ -18,7 +18,6 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
 import HeroSlider from "@/components/HeroSlider";
 import ScrollableContainer from "@/components/ScrollableContainer";
-import { Progress } from "@/components/ui/progress";
 import { apiRequest } from "@/lib/queryClient";
 import { FormattedText } from "@/lib/textUtils";
 import type {
@@ -35,8 +34,6 @@ export default function Home() {
   const { language, t } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
-  const [loadingProgress, setLoadingProgress] = useState(0);
-  const [showLoading, setShowLoading] = useState(true);
   const [expandedStepNumber, setExpandedStepNumber] = useState<number | null>(null);
   const [contactFormExpanded, setContactFormExpanded] = useState(false);
   const [autoCloseTimer, setAutoCloseTimer] = useState<NodeJS.Timeout | null>(
@@ -478,29 +475,6 @@ export default function Home() {
     },
   });
 
-  // Controlled loading animation
-  useEffect(() => {
-    const startTime = Date.now();
-    const duration = 1500; // 1.5 seconds total loading time
-
-    const interval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const progress = Math.min((elapsed / duration) * 100, 100);
-
-      setLoadingProgress(progress);
-
-      if (progress >= 100) {
-        clearInterval(interval);
-        // Wait a bit then hide loading screen
-        setTimeout(() => {
-          setShowLoading(false);
-        }, 300);
-      }
-    }, 16); // 60fps for smoother animation
-
-    return () => clearInterval(interval);
-  }, []);
-
   // Cleanup timers on unmount
   useEffect(() => {
     return () => {
@@ -601,23 +575,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-black">
-      {/* Full Screen Loading Overlay */}
-      {showLoading && (
-        <div className="fixed inset-0 bg-black text-white flex items-center justify-center z-[9999]">
-          <div className="text-center">
-            <div className="mb-8">
-              <img
-                src="/api/assets/logo.white.png"
-                alt="IEVRA Design & Build"
-                className="h-24 md:h-32 w-auto mx-auto"
-              />
-            </div>
-            <div className="w-80 mx-auto">
-              <Progress value={loadingProgress} className="h-1 bg-white/20" />
-            </div>
-          </div>
-        </div>
-      )}
       {/* Hero Slider Section - IIDA Style */}
       <HeroSlider projects={featuredProjects || []} />
       {/* Featured Projects Section */}
