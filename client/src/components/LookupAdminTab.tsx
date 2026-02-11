@@ -457,9 +457,9 @@ export default function LookupAdminTab() {
           <div className="border border-white/20">
             <div className="flex border-b border-white/20 overflow-x-auto">
               {([
-                { key: "interactions" as const, vi: "Nhật ký thi công", en: "Construction Log" },
-                { key: "construction_progress" as const, vi: "Tiến độ công trình", en: "Construction Progress" },
                 { key: "design_progress" as const, vi: "Tiến độ thiết kế", en: "Design Progress" },
+                { key: "construction_progress" as const, vi: "Tiến độ công trình", en: "Construction Progress" },
+                { key: "interactions" as const, vi: "Nhật ký thi công", en: "Construction Log" },
                 { key: "transactions" as const, vi: "Giao dịch", en: "Transactions" },
                 { key: "warranty" as const, vi: "Bảo hành", en: "Warranty" },
               ]).map((tab) => (
