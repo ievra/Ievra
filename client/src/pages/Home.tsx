@@ -693,7 +693,7 @@ export default function Home() {
                           data-testid={`img-project-${project.id}`}
                         />
                       ) : (
-                        <div className="w-full h-full bg-neutral-900" data-testid={`img-project-${project.id}`} />
+                        <div className="w-full h-full bg-transparent" data-testid={`img-project-${project.id}`} />
                       )}
                       <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-300" />
 
