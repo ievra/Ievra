@@ -453,6 +453,80 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/lookup", async (req, res) => {
+    try {
+      const { phone } = req.query;
+      if (!phone || typeof phone !== 'string' || phone.trim().length < 6) {
+        return res.status(400).json({ message: "Vui lòng nhập số điện thoại hợp lệ" });
+      }
+
+      const normalizedPhone = phone.trim().replace(/[\s\-\.]/g, '');
+      const allClients = await storage.getClients();
+      const client = allClients.find(c => {
+        if (!c.phone) return false;
+        const clientPhone = c.phone.replace(/[\s\-\.]/g, '');
+        return clientPhone === normalizedPhone || clientPhone.endsWith(normalizedPhone) || normalizedPhone.endsWith(clientPhone);
+      });
+
+      if (!client) {
+        return res.status(404).json({ message: "Không tìm thấy thông tin khách hàng với số điện thoại này" });
+      }
+
+      const clientInteractions = await storage.getInteractions(client.id);
+      const clientDeals = await storage.getDeals({ clientId: client.id });
+      const clientTransactions = await storage.getTransactions(client.id);
+
+      const safeClient = {
+        firstName: client.firstName,
+        lastName: client.lastName,
+        stage: client.stage,
+        tier: client.tier,
+        warrantyStatus: client.warrantyStatus,
+        warrantyExpiry: client.warrantyExpiry,
+      };
+
+      const safeDeals = clientDeals.map(d => ({
+        title: d.title,
+        stage: d.stage,
+        value: d.value,
+        expectedCloseDate: d.expectedCloseDate,
+        actualCloseDate: d.actualCloseDate,
+        description: d.description,
+        createdAt: d.createdAt,
+      }));
+
+      const safeInteractions = clientInteractions
+        .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+        .map(i => ({
+          type: i.type,
+          title: i.title,
+          description: i.description,
+          date: i.date,
+          outcome: i.outcome,
+          nextAction: i.nextAction,
+          nextActionDate: i.nextActionDate,
+        }));
+
+      const safeTransactions = clientTransactions.map(t => ({
+        title: t.title,
+        description: t.description,
+        amount: t.amount,
+        type: t.type,
+        status: t.status,
+        paymentDate: t.paymentDate,
+      }));
+
+      res.json({
+        client: safeClient,
+        deals: safeDeals,
+        interactions: safeInteractions,
+        transactions: safeTransactions,
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Đã xảy ra lỗi khi tra cứu" });
+    }
+  });
+
   // Clients routes
   app.get("/api/clients", async (req, res) => {
     try {
