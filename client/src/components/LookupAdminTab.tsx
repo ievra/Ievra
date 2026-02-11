@@ -652,15 +652,15 @@ export default function LookupAdminTab() {
                     <Table>
                       <TableHeader>
                         <TableRow className="border-white/10">
-                          <TableHead className="text-white/60">
+                          <TableHead className="text-white/60 w-[25%]">
                             <div>
                               <span>{isVi ? "Ngày" : "Date"}</span>
                               <p className="text-xs font-normal text-white/30">{isVi ? "Tiêu đề" : "Title"}</p>
                             </div>
                           </TableHead>
-                          <TableHead className="text-white/60 text-right">{isVi ? "Số tiền" : "Amount"}</TableHead>
-                          <TableHead className="text-white/60">{isVi ? "Ghi chú" : "Notes"}</TableHead>
-                          <TableHead className="text-white/60">
+                          <TableHead className="text-white/60 w-[20%]">{isVi ? "Số tiền" : "Amount"}</TableHead>
+                          <TableHead className="text-white/60 w-[30%]">{isVi ? "Ghi chú" : "Notes"}</TableHead>
+                          <TableHead className="text-white/60 w-[25%]">
                             <div>
                               <span>{isVi ? "Loại" : "Type"}</span>
                               <p className="text-xs font-normal text-white/30">{isVi ? "Trạng thái" : "Status"}</p>
@@ -677,10 +677,10 @@ export default function LookupAdminTab() {
                                 <p className="text-sm text-white/50">{tx.title}</p>
                               </div>
                             </TableCell>
-                            <TableCell className={`text-right font-light ${tx.type === "refund" ? "text-red-400" : "text-white"}`}>
+                            <TableCell className={`font-light ${tx.type === "refund" ? "text-red-400" : "text-white"}`}>
                               {tx.type === "refund" ? "-" : "+"}{formatCurrency(tx.amount)}
                             </TableCell>
-                            <TableCell className="text-white/60 max-w-[200px] truncate">{tx.notes || tx.description || "—"}</TableCell>
+                            <TableCell className="text-white/60 truncate">{tx.notes || tx.description || "—"}</TableCell>
                             <TableCell>
                               <div className="space-y-1">
                                 <Badge variant="outline" className={`rounded-none ${tx.type === "refund" ? "border-red-500/40 text-red-400" : tx.type === "commission" ? "border-yellow-500/40 text-yellow-400" : "border-white/20 text-white/60"}`}>
