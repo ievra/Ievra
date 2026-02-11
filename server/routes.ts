@@ -10,7 +10,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import { storage } from "./storage";
-import { insertProjectSchema, insertClientSchema, insertInquirySchema, insertServiceSchema, insertArticleSchema, insertHomepageContentSchema, insertPartnerSchema, insertCategorySchema, insertInteractionSchema, insertDealSchema, insertTransactionSchema, insertSettingsSchema, insertFaqSchema, insertAdvantageSchema, insertJourneyStepSchema, insertAboutPageContentSchema, insertAboutShowcaseServiceSchema, insertAboutProcessStepSchema, insertAboutCoreValueSchema, insertAboutTeamMemberSchema, insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema, insertUserSchema } from "@shared/schema";
+import { insertProjectSchema, insertClientSchema, insertInquirySchema, insertServiceSchema, insertArticleSchema, insertHomepageContentSchema, insertPartnerSchema, insertCategorySchema, insertInteractionSchema, insertDealSchema, insertTransactionSchema, insertWarrantyLogSchema, insertSettingsSchema, insertFaqSchema, insertAdvantageSchema, insertJourneyStepSchema, insertAboutPageContentSchema, insertAboutShowcaseServiceSchema, insertAboutProcessStepSchema, insertAboutCoreValueSchema, insertAboutTeamMemberSchema, insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema, insertUserSchema } from "@shared/schema";
 import { z } from "zod";
 import { createHash } from "crypto";
 
@@ -1171,6 +1171,46 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete transaction" });
+    }
+  });
+
+  // Warranty Logs
+  app.get("/api/warranty-logs", async (req, res) => {
+    try {
+      const clientId = req.query.clientId as string | undefined;
+      const logs = await storage.getWarrantyLogs(clientId);
+      res.json(logs);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch warranty logs" });
+    }
+  });
+
+  app.post("/api/warranty-logs", requirePermission('crm'), async (req, res) => {
+    try {
+      const data = insertWarrantyLogSchema.parse(req.body);
+      const log = await storage.createWarrantyLog(data);
+      res.status(201).json(log);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to create warranty log" });
+    }
+  });
+
+  app.put("/api/warranty-logs/:id", requirePermission('crm'), async (req, res) => {
+    try {
+      const data = insertWarrantyLogSchema.partial().parse(req.body);
+      const log = await storage.updateWarrantyLog(req.params.id, data);
+      res.json(log);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to update warranty log" });
+    }
+  });
+
+  app.delete("/api/warranty-logs/:id", requirePermission('crm'), async (req, res) => {
+    try {
+      await storage.deleteWarrantyLog(req.params.id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete warranty log" });
     }
   });
 
