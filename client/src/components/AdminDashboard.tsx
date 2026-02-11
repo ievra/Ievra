@@ -4980,19 +4980,41 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 >
                                   <Pencil className="h-3 w-3" />
                                 </Button>
-                                <Button
-                                  type="button"
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={() => {
-                                    if (confirm(language === 'vi' ? `Xóa giao dịch "${transaction.title}"?` : `Delete transaction "${transaction.title}"?`)) {
-                                      deleteTransactionMutation.mutate(transaction.id);
-                                    }
-                                  }}
-                                  className="h-6 w-6 text-white hover:text-white hover:bg-white/20 rounded-none"
-                                >
-                                  <X className="h-3 w-3" />
-                                </Button>
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-6 w-6 text-white hover:text-white hover:bg-white/20 rounded-none"
+                                    >
+                                      <X className="h-3 w-3" />
+                                    </Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent className="bg-black/95 backdrop-blur-xl border border-white/20 rounded-none">
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>{language === 'vi' ? 'Xóa giao dịch' : 'Delete Transaction'}</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        {language === 'vi'
+                                          ? <>Bạn có chắc chắn muốn xóa giao dịch <strong>"{transaction.title}"</strong>?<br />Hành động này không thể hoàn tác.</>
+                                          : <>Are you sure you want to delete transaction <strong>"{transaction.title}"</strong>?<br />This action cannot be undone.</>
+                                        }
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel className="bg-black border-white/30 hover:border-white hover:bg-white/10 rounded-none h-10 px-4">
+                                        {language === 'vi' ? 'Hủy' : 'Cancel'}
+                                      </AlertDialogCancel>
+                                      <AlertDialogAction
+                                        onClick={() => deleteTransactionMutation.mutate(transaction.id)}
+                                        className="bg-white hover:bg-white/90 text-black rounded-none h-10 px-4"
+                                        disabled={deleteTransactionMutation.isPending}
+                                      >
+                                        {deleteTransactionMutation.isPending ? (language === 'vi' ? "Đang xóa..." : "Deleting...") : (language === 'vi' ? "Xóa" : "Delete")}
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
                               </div>
                             </div>
                           ))}
