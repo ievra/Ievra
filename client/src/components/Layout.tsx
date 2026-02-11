@@ -72,19 +72,11 @@ export default function Layout({ children }: LayoutProps) {
     };
 
     window.addEventListener("scroll", updateScrollDirection);
-    window.addEventListener("mousemove", handleActivity);
-    window.addEventListener("touchstart", handleActivity);
-    window.addEventListener("keydown", handleActivity);
-    window.addEventListener("click", handleActivity);
 
     resetIdleTimer();
 
     return () => {
       window.removeEventListener("scroll", updateScrollDirection);
-      window.removeEventListener("mousemove", handleActivity);
-      window.removeEventListener("touchstart", handleActivity);
-      window.removeEventListener("keydown", handleActivity);
-      window.removeEventListener("click", handleActivity);
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
     };
   }, []);
