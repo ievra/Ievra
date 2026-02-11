@@ -615,6 +615,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   // Search/filter state for Articles, Clients, Inquiries
   const [articleSearchQuery, setArticleSearchQuery] = useState('');
   const [articleCategoryFilter, setArticleCategoryFilter] = useState('all');
+  const [articleStatusFilter, setArticleStatusFilter] = useState('all');
   const [clientSearchQuery, setClientSearchQuery] = useState('');
   const [clientStageFilter, setClientStageFilter] = useState('all');
   const [clientStatusFilter, setClientStatusFilter] = useState('all');
@@ -654,6 +655,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   const [projectSearchQuery, setProjectSearchQuery] = useState('');
   const [projectYearFilter, setProjectYearFilter] = useState('all');
   const [projectCategoryFilter, setProjectCategoryFilter] = useState('all');
+  const [projectStatusFilter, setProjectStatusFilter] = useState('all');
   const [projectLanguageFilter, setProjectLanguageFilter] = useState('all');
 
   // Pagination state for Projects - group by slug, then paginate
@@ -680,6 +682,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     const searchLower = projectSearchQuery.toLowerCase();
     if (projectYearFilter !== 'all' && primary.completionYear !== projectYearFilter) return false;
     if (projectCategoryFilter !== 'all' && primary.category !== projectCategoryFilter) return false;
+    if (projectStatusFilter !== 'all' && primary.status !== projectStatusFilter) return false;
     if (!searchLower) return true;
     const cat = categories.find(c => c.slug === primary.category && c.type === 'project');
     const categoryName = cat ? `${cat.name} ${cat.nameVi || ''}`.toLowerCase() : (primary.category || '').toLowerCase();
@@ -719,6 +722,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     const display = group[0];
     const searchLower = articleSearchQuery.toLowerCase();
     if (articleCategoryFilter !== 'all' && display.category !== articleCategoryFilter) return false;
+    if (articleStatusFilter !== 'all' && display.status !== articleStatusFilter) return false;
     if (!searchLower) return true;
     const cat = categories.find(c => c.slug === display.category && c.type === 'article');
     const categoryName = cat ? `${cat.name} ${cat.nameVi || ''}`.toLowerCase() : (display.category || '').toLowerCase();
@@ -4418,6 +4422,17 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               ))}
             </SelectContent>
           </Select>
+          <Select value={projectStatusFilter} onValueChange={(v) => { setProjectStatusFilter(v); setProjectsPage(1); }}>
+            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectValue placeholder={language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'}</SelectItem>
+              <SelectItem value="draft">{language === 'vi' ? 'Bản Nháp' : 'Draft'}</SelectItem>
+              <SelectItem value="published">{language === 'vi' ? 'Đã Đăng' : 'Published'}</SelectItem>
+              <SelectItem value="archived">{language === 'vi' ? 'Lưu Trữ' : 'Archived'}</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         <Card>
@@ -7654,8 +7669,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           </div>
         </div>
 
-        <Card>
-          <CardContent className="p-0">
             <Dialog open={isArticleDialogOpen} onOpenChange={setIsArticleDialogOpen}>
             <DialogContent className="max-w-4xl max-h-[85vh] flex flex-col">
               <DialogHeader>
@@ -8095,8 +8108,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               </div>
             </DialogContent>
             </Dialog>
-          </CardContent>
-        </Card>
 
         <div className="flex items-center gap-4">
           <div className="relative flex-1">
@@ -8117,6 +8128,17 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               {categories.filter(c => c.type === 'article' && c.active).map(cat => (
                 <SelectItem key={cat.id} value={cat.slug}>{language === 'vi' && cat.nameVi ? cat.nameVi : cat.name}</SelectItem>
               ))}
+            </SelectContent>
+          </Select>
+          <Select value={articleStatusFilter} onValueChange={(v) => { setArticleStatusFilter(v); setArticlesPage(1); }}>
+            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectValue placeholder={language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'}</SelectItem>
+              <SelectItem value="draft">{language === 'vi' ? 'Bản Nháp' : 'Draft'}</SelectItem>
+              <SelectItem value="published">{language === 'vi' ? 'Đã Đăng' : 'Published'}</SelectItem>
+              <SelectItem value="archived">{language === 'vi' ? 'Lưu Trữ' : 'Archived'}</SelectItem>
             </SelectContent>
           </Select>
         </div>
