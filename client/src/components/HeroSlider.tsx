@@ -4,7 +4,6 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectFade, Navigation } from 'swiper/modules';
 import type { Project, Category } from '@shared/schema';
 import { ChevronRight } from 'lucide-react';
-import { Progress } from '@/components/ui/progress';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
 
@@ -18,8 +17,6 @@ interface HeroSliderProps {
 
 export default function HeroSlider({ projects }: HeroSliderProps) {
   const [progressKey, setProgressKey] = useState(0);
-  const [loadingProgress, setLoadingProgress] = useState(0);
-  const [showLoading, setShowLoading] = useState(true);
   const swiperRef = useRef<any>(null);
   const { language } = useLanguage();
 
@@ -41,58 +38,6 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
   const handleSlideChange = () => {
     setProgressKey(prev => prev + 1);
   };
-
-  // Controlled loading animation
-  useEffect(() => {
-    if (!projects || projects.length === 0) {
-      const startTime = Date.now();
-      const duration = 1500; // 1.5 seconds total loading time
-      
-      const interval = setInterval(() => {
-        const elapsed = Date.now() - startTime;
-        const progress = Math.min((elapsed / duration) * 100, 100);
-        
-        setLoadingProgress(progress);
-        
-        if (progress >= 100) {
-          clearInterval(interval);
-          // Wait a bit then hide loading screen
-          setTimeout(() => {
-            setShowLoading(false);
-          }, 300);
-        }
-      }, 16); // 60fps for smoother animation
-      
-      return () => clearInterval(interval);
-    } else {
-      setShowLoading(false);
-    }
-  }, [projects]);
-
-  if ((!projects || projects.length === 0) && showLoading) {
-    return (
-      <>
-        <div className="fixed inset-0 bg-black text-white flex items-center justify-center z-[9999]">
-          <div className="text-center">
-            <div className="mb-8">
-              <img 
-                src="/api/assets/logo.white.png" 
-                alt="IEVRA Design & Build" 
-                className="h-24 md:h-32 w-auto mx-auto"
-              />
-            </div>
-            <div className="w-80 mx-auto">
-              <Progress 
-                value={loadingProgress} 
-                className="h-1 bg-white/20" 
-              />
-            </div>
-          </div>
-        </div>
-        <div className="bg-black text-white min-h-screen"></div>
-      </>
-    );
-  }
 
   if (!projects || projects.length === 0) {
     return (
