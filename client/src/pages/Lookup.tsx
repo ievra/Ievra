@@ -173,7 +173,7 @@ export default function Lookup() {
           <h1 className="text-4xl md:text-5xl font-light text-white mb-4 tracking-wide text-center">
             {language === "vi" ? "TRA CỨU" : "LOOKUP"}
           </h1>
-          <p className="text-white/60 font-light text-lg mb-10">
+          <p className="text-white/60 font-light text-lg mb-10 text-center">
             {language === "vi"
               ? "Nhập số điện thoại để tra cứu tiến độ dự án, nhật ký hoạt động và thông tin bảo hành."
               : "Enter your phone number to check project progress, activity log and warranty information."}
