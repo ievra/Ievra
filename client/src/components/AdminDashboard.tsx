@@ -619,6 +619,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   const [clientStageFilter, setClientStageFilter] = useState('all');
   const [clientStatusFilter, setClientStatusFilter] = useState('all');
   const [clientTierFilter, setClientTierFilter] = useState('all');
+  const [clientWarrantyFilter, setClientWarrantyFilter] = useState('all');
   const [inquirySearchQuery, setInquirySearchQuery] = useState('');
   
   // Calculate pagination for Clients
@@ -626,6 +627,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     if (clientStageFilter !== 'all' && (client.stage || 'lead') !== clientStageFilter) return false;
     if (clientStatusFilter !== 'all' && (client.status || 'active') !== clientStatusFilter) return false;
     if (clientTierFilter !== 'all' && (client.tier || 'silver') !== clientTierFilter) return false;
+    if (clientWarrantyFilter !== 'all' && (client.warrantyStatus || 'none') !== clientWarrantyFilter) return false;
     if (!clientSearchQuery) return true;
     const searchLower = clientSearchQuery.toLowerCase();
     return (
@@ -5608,6 +5610,17 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   {language === 'vi' ? tier.labelVi : tier.labelEn}
                 </SelectItem>
               ))}
+            </SelectContent>
+          </Select>
+          <Select value={clientWarrantyFilter} onValueChange={(v) => { setClientWarrantyFilter(v); setCurrentPage(1); }}>
+            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectValue placeholder={language === 'vi' ? 'Tất cả bảo hành' : 'All warranty'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{language === 'vi' ? 'Tất cả bảo hành' : 'All warranty'}</SelectItem>
+              <SelectItem value="active">{language === 'vi' ? 'Còn bảo hành' : 'Active'}</SelectItem>
+              <SelectItem value="expired">{language === 'vi' ? 'Hết bảo hành' : 'Expired'}</SelectItem>
+              <SelectItem value="none">{language === 'vi' ? 'Không có' : 'None'}</SelectItem>
             </SelectContent>
           </Select>
         </div>
