@@ -477,7 +477,7 @@ export default function LookupAdminTab() {
               {activeSubTab === "interactions" && (
                 <div className="space-y-4">
                   <div className="flex justify-end">
-                    <Button onClick={() => openInteractionDialog()} className="h-10 px-4 rounded-none bg-white text-black hover:bg-white/90">
+                    <Button onClick={() => openInteractionDialog()} className="h-10 px-4 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10">
                       <Plus className="w-4 h-4 mr-2" />
                       {isVi ? "Thêm nhật ký" : "Add Log"}
                     </Button>
