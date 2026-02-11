@@ -396,7 +396,7 @@ export default function LookupAdminTab() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between -mb-4">
+      <div className="flex items-center justify-between -mb-2">
         <h2 className="text-xl font-light text-white">
           {isVi ? "Tra Cứu Khách Hàng" : "Client Lookup"}
         </h2>
