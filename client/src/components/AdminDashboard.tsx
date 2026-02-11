@@ -5321,7 +5321,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         <FormItem>
                           <FormLabel>Số tiền (đ) *</FormLabel>
                           <FormControl>
-                            <Input {...field} type="number" placeholder="0" />
+                            <Input {...field} type="text" placeholder="VD: 50000000" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
