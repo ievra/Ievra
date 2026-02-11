@@ -5563,29 +5563,29 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             ) : (
               <>
                 <div className="overflow-x-auto">
-                  <Table>
+                  <Table className="table-fixed w-full">
                     <TableHeader>
                       <TableRow>
-                        <TableHead className="w-[160px]">
+                        <TableHead className="w-[15%] whitespace-nowrap">
                           <div>{t('admin.clients')}</div>
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Khởi tạo' : 'Intake'}</div>
                         </TableHead>
-                        <TableHead className="w-[120px]">
+                        <TableHead className="w-[14%] whitespace-nowrap">
                           <div>{t('crm.phone')}</div>
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">{t('crm.email')}</div>
                         </TableHead>
-                        <TableHead className="w-[130px]">
+                        <TableHead className="w-[14%] whitespace-nowrap">
                           <div>{t('crm.address')}</div>
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">{t('crm.company')}</div>
                         </TableHead>
-                        <TableHead className="w-[110px]">
+                        <TableHead className="w-[12%] whitespace-nowrap">
                           <div>{language === 'vi' ? 'Đã Thanh Toán' : 'Paid'}</div>
-                          <div className="text-xs font-normal text-muted-foreground mt-0.5">Hoàn Trả</div>
+                          <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Hoàn Trả' : 'Refund'}</div>
                         </TableHead>
-                        <TableHead className="w-[110px] text-center">{t('crm.warrantyStatus')}</TableHead>
-                        <TableHead className="w-[110px] text-center">{t('crm.pipelineStage')}</TableHead>
-                        <TableHead className="w-[100px] text-center">{t('crm.status')}</TableHead>
-                        <TableHead className="text-right w-[70px]"></TableHead>
+                        <TableHead className="w-[12%] text-center whitespace-nowrap">{t('crm.warrantyStatus')}</TableHead>
+                        <TableHead className="w-[13%] text-center whitespace-nowrap">{t('crm.pipelineStage')}</TableHead>
+                        <TableHead className="w-[13%] text-center whitespace-nowrap">{t('crm.status')}</TableHead>
+                        <TableHead className="w-[7%] text-right"></TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -5600,16 +5600,16 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             </div>
                           </TableCell>
                           <TableCell className="align-middle">
-                            <div className="text-sm">{client.phone || "—"}</div>
-                            <div className="text-xs text-muted-foreground truncate max-w-[140px] mt-1" title={client.email}>
+                            <div className="text-sm truncate">{client.phone || "—"}</div>
+                            <div className="text-xs text-muted-foreground truncate mt-1" title={client.email}>
                               {client.email}
                             </div>
                           </TableCell>
                           <TableCell className="align-middle">
-                            <div className="text-sm truncate max-w-[110px]" title={client.address || ""}>
+                            <div className="text-sm truncate" title={client.address || ""}>
                               {client.address || "—"}
                             </div>
-                            <div className="text-xs text-muted-foreground truncate max-w-[110px] mt-1" title={client.company || ""}>
+                            <div className="text-xs text-muted-foreground truncate mt-1" title={client.company || ""}>
                               {client.company || "—"}
                             </div>
                           </TableCell>
