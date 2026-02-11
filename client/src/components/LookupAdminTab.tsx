@@ -244,7 +244,7 @@ export default function LookupAdminTab() {
       const body = {
         clientId: selectedClient!.id,
         title: data.title,
-        value: data.value,
+        value: String(Math.round(parseFloat(data.value.replace(/[^0-9.]/g, '')))),
         stage: data.stage,
         description: data.description || undefined,
         expectedCloseDate: data.expectedCloseDate || undefined,
@@ -266,7 +266,7 @@ export default function LookupAdminTab() {
     mutationFn: async (data: DealFormData) => {
       const body = {
         title: data.title,
-        value: data.value,
+        value: String(Math.round(parseFloat(data.value.replace(/[^0-9.]/g, '')))),
         stage: data.stage,
         description: data.description || undefined,
         expectedCloseDate: data.expectedCloseDate || undefined,

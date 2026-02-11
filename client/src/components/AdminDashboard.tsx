@@ -3340,7 +3340,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     try {
       const cleanedData = {
         ...data,
-        amount: data.amount.replace(/[^0-9.]/g, ''),
+        amount: String(Math.round(parseFloat(data.amount.replace(/[^0-9.]/g, '')))),
         type: data.type || "payment",
         status: data.status || "completed",
       };
