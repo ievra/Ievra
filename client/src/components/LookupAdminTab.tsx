@@ -444,7 +444,7 @@ export default function LookupAdminTab() {
                     <Badge variant="outline" className="rounded-none border-white/20 text-white/70">
                       {tierLabels[selectedClient.tier]?.[language] || selectedClient.tier}
                     </Badge>
-                    <Badge variant="outline" className={`rounded-none ${selectedClient.warrantyStatus === "active" ? "border-green-500/40 text-green-400" : selectedClient.warrantyStatus === "expired" ? "border-red-500/40 text-red-400" : "border-white/20 text-white/40"}`}>
+                    <Badge variant="outline" className={`rounded-none ${selectedClient.warrantyStatus === "active" ? "border-white/20 text-white/60" : selectedClient.warrantyStatus === "expired" ? "border-red-500/40 text-red-400" : "border-white/20 text-white/40"}`}>
                       <Shield className="w-3 h-3 mr-1" />
                       {selectedClient.warrantyStatus === "active" ? (isVi ? "Bảo hành" : "Warranty") : selectedClient.warrantyStatus === "expired" ? (isVi ? "Hết hạn" : "Expired") : (isVi ? "Chưa có" : "None")}
                     </Badge>
@@ -596,7 +596,7 @@ export default function LookupAdminTab() {
                               </div>
                             </TableCell>
                             <TableCell>
-                              <Badge variant="outline" className={`rounded-none ${deal.stage === "completed" ? "border-green-500/40 text-green-400" : deal.stage === "lost" ? "border-red-500/40 text-red-400" : "border-white/20 text-white/60"}`}>
+                              <Badge variant="outline" className={`rounded-none ${deal.stage === "completed" ? "border-white/20 text-white/60" : deal.stage === "lost" ? "border-red-500/40 text-red-400" : "border-white/20 text-white/60"}`}>
                                 {dealStageLabels[deal.stage]?.[language] || deal.stage}
                               </Badge>
                             </TableCell>
@@ -677,7 +677,7 @@ export default function LookupAdminTab() {
                                 <Badge variant="outline" className={`rounded-none ${tx.type === "refund" ? "border-red-500/40 text-red-400" : tx.type === "commission" ? "border-yellow-500/40 text-yellow-400" : "border-white/20 text-white/60"}`}>
                                   {tx.type === "refund" ? (isVi ? "Hoàn trả" : "Refund") : tx.type === "commission" ? (isVi ? "Hoa hồng" : "Commission") : (isVi ? "Thanh toán" : "Payment")}
                                 </Badge>
-                                <Badge variant="outline" className={`rounded-none block w-fit ${tx.status === "completed" ? "border-green-500/40 text-green-400" : tx.status === "cancelled" ? "border-red-500/40 text-red-400" : "border-white/20 text-white/60"}`}>
+                                <Badge variant="outline" className={`rounded-none block w-fit ${tx.status === "completed" ? "border-white/20 text-white/60" : tx.status === "cancelled" ? "border-red-500/40 text-red-400" : "border-white/20 text-white/60"}`}>
                                   {tx.status === "completed" ? (isVi ? "Hoàn tất" : "Completed") : tx.status === "cancelled" ? (isVi ? "Đã hủy" : "Cancelled") : (isVi ? "Chờ xử lý" : "Pending")}
                                 </Badge>
                               </div>
@@ -698,7 +698,7 @@ export default function LookupAdminTab() {
                   <div className="border border-white/10 p-5 space-y-4">
                     <div className="flex items-center justify-between">
                       <span className="text-sm text-white/60">{isVi ? "Trạng thái bảo hành" : "Warranty Status"}</span>
-                      <span className={`text-sm font-light ${selectedClient.warrantyStatus === "active" ? "text-green-400" : selectedClient.warrantyStatus === "expired" ? "text-red-400" : "text-white/40"}`}>
+                      <span className={`text-sm font-light ${selectedClient.warrantyStatus === "active" ? "text-white/60" : selectedClient.warrantyStatus === "expired" ? "text-red-400" : "text-white/40"}`}>
                         {selectedClient.warrantyStatus === "active" ? (isVi ? "Đang hiệu lực" : "Active") : selectedClient.warrantyStatus === "expired" ? (isVi ? "Hết hạn" : "Expired") : (isVi ? "Chưa có" : "None")}
                       </span>
                     </div>
