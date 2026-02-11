@@ -21,6 +21,7 @@ export default function Layout({ children }: LayoutProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isInHero, setIsInHero] = useState(true);
   const { language, setLanguage, t } = useLanguage();
   const navigation = getNavigation(t);
 
@@ -49,6 +50,7 @@ export default function Layout({ children }: LayoutProps) {
       } else if (direction === "up" || scrollY < 50) {
         setIsScrolled(false);
       }
+      setIsInHero(scrollY < window.innerHeight * 0.8);
       lastScrollY = scrollY > 0 ? scrollY : 0;
       setLangDropdownOpen(false);
     };
@@ -70,7 +72,7 @@ export default function Layout({ children }: LayoutProps) {
       <header className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-700 ease-in-out ${
         isScrolled ? '-translate-y-full' : 'translate-y-0'
       }`}>
-        <div className="flex items-center justify-between py-2 px-6 md:py-3 md:px-10 lg:px-16 bg-black/20">
+        <div className={`flex items-center justify-between py-2 px-6 md:py-3 md:px-10 lg:px-16 transition-colors duration-300 ${isInHero ? '' : 'bg-black/20'}`}>
           <nav className="hidden lg:flex items-center gap-8">
             {navigation.map((item) => (
               <Link
