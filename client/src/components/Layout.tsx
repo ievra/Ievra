@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { useLanguage, type Language } from "@/contexts/LanguageContext";
@@ -23,6 +23,8 @@ export default function Layout({ children }: LayoutProps) {
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isInHero, setIsInHero] = useState(true);
+  const [isIdle, setIsIdle] = useState(false);
+  const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { language, setLanguage, t } = useLanguage();
   const navigation = getNavigation(t);
 
@@ -42,6 +44,14 @@ export default function Layout({ children }: LayoutProps) {
   }, [mobileMenuOpen]);
 
   useEffect(() => {
+    const resetIdleTimer = () => {
+      setIsIdle(false);
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+      idleTimerRef.current = setTimeout(() => {
+        setIsIdle(true);
+      }, 5000);
+    };
+
     let lastScrollY = window.scrollY;
     const updateScrollDirection = () => {
       const scrollY = window.scrollY;
@@ -54,9 +64,29 @@ export default function Layout({ children }: LayoutProps) {
       setIsInHero(scrollY < window.innerHeight * 0.8);
       lastScrollY = scrollY > 0 ? scrollY : 0;
       setLangDropdownOpen(false);
+      resetIdleTimer();
     };
+
+    const handleActivity = () => {
+      resetIdleTimer();
+    };
+
     window.addEventListener("scroll", updateScrollDirection);
-    return () => window.removeEventListener("scroll", updateScrollDirection);
+    window.addEventListener("mousemove", handleActivity);
+    window.addEventListener("touchstart", handleActivity);
+    window.addEventListener("keydown", handleActivity);
+    window.addEventListener("click", handleActivity);
+
+    resetIdleTimer();
+
+    return () => {
+      window.removeEventListener("scroll", updateScrollDirection);
+      window.removeEventListener("mousemove", handleActivity);
+      window.removeEventListener("touchstart", handleActivity);
+      window.removeEventListener("keydown", handleActivity);
+      window.removeEventListener("click", handleActivity);
+      if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+    };
   }, []);
 
   const handleLanguageChange = (lang: Language) => {
@@ -71,7 +101,7 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div className="min-h-screen relative">
       <header className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-700 ease-in-out ${
-        isScrolled ? '-translate-y-full' : 'translate-y-0'
+        isScrolled || isIdle ? '-translate-y-full' : 'translate-y-0'
       }`}>
         <div className={`flex items-center justify-between py-2 px-6 md:py-3 md:px-10 lg:px-16 transition-colors duration-300 ${isInHero ? '' : 'bg-black/20'}`}>
           <nav className="hidden lg:flex items-center gap-8">
