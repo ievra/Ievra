@@ -5141,11 +5141,21 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">{t('crm.pipelineStage')}</label>
-                        <p className="text-base mt-1 capitalize">{t(`crm.stage.${viewingClient.stage}`)}</p>
+                        <p className="text-base mt-1 capitalize">
+                          {(() => {
+                            const stage = crmStages.find(s => s.value === viewingClient.stage);
+                            return stage ? (language === 'vi' ? stage.labelVi : stage.labelEn) : viewingClient.stage;
+                          })()}
+                        </p>
                       </div>
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">{t('crm.status')}</label>
-                        <p className="text-base mt-1 capitalize">{t(`crm.status.${viewingClient.status}`)}</p>
+                        <p className="text-base mt-1 capitalize">
+                          {(() => {
+                            const status = crmStatuses.find(s => s.value === viewingClient.status);
+                            return status ? (language === 'vi' ? status.labelVi : status.labelEn) : viewingClient.status;
+                          })()}
+                        </p>
                       </div>
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">{t('crm.created')}</label>
@@ -5165,9 +5175,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         </p>
                       </div>
                       <div>
-                        <label className="text-sm font-medium text-muted-foreground">Hoa hồng</label>
+                        <label className="text-sm font-medium text-muted-foreground">Hoàn Trả</label>
                         <p className="text-base mt-1 font-semibold">
-                          {(clientFinances[viewingClient.id]?.commission || 0).toLocaleString('vi-VN')} đ
+                          {(clientFinances[viewingClient.id]?.refundAmount || 0).toLocaleString('vi-VN')} đ
                         </p>
                       </div>
                       <div>
