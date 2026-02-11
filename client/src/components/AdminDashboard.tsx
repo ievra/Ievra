@@ -3452,7 +3452,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               <p className="text-muted-foreground py-8 text-center">{language === 'vi' ? 'Chưa có hoạt động nào' : 'No recent activity'}</p>
             ) : (
               <div className="space-y-4">
-                {inquiries.slice(0, 5).map((inquiry) => (
+                {[...inquiries].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 5).map((inquiry) => (
                   <div key={inquiry.id} className="flex items-center justify-between py-3 border-b border-white/20">
                     <div>
                       <p className="font-light">
