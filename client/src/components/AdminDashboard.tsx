@@ -5607,7 +5607,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         </TableHead>
                         <TableHead className="w-[110px]">
                           <div>{language === 'vi' ? 'Đã Thanh Toán' : 'Paid'}</div>
-                          <div className="text-xs font-normal text-muted-foreground mt-0.5">Hoa hồng</div>
+                          <div className="text-xs font-normal text-muted-foreground mt-0.5">Hoàn Trả</div>
                         </TableHead>
                         <TableHead className="w-[110px] text-center">{t('crm.warrantyStatus')}</TableHead>
                         <TableHead className="w-[110px] text-center">{t('crm.pipelineStage')}</TableHead>
@@ -5642,7 +5642,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                               {(clientFinances[client.id]?.totalSpending || 0).toLocaleString('vi-VN')} đ
                             </div>
                             <div className="text-xs text-muted-foreground mt-1 whitespace-nowrap">
-                              {(clientFinances[client.id]?.commission || 0).toLocaleString('vi-VN')} đ
+                              {(clientFinances[client.id]?.refundAmount || 0).toLocaleString('vi-VN')} đ
                             </div>
                           </TableCell>
                           <TableCell className="align-middle text-center">
