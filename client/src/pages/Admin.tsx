@@ -119,7 +119,7 @@ export default function Admin() {
                       <Button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`w-[135px] justify-start px-4 py-3 font-light tracking-wide transition-all duration-300 ease-in-out rounded-none ${
+                        className={`w-[155px] justify-start px-4 py-3 font-light tracking-wide transition-all duration-300 ease-in-out rounded-none ${
                           isActive 
                             ? 'bg-white/20 border border-white/30 text-white backdrop-blur-sm' 
                             : 'bg-transparent border border-white/30 text-white/70 hover:bg-white/10 hover:text-white hover:border-white'
