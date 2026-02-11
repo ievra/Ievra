@@ -6005,10 +6005,86 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         </div>
                       </TableCell>
                     </TableRow>
-                  ))}
+                  ));
+                  })()}
                 </TableBody>
               </Table>
             )}
+            {(() => {
+              const filtered = inquiries.filter(inquiry => {
+                if (!inquirySearchQuery) return true;
+                const searchLower = inquirySearchQuery.toLowerCase();
+                return (
+                  (`${inquiry.firstName} ${inquiry.lastName}`).toLowerCase().includes(searchLower) ||
+                  (inquiry.email || '').toLowerCase().includes(searchLower) ||
+                  (inquiry.projectType || '').toLowerCase().includes(searchLower) ||
+                  (inquiry.budget || '').toLowerCase().includes(searchLower) ||
+                  (inquiry.message || '').toLowerCase().includes(searchLower)
+                );
+              });
+              const inquiriesTotalPages = Math.ceil(filtered.length / inquiriesPerPage);
+              const inquiriesStartIdx = (inquiriesPage - 1) * inquiriesPerPage;
+              const inquiriesEndIdx = inquiriesStartIdx + inquiriesPerPage;
+              if (filtered.length <= 10) return null;
+              return (
+                <div className="p-4 border-t border-white/10">
+                  <div className="flex items-center justify-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setInquiriesPage(1)}
+                      disabled={inquiriesPage === 1}
+                      className="text-xs min-w-[60px]"
+                    >
+                      {language === 'vi' ? 'ĐẦU' : 'FIRST'}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setInquiriesPage(prev => Math.max(1, prev - 1))}
+                      disabled={inquiriesPage === 1}
+                      className="text-xs min-w-[60px]"
+                    >
+                      {language === 'vi' ? 'TRƯỚC' : 'PREV'}
+                    </Button>
+                    {Array.from({ length: inquiriesTotalPages }, (_, i) => i + 1).map((page) => (
+                      <Button
+                        key={page}
+                        variant={inquiriesPage === page ? "default" : "ghost"}
+                        size="sm"
+                        onClick={() => setInquiriesPage(page)}
+                        className="text-xs min-w-[32px] border-0"
+                      >
+                        {page}
+                      </Button>
+                    ))}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setInquiriesPage(prev => Math.min(inquiriesTotalPages, prev + 1))}
+                      disabled={inquiriesPage === inquiriesTotalPages}
+                      className="text-xs min-w-[60px]"
+                    >
+                      {language === 'vi' ? 'SAU' : 'NEXT'}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setInquiriesPage(inquiriesTotalPages)}
+                      disabled={inquiriesPage === inquiriesTotalPages}
+                      className="text-xs min-w-[60px]"
+                    >
+                      {language === 'vi' ? 'CUỐI' : 'LAST'}
+                    </Button>
+                  </div>
+                  <div className="text-center mt-2">
+                    <span className="text-xs text-muted-foreground">
+                      {language === 'vi' ? `Hiển thị ${inquiriesStartIdx + 1}-${Math.min(inquiriesEndIdx, filtered.length)} / ${filtered.length} yêu cầu` : `Showing ${inquiriesStartIdx + 1}-${Math.min(inquiriesEndIdx, filtered.length)} of ${filtered.length} inquiries`}
+                    </span>
+                  </div>
+                </div>
+              );
+            })()}
           </CardContent>
         </Card>
       </div>
@@ -8260,7 +8336,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     disabled={articlesPage === 1}
                     className="text-xs"
                   >
-                    FIRST
+                    {language === 'vi' ? 'ĐẦU' : 'FIRST'}
                   </Button>
                   <Button
                     variant="ghost"
@@ -8269,7 +8345,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     disabled={articlesPage === 1}
                     className="text-xs"
                   >
-                    PREV
+                    {language === 'vi' ? 'TRƯỚC' : 'PREV'}
                   </Button>
                   {Array.from({ length: articlesTotalPages }, (_, i) => i + 1).map((page) => (
                     <Button
@@ -8289,7 +8365,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     disabled={articlesPage === articlesTotalPages}
                     className="text-xs"
                   >
-                    NEXT
+                    {language === 'vi' ? 'SAU' : 'NEXT'}
                   </Button>
                   <Button
                     variant="ghost"
@@ -8298,12 +8374,12 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     disabled={articlesPage === articlesTotalPages}
                     className="text-xs"
                   >
-                    LAST
+                    {language === 'vi' ? 'CUỐI' : 'LAST'}
                   </Button>
                 </div>
                 <div className="text-center mt-2">
                   <span className="text-xs text-muted-foreground">
-                    Showing {articlesStartIndex + 1}-{Math.min(articlesEndIndex, uniqueArticleSlugs.length)} of {uniqueArticleSlugs.length} articles
+                    {language === 'vi' ? `Hiển thị ${articlesStartIndex + 1}-${Math.min(articlesEndIndex, uniqueArticleSlugs.length)} / ${uniqueArticleSlugs.length} bài viết` : `Showing ${articlesStartIndex + 1}-${Math.min(articlesEndIndex, uniqueArticleSlugs.length)} of ${uniqueArticleSlugs.length} articles`}
                   </span>
                 </div>
               </div>
