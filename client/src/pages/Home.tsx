@@ -1053,11 +1053,7 @@ export default function Home() {
                     </div>
                   );
                 }))
-            ) : (
-              // Fallback if no advantages available
-              (<div className="col-span-full text-center text-white/50 py-8">No advantages available
-                              </div>)
-            )}
+            ) : null}
           </div>
         </div>
       </section>
