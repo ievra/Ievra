@@ -416,13 +416,12 @@ export default function LookupAdminTab() {
           {isVi ? "Tìm kiếm" : "Search"}
         </Button>
       </div>
-
       {selectedClient && (
         <>
           <Card className="bg-black border border-white/20 rounded-none">
             <CardContent className="p-6">
               <div className="flex items-start justify-between">
-                <div className="space-y-2">
+                <div className="space-y-1">
                   <h3 className="text-2xl font-light text-white">
                     {selectedClient.lastName} {selectedClient.firstName}
                   </h3>
@@ -431,7 +430,7 @@ export default function LookupAdminTab() {
                       <span>{selectedClient.phone}</span>
                     )}
                     {selectedClient.phone && selectedClient.email && (
-                      <span className="text-white/20">—</span>
+                      <span className="text-white/20">-</span>
                     )}
                     {selectedClient.email && (
                       <span>{selectedClient.email}</span>
@@ -451,9 +450,6 @@ export default function LookupAdminTab() {
                     </div>
                   )}
                 </div>
-                <Button variant="ghost" size="icon" onClick={() => setSelectedClient(null)} className="text-white/40 hover:text-white">
-                  <X className="w-5 h-5" />
-                </Button>
               </div>
             </CardContent>
           </Card>
@@ -728,7 +724,6 @@ export default function LookupAdminTab() {
           </div>
         </>
       )}
-
       <Dialog open={isInteractionDialogOpen} onOpenChange={setIsInteractionDialogOpen}>
         <DialogContent className="bg-black border border-white/20 rounded-none max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -855,7 +850,6 @@ export default function LookupAdminTab() {
           </Form>
         </DialogContent>
       </Dialog>
-
     </div>
   );
 }
