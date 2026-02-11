@@ -5760,9 +5760,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                   <Pencil className="h-4 w-4" />
                                 </Button>
                               </div>
-                              <div className="text-[10px] text-muted-foreground/50 whitespace-nowrap">
-                                {formatDate(client.updatedAt || client.createdAt)}
-                              </div>
                             </div>
                           </TableCell>
                         </TableRow>
