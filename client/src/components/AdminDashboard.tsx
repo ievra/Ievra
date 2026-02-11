@@ -4628,57 +4628,27 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             {uniqueProjectSlugs.length > 10 && (
               <div className="p-4 border-t border-white/10">
                   <div className="flex items-center justify-center gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setProjectsPage(1)}
-                      disabled={projectsPage === 1}
-                      className="text-xs"
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => setProjectsPage(1)} disabled={projectsPage === 1} className="text-xs min-w-[60px]">
                       {language === 'vi' ? 'ĐẦU' : 'FIRST'}
                     </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setProjectsPage(prev => Math.max(1, prev - 1))}
-                      disabled={projectsPage === 1}
-                      className="text-xs"
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => setProjectsPage(prev => Math.max(1, prev - 1))} disabled={projectsPage === 1} className="text-xs min-w-[60px]">
                       {language === 'vi' ? 'TRƯỚC' : 'PREV'}
                     </Button>
                     {Array.from({ length: projectsTotalPages }, (_, i) => i + 1).map((page) => (
-                      <Button
-                        key={page}
-                        variant={projectsPage === page ? "default" : "ghost"}
-                        size="sm"
-                        onClick={() => setProjectsPage(page)}
-                        className="text-xs min-w-[32px]"
-                      >
+                      <Button key={page} variant={projectsPage === page ? "default" : "ghost"} size="sm" onClick={() => setProjectsPage(page)} className="text-xs min-w-[32px] border-0">
                         {page}
                       </Button>
                     ))}
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setProjectsPage(prev => Math.min(projectsTotalPages, prev + 1))}
-                      disabled={projectsPage === projectsTotalPages}
-                      className="text-xs"
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => setProjectsPage(prev => Math.min(projectsTotalPages, prev + 1))} disabled={projectsPage === projectsTotalPages} className="text-xs min-w-[60px]">
                       {language === 'vi' ? 'SAU' : 'NEXT'}
                     </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setProjectsPage(projectsTotalPages)}
-                      disabled={projectsPage === projectsTotalPages}
-                      className="text-xs"
-                    >
+                    <Button variant="ghost" size="sm" onClick={() => setProjectsPage(projectsTotalPages)} disabled={projectsPage === projectsTotalPages} className="text-xs min-w-[60px]">
                       {language === 'vi' ? 'CUỐI' : 'LAST'}
                     </Button>
                   </div>
                   <div className="text-center mt-2">
                     <span className="text-xs text-muted-foreground">
-                      {language === 'vi' ? `Hiển thị ${projectsStartIndex + 1}-${Math.min(projectsEndIndex, uniqueProjectSlugs.length)} trên ${uniqueProjectSlugs.length} dự án` : `Showing ${projectsStartIndex + 1}-${Math.min(projectsEndIndex, uniqueProjectSlugs.length)} of ${uniqueProjectSlugs.length} projects`}
+                      {language === 'vi' ? `Hiển thị ${projectsStartIndex + 1}-${Math.min(projectsEndIndex, uniqueProjectSlugs.length)} / ${uniqueProjectSlugs.length} dự án` : `Showing ${projectsStartIndex + 1}-${Math.min(projectsEndIndex, uniqueProjectSlugs.length)} of ${uniqueProjectSlugs.length} projects`}
                     </span>
                   </div>
                 </div>
@@ -8316,57 +8286,27 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             {uniqueArticleSlugs.length > 10 && (
               <div className="p-4 border-t border-white/10">
                 <div className="flex items-center justify-center gap-2">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setArticlesPage(1)}
-                    disabled={articlesPage === 1}
-                    className="text-xs"
-                  >
-                    FIRST
+                  <Button variant="ghost" size="sm" onClick={() => setArticlesPage(1)} disabled={articlesPage === 1} className="text-xs min-w-[60px]">
+                    {language === 'vi' ? 'ĐẦU' : 'FIRST'}
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setArticlesPage(prev => Math.max(1, prev - 1))}
-                    disabled={articlesPage === 1}
-                    className="text-xs"
-                  >
-                    PREV
+                  <Button variant="ghost" size="sm" onClick={() => setArticlesPage(prev => Math.max(1, prev - 1))} disabled={articlesPage === 1} className="text-xs min-w-[60px]">
+                    {language === 'vi' ? 'TRƯỚC' : 'PREV'}
                   </Button>
                   {Array.from({ length: articlesTotalPages }, (_, i) => i + 1).map((page) => (
-                    <Button
-                      key={page}
-                      variant={articlesPage === page ? "default" : "ghost"}
-                      size="sm"
-                      onClick={() => setArticlesPage(page)}
-                      className="text-xs min-w-[32px]"
-                    >
+                    <Button key={page} variant={articlesPage === page ? "default" : "ghost"} size="sm" onClick={() => setArticlesPage(page)} className="text-xs min-w-[32px] border-0">
                       {page}
                     </Button>
                   ))}
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setArticlesPage(prev => Math.min(articlesTotalPages, prev + 1))}
-                    disabled={articlesPage === articlesTotalPages}
-                    className="text-xs"
-                  >
-                    NEXT
+                  <Button variant="ghost" size="sm" onClick={() => setArticlesPage(prev => Math.min(articlesTotalPages, prev + 1))} disabled={articlesPage === articlesTotalPages} className="text-xs min-w-[60px]">
+                    {language === 'vi' ? 'SAU' : 'NEXT'}
                   </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => setArticlesPage(articlesTotalPages)}
-                    disabled={articlesPage === articlesTotalPages}
-                    className="text-xs"
-                  >
-                    LAST
+                  <Button variant="ghost" size="sm" onClick={() => setArticlesPage(articlesTotalPages)} disabled={articlesPage === articlesTotalPages} className="text-xs min-w-[60px]">
+                    {language === 'vi' ? 'CUỐI' : 'LAST'}
                   </Button>
                 </div>
                 <div className="text-center mt-2">
                   <span className="text-xs text-muted-foreground">
-                    Showing {articlesStartIndex + 1}-{Math.min(articlesEndIndex, uniqueArticleSlugs.length)} of {uniqueArticleSlugs.length} articles
+                    {language === 'vi' ? `Hiển thị ${articlesStartIndex + 1}-${Math.min(articlesEndIndex, uniqueArticleSlugs.length)} / ${uniqueArticleSlugs.length} bài viết` : `Showing ${articlesStartIndex + 1}-${Math.min(articlesEndIndex, uniqueArticleSlugs.length)} of ${uniqueArticleSlugs.length} articles`}
                   </span>
                 </div>
               </div>
