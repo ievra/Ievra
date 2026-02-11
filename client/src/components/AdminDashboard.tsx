@@ -5215,33 +5215,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     </div>
                   </div>
 
-                  {/* Referral Information */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium border-b pb-2">{t('crm.referralInfo')}</h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-sm font-medium text-muted-foreground">Được giới thiệu bởi</label>
-                        <p className="text-base mt-1">
-                          {(() => {
-                            if (!viewingClient.referredById) return "—";
-                            const referrer = clients.find(c => c.id === viewingClient.referredById);
-                            return referrer ? `${referrer.firstName} ${referrer.lastName}` : "—";
-                          })()}
-                        </p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-muted-foreground">{t('crm.referralCount')}</label>
-                        <p className="text-base mt-1">{viewingClient.referralCount || 0}</p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-muted-foreground">{t('crm.referralRevenue')}</label>
-                        <p className="text-base mt-1">
-                          {viewingClient.referralRevenue ? `${parseFloat(viewingClient.referralRevenue).toLocaleString('vi-VN')} đ` : "0 đ"}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
                   {/* Warranty Information */}
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium border-b pb-2">{t('crm.warrantyInfo')}</h3>
