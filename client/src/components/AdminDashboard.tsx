@@ -5635,7 +5635,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               <SelectItem value="all">{language === 'vi' ? 'Tất cả bảo hành' : 'All warranty'}</SelectItem>
               <SelectItem value="active">{language === 'vi' ? 'Còn bảo hành' : 'Active'}</SelectItem>
               <SelectItem value="expired">{language === 'vi' ? 'Hết bảo hành' : 'Expired'}</SelectItem>
-              <SelectItem value="none">{language === 'vi' ? 'Không có' : 'None'}</SelectItem>
             </SelectContent>
           </Select>
         </div>
