@@ -5662,50 +5662,20 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             )}
                           </TableCell>
                           <TableCell className="align-middle text-center">
-                            <div className="inline-block w-full">
-                              <Select
-                                value={client.stage || crmStages.find(s => s.active)?.value || "lead"}
-                                onValueChange={(value) => updateClientMutation.mutate({ 
-                                  id: client.id, 
-                                  stage: value as any,
-                                  showToast: false
-                                })}
-                              >
-                                <SelectTrigger className="w-full border-0" data-testid={`select-client-stage-${client.id}`}>
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {crmStages.filter(s => s.active).sort((a, b) => a.order - b.order).map(stage => (
-                                    <SelectItem key={stage.id} value={stage.value}>
-                                      {language === 'vi' ? stage.labelVi : stage.labelEn}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </div>
+                            <span className="text-sm" data-testid={`select-client-stage-${client.id}`}>
+                              {(() => {
+                                const stage = crmStages.find(s => s.value === client.stage);
+                                return stage ? (language === 'vi' ? stage.labelVi : stage.labelEn) : client.stage || '—';
+                              })()}
+                            </span>
                           </TableCell>
                           <TableCell className="align-middle text-center">
-                            <div className="inline-block w-full">
-                              <Select
-                                value={client.status || crmStatuses.find(s => s.active)?.value || "active"}
-                                onValueChange={(value) => updateClientMutation.mutate({ 
-                                  id: client.id, 
-                                  status: value as any,
-                                  showToast: false
-                                })}
-                              >
-                                <SelectTrigger className="w-full border-0" data-testid={`select-client-status-${client.id}`}>
-                                  <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  {crmStatuses.filter(s => s.active).sort((a, b) => a.order - b.order).map(status => (
-                                    <SelectItem key={status.id} value={status.value}>
-                                      {language === 'vi' ? status.labelVi : status.labelEn}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                            </div>
+                            <span className="text-sm" data-testid={`select-client-status-${client.id}`}>
+                              {(() => {
+                                const status = crmStatuses.find(s => s.value === client.status);
+                                return status ? (language === 'vi' ? status.labelVi : status.labelEn) : client.status || '—';
+                              })()}
+                            </span>
                           </TableCell>
                           <TableCell className="align-middle text-right">
                             <div className="flex flex-col items-end">
