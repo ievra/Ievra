@@ -4900,7 +4900,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
 
                   {/* Transaction Management - Only show when editing */}
                   {editingClient && (
-                    <div className="border-t border-white/30 pt-6 mt-6">
+                    <div className="pt-6 mt-6">
                       <div className="flex justify-between items-center mb-4">
                         <h3 className="text-lg font-medium">{language === 'vi' ? 'Lịch sử giao dịch' : 'Transaction History'}</h3>
                         <Button
