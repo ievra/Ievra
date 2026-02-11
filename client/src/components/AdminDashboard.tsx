@@ -4477,6 +4477,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               <Table className="table-fixed [&_td]:py-2 [&_th]:py-2">
                 <TableHeader>
                   <TableRow>
+                    <TableHead className="w-[50px] whitespace-nowrap text-center">STT</TableHead>
                     <TableHead className="w-[60px] whitespace-nowrap text-left">{language === 'vi' ? 'Năm' : 'Year'}</TableHead>
                     <TableHead className="w-[110px] whitespace-nowrap text-left">{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
                     <TableHead className="w-[110px] whitespace-nowrap text-left">{language === 'vi' ? 'Phong Cách' : 'Style'}</TableHead>
@@ -4489,13 +4490,14 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {paginatedProjectSlugs.map((slug) => {
+                  {paginatedProjectSlugs.map((slug, idx) => {
                     const group = groupedProjectsMap[slug];
                     const hasVi = group.some(p => p.language === 'vi');
                     const hasEn = group.some(p => p.language === 'en');
                     const primary = (language === 'vi' ? group.find(p => p.language === 'vi') : group.find(p => p.language === 'en')) || group[0];
                     return (
                     <TableRow key={primary.id} data-testid={`row-project-${primary.id}`}>
+                      <TableCell className="text-center">{(projectsPage - 1) * projectsPerPage + idx + 1}</TableCell>
                       <TableCell>{primary.completionYear || "—"}</TableCell>
                       <TableCell>{(() => {
                         const cat = categories.find(c => c.slug === primary.category && c.type === 'project');
@@ -5647,6 +5649,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   <Table className="table-fixed w-full">
                     <TableHeader>
                       <TableRow>
+                        <TableHead className="w-[4%] whitespace-nowrap text-center">STT</TableHead>
                         <TableHead className="w-[5%] whitespace-nowrap text-center">{language === 'vi' ? 'Hạng' : 'Rank'}</TableHead>
                         <TableHead className="w-[14%] whitespace-nowrap">
                           <div>{t('admin.clients')}</div>
@@ -5671,10 +5674,11 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {paginatedClients.map((client) => {
+                      {paginatedClients.map((client, idx) => {
                         const clientTier = crmTiers.find((t: any) => t.value === client.tier);
                         return (
                         <TableRow key={client.id} data-testid={`row-client-${client.id}`} className="relative h-16">
+                          <TableCell className="align-middle text-center"><span className="text-sm">{startIndex + idx + 1}</span></TableCell>
                           <TableCell className="align-middle text-center">
                             <span className="text-sm font-medium text-white/70">
                               {clientTier ? (language === 'vi' ? clientTier.labelVi : clientTier.labelEn) : '—'}
@@ -5876,6 +5880,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               <Table className="table-fixed">
                 <TableHeader>
                   <TableRow>
+                    <TableHead className="w-[50px] whitespace-nowrap text-center">STT</TableHead>
                     <TableHead className="w-[200px] whitespace-nowrap">
                       <div>
                         <span>{language === 'vi' ? 'Họ Tên' : 'Full Name'}</span>
@@ -5910,8 +5915,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     const inquiriesStartIdx = (inquiriesPage - 1) * inquiriesPerPage;
                     const inquiriesEndIdx = inquiriesStartIdx + inquiriesPerPage;
                     const paginated = filtered.slice(inquiriesStartIdx, inquiriesEndIdx);
-                    return paginated.map((inquiry) => (
+                    return paginated.map((inquiry, idx) => (
                     <TableRow key={inquiry.id} data-testid={`row-inquiry-${inquiry.id}`}>
+                      <TableCell className="text-center">{inquiriesStartIdx + idx + 1}</TableCell>
                       <TableCell>
                         <div>
                           <p className="font-light">
@@ -8180,6 +8186,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               <Table className="table-fixed [&_td]:py-2 [&_th]:py-2">
                 <TableHeader>
                   <TableRow>
+                    <TableHead className="w-[50px] whitespace-nowrap text-center">STT</TableHead>
                     <TableHead className="w-[120px] whitespace-nowrap text-left">{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
                     <TableHead className="text-left">{language === 'vi' ? 'Tiêu Đề' : 'Title'}</TableHead>
                     <TableHead className="w-[80px] whitespace-nowrap text-left">{language === 'vi' ? 'Ngôn Ngữ' : 'Lang'}</TableHead>
@@ -8190,7 +8197,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 </TableHeader>
                 <TableBody>
                   {(() => {
-                    return paginatedSlugs.map((slug) => {
+                    return paginatedSlugs.map((slug, idx) => {
                       const articleGroup = groupedArticlesMap[slug];
                       const enVersion = articleGroup.find(a => a.language === 'en');
                       const viVersion = articleGroup.find(a => a.language === 'vi');
@@ -8201,6 +8208,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
 
                       return (
                         <TableRow key={slug} data-testid={`row-article-${slug}`}>
+                          <TableCell className="text-center">{(articlesPage - 1) * articlesPerPage + idx + 1}</TableCell>
                           <TableCell>
                             <span className="text-sm" data-testid={`badge-category-${slug}`}>
                               {(() => {
