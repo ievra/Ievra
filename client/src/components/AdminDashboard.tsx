@@ -630,7 +630,12 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   const [clientWarrantyFilter, setClientWarrantyFilter] = useState('all');
   const [clientTierFilter, setClientTierFilter] = useState('all');
   const [inquirySearchQuery, setInquirySearchQuery] = useState('');
-  
+  const [inquiryStatusFilter, setInquiryStatusFilter] = useState('all');
+
+  // Pagination state for Inquiries
+  const [inquiriesPage, setInquiriesPage] = useState(1);
+  const inquiriesPerPage = 10;
+
   // Calculate pagination for Clients
   const filteredClients = clients.filter(client => {
     if (clientStageFilter !== 'all' && (client.stage || 'lead') !== clientStageFilter) return false;
@@ -743,6 +748,30 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   const articlesStartIndex = (articlesPage - 1) * articlesPerPage;
   const articlesEndIndex = articlesStartIndex + articlesPerPage;
   const paginatedSlugs = uniqueArticleSlugs.slice(articlesStartIndex, articlesEndIndex);
+
+  // Calculate pagination for Inquiries
+  const filteredInquiries = inquiries.filter(inquiry => {
+    if (inquiryStatusFilter !== 'all' && inquiry.status !== inquiryStatusFilter) return false;
+    if (!inquirySearchQuery) return true;
+    const searchLower = inquirySearchQuery.toLowerCase();
+    return (
+      (`${inquiry.firstName} ${inquiry.lastName}`).toLowerCase().includes(searchLower) ||
+      (inquiry.email || '').toLowerCase().includes(searchLower) ||
+      (inquiry.phone || '').toLowerCase().includes(searchLower) ||
+      (inquiry.projectType || '').toLowerCase().includes(searchLower) ||
+      (inquiry.message || '').toLowerCase().includes(searchLower)
+    );
+  });
+  const inquiriesTotalPages = Math.ceil(filteredInquiries.length / inquiriesPerPage);
+  const inquiriesStartIndex = (inquiriesPage - 1) * inquiriesPerPage;
+  const inquiriesEndIndex = inquiriesStartIndex + inquiriesPerPage;
+  const paginatedInquiries = filteredInquiries.slice(inquiriesStartIndex, inquiriesEndIndex);
+
+  useEffect(() => {
+    if (inquiriesPage > inquiriesTotalPages && inquiriesTotalPages > 0) {
+      setInquiriesPage(1);
+    }
+  }, [inquiries.length, inquiriesPage, inquiriesTotalPages]);
 
   // Memoized client financial calculations (calculate once, reuse for all clients)
   const clientFinances = useMemo(() => {
@@ -4473,14 +4502,26 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               <Table className="table-fixed [&_td]:py-2 [&_th]:py-2">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[60px] whitespace-nowrap text-left">{language === 'vi' ? 'Năm' : 'Year'}</TableHead>
-                    <TableHead className="w-[110px] whitespace-nowrap text-left">{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
-                    <TableHead className="w-[110px] whitespace-nowrap text-left">{language === 'vi' ? 'Phong Cách' : 'Style'}</TableHead>
-                    <TableHead className="w-[90px] whitespace-nowrap text-left">{language === 'vi' ? 'Diện Tích' : 'Area'}</TableHead>
+                    <TableHead className="w-[60px] whitespace-nowrap text-left">
+                      <div>
+                        <span>{language === 'vi' ? 'Năm' : 'Year'}</span>
+                        <p className="text-xs font-normal text-muted-foreground">{language === 'vi' ? 'Danh Mục' : 'Category'}</p>
+                      </div>
+                    </TableHead>
+                    <TableHead className="w-[110px] whitespace-nowrap text-left">
+                      <div>
+                        <span>{language === 'vi' ? 'Phong Cách' : 'Style'}</span>
+                        <p className="text-xs font-normal text-muted-foreground">{language === 'vi' ? 'Diện Tích' : 'Area'}</p>
+                      </div>
+                    </TableHead>
                     <TableHead className="text-left">{language === 'vi' ? 'Dự Án' : 'Project'}</TableHead>
                     <TableHead className="w-[80px] whitespace-nowrap text-left">{language === 'vi' ? 'Ngôn Ngữ' : 'Lang'}</TableHead>
-                    <TableHead className="w-[120px] whitespace-nowrap text-left">{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
-                    <TableHead className="w-[120px] whitespace-nowrap text-left">{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
+                    <TableHead className="w-[120px] whitespace-nowrap text-left">
+                      <div>
+                        <span>{language === 'vi' ? 'Ngày Đăng' : 'Published'}</span>
+                        <p className="text-xs font-normal text-muted-foreground">{language === 'vi' ? 'Trạng Thái' : 'Status'}</p>
+                      </div>
+                    </TableHead>
                     <TableHead className="w-[100px] text-right"></TableHead>
                   </TableRow>
                 </TableHeader>
@@ -4492,13 +4533,21 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     const primary = (language === 'vi' ? group.find(p => p.language === 'vi') : group.find(p => p.language === 'en')) || group[0];
                     return (
                     <TableRow key={primary.id} data-testid={`row-project-${primary.id}`}>
-                      <TableCell>{primary.completionYear || "—"}</TableCell>
-                      <TableCell>{(() => {
-                        const cat = categories.find(c => c.slug === primary.category && c.type === 'project');
-                        return cat ? (language === 'vi' && cat.nameVi ? cat.nameVi : cat.name) : primary.category;
-                      })()}</TableCell>
-                      <TableCell>{primary.style || "—"}</TableCell>
-                      <TableCell>{primary.area || "—"}</TableCell>
+                      <TableCell>
+                        <div>
+                          <p>{primary.completionYear || "—"}</p>
+                          <p className="text-sm text-muted-foreground">{(() => {
+                            const cat = categories.find(c => c.slug === primary.category && c.type === 'project');
+                            return cat ? (language === 'vi' && cat.nameVi ? cat.nameVi : cat.name) : primary.category;
+                          })()}</p>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div>
+                          <p>{primary.style || "—"}</p>
+                          <p className="text-sm text-muted-foreground">{primary.area || "—"}</p>
+                        </div>
+                      </TableCell>
                       <TableCell>
                         <p className="font-light">{primary.title}</p>
                       </TableCell>
@@ -4508,31 +4557,33 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           {hasVi && <span className="text-[14px] text-white">VI</span>}
                         </div>
                       </TableCell>
-                      <TableCell>{formatDate(primary.createdAt)}</TableCell>
                       <TableCell>
-                        <Select
-                          value={(primary as any).status || 'draft'}
-                          onValueChange={async (newStatus) => {
-                            try {
-                              for (const p of group) {
-                                await updateProjectMutation.mutateAsync({
-                                  id: p.id,
-                                  data: { status: newStatus }
-                                });
+                        <div>
+                          <p>{formatDate(primary.createdAt)}</p>
+                          <Select
+                            value={(primary as any).status || 'draft'}
+                            onValueChange={async (newStatus) => {
+                              try {
+                                for (const p of group) {
+                                  await updateProjectMutation.mutateAsync({
+                                    id: p.id,
+                                    data: { status: newStatus }
+                                  });
+                                }
+                              } catch (error) {
                               }
-                            } catch (error) {
-                            }
-                          }}
-                        >
-                          <SelectTrigger className="h-auto py-1 px-3 text-sm bg-transparent border-none hover:bg-white/10 w-[110px] gap-1">
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="draft">Bản Nháp</SelectItem>
-                            <SelectItem value="published">Đã Đăng</SelectItem>
-                            <SelectItem value="archived">Lưu Trữ</SelectItem>
-                          </SelectContent>
-                        </Select>
+                            }}
+                          >
+                            <SelectTrigger className="h-auto py-0.5 px-2 text-xs bg-transparent border-none hover:bg-white/10 w-[100px] gap-1 mt-1">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="draft">Bản Nháp</SelectItem>
+                              <SelectItem value="published">Đã Đăng</SelectItem>
+                              <SelectItem value="archived">Lưu Trữ</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex justify-end items-center gap-3">
@@ -5890,17 +5941,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {inquiries.filter(inquiry => {
-                    if (!inquirySearchQuery) return true;
-                    const searchLower = inquirySearchQuery.toLowerCase();
-                    return (
-                      (`${inquiry.firstName} ${inquiry.lastName}`).toLowerCase().includes(searchLower) ||
-                      (inquiry.email || '').toLowerCase().includes(searchLower) ||
-                      (inquiry.projectType || '').toLowerCase().includes(searchLower) ||
-                      (inquiry.budget || '').toLowerCase().includes(searchLower) ||
-                      (inquiry.message || '').toLowerCase().includes(searchLower)
-                    );
-                  }).map((inquiry) => (
+                  {paginatedInquiries.map((inquiry) => (
                     <TableRow key={inquiry.id} data-testid={`row-inquiry-${inquiry.id}`}>
                       <TableCell>
                         <div>
@@ -5998,6 +6039,34 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   ))}
                 </TableBody>
               </Table>
+            )}
+            {filteredInquiries.length > inquiriesPerPage && (
+              <div className="p-4 border-t border-white/10">
+                <div className="flex items-center justify-center gap-2">
+                  <Button variant="ghost" size="sm" onClick={() => setInquiriesPage(1)} disabled={inquiriesPage === 1} className="text-xs min-w-[60px]">
+                    {language === 'vi' ? 'ĐẦU' : 'FIRST'}
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={() => setInquiriesPage(prev => Math.max(1, prev - 1))} disabled={inquiriesPage === 1} className="text-xs min-w-[60px]">
+                    {language === 'vi' ? 'TRƯỚC' : 'PREV'}
+                  </Button>
+                  {Array.from({ length: inquiriesTotalPages }, (_, i) => i + 1).map((page) => (
+                    <Button key={page} variant={inquiriesPage === page ? "default" : "ghost"} size="sm" onClick={() => setInquiriesPage(page)} className="text-xs min-w-[32px] border-0">
+                      {page}
+                    </Button>
+                  ))}
+                  <Button variant="ghost" size="sm" onClick={() => setInquiriesPage(prev => Math.min(inquiriesTotalPages, prev + 1))} disabled={inquiriesPage === inquiriesTotalPages} className="text-xs min-w-[60px]">
+                    {language === 'vi' ? 'SAU' : 'NEXT'}
+                  </Button>
+                  <Button variant="ghost" size="sm" onClick={() => setInquiriesPage(inquiriesTotalPages)} disabled={inquiriesPage === inquiriesTotalPages} className="text-xs min-w-[60px]">
+                    {language === 'vi' ? 'CUỐI' : 'LAST'}
+                  </Button>
+                </div>
+                <div className="text-center mt-2">
+                  <span className="text-xs text-muted-foreground">
+                    {language === 'vi' ? `Hiển thị ${inquiriesStartIndex + 1}-${Math.min(inquiriesEndIndex, filteredInquiries.length)} / ${filteredInquiries.length} yêu cầu` : `Showing ${inquiriesStartIndex + 1}-${Math.min(inquiriesEndIndex, filteredInquiries.length)} of ${filteredInquiries.length} inquiries`}
+                  </span>
+                </div>
+              </div>
             )}
           </CardContent>
         </Card>
@@ -8097,8 +8166,12 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     <TableHead className="w-[120px] whitespace-nowrap text-left">{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
                     <TableHead className="text-left">{language === 'vi' ? 'Tiêu Đề' : 'Title'}</TableHead>
                     <TableHead className="w-[80px] whitespace-nowrap text-left">{language === 'vi' ? 'Ngôn Ngữ' : 'Lang'}</TableHead>
-                    <TableHead className="w-[120px] whitespace-nowrap text-left">{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
-                    <TableHead className="w-[120px] whitespace-nowrap text-left">{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
+                    <TableHead className="w-[120px] whitespace-nowrap text-left">
+                      <div>
+                        <span>{language === 'vi' ? 'Ngày Đăng' : 'Published'}</span>
+                        <p className="text-xs font-normal text-muted-foreground">{language === 'vi' ? 'Trạng Thái' : 'Status'}</p>
+                      </div>
+                    </TableHead>
                     <TableHead className="w-[100px]"></TableHead>
                   </TableRow>
                 </TableHeader>
