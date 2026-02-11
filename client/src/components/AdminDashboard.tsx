@@ -5035,7 +5035,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     )}
                   />
 
-                  <div className="flex justify-between pt-4 border-t border-white/30">
+                  <div className="flex justify-between pt-4">
                     {editingClient && (
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
