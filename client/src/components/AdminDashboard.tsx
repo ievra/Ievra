@@ -975,8 +975,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       amount: "",
       title: "",
       description: "",
-      type: "",
-      status: "",
+      type: "payment",
+      status: "completed",
       paymentDate: new Date().toISOString().split('T')[0],
       notes: "",
     },
@@ -3334,10 +3334,16 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
 
   const onTransactionSubmit = async (data: TransactionFormData) => {
     try {
+      const cleanedData = {
+        ...data,
+        amount: data.amount.replace(/[^0-9.]/g, ''),
+        type: data.type || "payment",
+        status: data.status || "completed",
+      };
       if (editingTransaction) {
-        await updateTransactionMutation.mutateAsync({ id: editingTransaction.id, data });
+        await updateTransactionMutation.mutateAsync({ id: editingTransaction.id, data: cleanedData });
       } else {
-        await createTransactionMutation.mutateAsync(data);
+        await createTransactionMutation.mutateAsync(cleanedData);
       }
     } catch (error) {
       // Error is handled by mutation's onError handler
@@ -4908,8 +4914,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                               amount: "",
                               title: "",
                               description: "",
-                              type: "",
-                              status: "",
+                              type: "payment",
+                              status: "completed",
                               paymentDate: new Date().toISOString().split('T')[0],
                               notes: "",
                             });
