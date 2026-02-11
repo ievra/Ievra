@@ -5596,10 +5596,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       <TableRow>
                         <TableHead className="w-[160px]">
                           <div>{t('admin.clients')}</div>
-                          <div className="text-xs font-normal text-muted-foreground mt-0.5">{t('crm.email')}</div>
                         </TableHead>
                         <TableHead className="w-[120px]">
                           <div>{t('crm.phone')}</div>
+                          <div className="text-xs font-normal text-muted-foreground mt-0.5">{t('crm.email')}</div>
                         </TableHead>
                         <TableHead className="w-[130px]">
                           <div>{t('crm.address')}</div>
@@ -5622,12 +5622,12 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             <div className="font-light whitespace-nowrap">
                               {client.firstName} {client.lastName}
                             </div>
-                            <div className="text-xs text-muted-foreground truncate max-w-[140px] mt-1" title={client.email}>
-                              {client.email}
-                            </div>
                           </TableCell>
                           <TableCell className="align-middle">
                             <div className="text-sm">{client.phone || "—"}</div>
+                            <div className="text-xs text-muted-foreground truncate max-w-[140px] mt-1" title={client.email}>
+                              {client.email}
+                            </div>
                           </TableCell>
                           <TableCell className="align-middle">
                             <div className="text-sm truncate max-w-[110px]" title={client.address || ""}>
