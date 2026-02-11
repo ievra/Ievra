@@ -454,7 +454,7 @@ const translations = {
     // Additional CRM Fields
     'crm.dateOfBirth': 'Ngày Sinh',
     'crm.totalSpending': 'Doanh Số',
-    'crm.warrantyStatus': 'Tình Trạng Bảo Hành',
+    'crm.warrantyStatus': 'Bảo Hành',
     'crm.warrantyExpiry': 'Ngày Hết Hạn Bảo Hành',
     'crm.lastUpdated': 'Cập Nhật Lần Cuối',
     'crm.orderCount': 'Số Đơn Hàng',
