@@ -486,7 +486,6 @@ export default function LookupAdminTab() {
                     <div className="text-center py-8 text-white/40">{isVi ? "Đang tải..." : "Loading..."}</div>
                   ) : interactions.length === 0 ? (
                     <div className="text-center py-12">
-                      <Clock className="w-10 h-10 text-white/10 mx-auto mb-3" />
                       <p className="text-white/30 font-light">{isVi ? "Chưa có nhật ký thi công" : "No construction logs yet"}</p>
                     </div>
                   ) : (
@@ -557,7 +556,6 @@ export default function LookupAdminTab() {
                     const constructionItems = interactions.filter(i => ["visit", "site_survey", "acceptance", "meeting"].includes(i.type)).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
                     return constructionItems.length === 0 ? (
                       <div className="text-center py-12">
-                        <HardHat className="w-10 h-10 text-white/10 mx-auto mb-3" />
                         <p className="text-white/30 font-light">{isVi ? "Chưa có tiến độ công trình" : "No construction progress yet"}</p>
                       </div>
                     ) : (
@@ -602,7 +600,6 @@ export default function LookupAdminTab() {
                     const designItems = interactions.filter(i => ["design"].includes(i.type)).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
                     return designItems.length === 0 ? (
                       <div className="text-center py-12">
-                        <PenTool className="w-10 h-10 text-white/10 mx-auto mb-3" />
                         <p className="text-white/30 font-light">{isVi ? "Chưa có tiến độ thiết kế" : "No design progress yet"}</p>
                       </div>
                     ) : (
@@ -645,7 +642,6 @@ export default function LookupAdminTab() {
                     <div className="text-center py-8 text-white/40">{isVi ? "Đang tải..." : "Loading..."}</div>
                   ) : transactions.length === 0 ? (
                     <div className="text-center py-12">
-                      <CreditCard className="w-10 h-10 text-white/10 mx-auto mb-3" />
                       <p className="text-white/30 font-light">{isVi ? "Chưa có giao dịch nào" : "No transactions yet"}</p>
                     </div>
                   ) : (
