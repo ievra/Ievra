@@ -4578,7 +4578,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 </TableBody>
               </Table>
             )}
-            {uniqueProjectSlugs.length > 10 && (
+            {uniqueProjectSlugs.length > 0 && (
               <div className="p-4 border-t border-white/10">
                   <div className="flex items-center justify-center gap-2">
                     <Button
@@ -8326,7 +8326,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 </TableBody>
               </Table>
             )}
-            {uniqueArticleSlugs.length > 10 && (
+            {uniqueArticleSlugs.length > 0 && (
               <div className="p-4 border-t border-white/10">
                 <div className="flex items-center justify-center gap-2">
                   <Button
