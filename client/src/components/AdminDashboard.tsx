@@ -5901,7 +5901,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           <p className="text-sm text-muted-foreground">{inquiry.email}</p>
                         </div>
                       </TableCell>
-                      <TableCell className="capitalize">{inquiry.projectType}</TableCell>
+                      <TableCell className="capitalize">{inquiry.projectType || "—"}</TableCell>
                       <TableCell>{inquiry.budget || "—"}</TableCell>
                       <TableCell>
                         <Select

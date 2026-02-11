@@ -98,7 +98,7 @@ export const inquiries = pgTable("inquiries", {
   lastName: text("last_name").notNull(),
   email: text("email").notNull(),
   phone: text("phone"),
-  projectType: varchar("project_type", { length: 50 }).notNull(),
+  projectType: varchar("project_type", { length: 50 }),
   budget: varchar("budget", { length: 50 }),
   message: text("message").notNull(),
   status: varchar("status", { length: 20 }).notNull().default("new"), // new, reviewed, contacted, converted

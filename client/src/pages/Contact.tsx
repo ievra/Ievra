@@ -180,7 +180,7 @@ export default function Contact() {
       lastName: formData.name.split(' ').slice(1).join(' ') || '',
       email: formData.email,
       phone: formData.phone,
-      projectType: formData.projectType || 'consultation',
+      projectType: formData.projectType || undefined,
       budget: formData.budget || undefined,
       message: `${formData.address ? (language === 'vi' ? 'Địa chỉ' : 'Address') + ': ' + formData.address + '\n\n' : ''}${formData.requirements || ''}`
     };
