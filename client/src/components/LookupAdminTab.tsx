@@ -396,33 +396,26 @@ export default function LookupAdminTab() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-light text-white">
+      <div className="flex items-center gap-4">
+        <h2 className="text-xl font-light text-white whitespace-nowrap">
           {isVi ? "Tra Cứu Khách Hàng" : "Client Lookup"}
         </h2>
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
+          <Input
+            type="tel"
+            placeholder={isVi ? "Nhập số điện thoại khách hàng..." : "Enter client phone number..."}
+            value={phoneSearch}
+            onChange={(e) => setPhoneSearch(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            className="bg-transparent border-white/20 text-white pl-10 rounded-none h-10"
+          />
+        </div>
+        <Button onClick={handleSearch} className="h-10 px-6 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10">
+          <Search className="w-4 h-4 mr-2" />
+          {isVi ? "Tìm kiếm" : "Search"}
+        </Button>
       </div>
-
-      <Card className="bg-black border-0 rounded-none shadow-none">
-        <CardContent className="p-4">
-          <div className="flex gap-3">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
-              <Input
-                type="tel"
-                placeholder={isVi ? "Nhập số điện thoại khách hàng..." : "Enter client phone number..."}
-                value={phoneSearch}
-                onChange={(e) => setPhoneSearch(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-                className="bg-transparent border-white/20 text-white pl-10 rounded-none h-10"
-              />
-            </div>
-            <Button onClick={handleSearch} className="h-10 px-6 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10">
-              <Search className="w-4 h-4 mr-2" />
-              {isVi ? "Tìm kiếm" : "Search"}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
 
       {selectedClient && (
         <>
