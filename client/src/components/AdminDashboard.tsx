@@ -3407,7 +3407,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 <div className="min-w-[120px]">
                   <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Yêu Cầu Mới' : 'New Inquiries'}</p>
                   <p className="text-2xl font-light" data-testid="stat-new-inquiries">
-                    {statsLoading ? "..." : stats?.newInquiries || 0}
+                    {inquiriesLoading ? "..." : inquiries.filter(i => i.status === 'new').length}
                   </p>
                 </div>
                 <Mail className="h-8 w-8 text-white/70" />
@@ -3452,7 +3452,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               <p className="text-muted-foreground py-8 text-center">{language === 'vi' ? 'Chưa có hoạt động nào' : 'No recent activity'}</p>
             ) : (
               <div className="space-y-4">
-                {[...inquiries].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 5).map((inquiry) => (
+                {[...inquiries].filter(i => i.status === 'new').sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 5).map((inquiry) => (
                   <div key={inquiry.id} className="flex items-center justify-between py-3 border-b border-white/20">
                     <div>
                       <p className="font-light">
