@@ -457,35 +457,6 @@ export default function Lookup() {
           </div>
         )}
 
-        {!searched && (
-          <div className="max-w-3xl mx-auto text-center pt-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {[
-                {
-                  icon: Clock,
-                  title: language === "vi" ? "Tiến độ dự án" : "Project Progress",
-                  desc: language === "vi" ? "Theo dõi trạng thái và các mốc quan trọng" : "Track status and key milestones",
-                },
-                {
-                  icon: FileText,
-                  title: language === "vi" ? "Nhật ký hoạt động" : "Activity Log",
-                  desc: language === "vi" ? "Xem lịch sử tương tác và ghi chú" : "View interaction history and notes",
-                },
-                {
-                  icon: Shield,
-                  title: language === "vi" ? "Thông tin bảo hành" : "Warranty Info",
-                  desc: language === "vi" ? "Kiểm tra trạng thái bảo hành" : "Check warranty status",
-                },
-              ].map((item, idx) => (
-                <div key={idx} className="border border-white/10 p-6">
-                  <item.icon className="w-8 h-8 text-white/20 mx-auto mb-4" />
-                  <h3 className="text-white font-light text-base mb-2">{item.title}</h3>
-                  <p className="text-white/40 font-light text-sm">{item.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
