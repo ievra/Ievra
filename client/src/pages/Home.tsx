@@ -639,7 +639,7 @@ export default function Home() {
                   {featuredProjects?.slice(0, 10).map((project, index) => (
                     <div
                       key={project.id}
-                      className="group relative overflow-hidden cursor-pointer h-[28rem] w-72 flex-shrink-0 rounded-none border border-white/10 hover:bg-white/5 transition-all duration-300 project-card"
+                      className="group relative overflow-hidden cursor-pointer h-[28rem] w-72 flex-shrink-0 rounded-none border border-white/10 hover:bg-white/[0.02] transition-all duration-300 project-card"
                       onClick={() => navigate(project.slug ? `/portfolio/${project.slug}` : `/project/${project.id}`)}
                     >
                       {Array.isArray(project.images) && project.images[0] ? (
@@ -810,7 +810,7 @@ export default function Home() {
                   {featuredArticles?.slice(0, 10).map((article, index) => (
                     <Card
                       key={article.id}
-                      className="group overflow-hidden cursor-pointer h-[28rem] w-72 flex-shrink-0 rounded-none border border-white/10 hover:bg-white/5 transition-all duration-300 article-card"
+                      className="group overflow-hidden cursor-pointer h-[28rem] w-72 flex-shrink-0 rounded-none border border-white/10 hover:bg-white/[0.02] transition-all duration-300 article-card"
                       onClick={() => navigate(`/blog/${article.slug}`)}
                     >
                       <div className="relative">
@@ -824,7 +824,7 @@ export default function Home() {
                         ) : (
                           <div className="w-full h-48 bg-transparent" />
                         )}
-                        <div className="absolute inset-0 bg-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div className="absolute inset-0 bg-white/[0.03] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       </div>
                       <CardContent className="p-6">
                         <h3
