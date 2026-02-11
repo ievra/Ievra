@@ -423,20 +423,33 @@ export default function LookupAdminTab() {
             <CardContent className="p-6">
               <div className="flex items-start justify-between">
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <User className="w-5 h-5 text-white/40" />
-                    <h3 className="text-2xl font-light text-white">
-                      {selectedClient.lastName} {selectedClient.firstName}
-                    </h3>
-                  </div>
+                  <h3 className="text-2xl font-light text-white">
+                    {selectedClient.lastName} {selectedClient.firstName}
+                  </h3>
                   <div className="flex flex-wrap items-center gap-4 text-sm text-white/60">
                     {selectedClient.phone && (
-                      <span className="flex items-center gap-1.5"><Phone className="w-3.5 h-3.5" />{selectedClient.phone}</span>
+                      <span>{selectedClient.phone}</span>
+                    )}
+                    {selectedClient.phone && selectedClient.email && (
+                      <span className="text-white/20">—</span>
                     )}
                     {selectedClient.email && (
-                      <span className="flex items-center gap-1.5"><Mail className="w-3.5 h-3.5" />{selectedClient.email}</span>
+                      <span>{selectedClient.email}</span>
                     )}
                   </div>
+                  {(selectedClient.company || selectedClient.address) && (
+                    <div className="flex flex-wrap items-center gap-4 text-sm text-white/40">
+                      {selectedClient.company && (
+                        <span>{selectedClient.company}</span>
+                      )}
+                      {selectedClient.company && selectedClient.address && (
+                        <span className="text-white/20">—</span>
+                      )}
+                      {selectedClient.address && (
+                        <span>{selectedClient.address}</span>
+                      )}
+                    </div>
+                  )}
                 </div>
                 <Button variant="ghost" size="icon" onClick={() => setSelectedClient(null)} className="text-white/40 hover:text-white">
                   <X className="w-5 h-5" />
