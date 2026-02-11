@@ -16,6 +16,8 @@ export default function Contact() {
     email: '',
     phone: '',
     address: '',
+    budget: '',
+    projectType: '',
     requirements: ''
   });
   const { toast } = useToast();
@@ -27,6 +29,8 @@ export default function Contact() {
     email: '',
     phone: '',
     address: '',
+    budget: '',
+    projectType: '',
     requirements: ''
   });
 
@@ -39,6 +43,8 @@ export default function Contact() {
       email: t('contact.form.email'),
       phone: t('contact.form.phone'),
       address: t('contact.form.address'),
+      budget: language === 'vi' ? 'Ngân sách cải tạo (VNĐ)' : 'Renovation budget (VND)',
+      projectType: language === 'vi' ? 'Loại hình (VD: Căn hộ, Nhà hàng, Quán CF...)' : 'Project type (e.g. Apartment, Restaurant, Cafe...)',
       requirements: t('contact.form.requirements')
     };
 
@@ -47,7 +53,9 @@ export default function Contact() {
       email: 200,
       phone: 400,
       address: 600,
-      requirements: 800
+      budget: 800,
+      projectType: 1000,
+      requirements: 1200
     };
 
     const timeouts: NodeJS.Timeout[] = [];
@@ -73,6 +81,8 @@ export default function Contact() {
     typeText('email', texts.email, delays.email);
     typeText('phone', texts.phone, delays.phone);
     typeText('address', texts.address, delays.address);
+    typeText('budget', texts.budget, delays.budget);
+    typeText('projectType', texts.projectType, delays.projectType);
     typeText('requirements', texts.requirements, delays.requirements);
 
     return () => {
@@ -141,7 +151,7 @@ export default function Contact() {
         title: t('contact.form.success'),
         description: t('contact.form.successDesc')
       });
-      setFormData({ name: '', email: '', phone: '', address: '', requirements: '' });
+      setFormData({ name: '', email: '', phone: '', address: '', budget: '', projectType: '', requirements: '' });
       queryClient.invalidateQueries({ queryKey: ['/api/inquiries'] });
     },
     onError: () => {
@@ -170,8 +180,9 @@ export default function Contact() {
       lastName: formData.name.split(' ').slice(1).join(' ') || '',
       email: formData.email,
       phone: formData.phone,
-      projectType: 'consultation' as const,
-      message: `Address: ${formData.address}\n\nRequirements: ${formData.requirements}`
+      projectType: formData.projectType || 'consultation',
+      budget: formData.budget || undefined,
+      message: `${formData.address ? (language === 'vi' ? 'Địa chỉ' : 'Address') + ': ' + formData.address + '\n\n' : ''}${formData.requirements || ''}`
     };
 
     mutation.mutate(inquiryData);
@@ -241,7 +252,31 @@ export default function Contact() {
                 </div>
               </div>
               
-              {/* Third row - Requirements */}
+              {/* Third row - Budget and Project Type */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <Input
+                    type="text"
+                    placeholder={placeholders.budget}
+                    value={formData.budget}
+                    onChange={(e) => setFormData(prev => ({ ...prev, budget: e.target.value }))}
+                    className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
+                    data-testid="input-budget"
+                  />
+                </div>
+                <div>
+                  <Input
+                    type="text"
+                    placeholder={placeholders.projectType}
+                    value={formData.projectType}
+                    onChange={(e) => setFormData(prev => ({ ...prev, projectType: e.target.value }))}
+                    className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
+                    data-testid="input-project-type"
+                  />
+                </div>
+              </div>
+              
+              {/* Fourth row - Requirements */}
               <div>
                 <Textarea
                   placeholder={placeholders.requirements}
