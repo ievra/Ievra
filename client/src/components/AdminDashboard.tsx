@@ -3391,9 +3391,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <CardContent className="p-6 min-h-[90px]">
               <div className="flex items-center justify-between">
                 <div className="min-w-[120px]">
-                  <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Khách Hàng' : 'Active Clients'}</p>
+                  <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Đang Theo Dõi' : 'Following Up'}</p>
                   <p className="text-2xl font-light" data-testid="stat-active-clients">
-                    {statsLoading ? "..." : stats?.activeClients || 0}
+                    {clientsLoading ? "..." : clients.filter(c => c.status === 'following_up').length}
                   </p>
                 </div>
                 <Users className="h-8 w-8 text-white/70" />
