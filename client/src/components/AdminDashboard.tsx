@@ -5215,23 +5215,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     </div>
                   </div>
 
-                  {/* Warranty Information */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium border-b pb-2">{t('crm.warrantyInfo')}</h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-sm font-medium text-muted-foreground">{t('crm.warrantyStatus')}</label>
-                        <p className="text-base mt-1 capitalize">{t(`crm.warranty.${viewingClient.warrantyStatus || 'none'}`)}</p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-muted-foreground">{t('crm.warrantyExpiry')}</label>
-                        <p className="text-base mt-1">
-                          {viewingClient.warrantyExpiry ? new Date(viewingClient.warrantyExpiry).toLocaleDateString('vi-VN') : "—"}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
                   {/* Tags */}
                   {viewingClient.tags && Array.isArray(viewingClient.tags) && viewingClient.tags.length > 0 && (
                     <div className="space-y-4">
