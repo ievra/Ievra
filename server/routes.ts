@@ -1238,7 +1238,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/dashboard/stats", async (req, res) => {
     try {
       const [allProjects, activeClients, allClients, newInquiries] = await Promise.all([
-        storage.getProjects(),
+        storage.getProjects({ status: 'all' }),
         storage.getClients("active"),
         storage.getClients(),
         storage.getInquiries("new")
