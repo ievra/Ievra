@@ -284,6 +284,20 @@ const transactionSchema = z.object({
   notes: z.string().optional(),
 });
 
+const bpTransactionSchema = z.object({
+  businessPartnerId: z.string().min(1, "Business partner is required"),
+  amount: z.string().min(1, "Amount is required").refine((val) => {
+    const num = parseFloat(val);
+    return !isNaN(num) && num > 0 && num <= 100000000000;
+  }, "Số tiền phải từ 1 đến 100.000.000.000 đ"),
+  title: z.string().min(1, "Title is required"),
+  description: z.string().optional(),
+  type: z.string().optional(),
+  status: z.string().optional(),
+  paymentDate: z.string().optional(),
+  notes: z.string().optional(),
+});
+
 // Bilingual article schema for form
 const bilingualArticleSchema = z.object({
   titleEn: z.string().optional(),
@@ -446,6 +460,15 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
 
   // CRM Settings state
   const [isCrmSettingsDialogOpen, setIsCrmSettingsDialogOpen] = useState(false);
+
+  // Business Partners states
+  const [editingBusinessPartner, setEditingBusinessPartner] = useState<any | null>(null);
+  const [viewingBusinessPartner, setViewingBusinessPartner] = useState<any | null>(null);
+  const [isBusinessPartnerDialogOpen, setIsBusinessPartnerDialogOpen] = useState(false);
+  const [isBusinessPartnerViewDialogOpen, setIsBusinessPartnerViewDialogOpen] = useState(false);
+  const [isBpTransactionDialogOpen, setIsBpTransactionDialogOpen] = useState(false);
+  const [editingBpTransaction, setEditingBpTransaction] = useState<any | null>(null);
+  const [isBpCrmSettingsDialogOpen, setIsBpCrmSettingsDialogOpen] = useState(false);
   
   // Category Management Dialog state
   const [isCategoryManagementDialogOpen, setIsCategoryManagementDialogOpen] = useState(false);
@@ -612,6 +635,39 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     },
   });
 
+  // Business Partners query
+  const { data: businessPartners = [], isLoading: businessPartnersLoading } = useQuery<any[]>({
+    queryKey: ['/api/business-partners'],
+  });
+
+  const { data: bpTransactions = [], isLoading: bpTransactionsLoading } = useQuery<any[]>({
+    queryKey: ['/api/bp-transactions', editingBusinessPartner?.id],
+    queryFn: async () => {
+      if (!editingBusinessPartner?.id) return [];
+      const response = await fetch(`/api/bp-transactions?businessPartnerId=${editingBusinessPartner.id}`);
+      return response.json();
+    },
+    enabled: !!editingBusinessPartner?.id,
+  });
+
+  const { data: viewBpTransactions = [], isLoading: viewBpTransactionsLoading } = useQuery<any[]>({
+    queryKey: ['/api/bp-transactions', viewingBusinessPartner?.id],
+    queryFn: async () => {
+      if (!viewingBusinessPartner?.id) return [];
+      const response = await fetch(`/api/bp-transactions?businessPartnerId=${viewingBusinessPartner.id}`);
+      return response.json();
+    },
+    enabled: !!viewingBusinessPartner?.id,
+  });
+
+  const { data: allBpTransactions = [] } = useQuery<any[]>({
+    queryKey: ['/api/bp-transactions'],
+    queryFn: async () => {
+      const response = await fetch('/api/bp-transactions');
+      return response.json();
+    },
+  });
+
   // Settings/Logo query
   const { data: settings, isLoading: settingsLoading } = useQuery<SettingsType>({
     queryKey: ['/api/settings'],
@@ -662,6 +718,42 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       setCurrentPage(1);
     }
   }, [clients.length, currentPage, totalPages]);
+
+  // Search/filter state for Business Partners
+  const [bpSearchQuery, setBpSearchQuery] = useState('');
+  const [bpStageFilter, setBpStageFilter] = useState('all');
+  const [bpStatusFilter, setBpStatusFilter] = useState('all');
+  const [bpWarrantyFilter, setBpWarrantyFilter] = useState('all');
+  const [bpTierFilter, setBpTierFilter] = useState('all');
+  
+  const [bpCurrentPage, setBpCurrentPage] = useState(1);
+  const bpItemsPerPage = 10;
+
+  const filteredBusinessPartners = businessPartners.filter((bp: any) => {
+    if (bpStageFilter !== 'all' && (bp.stage || 'lead') !== bpStageFilter) return false;
+    if (bpStatusFilter !== 'all' && (bp.status || 'active') !== bpStatusFilter) return false;
+    if (bpWarrantyFilter !== 'all' && (bp.warrantyStatus || 'none') !== bpWarrantyFilter) return false;
+    if (bpTierFilter !== 'all' && (bp.tier || 'silver') !== bpTierFilter) return false;
+    if (!bpSearchQuery) return true;
+    const searchLower = bpSearchQuery.toLowerCase();
+    return (
+      (`${bp.firstName} ${bp.lastName}`).toLowerCase().includes(searchLower) ||
+      (bp.email || '').toLowerCase().includes(searchLower) ||
+      (bp.phone || '').toLowerCase().includes(searchLower) ||
+      (bp.company || '').toLowerCase().includes(searchLower) ||
+      (bp.address || '').toLowerCase().includes(searchLower)
+    );
+  });
+  const bpTotalPages = Math.ceil(filteredBusinessPartners.length / bpItemsPerPage);
+  const bpStartIndex = (bpCurrentPage - 1) * bpItemsPerPage;
+  const bpEndIndex = bpStartIndex + bpItemsPerPage;
+  const paginatedBusinessPartners = filteredBusinessPartners.slice(bpStartIndex, bpEndIndex);
+
+  useEffect(() => {
+    if (bpCurrentPage > bpTotalPages && bpTotalPages > 0) {
+      setBpCurrentPage(1);
+    }
+  }, [businessPartners.length, bpCurrentPage, bpTotalPages]);
 
   // Search/filter state for Projects
   const [projectSearchQuery, setProjectSearchQuery] = useState('');
@@ -774,6 +866,23 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     return finances;
   }, [allTransactions]);
 
+  const bpFinances = useMemo(() => {
+    const finances: Record<string, { totalSpending: number; refundAmount: number }> = {};
+    allBpTransactions.forEach((t: any) => {
+      if (t.status !== "completed" || !t.businessPartnerId) return;
+      if (!finances[t.businessPartnerId]) {
+        finances[t.businessPartnerId] = { totalSpending: 0, refundAmount: 0 };
+      }
+      const amount = parseFloat(t.amount || "0");
+      if (t.type === "payment") {
+        finances[t.businessPartnerId].totalSpending += amount;
+      } else if (t.type === "refund") {
+        finances[t.businessPartnerId].refundAmount += amount;
+      }
+    });
+    return finances;
+  }, [allBpTransactions]);
+
   // Forms
   const projectForm = useForm<BilingualProjectFormData>({
     resolver: zodResolver(bilingualProjectSchema),
@@ -846,6 +955,46 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       referralCount: 0,
       referralRevenue: "0",
       tags: [],
+      notes: "",
+    },
+  });
+
+  const businessPartnerForm = useForm<ClientFormData>({
+    resolver: zodResolver(clientSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      company: "",
+      address: "",
+      intakeDate: "",
+      warrantyExpiry: "",
+      stage: "lead",
+      status: "active",
+      tier: "silver",
+      totalSpending: "0",
+      refundAmount: "0",
+      commission: "0",
+      orderCount: 0,
+      referredById: "",
+      referralCount: 0,
+      referralRevenue: "0",
+      tags: [],
+      notes: "",
+    },
+  });
+
+  const bpTransactionForm = useForm<z.infer<typeof bpTransactionSchema>>({
+    resolver: zodResolver(bpTransactionSchema),
+    defaultValues: {
+      businessPartnerId: "",
+      amount: "",
+      title: "",
+      description: "",
+      type: "payment",
+      status: "completed",
+      paymentDate: new Date().toISOString().split('T')[0],
       notes: "",
     },
   });
@@ -2127,6 +2276,113 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     },
   });
 
+  // Business Partner mutations
+  const createBusinessPartnerMutation = useMutation({
+    mutationFn: async (data: ClientFormData) => {
+      const response = await apiRequest('POST', '/api/business-partners', data);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/business-partners'] });
+      toast({ title: language === 'vi' ? "Đã tạo đối tác thành công" : "Business partner created successfully" });
+      businessPartnerForm.reset();
+      setIsBusinessPartnerDialogOpen(false);
+    },
+  });
+
+  const updateBusinessPartnerMutation = useMutation({
+    mutationFn: async ({ id, showToast, ...updates }: { id: string; showToast?: boolean; [key: string]: any }) => {
+      const response = await apiRequest('PUT', `/api/business-partners/${id}`, updates);
+      return response.json();
+    },
+    onMutate: async ({ id, showToast, ...updates }) => {
+      await queryClient.cancelQueries({ queryKey: ['/api/business-partners'] });
+      const previousBPs = queryClient.getQueryData(['/api/business-partners']);
+      queryClient.setQueryData(['/api/business-partners'], (old: any) => {
+        if (!old) return old;
+        return old.map((bp: any) => bp.id === id ? { ...bp, ...updates } : bp);
+      });
+      return { previousBPs };
+    },
+    onError: (err: any, variables, context) => {
+      if (context?.previousBPs) {
+        queryClient.setQueryData(['/api/business-partners'], context.previousBPs);
+      }
+      toast({ title: language === 'vi' ? "Lỗi khi cập nhật đối tác" : "Error updating partner", description: err.message, variant: "destructive" });
+    },
+    onSuccess: (data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['/api/business-partners'] });
+      if (variables.showToast !== false) {
+        toast({ title: language === 'vi' ? "Đã cập nhật đối tác thành công" : "Business partner updated successfully" });
+      }
+    },
+  });
+
+  const deleteBusinessPartnerMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiRequest('DELETE', `/api/business-partners/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/business-partners'] });
+      toast({ title: language === 'vi' ? "Đã xóa đối tác thành công" : "Business partner deleted successfully" });
+      setIsBusinessPartnerDialogOpen(false);
+      setEditingBusinessPartner(null);
+      businessPartnerForm.reset();
+    },
+    onError: (error: any) => {
+      toast({ title: language === 'vi' ? "Lỗi khi xóa đối tác" : "Error deleting partner", description: error.message, variant: "destructive" });
+    },
+  });
+
+  const createBpTransactionMutation = useMutation({
+    mutationFn: async (data: any) => {
+      const response = await apiRequest('POST', '/api/bp-transactions', data);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/bp-transactions'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/business-partners'] });
+      toast({ title: language === 'vi' ? "Đã thêm giao dịch thành công" : "Transaction added successfully" });
+      bpTransactionForm.reset();
+      setIsBpTransactionDialogOpen(false);
+    },
+    onError: (error: any) => {
+      toast({ title: language === 'vi' ? "Lỗi khi thêm giao dịch" : "Error adding transaction", description: error.message, variant: "destructive" });
+    },
+  });
+
+  const updateBpTransactionMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: any }) => {
+      const response = await apiRequest('PUT', `/api/bp-transactions/${id}`, data);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/bp-transactions'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/business-partners'] });
+      toast({ title: language === 'vi' ? "Đã cập nhật giao dịch thành công" : "Transaction updated successfully" });
+      setEditingBpTransaction(null);
+      bpTransactionForm.reset();
+      setIsBpTransactionDialogOpen(false);
+    },
+    onError: (error: any) => {
+      toast({ title: language === 'vi' ? "Lỗi khi cập nhật giao dịch" : "Error updating transaction", description: error.message, variant: "destructive" });
+    },
+  });
+
+  const deleteBpTransactionMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiRequest('DELETE', `/api/bp-transactions/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/bp-transactions'] });
+      queryClient.invalidateQueries({ queryKey: ['/api/business-partners'] });
+      toast({ title: language === 'vi' ? "Đã xóa giao dịch thành công" : "Transaction deleted successfully" });
+    },
+    onError: (error: any) => {
+      toast({ title: language === 'vi' ? "Lỗi khi xóa giao dịch" : "Error deleting transaction", description: error.message, variant: "destructive" });
+    },
+  });
+
   // Settings mutation (Logo, SEO, etc.)
   const updateSettingsMutation = useMutation({
     mutationFn: async (data: any) => {
@@ -2398,6 +2654,89 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       }
     } catch (error) {
       // Error is handled by mutation's onError handler
+    }
+  };
+
+  const handleEditBusinessPartner = (bp: any) => {
+    setEditingBusinessPartner(bp);
+    const formatDateForInput = (dateValue: any) => {
+      if (!dateValue) return "";
+      const date = new Date(dateValue);
+      return date.toISOString().split('T')[0];
+    };
+    businessPartnerForm.reset({
+      firstName: bp.firstName,
+      lastName: bp.lastName,
+      email: bp.email,
+      phone: bp.phone || "",
+      company: bp.company || "",
+      address: bp.address || "",
+      intakeDate: formatDateForInput(bp.intakeDate),
+      stage: bp.stage || "lead",
+      status: bp.status || "active",
+      totalSpending: bp.totalSpending || "0",
+      refundAmount: bp.refundAmount || "0",
+      commission: bp.commission || "0",
+      orderCount: bp.orderCount || 0,
+      referredById: bp.referredById || "",
+      referralCount: bp.referralCount || 0,
+      referralRevenue: bp.referralRevenue || "0",
+      warrantyStatus: (bp.warrantyStatus as "none" | "active" | "expired") || "none",
+      warrantyExpiry: formatDateForInput(bp.warrantyExpiry),
+      tier: bp.tier || "silver",
+      tags: (bp.tags as string[]) || [],
+      notes: bp.notes || "",
+    });
+    setIsBusinessPartnerDialogOpen(true);
+  };
+
+  const onBusinessPartnerSubmit = async (data: ClientFormData) => {
+    try {
+      let warrantyStatus: "none" | "active" | "expired" = "none";
+      if (data.warrantyExpiry && data.warrantyExpiry.trim() !== "") {
+        const expiryDate = new Date(data.warrantyExpiry);
+        const now = new Date();
+        warrantyStatus = expiryDate < now ? "expired" : "active";
+      }
+      const cleanedData = {
+        ...data,
+        warrantyStatus,
+        intakeDate: data.intakeDate && data.intakeDate.trim() !== "" ? data.intakeDate : undefined,
+        warrantyExpiry: data.warrantyExpiry && data.warrantyExpiry.trim() !== "" ? data.warrantyExpiry : undefined,
+        phone: data.phone && data.phone.trim() !== "" ? data.phone : undefined,
+        company: data.company && data.company.trim() !== "" ? data.company : undefined,
+        address: data.address && data.address.trim() !== "" ? data.address : undefined,
+        referredById: data.referredById && data.referredById.trim() !== "" ? data.referredById : undefined,
+        notes: data.notes && data.notes.trim() !== "" ? data.notes : undefined,
+      };
+      if (editingBusinessPartner) {
+        await updateBusinessPartnerMutation.mutateAsync({ id: editingBusinessPartner.id, ...cleanedData });
+        setEditingBusinessPartner(null);
+        setIsBusinessPartnerDialogOpen(false);
+        businessPartnerForm.reset();
+      } else {
+        await createBusinessPartnerMutation.mutateAsync(cleanedData);
+      }
+    } catch (error) {
+      console.error("Error saving business partner:", error);
+    }
+  };
+
+  const onBpTransactionSubmit = async (data: any) => {
+    try {
+      const cleanedData = {
+        ...data,
+        paymentDate: data.paymentDate && data.paymentDate.trim() !== "" ? data.paymentDate : undefined,
+        description: data.description && data.description.trim() !== "" ? data.description : undefined,
+        notes: data.notes && data.notes.trim() !== "" ? data.notes : undefined,
+      };
+      if (editingBpTransaction) {
+        await updateBpTransactionMutation.mutateAsync({ id: editingBpTransaction.id, data: cleanedData });
+      } else {
+        await createBpTransactionMutation.mutateAsync(cleanedData);
+      }
+    } catch (error) {
+      console.error("Error saving BP transaction:", error);
     }
   };
 
@@ -5815,6 +6154,1186 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   <div className="text-center mt-2">
                     <span className="text-xs text-muted-foreground">
                       {language === 'vi' ? `Hiển thị ${startIndex + 1}-${Math.min(endIndex, clients.length)} / ${clients.length} khách hàng` : `Showing ${startIndex + 1}-${Math.min(endIndex, clients.length)} of ${clients.length} clients`}
+                    </span>
+                  </div>
+                </div>
+              </>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (activeTab === 'businessPartners') {
+    if (!hasPermission(user, 'crm')) {
+      return <PermissionDenied feature="CRM / Business Partners" />;
+    }
+    return (
+      <div className="space-y-6 p-6">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-sans font-light">{language === 'vi' ? 'Quản Lý Đối Tác' : 'Business Partner Management'}</h2>
+          <div className="flex gap-2">
+            <Dialog open={isBusinessPartnerDialogOpen} onOpenChange={(open) => {
+            setIsBusinessPartnerDialogOpen(open);
+            if (!open) {
+              setEditingBusinessPartner(null);
+              businessPartnerForm.reset({
+                firstName: "",
+                lastName: "",
+                email: "",
+                phone: "",
+                company: "",
+                address: "",
+                stage: "lead",
+                status: "active",
+                tier: "silver",
+                orderCount: 0,
+                referredById: "",
+                referralCount: 0,
+                referralRevenue: "0",
+                warrantyStatus: "none",
+                warrantyExpiry: "",
+                tags: [],
+                notes: "",
+              });
+            }
+          }}>
+            <DialogTrigger asChild>
+              <Button 
+                onClick={() => {
+                  setEditingBusinessPartner(null);
+                  businessPartnerForm.reset({
+                    firstName: "",
+                    lastName: "",
+                    email: "",
+                    phone: "",
+                    company: "",
+                    address: "",
+                    stage: "lead",
+                    status: "active",
+                    tier: "silver",
+                    orderCount: 0,
+                    referredById: "",
+                    referralCount: 0,
+                    referralRevenue: "0",
+                    warrantyStatus: "none",
+                    warrantyExpiry: "",
+                    tags: [],
+                    notes: "",
+                  });
+                }}
+                data-testid="button-add-bp"
+                className="h-10 px-4"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                {language === 'vi' ? 'Thêm Đối Tác' : 'Add Partner'}
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="bg-black border border-white/20 rounded-none">
+              <DialogHeader>
+                <DialogTitle>
+                  {editingBusinessPartner ? (language === 'vi' ? 'Chỉnh Sửa Đối Tác' : 'Edit Partner') : (language === 'vi' ? 'Thêm Đối Tác' : 'Add Partner')}
+                </DialogTitle>
+              </DialogHeader>
+              <Form {...businessPartnerForm}>
+                <form onSubmit={businessPartnerForm.handleSubmit(onBusinessPartnerSubmit)} className="space-y-4 max-h-[70vh] overflow-y-auto px-1">
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={businessPartnerForm.control}
+                      name="firstName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('crm.firstName')} *</FormLabel>
+                          <FormControl>
+                            <Input {...field} placeholder="Nguyễn" data-testid="input-bp-first-name" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={businessPartnerForm.control}
+                      name="lastName"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('crm.lastName')} *</FormLabel>
+                          <FormControl>
+                            <Input {...field} placeholder="Văn A" data-testid="input-bp-last-name" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={businessPartnerForm.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('crm.email')} *</FormLabel>
+                          <FormControl>
+                            <Input {...field} type="email" placeholder="email@example.com" data-testid="input-bp-email" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={businessPartnerForm.control}
+                      name="tier"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Hạng Đối Tác' : 'Partner Tier'}</FormLabel>
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <FormControl>
+                              <SelectTrigger data-testid="select-bp-tier">
+                                <SelectValue />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {crmTiers
+                                .filter((tier: any) => tier.active)
+                                .sort((a: any, b: any) => a.order - b.order)
+                                .map((tier: any) => (
+                                  <SelectItem key={tier.id} value={tier.value}>
+                                    {language === 'vi' ? tier.labelVi : tier.labelEn}
+                                  </SelectItem>
+                                ))
+                              }
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={businessPartnerForm.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('crm.phone')}</FormLabel>
+                          <FormControl>
+                            <Input {...field} placeholder="0901234567" data-testid="input-bp-phone" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={businessPartnerForm.control}
+                      name="company"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('crm.company')}</FormLabel>
+                          <FormControl>
+                            <Input {...field} placeholder="ABC Company" data-testid="input-bp-company" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <FormField
+                    control={businessPartnerForm.control}
+                    name="address"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('crm.address')}</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="123 Nguyễn Huệ, Quận 1, TP.HCM" data-testid="input-bp-address" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={businessPartnerForm.control}
+                    name="intakeDate"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{language === 'vi' ? 'Khởi tạo (Ngày tiếp nhận)' : 'Intake Date'}</FormLabel>
+                        <FormControl>
+                          <Input {...field} type="date" maxLength={10} data-testid="input-bp-intake-date" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={businessPartnerForm.control}
+                      name="warrantyExpiry"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('crm.warrantyExpiry')}</FormLabel>
+                          <FormControl>
+                            <Input {...field} type="date" maxLength={10} data-testid="input-bp-warranty-expiry" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <div className="space-y-2">
+                      <FormLabel>{t('crm.warrantyStatus')}</FormLabel>
+                      <div className="h-10 px-3 py-2 rounded-none border border-white/30 bg-white/5 flex items-center">
+                        <span className="text-sm text-white/70">
+                          {(() => {
+                            const warrantyDate = businessPartnerForm.watch('warrantyExpiry');
+                            if (!warrantyDate) return '';
+                            const expiry = new Date(warrantyDate);
+                            const now = new Date();
+                            return expiry < now ? t('crm.warranty.expired') : t('crm.warranty.active');
+                          })()}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={businessPartnerForm.control}
+                      name="stage"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('crm.pipelineStage')}</FormLabel>
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <FormControl>
+                              <SelectTrigger data-testid="select-bp-stage">
+                                <SelectValue />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {crmStages
+                                .filter((stage: any) => stage.active)
+                                .sort((a: any, b: any) => a.order - b.order)
+                                .map((stage: any) => (
+                                  <SelectItem key={stage.id} value={stage.value}>
+                                    {language === 'vi' ? stage.labelVi : stage.labelEn}
+                                  </SelectItem>
+                                ))
+                              }
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={businessPartnerForm.control}
+                      name="status"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{t('crm.status')}</FormLabel>
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <FormControl>
+                              <SelectTrigger data-testid="select-bp-status">
+                                <SelectValue />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {crmStatuses
+                                .filter((status: any) => status.active)
+                                .sort((a: any, b: any) => a.order - b.order)
+                                .map((status: any) => (
+                                  <SelectItem key={status.id} value={status.value}>
+                                    {language === 'vi' ? status.labelVi : status.labelEn}
+                                  </SelectItem>
+                                ))
+                              }
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+
+                  {editingBusinessPartner && (
+                    <div className="pt-6 mt-6">
+                      <div className="flex justify-between items-center mb-4">
+                        <h3 className="text-lg font-medium">{language === 'vi' ? 'Lịch sử giao dịch' : 'Transaction History'}</h3>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          onClick={() => {
+                            setEditingBpTransaction(null);
+                            bpTransactionForm.reset({
+                              businessPartnerId: editingBusinessPartner.id,
+                              amount: "",
+                              title: "",
+                              description: "",
+                              type: "payment",
+                              status: "completed",
+                              paymentDate: new Date().toISOString().split('T')[0],
+                              notes: "",
+                            });
+                            setIsBpTransactionDialogOpen(true);
+                          }}
+                          className="bg-black border-white/30 hover:border-white hover:bg-white/10 rounded-none h-8 w-8"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      
+                      {bpTransactionsLoading ? (
+                        <div className="text-sm text-white/50">{language === 'vi' ? 'Đang tải...' : 'Loading...'}</div>
+                      ) : !Array.isArray(bpTransactions) || bpTransactions.length === 0 ? (
+                        <div className="text-sm text-white/50">{language === 'vi' ? 'Chưa có giao dịch nào' : 'No transactions yet'}</div>
+                      ) : (
+                        <div className="border border-white/30 rounded-none max-h-48 overflow-y-auto bg-black">
+                          {bpTransactions.map((transaction: any) => (
+                            <div key={transaction.id} className="flex items-center justify-between px-2 py-2 border-b border-white/20 last:border-b-0 hover:bg-white/5 transition-colors">
+                              <div className="flex-1 space-y-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-sm font-medium text-white">{transaction.title}</span>
+                                  <span className="text-[10px] px-1.5 py-0.5 bg-white/10 text-white/70 rounded-none">
+                                    {transaction.type === "payment" ? (language === 'vi' ? "Thanh toán" : "Payment") : transaction.type === "refund" ? (language === 'vi' ? "Hoàn tiền" : "Refund") : "—"}
+                                  </span>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm font-semibold text-white">{Math.round(parseFloat(transaction.amount)).toLocaleString('vi-VN')} đ</span>
+                                  <div className="flex items-center gap-2">
+                                    {transaction.status === "completed" && transaction.paymentDate && (
+                                      <span className="text-[10px] text-white/50">
+                                        {new Date(transaction.paymentDate).toLocaleDateString('vi-VN')}
+                                      </span>
+                                    )}
+                                    <span className="text-[10px] text-white/50">
+                                      {transaction.status === "pending" ? (language === 'vi' ? "Đang chờ" : "Pending") : transaction.status === "completed" ? (language === 'vi' ? "Hoàn thành" : "Completed") : transaction.status === "cancelled" ? (language === 'vi' ? "Đã hủy" : "Cancelled") : "—"}
+                                    </span>
+                                  </div>
+                                </div>
+                                {transaction.description && (
+                                  <p className="text-[10px] text-white/50">{transaction.description}</p>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-0.5 ml-2">
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => {
+                                    setEditingBpTransaction(transaction);
+                                    bpTransactionForm.reset({
+                                      businessPartnerId: transaction.businessPartnerId,
+                                      amount: transaction.amount,
+                                      title: transaction.title,
+                                      description: transaction.description || "",
+                                      type: transaction.type || "payment",
+                                      status: transaction.status || "completed",
+                                      paymentDate: transaction.paymentDate ? new Date(transaction.paymentDate).toISOString().split('T')[0] : "",
+                                      notes: transaction.notes || "",
+                                    });
+                                    setIsBpTransactionDialogOpen(true);
+                                  }}
+                                  className="h-6 w-6 text-white hover:text-white hover:bg-white/20 rounded-none"
+                                >
+                                  <Pencil className="h-3 w-3" />
+                                </Button>
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-6 w-6 text-white hover:text-white hover:bg-white/20 rounded-none"
+                                    >
+                                      <X className="h-3 w-3" />
+                                    </Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent className="bg-black/95 backdrop-blur-xl border border-white/20 rounded-none">
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>{language === 'vi' ? 'Xóa giao dịch' : 'Delete Transaction'}</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        {language === 'vi'
+                                          ? <>Bạn có chắc chắn muốn xóa giao dịch <strong>"{transaction.title}"</strong>?<br />Hành động này không thể hoàn tác.</>
+                                          : <>Are you sure you want to delete transaction <strong>"{transaction.title}"</strong>?<br />This action cannot be undone.</>
+                                        }
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel className="bg-black border-white/30 hover:border-white hover:bg-white/10 rounded-none h-10 px-4">
+                                        {language === 'vi' ? 'Hủy' : 'Cancel'}
+                                      </AlertDialogCancel>
+                                      <AlertDialogAction
+                                        onClick={() => deleteBpTransactionMutation.mutate(transaction.id)}
+                                        className="bg-white hover:bg-white/90 text-black rounded-none h-10 px-4"
+                                        disabled={deleteBpTransactionMutation.isPending}
+                                      >
+                                        {deleteBpTransactionMutation.isPending ? (language === 'vi' ? "Đang xóa..." : "Deleting...") : (language === 'vi' ? "Xóa" : "Delete")}
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <FormField
+                    control={businessPartnerForm.control}
+                    name="notes"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('crm.notes')}</FormLabel>
+                        <FormControl>
+                          <Textarea {...field} rows={3} placeholder={language === 'vi' ? "Ghi chú về đối tác..." : "Notes about partner..."} data-testid="input-bp-notes" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="flex justify-between pt-4">
+                    {editingBusinessPartner && (
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            className="border-white/30 text-white hover:border-white hover:bg-white/10 rounded-none h-8 w-8"
+                            data-testid="button-delete-bp"
+                          >
+                            <Trash2 className="h-4 w-4 text-white" />
+                          </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent className="bg-black/95 backdrop-blur-xl border border-white/20 rounded-none">
+                          {Array.isArray(bpTransactions) && bpTransactions.length > 0 ? (
+                            <>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>{language === 'vi' ? 'Không thể xóa đối tác' : 'Cannot Delete Partner'}</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  {language === 'vi'
+                                    ? <>Đối tác <strong>{editingBusinessPartner.firstName} {editingBusinessPartner.lastName}</strong> hiện có <strong>{bpTransactions.length}</strong> giao dịch. Vui lòng xóa tất cả giao dịch trước khi xóa đối tác.</>
+                                    : <>Partner <strong>{editingBusinessPartner.firstName} {editingBusinessPartner.lastName}</strong> currently has <strong>{bpTransactions.length}</strong> transaction(s). Please delete all transactions before deleting this partner.</>
+                                  }
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel className="bg-white hover:bg-white/90 text-black rounded-none h-10 px-4">
+                                  {language === 'vi' ? 'Đã hiểu' : 'Understood'}
+                                </AlertDialogCancel>
+                              </AlertDialogFooter>
+                            </>
+                          ) : (
+                            <>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>{language === 'vi' ? 'Xác nhận xóa đối tác' : 'Confirm Delete Partner'}</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  {language === 'vi' 
+                                    ? <>Bạn có chắc chắn muốn xóa đối tác <strong>{editingBusinessPartner.firstName} {editingBusinessPartner.lastName}</strong>?<br />Hành động này không thể hoàn tác và sẽ xóa toàn bộ dữ liệu liên quan.</>
+                                    : <>Are you sure you want to delete partner <strong>{editingBusinessPartner.firstName} {editingBusinessPartner.lastName}</strong>?<br />This action cannot be undone and will delete all related data.</>
+                                  }
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel className="bg-black border-white/30 hover:border-white hover:bg-white/10 rounded-none h-10 px-4">
+                                  {language === 'vi' ? 'Hủy' : 'Cancel'}
+                                </AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => deleteBusinessPartnerMutation.mutate(editingBusinessPartner.id)}
+                                  className="bg-white hover:bg-white/90 text-black rounded-none h-10 px-4"
+                                  disabled={deleteBusinessPartnerMutation.isPending}
+                                >
+                                  {deleteBusinessPartnerMutation.isPending ? (language === 'vi' ? "Đang xóa..." : "Deleting...") : (language === 'vi' ? "Xóa" : "Delete")}
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </>
+                          )}
+                        </AlertDialogContent>
+                      </AlertDialog>
+                    )}
+                    <div className="flex space-x-2 ml-auto">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => {
+                          setIsBusinessPartnerDialogOpen(false);
+                          setEditingBusinessPartner(null);
+                          businessPartnerForm.reset();
+                        }}
+                        className="h-10 px-4"
+                      >
+                        {t('crm.cancel')}
+                      </Button>
+                      <Button 
+                        type="submit"
+                        disabled={createBusinessPartnerMutation.isPending}
+                        data-testid="button-save-bp"
+                        className="h-10 px-4"
+                      >
+                        {editingBusinessPartner ? t('crm.update') : t('crm.create')}
+                      </Button>
+                    </div>
+                  </div>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
+            <Button
+              variant="outline"
+              onClick={() => setIsBpCrmSettingsDialogOpen(true)}
+              data-testid="button-bp-crm-settings"
+              className="h-10 px-4"
+            >
+              <Settings className="mr-2 h-4 w-4" />
+              {language === 'vi' ? 'Cài Đặt' : 'Settings'}
+            </Button>
+          </div>
+        </div>
+
+        <Dialog open={isBpCrmSettingsDialogOpen} onOpenChange={setIsBpCrmSettingsDialogOpen}>
+          <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto bg-black border border-white/20 rounded-none">
+            <DialogHeader>
+              <DialogTitle className="text-2xl font-light">{language === 'vi' ? 'Cài Đặt' : 'Settings'}</DialogTitle>
+            </DialogHeader>
+            <CrmSettingsManager />
+          </DialogContent>
+        </Dialog>
+
+        <Dialog open={isBusinessPartnerViewDialogOpen} onOpenChange={setIsBusinessPartnerViewDialogOpen}>
+            <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-black border border-white/20 rounded-none">
+              <DialogHeader>
+              </DialogHeader>
+              {viewingBusinessPartner && (
+                <div className="space-y-6">
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium border-b pb-2">{t('crm.basicInfo')}</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">{t('crm.name')}</label>
+                        <p className="text-base mt-1">{viewingBusinessPartner.firstName} {viewingBusinessPartner.lastName}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">{t('crm.email')}</label>
+                        <p className="text-base mt-1">{viewingBusinessPartner.email}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">{t('crm.phone')}</label>
+                        <p className="text-base mt-1">{viewingBusinessPartner.phone || "—"}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">{t('crm.company')}</label>
+                        <p className="text-base mt-1">{viewingBusinessPartner.company || "—"}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">{t('crm.address')}</label>
+                        <p className="text-base mt-1">{viewingBusinessPartner.address || "—"}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium border-b pb-2">{language === 'vi' ? 'Trạng Thái' : 'Status'}</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">{t('crm.pipelineStage')}</label>
+                        <p className="text-base mt-1 capitalize">
+                          {(() => {
+                            const stage = crmStages.find(s => s.value === viewingBusinessPartner.stage);
+                            return stage ? (language === 'vi' ? stage.labelVi : stage.labelEn) : viewingBusinessPartner.stage;
+                          })()}
+                        </p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">{t('crm.status')}</label>
+                        <p className="text-base mt-1 capitalize">
+                          {(() => {
+                            const status = crmStatuses.find(s => s.value === viewingBusinessPartner.status);
+                            return status ? (language === 'vi' ? status.labelVi : status.labelEn) : viewingBusinessPartner.status;
+                          })()}
+                        </p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Khởi tạo' : 'Intake Date'}</label>
+                        <p className="text-base mt-1">{viewingBusinessPartner.intakeDate ? new Date(viewingBusinessPartner.intakeDate).toLocaleDateString('vi-VN') : "—"}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">{t('crm.created')}</label>
+                        <p className="text-base mt-1">{formatDate(viewingBusinessPartner.createdAt)}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium border-b pb-2">{t('crm.financialInfo')}</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Đã Thanh Toán' : 'Total Revenue'}</label>
+                        <p className="text-base mt-1 font-semibold">
+                          {Math.round(bpFinances[viewingBusinessPartner.id]?.totalSpending || 0).toLocaleString('vi-VN')} đ
+                        </p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Hoàn Trả' : 'Refund'}</label>
+                        <p className="text-base mt-1 font-semibold">
+                          {Math.round(bpFinances[viewingBusinessPartner.id]?.refundAmount || 0).toLocaleString('vi-VN')} đ
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {viewingBusinessPartner.tags && Array.isArray(viewingBusinessPartner.tags) && viewingBusinessPartner.tags.length > 0 && (
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-medium border-b pb-2">{t('crm.tags')}</h3>
+                      <div className="flex flex-wrap gap-2">
+                        {viewingBusinessPartner.tags.map((tag: string, index: number) => (
+                          <Badge key={index} variant="secondary">{tag}</Badge>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {viewingBusinessPartner.notes && (
+                    <div className="space-y-4">
+                      <h3 className="text-lg font-medium border-b pb-2">{t('crm.notes')}</h3>
+                      <p className="text-base whitespace-pre-wrap">{viewingBusinessPartner.notes}</p>
+                    </div>
+                  )}
+
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium border-b pb-2">{language === 'vi' ? 'Lịch sử giao dịch' : 'Transaction History'}</h3>
+                    {viewBpTransactionsLoading ? (
+                      <div className="text-sm text-white/50">{language === 'vi' ? 'Đang tải...' : 'Loading...'}</div>
+                    ) : !Array.isArray(viewBpTransactions) || viewBpTransactions.length === 0 ? (
+                      <div className="text-sm text-white/50">{language === 'vi' ? 'Chưa có giao dịch nào' : 'No transactions yet'}</div>
+                    ) : (
+                      <div className="border border-white/30 rounded-none max-h-64 overflow-y-auto bg-black">
+                        {viewBpTransactions.map((transaction: any) => (
+                          <div key={transaction.id} className="flex items-center justify-between px-3 py-3 border-b border-white/20 last:border-b-0 hover:bg-white/5 transition-colors">
+                            <div className="flex-1 space-y-1">
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm font-medium text-white">{transaction.title}</span>
+                                <span className="text-[10px] px-1.5 py-0.5 bg-white/10 text-white/70 rounded-none">
+                                  {transaction.type === "payment" ? (language === 'vi' ? "Thanh toán" : "Payment") : transaction.type === "refund" ? (language === 'vi' ? "Hoàn tiền" : "Refund") : "—"}
+                                </span>
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm font-semibold text-white">{Math.round(parseFloat(transaction.amount)).toLocaleString('vi-VN')} đ</span>
+                                <div className="flex items-center gap-2">
+                                  {transaction.status === "completed" && transaction.paymentDate && (
+                                    <span className="text-[10px] text-white/50">
+                                      {new Date(transaction.paymentDate).toLocaleDateString('vi-VN')}
+                                    </span>
+                                  )}
+                                  <span className="text-[10px] text-white/50">
+                                    {transaction.status === "pending" ? (language === 'vi' ? "Đang chờ" : "Pending") : transaction.status === "completed" ? (language === 'vi' ? "Hoàn thành" : "Completed") : transaction.status === "cancelled" ? (language === 'vi' ? "Đã hủy" : "Cancelled") : "—"}
+                                  </span>
+                                </div>
+                              </div>
+                              {transaction.description && (
+                                <p className="text-[10px] text-white/50">{transaction.description}</p>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex justify-end pt-4 border-t">
+                    <Button
+                      onClick={() => {
+                        setIsBusinessPartnerViewDialogOpen(false);
+                        setViewingBusinessPartner(null);
+                      }}
+                      className="h-10 px-4"
+                    >
+                      {t('crm.close')}
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </DialogContent>
+          </Dialog>
+
+          <Dialog open={isBpTransactionDialogOpen} onOpenChange={setIsBpTransactionDialogOpen}>
+            <DialogContent className="max-w-md bg-black border border-white/20 rounded-none">
+              <DialogHeader>
+                <DialogTitle>
+                  {editingBpTransaction ? (language === 'vi' ? "Chỉnh sửa giao dịch" : "Edit Transaction") : (language === 'vi' ? "Thêm giao dịch mới" : "Add New Transaction")}
+                </DialogTitle>
+              </DialogHeader>
+              <Form {...bpTransactionForm}>
+                <form onSubmit={bpTransactionForm.handleSubmit(onBpTransactionSubmit)} className="space-y-4">
+                  <FormField
+                    control={bpTransactionForm.control}
+                    name="title"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{language === 'vi' ? 'Tiêu đề' : 'Title'}</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder={language === 'vi' ? "VD: Thanh toán đợt 1" : "E.g.: Payment phase 1"} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={bpTransactionForm.control}
+                      name="amount"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Số tiền (đ)' : 'Amount (đ)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} type="text" placeholder="VD: 50000000" maxLength={12} onKeyDown={(e) => { if (!/[0-9]/.test(e.key) && !['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(e.key)) e.preventDefault(); }} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={bpTransactionForm.control}
+                      name="type"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Loại' : 'Type'}</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger className="border-t-0 border-l-0 border-r-0 border-b border-white/30 rounded-none">
+                                <SelectValue placeholder={language === 'vi' ? "Chọn loại" : "Select type"} />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="payment">{language === 'vi' ? 'Thanh toán' : 'Payment'}</SelectItem>
+                              <SelectItem value="refund">{language === 'vi' ? 'Hoàn tiền' : 'Refund'}</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={bpTransactionForm.control}
+                      name="status"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Trạng thái' : 'Status'}</FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger className="border-t-0 border-l-0 border-r-0 border-b border-white/30 rounded-none">
+                                <SelectValue placeholder={language === 'vi' ? "Chọn trạng thái" : "Select status"} />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="pending">{language === 'vi' ? 'Đang chờ' : 'Pending'}</SelectItem>
+                              <SelectItem value="completed">{language === 'vi' ? 'Hoàn thành' : 'Completed'}</SelectItem>
+                              <SelectItem value="cancelled">{language === 'vi' ? 'Đã hủy' : 'Cancelled'}</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    {bpTransactionForm.watch("status") === "completed" && (
+                      <FormField
+                        control={bpTransactionForm.control}
+                        name="paymentDate"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{language === 'vi' ? 'Ngày thanh toán' : 'Payment Date'}</FormLabel>
+                            <FormControl>
+                              <Input {...field} type="date" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    )}
+                  </div>
+
+                  <FormField
+                    control={bpTransactionForm.control}
+                    name="notes"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{language === 'vi' ? 'Ghi chú' : 'Notes'}</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder={language === 'vi' ? "Ghi chú thêm (tùy chọn)" : "Additional notes (optional)"} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <div className="flex justify-end space-x-2 pt-4">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        setIsBpTransactionDialogOpen(false);
+                        setEditingBpTransaction(null);
+                        bpTransactionForm.reset();
+                      }}
+                      className="h-10 px-4"
+                    >
+                      {language === 'vi' ? 'Hủy' : 'Cancel'}
+                    </Button>
+                    <Button 
+                      type="submit"
+                      disabled={createBpTransactionMutation.isPending || updateBpTransactionMutation.isPending}
+                      className="h-10 px-4"
+                    >
+                      {editingBpTransaction ? (language === 'vi' ? "Cập nhật" : "Update") : (language === 'vi' ? "Thêm" : "Add")}
+                    </Button>
+                  </div>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+          <Card className="bg-black border-white/10 rounded-none">
+            <CardContent className="p-6 min-h-[90px]">
+              <div className="flex items-center justify-between">
+                <div className="min-w-[120px]">
+                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Tổng đối tác' : 'Total Partners'}</p>
+                  <p className="text-2xl font-semibold mt-1">{businessPartners.length}</p>
+                </div>
+                <Users className="h-8 w-8 text-muted-foreground" />
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-black border-white/10 rounded-none">
+            <CardContent className="p-6 min-h-[90px]">
+              <div className="flex items-center justify-between">
+                <div className="min-w-[120px]">
+                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Tổng doanh thu' : 'Total Revenue'}</p>
+                  <p className="text-2xl font-semibold mt-1">
+                    {allBpTransactions.reduce((sum: number, t: any) => {
+                      if (t.status !== "completed") return sum;
+                      const amount = parseFloat(t.amount || "0");
+                      if (t.type === "payment") return sum + amount;
+                      if (t.type === "refund") return sum - amount;
+                      return sum;
+                    }, 0).toLocaleString('vi-VN', {maximumFractionDigits: 0})} đ
+                  </p>
+                </div>
+                <TrendingUp className="h-8 w-8 text-muted-foreground" />
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-black border-white/10 rounded-none">
+            <CardContent className="p-6 min-h-[90px]">
+              <div className="flex items-center justify-between">
+                <div className="min-w-[120px]">
+                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Còn bảo hành' : 'Active Warranty'}</p>
+                  <p className="text-2xl font-semibold mt-1">
+                    {businessPartners.filter((c: any) => c.warrantyStatus === 'active').length}
+                  </p>
+                </div>
+                <Shield className="h-8 w-8 text-muted-foreground" />
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-black border-white/10 rounded-none">
+            <CardContent className="p-6 min-h-[90px]">
+              <div className="flex items-center justify-between">
+                <div className="min-w-[120px]">
+                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Hết hạn bảo hành' : 'Expired Warranty'}</p>
+                  <p className="text-2xl font-semibold mt-1">
+                    {businessPartners.filter((c: any) => c.warrantyStatus === 'expired').length}
+                  </p>
+                </div>
+                <Shield className="h-8 w-8 text-muted-foreground" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
+            <Input
+              value={bpSearchQuery}
+              onChange={(e) => { setBpSearchQuery(e.target.value); setBpCurrentPage(1); }}
+              placeholder={language === 'vi' ? 'Chúng tôi có thể giúp bạn tìm gì?' : 'What can we help you find?'}
+              className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
+            />
+          </div>
+          <Select value={bpStageFilter} onValueChange={(v) => { setBpStageFilter(v); setBpCurrentPage(1); }}>
+            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectValue placeholder={language === 'vi' ? 'Tất cả giai đoạn' : 'All stages'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{language === 'vi' ? 'Tất cả giai đoạn' : 'All stages'}</SelectItem>
+              {crmStages.filter(s => s.active).sort((a, b) => a.order - b.order).map(stage => (
+                <SelectItem key={stage.id} value={stage.value}>
+                  {language === 'vi' ? stage.labelVi : stage.labelEn}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={bpStatusFilter} onValueChange={(v) => { setBpStatusFilter(v); setBpCurrentPage(1); }}>
+            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectValue placeholder={language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'}</SelectItem>
+              {crmStatuses.filter(s => s.active).sort((a, b) => a.order - b.order).map(status => (
+                <SelectItem key={status.id} value={status.value}>
+                  {language === 'vi' ? status.labelVi : status.labelEn}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={bpWarrantyFilter} onValueChange={(v) => { setBpWarrantyFilter(v); setBpCurrentPage(1); }}>
+            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectValue placeholder={language === 'vi' ? 'Tất cả bảo hành' : 'All warranty'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{language === 'vi' ? 'Tất cả bảo hành' : 'All warranty'}</SelectItem>
+              <SelectItem value="active">{language === 'vi' ? 'Còn bảo hành' : 'Active'}</SelectItem>
+              <SelectItem value="expired">{language === 'vi' ? 'Hết bảo hành' : 'Expired'}</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select value={bpTierFilter} onValueChange={(v) => { setBpTierFilter(v); setBpCurrentPage(1); }}>
+            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectValue placeholder={language === 'vi' ? 'Tất cả hạng' : 'All tiers'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{language === 'vi' ? 'Tất cả hạng' : 'All tiers'}</SelectItem>
+              {crmTiers.filter((t: any) => t.active).sort((a: any, b: any) => a.order - b.order).map((tier: any) => (
+                <SelectItem key={tier.id} value={tier.value}>
+                  {language === 'vi' ? tier.labelVi : tier.labelEn}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <Card>
+          <CardContent className="p-0">
+            {businessPartnersLoading ? (
+              <div className="p-6">
+                <div className="space-y-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="flex items-center justify-between py-4 animate-pulse">
+                      <div className="space-y-2">
+                        <div className="h-4 bg-muted rounded w-48" />
+                        <div className="h-3 bg-muted rounded w-32" />
+                      </div>
+                      <div className="h-8 bg-muted rounded w-24" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : businessPartners.length === 0 ? (
+              <div className="p-12 text-center">
+                <h3 className="text-lg font-light mb-2">{language === 'vi' ? 'Chưa có đối tác' : 'No partners found'}</h3>
+                <p className="text-muted-foreground">{language === 'vi' ? 'Thêm đối tác đầu tiên để bắt đầu.' : 'Add your first partner to get started.'}</p>
+              </div>
+            ) : (
+              <>
+                <div className="overflow-x-auto">
+                  <Table className="table-fixed w-full">
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="w-[4%] whitespace-nowrap text-center">{language === 'vi' ? 'STT' : 'NO'}</TableHead>
+                        <TableHead className="w-[5%] whitespace-nowrap text-center">{language === 'vi' ? 'Hạng' : 'Rank'}</TableHead>
+                        <TableHead className="w-[14%] whitespace-nowrap">
+                          <div>{language === 'vi' ? 'Đối Tác' : 'Partners'}</div>
+                          <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Khởi tạo' : 'Intake'}</div>
+                        </TableHead>
+                        <TableHead className="w-[13%] whitespace-nowrap">
+                          <div>{t('crm.phone')}</div>
+                          <div className="text-xs font-normal text-muted-foreground mt-0.5">{t('crm.email')}</div>
+                        </TableHead>
+                        <TableHead className="w-[13%] whitespace-nowrap">
+                          <div>{t('crm.address')}</div>
+                          <div className="text-xs font-normal text-muted-foreground mt-0.5">{t('crm.company')}</div>
+                        </TableHead>
+                        <TableHead className="w-[12%] whitespace-nowrap">
+                          <div>{language === 'vi' ? 'Đã Thanh Toán' : 'Paid'}</div>
+                          <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Hoàn Trả' : 'Refund'}</div>
+                        </TableHead>
+                        <TableHead className="w-[11%] text-center whitespace-nowrap">{t('crm.warrantyStatus')}</TableHead>
+                        <TableHead className="w-[12%] text-center whitespace-nowrap">{t('crm.pipelineStage')}</TableHead>
+                        <TableHead className="w-[13%] text-center whitespace-nowrap">{t('crm.status')}</TableHead>
+                        <TableHead className="w-[7%] text-right"></TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {paginatedBusinessPartners.map((bp: any, idx: number) => {
+                        const bpTier = crmTiers.find((t: any) => t.value === bp.tier);
+                        return (
+                        <TableRow key={bp.id} data-testid={`row-bp-${bp.id}`} className="relative h-16">
+                          <TableCell className="align-middle text-center"><span className="text-sm">{bpStartIndex + idx + 1}</span></TableCell>
+                          <TableCell className="align-middle text-center">
+                            <span className="text-sm font-medium text-white/70">
+                              {bpTier ? (language === 'vi' ? bpTier.labelVi : bpTier.labelEn) : '—'}
+                            </span>
+                          </TableCell>
+                          <TableCell className="align-middle">
+                            <div className="font-light whitespace-nowrap">
+                              {bp.firstName} {bp.lastName}
+                            </div>
+                            <div className="text-xs text-muted-foreground mt-1">
+                              {bp.intakeDate ? new Date(bp.intakeDate).toLocaleDateString('vi-VN') : "—"}
+                            </div>
+                          </TableCell>
+                          <TableCell className="align-middle">
+                            <div className="text-sm truncate">{bp.phone || "—"}</div>
+                            <div className="text-xs text-muted-foreground truncate mt-1" title={bp.email}>
+                              {bp.email}
+                            </div>
+                          </TableCell>
+                          <TableCell className="align-middle">
+                            <div className="text-sm truncate" title={bp.address || ""}>
+                              {bp.address || "—"}
+                            </div>
+                            <div className="text-xs text-muted-foreground truncate mt-1" title={bp.company || ""}>
+                              {bp.company || "—"}
+                            </div>
+                          </TableCell>
+                          <TableCell className="align-middle">
+                            <div className="text-sm whitespace-nowrap">
+                              {Math.round(bpFinances[bp.id]?.totalSpending || 0).toLocaleString('vi-VN')} đ
+                            </div>
+                            <div className="text-xs text-muted-foreground mt-1 whitespace-nowrap">
+                              {Math.round(bpFinances[bp.id]?.refundAmount || 0).toLocaleString('vi-VN')} đ
+                            </div>
+                          </TableCell>
+                          <TableCell className="align-middle text-center">
+                            <div className="text-sm capitalize" data-testid={`text-bp-warranty-${bp.id}`}>
+                              {t(`crm.warranty.${bp.warrantyStatus || 'none'}`)}
+                            </div>
+                            {bp.warrantyExpiry && (
+                              <div className="text-xs text-muted-foreground mt-1">
+                                {new Date(bp.warrantyExpiry).toLocaleDateString('vi-VN')}
+                              </div>
+                            )}
+                          </TableCell>
+                          <TableCell className="align-middle text-center">
+                            <span className="text-sm" data-testid={`select-bp-stage-${bp.id}`}>
+                              {(() => {
+                                const stage = crmStages.find(s => s.value === bp.stage);
+                                return stage ? (language === 'vi' ? stage.labelVi : stage.labelEn) : bp.stage || '—';
+                              })()}
+                            </span>
+                          </TableCell>
+                          <TableCell className="align-middle text-center">
+                            <span className="text-sm" data-testid={`select-bp-status-${bp.id}`}>
+                              {(() => {
+                                const status = crmStatuses.find(s => s.value === bp.status);
+                                return status ? (language === 'vi' ? status.labelVi : status.labelEn) : bp.status || '—';
+                              })()}
+                            </span>
+                          </TableCell>
+                          <TableCell className="align-middle text-right">
+                            <div className="flex flex-col items-end">
+                              <div className="flex gap-0">
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => {
+                                    setViewingBusinessPartner(bp);
+                                    setIsBusinessPartnerViewDialogOpen(true);
+                                  }}
+                                  data-testid={`button-view-bp-${bp.id}`}
+                                >
+                                  <Eye className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleEditBusinessPartner(bp)}
+                                  data-testid={`button-edit-bp-${bp.id}`}
+                                >
+                                  <Pencil className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+                <div className="p-4">
+                  <div className="flex items-center justify-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setBpCurrentPage(1)}
+                      disabled={bpCurrentPage === 1}
+                      className="text-xs min-w-[60px]"
+                    >
+                      {language === 'vi' ? 'ĐẦU' : 'FIRST'}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setBpCurrentPage(prev => Math.max(1, prev - 1))}
+                      disabled={bpCurrentPage === 1}
+                      className="text-xs min-w-[60px]"
+                    >
+                      {language === 'vi' ? 'TRƯỚC' : 'PREV'}
+                    </Button>
+                    {Array.from({ length: bpTotalPages }, (_, i) => i + 1).map((page) => (
+                      <Button
+                        key={page}
+                        variant={bpCurrentPage === page ? "default" : "ghost"}
+                        size="sm"
+                        onClick={() => setBpCurrentPage(page)}
+                        className="text-xs min-w-[32px] border-0"
+                      >
+                        {page}
+                      </Button>
+                    ))}
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setBpCurrentPage(prev => Math.min(bpTotalPages, prev + 1))}
+                      disabled={bpCurrentPage === bpTotalPages}
+                      className="text-xs min-w-[60px]"
+                    >
+                      {language === 'vi' ? 'SAU' : 'NEXT'}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setBpCurrentPage(bpTotalPages)}
+                      disabled={bpCurrentPage === bpTotalPages}
+                      className="text-xs min-w-[60px]"
+                    >
+                      {language === 'vi' ? 'CUỐI' : 'LAST'}
+                    </Button>
+                  </div>
+                  <div className="text-center mt-2">
+                    <span className="text-xs text-muted-foreground">
+                      {language === 'vi' ? `Hiển thị ${bpStartIndex + 1}-${Math.min(bpEndIndex, businessPartners.length)} / ${businessPartners.length} đối tác` : `Showing ${bpStartIndex + 1}-${Math.min(bpEndIndex, businessPartners.length)} of ${businessPartners.length} partners`}
                     </span>
                   </div>
                 </div>
