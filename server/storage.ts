@@ -3,8 +3,11 @@ import {
   interactions, deals, transactions, warrantyLogs, settings, faqs, advantages, journeySteps,
   aboutPageContent, aboutShowcaseServices, aboutProcessSteps, aboutCoreValues, aboutTeamMembers,
   crmPipelineStages, crmCustomerTiers, crmStatuses,
+  businessPartners, bpTransactions,
   type User, type InsertUser,
   type Client, type InsertClient,
+  type BusinessPartner, type InsertBusinessPartner,
+  type BpTransaction, type InsertBpTransaction,
   type Project, type InsertProject,
   type Inquiry, type InsertInquiry,
   type Service, type InsertService,
@@ -57,6 +60,21 @@ export interface IStorage {
   createClient(client: InsertClient): Promise<Client>;
   updateClient(id: string, client: Partial<InsertClient>): Promise<Client>;
   deleteClient(id: string): Promise<void>;
+
+  // Business Partners
+  getBusinessPartners(status?: string): Promise<BusinessPartner[]>;
+  getBusinessPartner(id: string): Promise<BusinessPartner | undefined>;
+  getBusinessPartnerByEmail(email: string): Promise<BusinessPartner | undefined>;
+  createBusinessPartner(bp: InsertBusinessPartner): Promise<BusinessPartner>;
+  updateBusinessPartner(id: string, bp: Partial<InsertBusinessPartner>): Promise<BusinessPartner>;
+  deleteBusinessPartner(id: string): Promise<void>;
+
+  // Business Partner Transactions
+  getBpTransactions(businessPartnerId?: string): Promise<BpTransaction[]>;
+  getBpTransaction(id: string): Promise<BpTransaction | undefined>;
+  createBpTransaction(transaction: InsertBpTransaction): Promise<BpTransaction>;
+  updateBpTransaction(id: string, transaction: Partial<InsertBpTransaction>): Promise<BpTransaction>;
+  deleteBpTransaction(id: string): Promise<void>;
 
   // Inquiries
   getInquiries(status?: string): Promise<Inquiry[]>;
@@ -1265,6 +1283,102 @@ export class DatabaseStorage implements IStorage {
 
   async deleteWarrantyLog(id: string): Promise<void> {
     await db.delete(warrantyLogs).where(eq(warrantyLogs.id, id));
+  }
+
+  // Business Partners
+  private async checkAndUpdateBpWarrantyStatus(bp: BusinessPartner): Promise<BusinessPartner> {
+    if (bp.warrantyStatus === 'active' && bp.warrantyExpiry) {
+      const now = new Date();
+      const expiryDate = new Date(bp.warrantyExpiry);
+      
+      if (expiryDate < now) {
+        const [updated] = await db
+          .update(businessPartners)
+          .set({ warrantyStatus: 'expired', updatedAt: new Date() })
+          .where(eq(businessPartners.id, bp.id))
+          .returning();
+        return updated;
+      }
+    }
+    return bp;
+  }
+
+  async getBusinessPartners(status?: string): Promise<BusinessPartner[]> {
+    const query = status
+      ? db.select().from(businessPartners).where(eq(businessPartners.status, status))
+      : db.select().from(businessPartners);
+    
+    const bpList = await query.orderBy(desc(businessPartners.createdAt));
+    
+    const updatedBps = await Promise.all(
+      bpList.map(async (bp: BusinessPartner) => {
+        return await this.checkAndUpdateBpWarrantyStatus(bp);
+      })
+    );
+    
+    return updatedBps;
+  }
+
+  async getBusinessPartner(id: string): Promise<BusinessPartner | undefined> {
+    const [bp] = await db.select().from(businessPartners).where(eq(businessPartners.id, id));
+    if (!bp) return undefined;
+    return await this.checkAndUpdateBpWarrantyStatus(bp);
+  }
+
+  async getBusinessPartnerByEmail(email: string): Promise<BusinessPartner | undefined> {
+    const [bp] = await db.select().from(businessPartners).where(eq(businessPartners.email, email));
+    return bp || undefined;
+  }
+
+  async createBusinessPartner(bp: InsertBusinessPartner): Promise<BusinessPartner> {
+    const [newBp] = await db.insert(businessPartners).values(bp).returning();
+    return newBp;
+  }
+
+  async updateBusinessPartner(id: string, bp: Partial<InsertBusinessPartner>): Promise<BusinessPartner> {
+    const [updated] = await db
+      .update(businessPartners)
+      .set({ ...bp, updatedAt: new Date() })
+      .where(eq(businessPartners.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteBusinessPartner(id: string): Promise<void> {
+    await db.delete(bpTransactions).where(eq(bpTransactions.businessPartnerId, id));
+    await db.delete(businessPartners).where(eq(businessPartners.id, id));
+  }
+
+  // Business Partner Transactions
+  async getBpTransactions(businessPartnerId?: string): Promise<BpTransaction[]> {
+    const query = businessPartnerId
+      ? db.select().from(bpTransactions).where(eq(bpTransactions.businessPartnerId, businessPartnerId))
+      : db.select().from(bpTransactions);
+    
+    return await query.orderBy(desc(bpTransactions.createdAt));
+  }
+
+  async getBpTransaction(id: string): Promise<BpTransaction | undefined> {
+    const [transaction] = await db.select().from(bpTransactions).where(eq(bpTransactions.id, id));
+    return transaction || undefined;
+  }
+
+  async createBpTransaction(transaction: InsertBpTransaction): Promise<BpTransaction> {
+    const [newTransaction] = await db.insert(bpTransactions).values(transaction).returning();
+    return newTransaction;
+  }
+
+  async updateBpTransaction(id: string, transaction: Partial<InsertBpTransaction>): Promise<BpTransaction> {
+    const [updated] = await db
+      .update(bpTransactions)
+      .set({ ...transaction, updatedAt: new Date() })
+      .where(eq(bpTransactions.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteBpTransaction(id: string): Promise<void> {
+    await db.delete(bpTransactions).where(eq(bpTransactions.id, id));
   }
 }
 

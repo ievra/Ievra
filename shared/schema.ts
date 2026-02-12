@@ -92,6 +92,48 @@ export const clients = pgTable("clients", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
+export const businessPartners = pgTable("business_partners", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  firstName: text("first_name").notNull(),
+  lastName: text("last_name").notNull(),
+  email: text("email").notNull(),
+  phone: text("phone"),
+  company: text("company"),
+  address: text("address"),
+  dateOfBirth: timestamp("date_of_birth"),
+  stage: varchar("stage", { length: 50 }).notNull().default("lead"),
+  status: varchar("status", { length: 50 }).notNull().default("active"),
+  tier: varchar("tier", { length: 50 }).notNull().default("silver"),
+  totalSpending: decimal("total_spending", { precision: 12, scale: 2 }).notNull().default("0"),
+  refundAmount: decimal("refund_amount", { precision: 12, scale: 2 }).notNull().default("0"),
+  commission: decimal("commission", { precision: 12, scale: 2 }).notNull().default("0"),
+  orderCount: integer("order_count").notNull().default(0),
+  referredById: varchar("referred_by_id"),
+  referralCount: integer("referral_count").notNull().default(0),
+  referralRevenue: decimal("referral_revenue", { precision: 12, scale: 2 }).notNull().default("0"),
+  intakeDate: timestamp("intake_date"),
+  warrantyStatus: varchar("warranty_status", { length: 30 }).default("none"),
+  warrantyExpiry: timestamp("warranty_expiry"),
+  notes: text("notes"),
+  tags: jsonb("tags").default([]),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const bpTransactions = pgTable("bp_transactions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  businessPartnerId: varchar("business_partner_id").notNull().references(() => businessPartners.id),
+  amount: decimal("amount", { precision: 12, scale: 2 }).notNull(),
+  title: text("title").notNull(),
+  description: text("description"),
+  type: varchar("type", { length: 30 }).notNull().default("payment"),
+  status: varchar("status", { length: 30 }).notNull().default("pending"),
+  paymentDate: timestamp("payment_date"),
+  notes: text("notes"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
 export const inquiries = pgTable("inquiries", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   firstName: text("first_name").notNull(),
@@ -454,6 +496,20 @@ export const insertWarrantyLogSchema = createInsertSchema(warrantyLogs).omit({
   ])
 });
 
+export const insertBusinessPartnerSchema = createInsertSchema(businessPartners).omit({ id: true, createdAt: true, updatedAt: true }).extend({
+  dateOfBirth: z.union([z.string(), z.date()]).optional().transform(val => val ? (typeof val === 'string' && val.trim() !== '' ? new Date(val) : typeof val === 'object' ? val : undefined) : undefined),
+  intakeDate: z.union([z.string(), z.date()]).optional().transform(val => val ? (typeof val === 'string' && val.trim() !== '' ? new Date(val) : typeof val === 'object' ? val : undefined) : undefined),
+  warrantyExpiry: z.union([z.string(), z.date()]).optional().transform(val => val ? (typeof val === 'string' && val.trim() !== '' ? new Date(val) : typeof val === 'object' ? val : undefined) : undefined),
+  tags: z.array(z.string()).optional().default([]),
+});
+
+export const insertBpTransactionSchema = createInsertSchema(bpTransactions).omit({ id: true, createdAt: true, updatedAt: true }).extend({
+  paymentDate: z.union([
+    z.string().transform((str) => new Date(str)),
+    z.date()
+  ]).optional()
+});
+
 // Types
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
@@ -463,6 +519,12 @@ export type Project = typeof projects.$inferSelect;
 
 export type InsertClient = z.infer<typeof insertClientSchema>;
 export type Client = typeof clients.$inferSelect;
+
+export type InsertBusinessPartner = z.infer<typeof insertBusinessPartnerSchema>;
+export type BusinessPartner = typeof businessPartners.$inferSelect;
+
+export type InsertBpTransaction = z.infer<typeof insertBpTransactionSchema>;
+export type BpTransaction = typeof bpTransactions.$inferSelect;
 
 export type InsertInquiry = z.infer<typeof insertInquirySchema>;
 export type Inquiry = typeof inquiries.$inferSelect;

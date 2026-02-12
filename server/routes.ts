@@ -10,7 +10,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import { storage } from "./storage";
-import { insertProjectSchema, insertClientSchema, insertInquirySchema, insertServiceSchema, insertArticleSchema, insertHomepageContentSchema, insertPartnerSchema, insertCategorySchema, insertInteractionSchema, insertDealSchema, insertTransactionSchema, insertWarrantyLogSchema, insertSettingsSchema, insertFaqSchema, insertAdvantageSchema, insertJourneyStepSchema, insertAboutPageContentSchema, insertAboutShowcaseServiceSchema, insertAboutProcessStepSchema, insertAboutCoreValueSchema, insertAboutTeamMemberSchema, insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema, insertUserSchema } from "@shared/schema";
+import { insertProjectSchema, insertClientSchema, insertInquirySchema, insertServiceSchema, insertArticleSchema, insertHomepageContentSchema, insertPartnerSchema, insertCategorySchema, insertInteractionSchema, insertDealSchema, insertTransactionSchema, insertWarrantyLogSchema, insertSettingsSchema, insertFaqSchema, insertAdvantageSchema, insertJourneyStepSchema, insertAboutPageContentSchema, insertAboutShowcaseServiceSchema, insertAboutProcessStepSchema, insertAboutCoreValueSchema, insertAboutTeamMemberSchema, insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema, insertUserSchema, insertBusinessPartnerSchema, insertBpTransactionSchema } from "@shared/schema";
 import { z } from "zod";
 import { createHash } from "crypto";
 
@@ -1915,6 +1915,130 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete status" });
+    }
+  });
+
+  // Business Partners routes
+  app.get("/api/business-partners", requireAuth, async (req, res) => {
+    try {
+      const { status } = req.query;
+      const partners = await storage.getBusinessPartners(status as string);
+      res.json(partners);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch business partners" });
+    }
+  });
+
+  app.get("/api/business-partners/:id", requireAuth, async (req, res) => {
+    try {
+      const bp = await storage.getBusinessPartner(req.params.id);
+      if (!bp) {
+        return res.status(404).json({ message: "Business partner not found" });
+      }
+      res.json(bp);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch business partner" });
+    }
+  });
+
+  app.post("/api/business-partners", requireAuth, async (req, res) => {
+    try {
+      const validatedData = insertBusinessPartnerSchema.parse(req.body);
+      const bp = await storage.createBusinessPartner(validatedData);
+      res.status(201).json(bp);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to create business partner" });
+    }
+  });
+
+  app.put("/api/business-partners/:id", requireAuth, async (req, res) => {
+    try {
+      const validatedData = insertBusinessPartnerSchema.partial().parse(req.body);
+      const bp = await storage.updateBusinessPartner(req.params.id, validatedData);
+      res.json(bp);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to update business partner" });
+    }
+  });
+
+  app.delete("/api/business-partners/:id", requireAuth, async (req, res) => {
+    try {
+      const bp = await storage.getBusinessPartner(req.params.id);
+      if (!bp) {
+        return res.status(404).json({ message: "Business partner not found" });
+      }
+      await storage.deleteBusinessPartner(req.params.id);
+      res.status(200).json({ message: "Business partner deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete business partner" });
+    }
+  });
+
+  // Business Partner Transactions routes
+  app.get("/api/bp-transactions", requireAuth, async (req, res) => {
+    try {
+      const { businessPartnerId } = req.query;
+      const transactions = await storage.getBpTransactions(businessPartnerId as string);
+      res.json(transactions);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch business partner transactions" });
+    }
+  });
+
+  app.get("/api/bp-transactions/:id", requireAuth, async (req, res) => {
+    try {
+      const transaction = await storage.getBpTransaction(req.params.id);
+      if (!transaction) {
+        return res.status(404).json({ message: "Transaction not found" });
+      }
+      res.json(transaction);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch transaction" });
+    }
+  });
+
+  app.post("/api/bp-transactions", requireAuth, async (req, res) => {
+    try {
+      const validatedData = insertBpTransactionSchema.parse(req.body);
+      const transaction = await storage.createBpTransaction(validatedData);
+      res.status(201).json(transaction);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to create transaction" });
+    }
+  });
+
+  app.put("/api/bp-transactions/:id", requireAuth, async (req, res) => {
+    try {
+      const validatedData = insertBpTransactionSchema.partial().parse(req.body);
+      const transaction = await storage.updateBpTransaction(req.params.id, validatedData);
+      res.json(transaction);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to update transaction" });
+    }
+  });
+
+  app.delete("/api/bp-transactions/:id", requireAuth, async (req, res) => {
+    try {
+      const transaction = await storage.getBpTransaction(req.params.id);
+      if (!transaction) {
+        return res.status(404).json({ message: "Transaction not found" });
+      }
+      await storage.deleteBpTransaction(req.params.id);
+      res.status(200).json({ message: "Transaction deleted successfully" });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete transaction" });
     }
   });
 
