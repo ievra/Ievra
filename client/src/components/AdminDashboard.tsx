@@ -3378,56 +3378,44 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <Card>
             <CardContent className="p-6 min-h-[90px]">
-              <div className="flex items-center justify-between">
-                <div className="min-w-[120px]">
-                  <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Tổng Dự Án' : 'Total Projects'}</p>
-                  <p className="text-2xl font-light" data-testid="stat-total-projects">
-                    {statsLoading ? "..." : stats?.totalProjects || 0}
-                  </p>
-                </div>
-                <Briefcase className="h-8 w-8 text-white/70" />
+              <div>
+                <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Tổng Dự Án' : 'Total Projects'}</p>
+                <p className="text-2xl font-light" data-testid="stat-total-projects">
+                  {statsLoading ? "..." : stats?.totalProjects || 0}
+                </p>
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardContent className="p-6 min-h-[90px]">
-              <div className="flex items-center justify-between">
-                <div className="min-w-[120px]">
-                  <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Đang Theo Dõi' : 'Following Up'}</p>
-                  <p className="text-2xl font-light" data-testid="stat-active-clients">
-                    {clientsLoading ? "..." : clients.filter(c => c.status === 'following_up').length}
-                  </p>
-                </div>
-                <Users className="h-8 w-8 text-white/70" />
+              <div>
+                <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Đang Theo Dõi' : 'Following Up'}</p>
+                <p className="text-2xl font-light" data-testid="stat-active-clients">
+                  {clientsLoading ? "..." : clients.filter(c => c.status === 'following_up').length}
+                </p>
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardContent className="p-6 min-h-[90px]">
-              <div className="flex items-center justify-between">
-                <div className="min-w-[120px]">
-                  <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Yêu Cầu Mới' : 'New Inquiries'}</p>
-                  <p className="text-2xl font-light" data-testid="stat-new-inquiries">
-                    {inquiriesLoading ? "..." : inquiries.filter(i => i.status === 'new').length}
-                  </p>
-                </div>
-                <Mail className="h-8 w-8 text-white/70" />
+              <div>
+                <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Yêu Cầu Mới' : 'New Inquiries'}</p>
+                <p className="text-2xl font-light" data-testid="stat-new-inquiries">
+                  {inquiriesLoading ? "..." : inquiries.filter(i => i.status === 'new').length}
+                </p>
               </div>
             </CardContent>
           </Card>
 
           <Card>
             <CardContent className="p-6 min-h-[90px]">
-              <div className="flex items-center justify-between">
-                <div className="min-w-[120px]">
-                  <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Doanh Thu (Năm)' : 'Revenue (YTD)'}</p>
-                  <p className="text-2xl font-light" data-testid="stat-revenue">
-                    {statsLoading ? "..." : stats?.revenue || "0 ₫"}
-                  </p>
-                </div>
-                <TrendingUp className="h-8 w-8 text-white/70" />
+              <div>
+                <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Doanh Thu (Năm)' : 'Revenue (YTD)'}</p>
+                <p className="text-2xl font-light" data-testid="stat-revenue">
+                  {statsLoading ? "..." : stats?.revenue || "0 ₫"}
+                </p>
               </div>
             </CardContent>
           </Card>
