@@ -358,7 +358,7 @@ export default function Blog() {
   };
 
   return (
-    <div className="min-h-screen pt-32">
+    <div className="min-h-screen pt-32 pb-32">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center mb-16">

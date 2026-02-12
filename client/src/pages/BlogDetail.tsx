@@ -239,7 +239,7 @@ export default function BlogDetail() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen pt-24">
+      <div className="min-h-screen pt-24 pb-32">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="animate-pulse">
             <div className="h-8 bg-white/10 rounded w-1/4 mb-8" />
@@ -259,7 +259,7 @@ export default function BlogDetail() {
 
   if (error || !article) {
     return (
-      <div className="min-h-screen pt-24">
+      <div className="min-h-screen pt-24 pb-32">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-16">
           <h1 className="text-2xl font-bold mb-4">
             {language === 'vi' ? 'Không tìm thấy bài viết' : 'Article Not Found'}
@@ -281,7 +281,7 @@ export default function BlogDetail() {
   }
 
   return (
-    <div className="min-h-screen pt-24">
+    <div className="min-h-screen pt-24 pb-32">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back Button */}
         <Button 

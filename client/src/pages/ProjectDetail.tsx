@@ -320,7 +320,7 @@ export default function ProjectDetail() {
                     [project.heroImage, ...galleryImages].filter(Boolean);
   
   return (
-    <div className="min-h-screen pt-24">
+    <div className="min-h-screen pt-24 pb-32">
       {/* Main Content Layout */}
       <div className="max-w-7xl mx-auto px-6">
         {/* Back Button */}
