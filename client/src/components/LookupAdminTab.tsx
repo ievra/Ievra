@@ -20,16 +20,11 @@ import { Search, Plus, Pencil, Trash2, Phone, Mail, User, Shield, Calendar, Cloc
 import type { Client, Interaction, Deal, Transaction, WarrantyLog } from "@shared/schema";
 
 const interactionFormSchema = z.object({
-  type: z.enum(["visit", "meeting", "site_survey", "design", "acceptance", "call", "email"]),
   title: z.string().min(1, "Tiêu đề bắt buộc"),
   description: z.string().optional(),
   date: z.string().min(1, "Ngày bắt buộc"),
-  duration: z.string().optional(),
-  location: z.string().optional(),
   assignedTo: z.string().optional(),
-  outcome: z.string().optional(),
   nextAction: z.string().optional(),
-  nextActionDate: z.string().optional(),
 });
 
 const dealFormSchema = z.object({
@@ -102,6 +97,8 @@ export default function LookupAdminTab() {
   const [editingWarrantyLog, setEditingWarrantyLog] = useState<WarrantyLog | null>(null);
   const [warrantyExpiry, setWarrantyExpiry] = useState("");
   const [warrantyStatus, setWarrantyStatus] = useState("none");
+  const [interactionAttachments, setInteractionAttachments] = useState<string[]>([]);
+  const [uploadingImage, setUploadingImage] = useState(false);
 
   const { data: clients = [] } = useQuery<Client[]>({
     queryKey: ['/api/clients'],
@@ -150,16 +147,11 @@ export default function LookupAdminTab() {
   const interactionForm = useForm<InteractionFormData>({
     resolver: zodResolver(interactionFormSchema),
     defaultValues: {
-      type: "meeting",
       title: "",
       description: "",
       date: new Date().toISOString().split("T")[0],
-      duration: "",
-      location: "",
       assignedTo: "",
-      outcome: "",
       nextAction: "",
-      nextActionDate: "",
     },
   });
 
@@ -203,28 +195,46 @@ export default function LookupAdminTab() {
     }
   };
 
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    setUploadingImage(true);
+    try {
+      const newAttachments: string[] = [];
+      for (let i = 0; i < files.length; i++) {
+        const formData = new FormData();
+        formData.append('file', files[i]);
+        const res = await fetch('/api/upload', { method: 'POST', body: formData, credentials: 'include' });
+        const data = await res.json();
+        if (data.url) newAttachments.push(data.url);
+      }
+      setInteractionAttachments(prev => [...prev, ...newAttachments]);
+    } catch {
+      toast({ title: isVi ? "Lỗi" : "Error", description: isVi ? "Lỗi tải hình" : "Upload failed", variant: "destructive" });
+    }
+    setUploadingImage(false);
+  };
+
   const createInteractionMutation = useMutation({
     mutationFn: async (data: InteractionFormData) => {
       const body = {
         clientId: selectedClient!.id,
-        type: data.type,
+        type: "meeting",
         title: data.title,
         description: data.description || undefined,
         date: data.date,
-        duration: data.duration ? parseInt(data.duration) : undefined,
-        location: data.location || undefined,
         assignedTo: data.assignedTo || undefined,
-        outcome: data.outcome || undefined,
         nextAction: data.nextAction || undefined,
-        nextActionDate: data.nextActionDate || undefined,
+        attachments: interactionAttachments.length > 0 ? interactionAttachments : undefined,
       };
       await apiRequest("POST", "/api/interactions", body);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/interactions', selectedClient?.id] });
       setIsInteractionDialogOpen(false);
+      setInteractionAttachments([]);
       interactionForm.reset();
-      toast({ title: isVi ? "Thành công" : "Success", description: isVi ? "Đã thêm nhật ký thi công" : "Interaction added" });
+      toast({ title: isVi ? "Thành công" : "Success", description: isVi ? "Đã thêm nhật ký thi công" : "Log added" });
     },
     onError: (err: Error) => {
       toast({ title: isVi ? "Lỗi" : "Error", description: err.message, variant: "destructive" });
@@ -234,16 +244,12 @@ export default function LookupAdminTab() {
   const updateInteractionMutation = useMutation({
     mutationFn: async (data: InteractionFormData) => {
       const body = {
-        type: data.type,
         title: data.title,
         description: data.description || undefined,
         date: data.date,
-        duration: data.duration ? parseInt(data.duration) : undefined,
-        location: data.location || undefined,
         assignedTo: data.assignedTo || undefined,
-        outcome: data.outcome || undefined,
         nextAction: data.nextAction || undefined,
-        nextActionDate: data.nextActionDate || undefined,
+        attachments: interactionAttachments,
       };
       await apiRequest("PUT", `/api/interactions/${editingInteraction!.id}`, body);
     },
@@ -251,8 +257,9 @@ export default function LookupAdminTab() {
       queryClient.invalidateQueries({ queryKey: ['/api/interactions', selectedClient?.id] });
       setIsInteractionDialogOpen(false);
       setEditingInteraction(null);
+      setInteractionAttachments([]);
       interactionForm.reset();
-      toast({ title: isVi ? "Thành công" : "Success", description: isVi ? "Đã cập nhật nhật ký" : "Interaction updated" });
+      toast({ title: isVi ? "Thành công" : "Success", description: isVi ? "Đã cập nhật nhật ký" : "Log updated" });
     },
     onError: (err: Error) => {
       toast({ title: isVi ? "Lỗi" : "Error", description: err.message, variant: "destructive" });
@@ -428,31 +435,23 @@ export default function LookupAdminTab() {
     if (interaction) {
       setEditingInteraction(interaction);
       interactionForm.reset({
-        type: interaction.type as any,
         title: interaction.title,
         description: interaction.description || "",
         date: interaction.date ? new Date(interaction.date).toISOString().split("T")[0] : "",
-        duration: interaction.duration?.toString() || "",
-        location: interaction.location || "",
         assignedTo: interaction.assignedTo || "",
-        outcome: interaction.outcome || "",
         nextAction: interaction.nextAction || "",
-        nextActionDate: interaction.nextActionDate ? new Date(interaction.nextActionDate).toISOString().split("T")[0] : "",
       });
+      setInteractionAttachments(Array.isArray(interaction.attachments) ? (interaction.attachments as string[]) : []);
     } else {
       setEditingInteraction(null);
       interactionForm.reset({
-        type: "meeting",
         title: "",
         description: "",
         date: new Date().toISOString().split("T")[0],
-        duration: "",
-        location: "",
         assignedTo: "",
-        outcome: "",
         nextAction: "",
-        nextActionDate: "",
       });
+      setInteractionAttachments([]);
     }
     setIsInteractionDialogOpen(true);
   };
@@ -900,35 +899,15 @@ export default function LookupAdminTab() {
           </DialogHeader>
           <Form {...interactionForm}>
             <form onSubmit={interactionForm.handleSubmit(onInteractionSubmit)} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <FormField control={interactionForm.control} name="type" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-white/60">{isVi ? "Loại" : "Type"}</FormLabel>
-                    <Select value={field.value} onValueChange={field.onChange}>
-                      <FormControl>
-                        <SelectTrigger className="bg-transparent border-white/20 text-white rounded-none h-10">
-                          <SelectValue />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent className="bg-black border-white/20 rounded-none">
-                        {Object.entries(interactionTypeLabels).map(([key, label]) => (
-                          <SelectItem key={key} value={key}>{isVi ? label.vi : label.en}</SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                <FormField control={interactionForm.control} name="date" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-white/60">{isVi ? "Ngày" : "Date"}</FormLabel>
-                    <FormControl>
-                      <Input type="date" {...field} className="bg-transparent border-white/20 text-white rounded-none h-10" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-              </div>
+              <FormField control={interactionForm.control} name="date" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white/60">{isVi ? "Ngày" : "Date"}</FormLabel>
+                  <FormControl>
+                    <Input type="date" {...field} className="bg-transparent border-white/20 text-white rounded-none h-10" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
               <FormField control={interactionForm.control} name="title" render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-white/60">{isVi ? "Tiêu đề" : "Title"}</FormLabel>
@@ -947,63 +926,38 @@ export default function LookupAdminTab() {
                   <FormMessage />
                 </FormItem>
               )} />
-              <div className="grid grid-cols-2 gap-4">
-                <FormField control={interactionForm.control} name="duration" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-white/60">{isVi ? "Thời lượng (phút)" : "Duration (min)"}</FormLabel>
-                    <FormControl>
-                      <Input type="number" {...field} className="bg-transparent border-white/20 text-white rounded-none h-10" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                <FormField control={interactionForm.control} name="location" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-white/60">{isVi ? "Địa điểm" : "Location"}</FormLabel>
-                    <FormControl>
-                      <Input {...field} className="bg-transparent border-white/20 text-white rounded-none h-10" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-              </div>
               <FormField control={interactionForm.control} name="assignedTo" render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white/60">{isVi ? "Người phụ trách" : "Assigned To"}</FormLabel>
+                  <FormLabel className="text-white/60">{isVi ? "Phụ trách" : "Assigned To"}</FormLabel>
                   <FormControl>
                     <Input {...field} className="bg-transparent border-white/20 text-white rounded-none h-10" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )} />
-              <FormField control={interactionForm.control} name="outcome" render={({ field }) => (
+              <FormField control={interactionForm.control} name="nextAction" render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-white/60">{isVi ? "Kết quả" : "Outcome"}</FormLabel>
+                  <FormLabel className="text-white/60">{isVi ? "Đề xuất" : "Proposal"}</FormLabel>
                   <FormControl>
                     <Textarea {...field} className="bg-transparent border-white/20 text-white rounded-none min-h-[60px]" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )} />
-              <div className="grid grid-cols-2 gap-4">
-                <FormField control={interactionForm.control} name="nextAction" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-white/60">{isVi ? "Bước tiếp theo" : "Next Action"}</FormLabel>
-                    <FormControl>
-                      <Input {...field} className="bg-transparent border-white/20 text-white rounded-none h-10" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
-                <FormField control={interactionForm.control} name="nextActionDate" render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-white/60">{isVi ? "Ngày tiếp theo" : "Next Action Date"}</FormLabel>
-                    <FormControl>
-                      <Input type="date" {...field} className="bg-transparent border-white/20 text-white rounded-none h-10" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )} />
+              <div>
+                <label className="text-sm text-white/60 mb-2 block">{isVi ? "Hình ảnh đính kèm" : "Attachments"}</label>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {interactionAttachments.map((url, idx) => (
+                    <div key={idx} className="relative group">
+                      <img src={url} alt="" className="w-20 h-20 object-cover border border-white/10" />
+                      <button type="button" onClick={() => setInteractionAttachments(prev => prev.filter((_, i) => i !== idx))} className="absolute -top-1 -right-1 w-5 h-5 bg-red-600 text-white text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">×</button>
+                    </div>
+                  ))}
+                </div>
+                <label className="inline-flex items-center gap-2 cursor-pointer h-10 px-4 border border-white/20 text-white/60 hover:bg-white/10 text-sm transition-colors">
+                  {uploadingImage ? (isVi ? "Đang tải..." : "Uploading...") : (isVi ? "Chọn hình" : "Choose Image")}
+                  <input type="file" accept="image/*" multiple onChange={handleImageUpload} className="hidden" disabled={uploadingImage} />
+                </label>
               </div>
               <div className="flex justify-end gap-3 pt-2">
                 <Button type="button" variant="outline" onClick={() => setIsInteractionDialogOpen(false)} className="h-10 px-4 rounded-none border-white/20 text-white hover:bg-white/10">
