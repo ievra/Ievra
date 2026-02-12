@@ -1250,8 +1250,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const formattedRevenue = totalRevenue.toLocaleString('vi-VN') + " ₫";
 
+      const uniqueSlugs = new Set(allProjects.map(p => p.slug));
       res.json({
-        totalProjects: allProjects.length,
+        totalProjects: uniqueSlugs.size,
         activeClients: activeClients.length,
         newInquiries: newInquiries.length,
         revenue: formattedRevenue
