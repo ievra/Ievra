@@ -86,7 +86,7 @@ export default function Admin() {
   };
 
   return (
-      <div className="min-h-screen bg-black">
+      <div className="min-h-screen pb-32 bg-black">
         <div className="max-w-[1600px] mx-auto py-24 px-6 md:px-10 lg:px-16">
           {/* Admin & Logout */}
           <div className="mb-8 flex items-center justify-end gap-4">
