@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, User, BarChart3, Briefcase, Users, Mail, Newspaper, Edit3, Home, Image, Shield, Search } from "lucide-react";
+import { LogOut, User, BarChart3, Briefcase, Users, Mail, Newspaper, Edit3, Home, Image, Shield, Search, Handshake } from "lucide-react";
 import AdminDashboard from "@/components/AdminDashboard";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -14,6 +14,7 @@ const TAB_PERMISSIONS: Record<string, string> = {
   overview: 'overview',
   projects: 'projects',
   clients: 'crm',
+  businessPartners: 'crm',
   lookup: 'crm',
   inquiries: 'inquiries',
   articles: 'articles',
@@ -50,6 +51,7 @@ function getTabs(t: (key: string) => string, language: string) {
     { id: 'overview', label: t('admin.overview'), icon: BarChart3 },
     { id: 'inquiries', label: t('admin.inquiries'), icon: Mail },
     { id: 'clients', label: t('admin.crm'), icon: Users },
+    { id: 'businessPartners', label: language === 'vi' ? 'Đối Tác' : 'Partners', icon: Handshake },
     { id: 'lookup', label: language === 'vi' ? 'Tra Cứu' : 'Lookup', icon: Search },
     { id: 'projects', label: t('admin.projects'), icon: Briefcase },
     { id: 'articles', label: t('admin.articles'), icon: Newspaper },
