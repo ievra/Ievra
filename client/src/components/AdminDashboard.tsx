@@ -8253,9 +8253,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="draft">Bản Nháp</SelectItem>
-                                <SelectItem value="published">Đã Đăng</SelectItem>
-                                <SelectItem value="archived">Lưu Trữ</SelectItem>
+                                {displayArticle.status === 'draft' && <SelectItem value="draft">{language === 'vi' ? 'Bản Nháp' : 'Draft'}</SelectItem>}
+                                <SelectItem value="published">{language === 'vi' ? 'Đã Đăng' : 'Published'}</SelectItem>
+                                <SelectItem value="archived">{language === 'vi' ? 'Lưu Trữ' : 'Archived'}</SelectItem>
                               </SelectContent>
                             </Select>
                           </TableCell>
