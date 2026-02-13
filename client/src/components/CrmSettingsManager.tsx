@@ -721,7 +721,7 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle>{editingTier ? (language === 'vi' ? 'Sửa Hạng Đối Tác' : 'Edit Partner Tier') : (language === 'vi' ? 'Thêm Hạng Đối Tác' : 'Add Partner Tier')}</DialogTitle>
+                        <DialogTitle>{editingTier ? (language === 'vi' ? 'Sửa Hạng Khách' : 'Edit Client Tier') : (language === 'vi' ? 'Thêm Hạng Khách' : 'Add Client Tier')}</DialogTitle>
                       </DialogHeader>
                       <Form {...tierForm}>
                         <form onSubmit={tierForm.handleSubmit(handleTierSubmit)} className="space-y-4">
@@ -832,9 +832,9 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
                               </AlertDialogTrigger>
                               <AlertDialogContent>
                                 <AlertDialogHeader>
-                                  <AlertDialogTitle>{language === 'vi' ? 'Xóa Hạng Đối Tác' : 'Delete Partner Tier'}</AlertDialogTitle>
+                                  <AlertDialogTitle>{language === 'vi' ? 'Xóa Hạng Khách' : 'Delete Client Tier'}</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    {language === 'vi' ? 'Bạn có chắc chắn muốn xóa hạng đối tác này? Hành động này không thể hoàn tác.' : 'Are you sure you want to delete this partner tier? This action cannot be undone.'}
+                                    {language === 'vi' ? 'Bạn có chắc chắn muốn xóa hạng khách này? Hành động này không thể hoàn tác.' : 'Are you sure you want to delete this client tier? This action cannot be undone.'}
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
