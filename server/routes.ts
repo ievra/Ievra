@@ -1021,7 +1021,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/interactions", requirePermission('crm'), async (req, res) => {
     try {
-      const validatedData = insertInteractionSchema.parse(req.body);
+      const body = { ...req.body };
+      if (body.date && typeof body.date === 'string') body.date = new Date(body.date);
+      if (body.nextActionDate && typeof body.nextActionDate === 'string') body.nextActionDate = new Date(body.nextActionDate);
+      const validatedData = insertInteractionSchema.parse(body);
       const interaction = await storage.createInteraction(validatedData);
       res.status(201).json(interaction);
     } catch (error) {
@@ -1034,7 +1037,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put("/api/interactions/:id", requirePermission('crm'), async (req, res) => {
     try {
-      const validatedData = insertInteractionSchema.partial().parse(req.body);
+      const body = { ...req.body };
+      if (body.date && typeof body.date === 'string') body.date = new Date(body.date);
+      if (body.nextActionDate && typeof body.nextActionDate === 'string') body.nextActionDate = new Date(body.nextActionDate);
+      const validatedData = insertInteractionSchema.partial().parse(body);
       const interaction = await storage.updateInteraction(req.params.id, validatedData);
       res.json(interaction);
     } catch (error) {
