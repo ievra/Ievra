@@ -14,8 +14,8 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Pencil, Trash2, Plus } from "lucide-react";
-import type { CrmPipelineStage, CrmCustomerTier, CrmStatus, BpCategory } from "@shared/schema";
-import { insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema, insertBpCategorySchema } from "@shared/schema";
+import type { CrmPipelineStage, CrmCustomerTier, CrmStatus, BpCategory, BpStatus } from "@shared/schema";
+import { insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema, insertBpCategorySchema, insertBpStatusSchema } from "@shared/schema";
 import { z } from "zod";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -28,16 +28,19 @@ export default function CrmSettingsManager() {
   const [isTierDialogOpen, setIsTierDialogOpen] = useState(false);
   const [isStatusDialogOpen, setIsStatusDialogOpen] = useState(false);
   const [isBpCategoryDialogOpen, setIsBpCategoryDialogOpen] = useState(false);
+  const [isBpStatusDialogOpen, setIsBpStatusDialogOpen] = useState(false);
   
   const [editingStage, setEditingStage] = useState<CrmPipelineStage | null>(null);
   const [editingTier, setEditingTier] = useState<CrmCustomerTier | null>(null);
   const [editingStatus, setEditingStatus] = useState<CrmStatus | null>(null);
   const [editingBpCategory, setEditingBpCategory] = useState<BpCategory | null>(null);
+  const [editingBpStatus, setEditingBpStatus] = useState<BpStatus | null>(null);
 
   const { data: stages = [] } = useQuery<CrmPipelineStage[]>({ queryKey: ['/api/crm-pipeline-stages'] });
   const { data: tiers = [] } = useQuery<CrmCustomerTier[]>({ queryKey: ['/api/crm-customer-tiers'] });
   const { data: statuses = [] } = useQuery<CrmStatus[]>({ queryKey: ['/api/crm-statuses'] });
   const { data: bpCategories = [] } = useQuery<BpCategory[]>({ queryKey: ['/api/bp-categories'] });
+  const { data: bpStatuses = [] } = useQuery<BpStatus[]>({ queryKey: ['/api/bp-statuses'] });
 
   const stageForm = useForm<z.infer<typeof insertCrmPipelineStageSchema>>({
     resolver: zodResolver(insertCrmPipelineStageSchema),
@@ -223,6 +226,52 @@ export default function CrmSettingsManager() {
     },
   });
 
+  const bpStatusForm = useForm<z.infer<typeof insertBpStatusSchema>>({
+    resolver: zodResolver(insertBpStatusSchema),
+    defaultValues: {
+      value: "",
+      labelEn: "",
+      labelVi: "",
+      order: 0,
+      active: true,
+    },
+  });
+
+  const createBpStatusMutation = useMutation({
+    mutationFn: async (data: z.infer<typeof insertBpStatusSchema>) => {
+      return await apiRequest('POST', '/api/bp-statuses', data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/bp-statuses'] });
+      setIsBpStatusDialogOpen(false);
+      bpStatusForm.reset();
+      toast({ title: language === 'vi' ? 'Đã tạo trạng thái ĐT thành công' : 'BP Status created successfully' });
+    },
+  });
+
+  const updateBpStatusMutation = useMutation({
+    mutationFn: async ({ id, ...data }: Partial<BpStatus> & { id: string }) => {
+      return await apiRequest('PUT', `/api/bp-statuses/${id}`, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/bp-statuses'] });
+      setIsBpStatusDialogOpen(false);
+      setEditingBpStatus(null);
+      bpStatusForm.reset();
+      toast({ title: language === 'vi' ? 'Đã cập nhật trạng thái ĐT thành công' : 'BP Status updated successfully' });
+    },
+  });
+
+  const deleteBpStatusMutation = useMutation({
+    mutationFn: async (id: string) => {
+      return await apiRequest('DELETE', `/api/bp-statuses/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/bp-statuses'] });
+      toast({ title: language === 'vi' ? 'Đã xóa trạng thái ĐT thành công' : 'BP Status deleted successfully' });
+    },
+  });
+
   const toValue = (label: string) => label.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
 
   const handleStageSubmit = (data: z.infer<typeof insertCrmPipelineStageSchema>) => {
@@ -261,14 +310,24 @@ export default function CrmSettingsManager() {
     }
   };
 
+  const handleBpStatusSubmit = (data: z.infer<typeof insertBpStatusSchema>) => {
+    const submitData = { ...data, value: editingBpStatus ? data.value : toValue(data.labelEn) };
+    if (editingBpStatus) {
+      updateBpStatusMutation.mutate({ id: editingBpStatus.id, ...submitData });
+    } else {
+      createBpStatusMutation.mutate(submitData);
+    }
+  };
+
   return (
     <div>
       <Tabs defaultValue="stages" className="w-full">
-              <TabsList className="grid w-full grid-cols-4 bg-black border border-white/10">
+              <TabsList className="grid w-full grid-cols-5 bg-black border border-white/10">
                 <TabsTrigger value="stages">{language === 'vi' ? 'Giai Đoạn' : 'Stages'}</TabsTrigger>
                 <TabsTrigger value="bpCategories">{language === 'vi' ? 'Hạng Mục ĐT' : 'BP Categories'}</TabsTrigger>
                 <TabsTrigger value="tiers">{language === 'vi' ? 'Hạng Đối Tác' : 'Partner Tiers'}</TabsTrigger>
-                <TabsTrigger value="statuses">{language === 'vi' ? 'Trạng Thái' : 'Statuses'}</TabsTrigger>
+                <TabsTrigger value="statuses">{language === 'vi' ? 'TT Khách Hàng' : 'Client Statuses'}</TabsTrigger>
+                <TabsTrigger value="bpStatuses">{language === 'vi' ? 'TT Đối Tác' : 'BP Statuses'}</TabsTrigger>
               </TabsList>
 
               {/* Pipeline Stages (Client) */}
@@ -884,6 +943,155 @@ export default function CrmSettingsManager() {
                                     onClick={() => deleteStatusMutation.mutate(status.id)}
                                     data-testid={`button-confirm-delete-status-${status.id}`}
                                   >
+                                    {language === 'vi' ? 'Xóa' : 'Delete'}
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TabsContent>
+
+              {/* BP Statuses */}
+              <TabsContent value="bpStatuses" className="mt-4">
+                <div className="flex justify-end mb-4">
+                  <Dialog open={isBpStatusDialogOpen} onOpenChange={setIsBpStatusDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button
+                        onClick={() => {
+                          setEditingBpStatus(null);
+                          bpStatusForm.reset({
+                            value: "",
+                            labelEn: "",
+                            labelVi: "",
+                            order: bpStatuses.length,
+                            active: true,
+                          });
+                        }}
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        {language === 'vi' ? 'Thêm' : 'Add Status'}
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>{editingBpStatus ? (language === 'vi' ? 'Sửa Trạng Thái ĐT' : 'Edit BP Status') : (language === 'vi' ? 'Thêm Trạng Thái ĐT' : 'Add BP Status')}</DialogTitle>
+                      </DialogHeader>
+                      <Form {...bpStatusForm}>
+                        <form onSubmit={bpStatusForm.handleSubmit(handleBpStatusSubmit)} className="space-y-4">
+                          <FormField
+                            control={bpStatusForm.control}
+                            name="labelEn"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</FormLabel>
+                                <FormControl>
+                                  <Input {...field} placeholder="Active" />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={bpStatusForm.control}
+                            name="labelVi"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</FormLabel>
+                                <FormControl>
+                                  <Input {...field} placeholder="Hoạt động" />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={bpStatusForm.control}
+                            name="order"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>{language === 'vi' ? 'Thứ tự' : 'Order'}</FormLabel>
+                                <FormControl>
+                                  <Input 
+                                    {...field} 
+                                    type="number" 
+                                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <div className="flex justify-end space-x-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() => {
+                                setIsBpStatusDialogOpen(false);
+                                setEditingBpStatus(null);
+                                bpStatusForm.reset();
+                              }}
+                            >
+                              {language === 'vi' ? 'Hủy' : 'Cancel'}
+                            </Button>
+                            <Button type="submit">
+                              {editingBpStatus ? (language === 'vi' ? 'Cập Nhật' : 'Update') : (language === 'vi' ? 'Tạo' : 'Create')}
+                            </Button>
+                          </div>
+                        </form>
+                      </Form>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</TableHead>
+                      <TableHead>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</TableHead>
+                      <TableHead>{language === 'vi' ? 'Thứ tự' : 'Order'}</TableHead>
+                      <TableHead className="text-right">{language === 'vi' ? 'Thao tác' : 'Actions'}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {bpStatuses.sort((a, b) => a.order - b.order).map((bpStatus) => (
+                      <TableRow key={bpStatus.id}>
+                        <TableCell>{bpStatus.labelEn}</TableCell>
+                        <TableCell>{bpStatus.labelVi}</TableCell>
+                        <TableCell>{bpStatus.order}</TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setEditingBpStatus(bpStatus);
+                                bpStatusForm.reset(bpStatus);
+                                setIsBpStatusDialogOpen(true);
+                              }}
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button variant="outline" size="sm">
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>{language === 'vi' ? 'Xóa Trạng Thái ĐT' : 'Delete BP Status'}</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    {language === 'vi' ? 'Bạn có chắc chắn muốn xóa trạng thái này? Hành động này không thể hoàn tác.' : 'Are you sure you want to delete this status? This action cannot be undone.'}
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>{language === 'vi' ? 'Hủy' : 'Cancel'}</AlertDialogCancel>
+                                  <AlertDialogAction onClick={() => deleteBpStatusMutation.mutate(bpStatus.id)}>
                                     {language === 'vi' ? 'Xóa' : 'Delete'}
                                   </AlertDialogAction>
                                 </AlertDialogFooter>
