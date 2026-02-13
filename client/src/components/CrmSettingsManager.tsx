@@ -207,7 +207,7 @@ export default function CrmSettingsManager() {
     <div>
       <Tabs defaultValue="stages" className="w-full">
               <TabsList className="grid w-full grid-cols-3 bg-black border border-white/10">
-                <TabsTrigger value="stages">{language === 'vi' ? 'Giai Đoạn' : 'Pipeline Stages'}</TabsTrigger>
+                <TabsTrigger value="stages">{language === 'vi' ? 'Hạng Mục' : 'Categories'}</TabsTrigger>
                 <TabsTrigger value="tiers">{language === 'vi' ? 'Hạng Khách' : 'Customer Tiers'}</TabsTrigger>
                 <TabsTrigger value="statuses">{language === 'vi' ? 'Trạng Thái' : 'Statuses'}</TabsTrigger>
               </TabsList>
@@ -231,12 +231,12 @@ export default function CrmSettingsManager() {
                         data-testid="button-add-stage"
                       >
                         <Plus className="h-4 w-4 mr-2" />
-                        {language === 'vi' ? 'Thêm' : 'Add Stage'}
+                        {language === 'vi' ? 'Thêm' : 'Add Category'}
                       </Button>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle>{editingStage ? (language === 'vi' ? 'Sửa Giai Đoạn' : 'Edit Pipeline Stage') : (language === 'vi' ? 'Thêm Giai Đoạn' : 'Add Pipeline Stage')}</DialogTitle>
+                        <DialogTitle>{editingStage ? (language === 'vi' ? 'Sửa Hạng Mục' : 'Edit Category') : (language === 'vi' ? 'Thêm Hạng Mục' : 'Add Category')}</DialogTitle>
                       </DialogHeader>
                       <Form {...stageForm}>
                         <form onSubmit={stageForm.handleSubmit(handleStageSubmit)} className="space-y-4">
@@ -347,9 +347,9 @@ export default function CrmSettingsManager() {
                               </AlertDialogTrigger>
                               <AlertDialogContent>
                                 <AlertDialogHeader>
-                                  <AlertDialogTitle>{language === 'vi' ? 'Xóa Giai Đoạn' : 'Delete Pipeline Stage'}</AlertDialogTitle>
+                                  <AlertDialogTitle>{language === 'vi' ? 'Xóa Hạng Mục' : 'Delete Category'}</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    {language === 'vi' ? 'Bạn có chắc chắn muốn xóa giai đoạn này? Hành động này không thể hoàn tác.' : 'Are you sure you want to delete this pipeline stage? This action cannot be undone.'}
+                                    {language === 'vi' ? 'Bạn có chắc chắn muốn xóa hạng mục này? Hành động này không thể hoàn tác.' : 'Are you sure you want to delete this category? This action cannot be undone.'}
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
