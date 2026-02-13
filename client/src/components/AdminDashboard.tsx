@@ -730,7 +730,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   const bpItemsPerPage = 10;
 
   const filteredBusinessPartners = businessPartners.filter((bp: any) => {
-    if (bpStageFilter !== 'all' && (bp.stage || 'lead') !== bpStageFilter) return false;
+    if (bpStageFilter !== 'all' && !(bp.stage || '').toLowerCase().includes(bpStageFilter.toLowerCase())) return false;
     if (bpStatusFilter !== 'all' && (bp.status || 'active') !== bpStatusFilter) return false;
     if (bpWarrantyFilter !== 'all' && (bp.warrantyStatus || 'none') !== bpWarrantyFilter) return false;
     if (bpTierFilter !== 'all' && (bp.tier || 'silver') !== bpTierFilter) return false;
@@ -6244,9 +6244,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="firstName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t('crm.firstName')} *</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Đại diện' : 'Representative'} *</FormLabel>
                           <FormControl>
-                            <Input {...field} placeholder="Nguyễn" data-testid="input-bp-first-name" />
+                            <Input {...field} placeholder={language === 'vi' ? "Nguyễn Văn A" : "John Doe"} data-testid="input-bp-first-name" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -6258,9 +6258,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="lastName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t('crm.lastName')} *</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Số điện thoại' : 'Phone'} *</FormLabel>
                           <FormControl>
-                            <Input {...field} placeholder="Văn A" data-testid="input-bp-last-name" />
+                            <Input {...field} placeholder="0901234567" data-testid="input-bp-last-name" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -6377,25 +6377,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="stage"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t('crm.pipelineStage')}</FormLabel>
-                          <Select onValueChange={field.onChange} value={field.value}>
-                            <FormControl>
-                              <SelectTrigger data-testid="select-bp-stage">
-                                <SelectValue />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {crmStages
-                                .filter((stage: any) => stage.active)
-                                .sort((a: any, b: any) => a.order - b.order)
-                                .map((stage: any) => (
-                                  <SelectItem key={stage.id} value={stage.value}>
-                                    {language === 'vi' ? stage.labelVi : stage.labelEn}
-                                  </SelectItem>
-                                ))
-                              }
-                            </SelectContent>
-                          </Select>
+                          <FormLabel>{language === 'vi' ? 'Hạng Mục' : 'Category'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} placeholder={language === 'vi' ? "VD: Xi măng, Kính, Gỗ..." : "E.g.: Cement, Glass, Wood..."} data-testid="select-bp-stage" />
+                          </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -6690,7 +6675,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     <h3 className="text-lg font-medium border-b pb-2">{t('crm.basicInfo')}</h3>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-medium text-muted-foreground">{t('crm.name')}</label>
+                        <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Đại diện' : 'Representative'}</label>
                         <p className="text-base mt-1">{viewingBusinessPartner.firstName} {viewingBusinessPartner.lastName}</p>
                       </div>
                       <div>
@@ -6716,13 +6701,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     <h3 className="text-lg font-medium border-b pb-2">{language === 'vi' ? 'Trạng Thái' : 'Status'}</h3>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-medium text-muted-foreground">{t('crm.pipelineStage')}</label>
-                        <p className="text-base mt-1 capitalize">
-                          {(() => {
-                            const stage = crmStages.find(s => s.value === viewingBusinessPartner.stage);
-                            return stage ? (language === 'vi' ? stage.labelVi : stage.labelEn) : viewingBusinessPartner.stage;
-                          })()}
-                        </p>
+                        <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Hạng Mục' : 'Category'}</label>
+                        <p className="text-base mt-1">{viewingBusinessPartner.stage || "—"}</p>
                       </div>
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">{t('crm.status')}</label>
@@ -7036,19 +7016,12 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
             />
           </div>
-          <Select value={bpStageFilter} onValueChange={(v) => { setBpStageFilter(v); setBpCurrentPage(1); }}>
-            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
-              <SelectValue placeholder={language === 'vi' ? 'Tất cả giai đoạn' : 'All stages'} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{language === 'vi' ? 'Tất cả giai đoạn' : 'All stages'}</SelectItem>
-              {crmStages.filter(s => s.active).sort((a, b) => a.order - b.order).map(stage => (
-                <SelectItem key={stage.id} value={stage.value}>
-                  {language === 'vi' ? stage.labelVi : stage.labelEn}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <Input
+            value={bpStageFilter === 'all' ? '' : bpStageFilter}
+            onChange={(e) => { setBpStageFilter(e.target.value || 'all'); setBpCurrentPage(1); }}
+            placeholder={language === 'vi' ? 'Lọc hạng mục...' : 'Filter category...'}
+            className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0 h-9"
+          />
           <Select value={bpStatusFilter} onValueChange={(v) => { setBpStatusFilter(v); setBpCurrentPage(1); }}>
             <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
               <SelectValue placeholder={language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'} />
@@ -7107,8 +7080,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         <TableHead className="w-[4%] whitespace-nowrap text-center">{language === 'vi' ? 'STT' : 'NO'}</TableHead>
                         <TableHead className="w-[5%] whitespace-nowrap text-center">{language === 'vi' ? 'Hạng' : 'Rank'}</TableHead>
                         <TableHead className="w-[14%] whitespace-nowrap">
-                          <div>{language === 'vi' ? 'Đối Tác' : 'Partners'}</div>
-                          <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Khởi tạo' : 'Intake'}</div>
+                          <div>{language === 'vi' ? 'Đại Diện' : 'Representative'}</div>
+                          <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Số điện thoại' : 'Phone'}</div>
                         </TableHead>
                         <TableHead className="w-[13%] whitespace-nowrap">
                           <div>{t('crm.phone')}</div>
@@ -7122,7 +7095,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           <div>{language === 'vi' ? 'Thu' : 'Income'}</div>
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Chi' : 'Expense'}</div>
                         </TableHead>
-                        <TableHead className="w-[12%] text-center whitespace-nowrap">{t('crm.pipelineStage')}</TableHead>
+                        <TableHead className="w-[12%] text-center whitespace-nowrap">{language === 'vi' ? 'Hạng Mục' : 'Category'}</TableHead>
                         <TableHead className="w-[13%] text-center whitespace-nowrap">{t('crm.status')}</TableHead>
                         <TableHead className="w-[7%] text-right"></TableHead>
                       </TableRow>
@@ -7143,7 +7116,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                               {bp.firstName} {bp.lastName}
                             </div>
                             <div className="text-xs text-muted-foreground mt-1">
-                              {bp.intakeDate ? new Date(bp.intakeDate).toLocaleDateString('vi-VN') : "—"}
+                              {bp.phone || "—"}
                             </div>
                           </TableCell>
                           <TableCell className="align-middle">
@@ -7170,10 +7143,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           </TableCell>
                           <TableCell className="align-middle text-center">
                             <span className="text-sm" data-testid={`select-bp-stage-${bp.id}`}>
-                              {(() => {
-                                const stage = crmStages.find(s => s.value === bp.stage);
-                                return stage ? (language === 'vi' ? stage.labelVi : stage.labelEn) : bp.stage || '—';
-                              })()}
+                              {bp.stage || '—'}
                             </span>
                           </TableCell>
                           <TableCell className="align-middle text-center">
