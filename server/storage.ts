@@ -3,7 +3,7 @@ import {
   interactions, deals, transactions, warrantyLogs, settings, faqs, advantages, journeySteps,
   aboutPageContent, aboutShowcaseServices, aboutProcessSteps, aboutCoreValues, aboutTeamMembers,
   crmPipelineStages, crmCustomerTiers, crmStatuses,
-  bpCategories, bpStatuses,
+  bpCategories, bpStatuses, bpTiers,
   businessPartners, bpTransactions,
   type User, type InsertUser,
   type Client, type InsertClient,
@@ -33,7 +33,8 @@ import {
   type CrmCustomerTier, type InsertCrmCustomerTier,
   type CrmStatus, type InsertCrmStatus,
   type BpCategory, type InsertBpCategory,
-  type BpStatus, type InsertBpStatus
+  type BpStatus, type InsertBpStatus,
+  type BpTier, type InsertBpTier
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, ne, desc, like, and, or, sql } from "drizzle-orm";
@@ -249,6 +250,13 @@ export interface IStorage {
   createBpStatus(status: InsertBpStatus): Promise<BpStatus>;
   updateBpStatus(id: string, status: Partial<InsertBpStatus>): Promise<BpStatus>;
   deleteBpStatus(id: string): Promise<void>;
+
+  // BP Tiers
+  getBpTiers(filters?: { active?: boolean }): Promise<BpTier[]>;
+  getBpTier(id: string): Promise<BpTier | undefined>;
+  createBpTier(tier: InsertBpTier): Promise<BpTier>;
+  updateBpTier(id: string, tier: Partial<InsertBpTier>): Promise<BpTier>;
+  deleteBpTier(id: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -1265,6 +1273,39 @@ export class DatabaseStorage implements IStorage {
 
   async deleteBpStatus(id: string): Promise<void> {
     await db.delete(bpStatuses).where(eq(bpStatuses.id, id));
+  }
+
+  // BP Tiers
+  async getBpTiers(filters?: { active?: boolean }): Promise<BpTier[]> {
+    const conditions = [];
+    if (filters?.active !== undefined) conditions.push(eq(bpTiers.active, filters.active));
+    const query = conditions.length > 0
+      ? db.select().from(bpTiers).where(and(...conditions))
+      : db.select().from(bpTiers);
+    return await query.orderBy(bpTiers.order);
+  }
+
+  async getBpTier(id: string): Promise<BpTier | undefined> {
+    const [t] = await db.select().from(bpTiers).where(eq(bpTiers.id, id));
+    return t || undefined;
+  }
+
+  async createBpTier(tier: InsertBpTier): Promise<BpTier> {
+    const [created] = await db.insert(bpTiers).values(tier).returning();
+    return created;
+  }
+
+  async updateBpTier(id: string, tier: Partial<InsertBpTier>): Promise<BpTier> {
+    const [updated] = await db
+      .update(bpTiers)
+      .set({ ...tier, updatedAt: new Date() })
+      .where(eq(bpTiers.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteBpTier(id: string): Promise<void> {
+    await db.delete(bpTiers).where(eq(bpTiers.id, id));
   }
 
   // CRM Customer Tiers
