@@ -16,7 +16,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient as qc } from "@/lib/queryClient";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Search, Plus, Pencil, Trash2, Phone, Mail, User, Shield, Calendar, Clock, Briefcase, CreditCard, X, HardHat, PenTool } from "lucide-react";
+import { Search, Plus, Pencil, Trash2, Phone, Mail, User, Shield, Calendar, Clock, Briefcase, CreditCard, X, HardHat, PenTool, Eye } from "lucide-react";
 import type { Client, Interaction, Deal, Transaction, WarrantyLog } from "@shared/schema";
 
 const interactionFormSchema = z.object({
@@ -93,6 +93,7 @@ export default function LookupAdminTab() {
   const [isDealDialogOpen, setIsDealDialogOpen] = useState(false);
   const [isWarrantyLogDialogOpen, setIsWarrantyLogDialogOpen] = useState(false);
   const [editingInteraction, setEditingInteraction] = useState<Interaction | null>(null);
+  const [viewingInteraction, setViewingInteraction] = useState<Interaction | null>(null);
   const [editingDeal, setEditingDeal] = useState<Deal | null>(null);
   const [editingWarrantyLog, setEditingWarrantyLog] = useState<WarrantyLog | null>(null);
   const [warrantyExpiry, setWarrantyExpiry] = useState("");
@@ -609,29 +610,37 @@ export default function LookupAdminTab() {
                     <Table>
                       <TableHeader>
                         <TableRow className="border-white/10">
-                          <TableHead className="text-white/60">
-                            <div>
-                              <span>{isVi ? "Ngày" : "Date"}</span>
-                              <p className="text-xs font-normal text-white/30">{isVi ? "Loại" : "Type"}</p>
-                            </div>
-                          </TableHead>
-                          <TableHead className="text-white/60">{isVi ? "Tiêu đề" : "Title"}</TableHead>
-                          <TableHead className="text-white/60">{isVi ? "Kết quả" : "Outcome"}</TableHead>
-                          <TableHead className="text-white/60">{isVi ? "Thao tác" : "Actions"}</TableHead>
+                          <TableHead className="text-white/60 w-[15%]">{isVi ? "Ngày" : "Date"}</TableHead>
+                          <TableHead className="text-white/60 w-[25%]">{isVi ? "Tiêu đề" : "Title"}</TableHead>
+                          <TableHead className="text-white/60 w-[15%]">{isVi ? "Phụ trách" : "Assigned To"}</TableHead>
+                          <TableHead className="text-white/60 w-[30%]">{isVi ? "Hình ảnh" : "Images"}</TableHead>
+                          <TableHead className="text-white/60 w-[15%]">{isVi ? "Thao tác" : "Actions"}</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {interactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction) => (
                           <TableRow key={interaction.id} className="border-white/10">
                             <TableCell>
-                              <div>
-                                <p className="text-white/70">{formatDate(interaction.date)}</p>
-                              </div>
+                              <p className="text-white/70">{formatDate(interaction.date)}</p>
                             </TableCell>
                             <TableCell className="text-white">{interaction.title}</TableCell>
-                            <TableCell className="text-white/60 max-w-[200px] truncate">{interaction.outcome || "—"}</TableCell>
+                            <TableCell className="text-white/60">{interaction.assignedTo || "—"}</TableCell>
+                            <TableCell>
+                              {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
+                                <div className="flex gap-1">
+                                  {(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (
+                                    <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10" />
+                                  ))}
+                                </div>
+                              ) : (
+                                <span className="text-white/30">—</span>
+                              )}
+                            </TableCell>
                             <TableCell>
                               <div className="flex gap-1">
+                                <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
+                                  <Eye className="w-3.5 h-3.5" />
+                                </Button>
                                 <Button variant="ghost" size="icon" onClick={() => openInteractionDialog(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
                                   <Pencil className="w-3.5 h-3.5" />
                                 </Button>
@@ -1039,6 +1048,55 @@ export default function LookupAdminTab() {
               </div>
             </form>
           </Form>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={!!viewingInteraction} onOpenChange={(open) => { if (!open) setViewingInteraction(null); }}>
+        <DialogContent className="bg-black border border-white/20 rounded-none max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-white font-light">{isVi ? "Chi tiết nhật ký" : "Log Details"}</DialogTitle>
+          </DialogHeader>
+          {viewingInteraction && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <span className="text-xs text-white/40">{isVi ? "Ngày" : "Date"}</span>
+                  <p className="text-white font-light">{formatDate(viewingInteraction.date)}</p>
+                </div>
+                <div>
+                  <span className="text-xs text-white/40">{isVi ? "Phụ trách" : "Assigned To"}</span>
+                  <p className="text-white font-light">{viewingInteraction.assignedTo || "—"}</p>
+                </div>
+              </div>
+              <div>
+                <span className="text-xs text-white/40">{isVi ? "Tiêu đề" : "Title"}</span>
+                <p className="text-white font-light">{viewingInteraction.title}</p>
+              </div>
+              {viewingInteraction.description && (
+                <div>
+                  <span className="text-xs text-white/40">{isVi ? "Mô tả" : "Description"}</span>
+                  <p className="text-white/70 font-light text-sm">{viewingInteraction.description}</p>
+                </div>
+              )}
+              {viewingInteraction.nextAction && (
+                <div>
+                  <span className="text-xs text-white/40">{isVi ? "Đề xuất" : "Proposal"}</span>
+                  <p className="text-white/70 font-light text-sm">{viewingInteraction.nextAction}</p>
+                </div>
+              )}
+              {Array.isArray(viewingInteraction.attachments) && viewingInteraction.attachments.length > 0 && (
+                <div>
+                  <span className="text-xs text-white/40 block mb-2">{isVi ? "Hình ảnh đính kèm" : "Attachments"} ({(viewingInteraction.attachments as string[]).length}/5)</span>
+                  <div className="grid grid-cols-3 gap-2">
+                    {(viewingInteraction.attachments as string[]).map((url, idx) => (
+                      <a key={idx} href={url} target="_blank" rel="noopener noreferrer">
+                        <img src={url} alt="" className="w-full h-32 object-cover border border-white/10 hover:border-white/40 transition-colors cursor-pointer" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>
