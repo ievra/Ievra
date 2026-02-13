@@ -208,7 +208,7 @@ export default function CrmSettingsManager() {
       <Tabs defaultValue="stages" className="w-full">
               <TabsList className="grid w-full grid-cols-3 bg-black border border-white/10">
                 <TabsTrigger value="stages">{language === 'vi' ? 'Hạng Mục' : 'Categories'}</TabsTrigger>
-                <TabsTrigger value="tiers">{language === 'vi' ? 'Hạng Khách' : 'Customer Tiers'}</TabsTrigger>
+                <TabsTrigger value="tiers">{language === 'vi' ? 'Hạng Đối Tác' : 'Partner Tiers'}</TabsTrigger>
                 <TabsTrigger value="statuses">{language === 'vi' ? 'Trạng Thái' : 'Statuses'}</TabsTrigger>
               </TabsList>
 
@@ -395,7 +395,7 @@ export default function CrmSettingsManager() {
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle>{editingTier ? (language === 'vi' ? 'Sửa Hạng Khách' : 'Edit Customer Tier') : (language === 'vi' ? 'Thêm Hạng Khách' : 'Add Customer Tier')}</DialogTitle>
+                        <DialogTitle>{editingTier ? (language === 'vi' ? 'Sửa Hạng Đối Tác' : 'Edit Partner Tier') : (language === 'vi' ? 'Thêm Hạng Đối Tác' : 'Add Partner Tier')}</DialogTitle>
                       </DialogHeader>
                       <Form {...tierForm}>
                         <form onSubmit={tierForm.handleSubmit(handleTierSubmit)} className="space-y-4">
@@ -506,9 +506,9 @@ export default function CrmSettingsManager() {
                               </AlertDialogTrigger>
                               <AlertDialogContent>
                                 <AlertDialogHeader>
-                                  <AlertDialogTitle>{language === 'vi' ? 'Xóa Hạng Khách' : 'Delete Customer Tier'}</AlertDialogTitle>
+                                  <AlertDialogTitle>{language === 'vi' ? 'Xóa Hạng Đối Tác' : 'Delete Partner Tier'}</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    {language === 'vi' ? 'Bạn có chắc chắn muốn xóa hạng khách này? Hành động này không thể hoàn tác.' : 'Are you sure you want to delete this customer tier? This action cannot be undone.'}
+                                    {language === 'vi' ? 'Bạn có chắc chắn muốn xóa hạng đối tác này? Hành động này không thể hoàn tác.' : 'Are you sure you want to delete this partner tier? This action cannot be undone.'}
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
