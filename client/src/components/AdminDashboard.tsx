@@ -588,6 +588,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     queryKey: ['/api/bp-categories'],
   });
 
+  const { data: bpStatuses = [] } = useQuery<any[]>({
+    queryKey: ['/api/bp-statuses'],
+  });
+
   // About Page Content Queries
   const { data: aboutContent, isLoading: aboutContentLoading } = useQuery<AboutPageContent>({
     queryKey: ['/api/about-page-content'],
@@ -6402,7 +6406,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {crmStatuses
+                              {bpStatuses
                                 .filter((status: any) => status.active)
                                 .sort((a: any, b: any) => a.order - b.order)
                                 .map((status: any) => (
@@ -6716,7 +6720,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         <label className="text-sm font-medium text-muted-foreground">{t('crm.status')}</label>
                         <p className="text-base mt-1 capitalize">
                           {(() => {
-                            const status = crmStatuses.find(s => s.value === viewingBusinessPartner.status);
+                            const status = bpStatuses.find(s => s.value === viewingBusinessPartner.status);
                             return status ? (language === 'vi' ? status.labelVi : status.labelEn) : viewingBusinessPartner.status;
                           })()}
                         </p>
@@ -7043,7 +7047,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'}</SelectItem>
-              {crmStatuses.filter(s => s.active).sort((a, b) => a.order - b.order).map(status => (
+              {bpStatuses.filter(s => s.active).sort((a, b) => a.order - b.order).map(status => (
                 <SelectItem key={status.id} value={status.value}>
                   {language === 'vi' ? status.labelVi : status.labelEn}
                 </SelectItem>
@@ -7161,7 +7165,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           <TableCell className="align-middle text-center">
                             <span className="text-sm" data-testid={`select-bp-status-${bp.id}`}>
                               {(() => {
-                                const status = crmStatuses.find(s => s.value === bp.status);
+                                const status = bpStatuses.find(s => s.value === bp.status);
                                 return status ? (language === 'vi' ? status.labelVi : status.labelEn) : bp.status || '—';
                               })()}
                             </span>
