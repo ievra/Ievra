@@ -592,6 +592,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     queryKey: ['/api/bp-statuses'],
   });
 
+  const { data: bpTiersData = [] } = useQuery<any[]>({
+    queryKey: ['/api/bp-tiers'],
+  });
+
   // About Page Content Queries
   const { data: aboutContent, isLoading: aboutContentLoading } = useQuery<AboutPageContent>({
     queryKey: ['/api/about-page-content'],
@@ -6304,7 +6308,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {crmTiers
+                              {bpTiersData
                                 .filter((tier: any) => tier.active)
                                 .sort((a: any, b: any) => a.order - b.order)
                                 .map((tier: any) => (
@@ -7060,7 +7064,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{language === 'vi' ? 'Tất cả hạng' : 'All tiers'}</SelectItem>
-              {crmTiers.filter((t: any) => t.active).sort((a: any, b: any) => a.order - b.order).map((tier: any) => (
+              {bpTiersData.filter((t: any) => t.active).sort((a: any, b: any) => a.order - b.order).map((tier: any) => (
                 <SelectItem key={tier.id} value={tier.value}>
                   {language === 'vi' ? tier.labelVi : tier.labelEn}
                 </SelectItem>
@@ -7120,7 +7124,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     </TableHeader>
                     <TableBody>
                       {paginatedBusinessPartners.map((bp: any, idx: number) => {
-                        const bpTier = crmTiers.find((t: any) => t.value === bp.tier);
+                        const bpTier = bpTiersData.find((t: any) => t.value === bp.tier);
                         return (
                         <TableRow key={bp.id} data-testid={`row-bp-${bp.id}`} className="relative h-16">
                           <TableCell className="align-middle text-center"><span className="text-sm">{bpStartIndex + idx + 1}</span></TableCell>

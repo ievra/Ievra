@@ -14,8 +14,8 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Pencil, Trash2, Plus } from "lucide-react";
-import type { CrmPipelineStage, CrmCustomerTier, CrmStatus, BpCategory, BpStatus } from "@shared/schema";
-import { insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema, insertBpCategorySchema, insertBpStatusSchema } from "@shared/schema";
+import type { CrmPipelineStage, CrmCustomerTier, CrmStatus, BpCategory, BpStatus, BpTier } from "@shared/schema";
+import { insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema, insertBpCategorySchema, insertBpStatusSchema, insertBpTierSchema } from "@shared/schema";
 import { z } from "zod";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -29,18 +29,21 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
   const [isStatusDialogOpen, setIsStatusDialogOpen] = useState(false);
   const [isBpCategoryDialogOpen, setIsBpCategoryDialogOpen] = useState(false);
   const [isBpStatusDialogOpen, setIsBpStatusDialogOpen] = useState(false);
+  const [isBpTierDialogOpen, setIsBpTierDialogOpen] = useState(false);
   
   const [editingStage, setEditingStage] = useState<CrmPipelineStage | null>(null);
   const [editingTier, setEditingTier] = useState<CrmCustomerTier | null>(null);
   const [editingStatus, setEditingStatus] = useState<CrmStatus | null>(null);
   const [editingBpCategory, setEditingBpCategory] = useState<BpCategory | null>(null);
   const [editingBpStatus, setEditingBpStatus] = useState<BpStatus | null>(null);
+  const [editingBpTier, setEditingBpTier] = useState<BpTier | null>(null);
 
   const { data: stages = [] } = useQuery<CrmPipelineStage[]>({ queryKey: ['/api/crm-pipeline-stages'] });
   const { data: tiers = [] } = useQuery<CrmCustomerTier[]>({ queryKey: ['/api/crm-customer-tiers'] });
   const { data: statuses = [] } = useQuery<CrmStatus[]>({ queryKey: ['/api/crm-statuses'] });
   const { data: bpCategories = [] } = useQuery<BpCategory[]>({ queryKey: ['/api/bp-categories'] });
   const { data: bpStatuses = [] } = useQuery<BpStatus[]>({ queryKey: ['/api/bp-statuses'] });
+  const { data: bpTiers = [] } = useQuery<BpTier[]>({ queryKey: ['/api/bp-tiers'] });
 
   const stageForm = useForm<z.infer<typeof insertCrmPipelineStageSchema>>({
     resolver: zodResolver(insertCrmPipelineStageSchema),
@@ -272,6 +275,52 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
     },
   });
 
+  const bpTierForm = useForm<z.infer<typeof insertBpTierSchema>>({
+    resolver: zodResolver(insertBpTierSchema),
+    defaultValues: {
+      value: "",
+      labelEn: "",
+      labelVi: "",
+      order: 0,
+      active: true,
+    },
+  });
+
+  const createBpTierMutation = useMutation({
+    mutationFn: async (data: z.infer<typeof insertBpTierSchema>) => {
+      return await apiRequest('POST', '/api/bp-tiers', data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/bp-tiers'] });
+      setIsBpTierDialogOpen(false);
+      bpTierForm.reset();
+      toast({ title: language === 'vi' ? 'Đã tạo hạng đối tác thành công' : 'BP Tier created successfully' });
+    },
+  });
+
+  const updateBpTierMutation = useMutation({
+    mutationFn: async ({ id, ...data }: Partial<BpTier> & { id: string }) => {
+      return await apiRequest('PUT', `/api/bp-tiers/${id}`, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/bp-tiers'] });
+      setIsBpTierDialogOpen(false);
+      setEditingBpTier(null);
+      bpTierForm.reset();
+      toast({ title: language === 'vi' ? 'Đã cập nhật hạng đối tác thành công' : 'BP Tier updated successfully' });
+    },
+  });
+
+  const deleteBpTierMutation = useMutation({
+    mutationFn: async (id: string) => {
+      return await apiRequest('DELETE', `/api/bp-tiers/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/bp-tiers'] });
+      toast({ title: language === 'vi' ? 'Đã xóa hạng đối tác thành công' : 'BP Tier deleted successfully' });
+    },
+  });
+
   const toValue = (label: string) => label.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
 
   const handleStageSubmit = (data: z.infer<typeof insertCrmPipelineStageSchema>) => {
@@ -319,13 +368,23 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
     }
   };
 
+  const handleBpTierSubmit = (data: z.infer<typeof insertBpTierSchema>) => {
+    const submitData = { ...data, value: editingBpTier ? data.value : toValue(data.labelEn) };
+    if (editingBpTier) {
+      updateBpTierMutation.mutate({ id: editingBpTier.id, ...submitData });
+    } else {
+      createBpTierMutation.mutate(submitData);
+    }
+  };
+
   return (
     <div>
       <Tabs defaultValue={context === 'bp' ? 'bpCategories' : 'stages'} className="w-full">
-              <TabsList className={`grid w-full bg-black border border-white/10 ${context === 'all' ? 'grid-cols-5' : 'grid-cols-3'}`}>
+              <TabsList className={`grid w-full bg-black border border-white/10 ${context === 'all' ? 'grid-cols-6' : 'grid-cols-3'}`}>
                 {context !== 'bp' && <TabsTrigger value="stages">{language === 'vi' ? 'Giai Đoạn' : 'Stages'}</TabsTrigger>}
                 {context !== 'client' && <TabsTrigger value="bpCategories">{language === 'vi' ? 'Hạng Mục ĐT' : 'BP Categories'}</TabsTrigger>}
-                <TabsTrigger value="tiers">{language === 'vi' ? 'Hạng Đối Tác' : 'Partner Tiers'}</TabsTrigger>
+                {context !== 'bp' && <TabsTrigger value="tiers">{language === 'vi' ? 'Hạng Khách' : 'Client Tiers'}</TabsTrigger>}
+                {context !== 'client' && <TabsTrigger value="bpTiers">{language === 'vi' ? 'Hạng Đối Tác' : 'BP Tiers'}</TabsTrigger>}
                 {context !== 'bp' && <TabsTrigger value="statuses">{language === 'vi' ? 'TT Khách Hàng' : 'Client Statuses'}</TabsTrigger>}
                 {context !== 'client' && <TabsTrigger value="bpStatuses">{language === 'vi' ? 'TT Đối Tác' : 'BP Statuses'}</TabsTrigger>}
               </TabsList>
@@ -784,6 +843,155 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
                                     onClick={() => deleteTierMutation.mutate(tier.id)}
                                     data-testid={`button-confirm-delete-tier-${tier.id}`}
                                   >
+                                    {language === 'vi' ? 'Xóa' : 'Delete'}
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TabsContent>
+
+              {/* BP Tiers */}
+              <TabsContent value="bpTiers" className="mt-4">
+                <div className="flex justify-end mb-4">
+                  <Dialog open={isBpTierDialogOpen} onOpenChange={setIsBpTierDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button
+                        onClick={() => {
+                          setEditingBpTier(null);
+                          bpTierForm.reset({
+                            value: "",
+                            labelEn: "",
+                            labelVi: "",
+                            order: bpTiers.length,
+                            active: true,
+                          });
+                        }}
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        {language === 'vi' ? 'Thêm' : 'Add Tier'}
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>{editingBpTier ? (language === 'vi' ? 'Sửa Hạng Đối Tác' : 'Edit BP Tier') : (language === 'vi' ? 'Thêm Hạng Đối Tác' : 'Add BP Tier')}</DialogTitle>
+                      </DialogHeader>
+                      <Form {...bpTierForm}>
+                        <form onSubmit={bpTierForm.handleSubmit(handleBpTierSubmit)} className="space-y-4">
+                          <FormField
+                            control={bpTierForm.control}
+                            name="labelEn"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</FormLabel>
+                                <FormControl>
+                                  <Input {...field} placeholder="VIP" />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={bpTierForm.control}
+                            name="labelVi"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</FormLabel>
+                                <FormControl>
+                                  <Input {...field} placeholder="VIP" />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={bpTierForm.control}
+                            name="order"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>{language === 'vi' ? 'Thứ tự' : 'Order'}</FormLabel>
+                                <FormControl>
+                                  <Input 
+                                    {...field} 
+                                    type="number" 
+                                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <div className="flex justify-end space-x-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() => {
+                                setIsBpTierDialogOpen(false);
+                                setEditingBpTier(null);
+                                bpTierForm.reset();
+                              }}
+                            >
+                              {language === 'vi' ? 'Hủy' : 'Cancel'}
+                            </Button>
+                            <Button type="submit">
+                              {editingBpTier ? (language === 'vi' ? 'Cập Nhật' : 'Update') : (language === 'vi' ? 'Tạo' : 'Create')}
+                            </Button>
+                          </div>
+                        </form>
+                      </Form>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</TableHead>
+                      <TableHead>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</TableHead>
+                      <TableHead>{language === 'vi' ? 'Thứ tự' : 'Order'}</TableHead>
+                      <TableHead className="text-right">{language === 'vi' ? 'Thao tác' : 'Actions'}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {bpTiers.sort((a, b) => a.order - b.order).map((tier) => (
+                      <TableRow key={tier.id}>
+                        <TableCell>{tier.labelEn}</TableCell>
+                        <TableCell>{tier.labelVi}</TableCell>
+                        <TableCell>{tier.order}</TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setEditingBpTier(tier);
+                                bpTierForm.reset(tier);
+                                setIsBpTierDialogOpen(true);
+                              }}
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button variant="outline" size="sm">
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>{language === 'vi' ? 'Xóa Hạng Đối Tác' : 'Delete BP Tier'}</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    {language === 'vi' ? 'Bạn có chắc chắn muốn xóa hạng đối tác này? Hành động này không thể hoàn tác.' : 'Are you sure you want to delete this BP tier? This action cannot be undone.'}
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>{language === 'vi' ? 'Hủy' : 'Cancel'}</AlertDialogCancel>
+                                  <AlertDialogAction onClick={() => deleteBpTierMutation.mutate(tier.id)}>
                                     {language === 'vi' ? 'Xóa' : 'Delete'}
                                   </AlertDialogAction>
                                 </AlertDialogFooter>
