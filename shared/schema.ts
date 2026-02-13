@@ -872,6 +872,17 @@ export const crmStatuses = pgTable("crm_statuses", {
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 
+export const bpCategories = pgTable("bp_categories", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  value: text("value").notNull().unique(),
+  labelEn: text("label_en").notNull(),
+  labelVi: text("label_vi").notNull(),
+  order: integer("order").notNull().default(0),
+  active: boolean("active").notNull().default(true),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
 // CRM Dropdown Settings Schemas
 export const insertCrmPipelineStageSchema = createInsertSchema(crmPipelineStages).omit({
   id: true,
@@ -891,6 +902,12 @@ export const insertCrmStatusSchema = createInsertSchema(crmStatuses).omit({
   updatedAt: true,
 });
 
+export const insertBpCategorySchema = createInsertSchema(bpCategories).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
 // CRM Dropdown Settings Types
 export type InsertCrmPipelineStage = z.infer<typeof insertCrmPipelineStageSchema>;
 export type CrmPipelineStage = typeof crmPipelineStages.$inferSelect;
@@ -900,3 +917,6 @@ export type CrmCustomerTier = typeof crmCustomerTiers.$inferSelect;
 
 export type InsertCrmStatus = z.infer<typeof insertCrmStatusSchema>;
 export type CrmStatus = typeof crmStatuses.$inferSelect;
+
+export type InsertBpCategory = z.infer<typeof insertBpCategorySchema>;
+export type BpCategory = typeof bpCategories.$inferSelect;

@@ -3,6 +3,7 @@ import {
   interactions, deals, transactions, warrantyLogs, settings, faqs, advantages, journeySteps,
   aboutPageContent, aboutShowcaseServices, aboutProcessSteps, aboutCoreValues, aboutTeamMembers,
   crmPipelineStages, crmCustomerTiers, crmStatuses,
+  bpCategories,
   businessPartners, bpTransactions,
   type User, type InsertUser,
   type Client, type InsertClient,
@@ -30,7 +31,8 @@ import {
   type AboutTeamMember, type InsertAboutTeamMember,
   type CrmPipelineStage, type InsertCrmPipelineStage,
   type CrmCustomerTier, type InsertCrmCustomerTier,
-  type CrmStatus, type InsertCrmStatus
+  type CrmStatus, type InsertCrmStatus,
+  type BpCategory, type InsertBpCategory
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, ne, desc, like, and, or, sql } from "drizzle-orm";
@@ -232,6 +234,13 @@ export interface IStorage {
   createCrmStatus(status: InsertCrmStatus): Promise<CrmStatus>;
   updateCrmStatus(id: string, status: Partial<InsertCrmStatus>): Promise<CrmStatus>;
   deleteCrmStatus(id: string): Promise<void>;
+
+  // BP Categories
+  getBpCategories(filters?: { active?: boolean }): Promise<BpCategory[]>;
+  getBpCategory(id: string): Promise<BpCategory | undefined>;
+  createBpCategory(category: InsertBpCategory): Promise<BpCategory>;
+  updateBpCategory(id: string, category: Partial<InsertBpCategory>): Promise<BpCategory>;
+  deleteBpCategory(id: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -1182,6 +1191,39 @@ export class DatabaseStorage implements IStorage {
 
   async deleteCrmPipelineStage(id: string): Promise<void> {
     await db.delete(crmPipelineStages).where(eq(crmPipelineStages.id, id));
+  }
+
+  // BP Categories
+  async getBpCategories(filters?: { active?: boolean }): Promise<BpCategory[]> {
+    const conditions = [];
+    if (filters?.active !== undefined) conditions.push(eq(bpCategories.active, filters.active));
+    const query = conditions.length > 0
+      ? db.select().from(bpCategories).where(and(...conditions))
+      : db.select().from(bpCategories);
+    return await query.orderBy(bpCategories.order);
+  }
+
+  async getBpCategory(id: string): Promise<BpCategory | undefined> {
+    const [cat] = await db.select().from(bpCategories).where(eq(bpCategories.id, id));
+    return cat || undefined;
+  }
+
+  async createBpCategory(category: InsertBpCategory): Promise<BpCategory> {
+    const [created] = await db.insert(bpCategories).values(category).returning();
+    return created;
+  }
+
+  async updateBpCategory(id: string, category: Partial<InsertBpCategory>): Promise<BpCategory> {
+    const [updated] = await db
+      .update(bpCategories)
+      .set({ ...category, updatedAt: new Date() })
+      .where(eq(bpCategories.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteBpCategory(id: string): Promise<void> {
+    await db.delete(bpCategories).where(eq(bpCategories.id, id));
   }
 
   // CRM Customer Tiers

@@ -10,7 +10,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import { storage } from "./storage";
-import { insertProjectSchema, insertClientSchema, insertInquirySchema, insertServiceSchema, insertArticleSchema, insertHomepageContentSchema, insertPartnerSchema, insertCategorySchema, insertInteractionSchema, insertDealSchema, insertTransactionSchema, insertWarrantyLogSchema, insertSettingsSchema, insertFaqSchema, insertAdvantageSchema, insertJourneyStepSchema, insertAboutPageContentSchema, insertAboutShowcaseServiceSchema, insertAboutProcessStepSchema, insertAboutCoreValueSchema, insertAboutTeamMemberSchema, insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema, insertUserSchema, insertBusinessPartnerSchema, insertBpTransactionSchema } from "@shared/schema";
+import { insertProjectSchema, insertClientSchema, insertInquirySchema, insertServiceSchema, insertArticleSchema, insertHomepageContentSchema, insertPartnerSchema, insertCategorySchema, insertInteractionSchema, insertDealSchema, insertTransactionSchema, insertWarrantyLogSchema, insertSettingsSchema, insertFaqSchema, insertAdvantageSchema, insertJourneyStepSchema, insertAboutPageContentSchema, insertAboutShowcaseServiceSchema, insertAboutProcessStepSchema, insertAboutCoreValueSchema, insertAboutTeamMemberSchema, insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema, insertUserSchema, insertBusinessPartnerSchema, insertBpTransactionSchema, insertBpCategorySchema } from "@shared/schema";
 import { z } from "zod";
 import { createHash } from "crypto";
 
@@ -1823,6 +1823,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete pipeline stage" });
+    }
+  });
+
+  // BP Categories routes
+  app.get("/api/bp-categories", async (req, res) => {
+    try {
+      const { active } = req.query;
+      const filters: any = {};
+      if (active !== undefined) filters.active = active === 'true';
+      const categories = await storage.getBpCategories(filters);
+      res.json(categories);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch BP categories" });
+    }
+  });
+
+  app.post("/api/bp-categories", requirePermission('crm'), async (req, res) => {
+    try {
+      const validatedData = insertBpCategorySchema.parse(req.body);
+      const category = await storage.createBpCategory(validatedData);
+      res.status(201).json(category);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to create BP category" });
+    }
+  });
+
+  app.put("/api/bp-categories/:id", requirePermission('crm'), async (req, res) => {
+    try {
+      const validatedData = insertBpCategorySchema.partial().parse(req.body);
+      const category = await storage.updateBpCategory(req.params.id, validatedData);
+      res.json(category);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to update BP category" });
+    }
+  });
+
+  app.delete("/api/bp-categories/:id", requirePermission('crm'), async (req, res) => {
+    try {
+      await storage.deleteBpCategory(req.params.id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete BP category" });
     }
   });
 
