@@ -6374,37 +6374,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   <div className="grid grid-cols-2 gap-4">
                     <FormField
                       control={businessPartnerForm.control}
-                      name="warrantyExpiry"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t('crm.warrantyExpiry')}</FormLabel>
-                          <FormControl>
-                            <Input {...field} type="date" maxLength={10} data-testid="input-bp-warranty-expiry" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <div className="space-y-2">
-                      <FormLabel>{t('crm.warrantyStatus')}</FormLabel>
-                      <div className="h-10 px-3 py-2 rounded-none border border-white/30 bg-white/5 flex items-center">
-                        <span className="text-sm text-white/70">
-                          {(() => {
-                            const warrantyDate = businessPartnerForm.watch('warrantyExpiry');
-                            if (!warrantyDate) return '';
-                            const expiry = new Date(warrantyDate);
-                            const now = new Date();
-                            return expiry < now ? t('crm.warranty.expired') : t('crm.warranty.active');
-                          })()}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <FormField
-                      control={businessPartnerForm.control}
                       name="stage"
                       render={({ field }) => (
                         <FormItem>
@@ -6503,7 +6472,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 <div className="flex items-center gap-2">
                                   <span className="text-sm font-medium text-white">{transaction.title}</span>
                                   <span className="text-[10px] px-1.5 py-0.5 bg-white/10 text-white/70 rounded-none">
-                                    {transaction.type === "payment" ? (language === 'vi' ? "Thanh toán" : "Payment") : transaction.type === "refund" ? (language === 'vi' ? "Hoàn tiền" : "Refund") : "—"}
+                                    {transaction.type === "payment" ? (language === 'vi' ? "Thu" : "Income") : transaction.type === "refund" ? (language === 'vi' ? "Chi" : "Expense") : "—"}
                                   </span>
                                 </div>
                                 <div className="flex items-center justify-between">
@@ -6776,16 +6745,16 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   </div>
 
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium border-b pb-2">{t('crm.financialInfo')}</h3>
+                    <h3 className="text-lg font-medium border-b pb-2">{language === 'vi' ? 'Tài Chính' : 'Financial'}</h3>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Đã Thanh Toán' : 'Total Revenue'}</label>
+                        <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Thu' : 'Income'}</label>
                         <p className="text-base mt-1 font-semibold">
                           {Math.round(bpFinances[viewingBusinessPartner.id]?.totalSpending || 0).toLocaleString('vi-VN')} đ
                         </p>
                       </div>
                       <div>
-                        <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Hoàn Trả' : 'Refund'}</label>
+                        <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Chi' : 'Expense'}</label>
                         <p className="text-base mt-1 font-semibold">
                           {Math.round(bpFinances[viewingBusinessPartner.id]?.refundAmount || 0).toLocaleString('vi-VN')} đ
                         </p>
@@ -6825,7 +6794,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                               <div className="flex items-center gap-2">
                                 <span className="text-sm font-medium text-white">{transaction.title}</span>
                                 <span className="text-[10px] px-1.5 py-0.5 bg-white/10 text-white/70 rounded-none">
-                                  {transaction.type === "payment" ? (language === 'vi' ? "Thanh toán" : "Payment") : transaction.type === "refund" ? (language === 'vi' ? "Hoàn tiền" : "Refund") : "—"}
+                                  {transaction.type === "payment" ? (language === 'vi' ? "Thu" : "Income") : transaction.type === "refund" ? (language === 'vi' ? "Chi" : "Expense") : "—"}
                                 </span>
                               </div>
                               <div className="flex items-center justify-between">
@@ -6883,7 +6852,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       <FormItem>
                         <FormLabel>{language === 'vi' ? 'Tiêu đề' : 'Title'}</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder={language === 'vi' ? "VD: Thanh toán đợt 1" : "E.g.: Payment phase 1"} />
+                          <Input {...field} placeholder={language === 'vi' ? "VD: Thu đợt 1" : "E.g.: Income phase 1"} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -6918,8 +6887,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="payment">{language === 'vi' ? 'Thanh toán' : 'Payment'}</SelectItem>
-                              <SelectItem value="refund">{language === 'vi' ? 'Hoàn tiền' : 'Refund'}</SelectItem>
+                              <SelectItem value="payment">{language === 'vi' ? 'Thu' : 'Income'}</SelectItem>
+                              <SelectItem value="refund">{language === 'vi' ? 'Chi' : 'Expense'}</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -7009,7 +6978,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             </DialogContent>
           </Dialog>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <Card className="bg-black border-white/10 rounded-none">
             <CardContent className="p-6 min-h-[90px]">
               <div className="flex items-center justify-between">
@@ -7026,14 +6995,11 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <CardContent className="p-6 min-h-[90px]">
               <div className="flex items-center justify-between">
                 <div className="min-w-[120px]">
-                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Tổng doanh thu' : 'Total Revenue'}</p>
+                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Tổng thu' : 'Total Income'}</p>
                   <p className="text-2xl font-semibold mt-1">
                     {allBpTransactions.reduce((sum: number, t: any) => {
-                      if (t.status !== "completed") return sum;
-                      const amount = parseFloat(t.amount || "0");
-                      if (t.type === "payment") return sum + amount;
-                      if (t.type === "refund") return sum - amount;
-                      return sum;
+                      if (t.status !== "completed" || t.type !== "payment") return sum;
+                      return sum + parseFloat(t.amount || "0");
                     }, 0).toLocaleString('vi-VN', {maximumFractionDigits: 0})} đ
                   </p>
                 </div>
@@ -7046,26 +7012,15 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <CardContent className="p-6 min-h-[90px]">
               <div className="flex items-center justify-between">
                 <div className="min-w-[120px]">
-                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Còn bảo hành' : 'Active Warranty'}</p>
+                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Tổng chi' : 'Total Expense'}</p>
                   <p className="text-2xl font-semibold mt-1">
-                    {businessPartners.filter((c: any) => c.warrantyStatus === 'active').length}
+                    {allBpTransactions.reduce((sum: number, t: any) => {
+                      if (t.status !== "completed" || t.type !== "refund") return sum;
+                      return sum + parseFloat(t.amount || "0");
+                    }, 0).toLocaleString('vi-VN', {maximumFractionDigits: 0})} đ
                   </p>
                 </div>
-                <Shield className="h-8 w-8 text-muted-foreground" />
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="bg-black border-white/10 rounded-none">
-            <CardContent className="p-6 min-h-[90px]">
-              <div className="flex items-center justify-between">
-                <div className="min-w-[120px]">
-                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Hết hạn bảo hành' : 'Expired Warranty'}</p>
-                  <p className="text-2xl font-semibold mt-1">
-                    {businessPartners.filter((c: any) => c.warrantyStatus === 'expired').length}
-                  </p>
-                </div>
-                <Shield className="h-8 w-8 text-muted-foreground" />
+                <TrendingUp className="h-8 w-8 text-muted-foreground" />
               </div>
             </CardContent>
           </Card>
@@ -7105,16 +7060,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   {language === 'vi' ? status.labelVi : status.labelEn}
                 </SelectItem>
               ))}
-            </SelectContent>
-          </Select>
-          <Select value={bpWarrantyFilter} onValueChange={(v) => { setBpWarrantyFilter(v); setBpCurrentPage(1); }}>
-            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
-              <SelectValue placeholder={language === 'vi' ? 'Tất cả bảo hành' : 'All warranty'} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{language === 'vi' ? 'Tất cả bảo hành' : 'All warranty'}</SelectItem>
-              <SelectItem value="active">{language === 'vi' ? 'Còn bảo hành' : 'Active'}</SelectItem>
-              <SelectItem value="expired">{language === 'vi' ? 'Hết bảo hành' : 'Expired'}</SelectItem>
             </SelectContent>
           </Select>
           <Select value={bpTierFilter} onValueChange={(v) => { setBpTierFilter(v); setBpCurrentPage(1); }}>
@@ -7174,10 +7119,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">{t('crm.company')}</div>
                         </TableHead>
                         <TableHead className="w-[12%] whitespace-nowrap">
-                          <div>{language === 'vi' ? 'Đã Thanh Toán' : 'Paid'}</div>
-                          <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Hoàn Trả' : 'Refund'}</div>
+                          <div>{language === 'vi' ? 'Thu' : 'Income'}</div>
+                          <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Chi' : 'Expense'}</div>
                         </TableHead>
-                        <TableHead className="w-[11%] text-center whitespace-nowrap">{t('crm.warrantyStatus')}</TableHead>
                         <TableHead className="w-[12%] text-center whitespace-nowrap">{t('crm.pipelineStage')}</TableHead>
                         <TableHead className="w-[13%] text-center whitespace-nowrap">{t('crm.status')}</TableHead>
                         <TableHead className="w-[7%] text-right"></TableHead>
@@ -7223,16 +7167,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             <div className="text-xs text-muted-foreground mt-1 whitespace-nowrap">
                               {Math.round(bpFinances[bp.id]?.refundAmount || 0).toLocaleString('vi-VN')} đ
                             </div>
-                          </TableCell>
-                          <TableCell className="align-middle text-center">
-                            <div className="text-sm capitalize" data-testid={`text-bp-warranty-${bp.id}`}>
-                              {t(`crm.warranty.${bp.warrantyStatus || 'none'}`)}
-                            </div>
-                            {bp.warrantyExpiry && (
-                              <div className="text-xs text-muted-foreground mt-1">
-                                {new Date(bp.warrantyExpiry).toLocaleDateString('vi-VN')}
-                              </div>
-                            )}
                           </TableCell>
                           <TableCell className="align-middle text-center">
                             <span className="text-sm" data-testid={`select-bp-stage-${bp.id}`}>
