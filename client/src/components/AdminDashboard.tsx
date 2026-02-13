@@ -3741,7 +3741,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           <Card>
             <CardContent className="p-6 min-h-[90px]">
               <div>
-                <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Đang Theo Dõi' : 'Following Up'}</p>
+                <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Khách Hàng Đang Theo Dõi' : 'Clients Following Up'}</p>
                 <p className="text-2xl font-light" data-testid="stat-active-clients">
                   {clientsLoading ? "..." : clients.filter(c => c.status === 'following_up').length}
                 </p>
@@ -7032,6 +7032,19 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
             />
           </div>
+          <Select value={bpTierFilter} onValueChange={(v) => { setBpTierFilter(v); setBpCurrentPage(1); }}>
+            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectValue placeholder={language === 'vi' ? 'Tất cả hạng' : 'All tiers'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{language === 'vi' ? 'Tất cả hạng' : 'All tiers'}</SelectItem>
+              {bpTiersData.filter((t: any) => t.active).sort((a: any, b: any) => a.order - b.order).map((tier: any) => (
+                <SelectItem key={tier.id} value={tier.value}>
+                  {language === 'vi' ? tier.labelVi : tier.labelEn}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Select value={bpStageFilter} onValueChange={(v) => { setBpStageFilter(v); setBpCurrentPage(1); }}>
             <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
               <SelectValue placeholder={language === 'vi' ? 'Tất cả hạng mục' : 'All categories'} />
@@ -7054,19 +7067,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               {bpStatuses.filter(s => s.active).sort((a, b) => a.order - b.order).map(status => (
                 <SelectItem key={status.id} value={status.value}>
                   {language === 'vi' ? status.labelVi : status.labelEn}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={bpTierFilter} onValueChange={(v) => { setBpTierFilter(v); setBpCurrentPage(1); }}>
-            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
-              <SelectValue placeholder={language === 'vi' ? 'Tất cả hạng' : 'All tiers'} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{language === 'vi' ? 'Tất cả hạng' : 'All tiers'}</SelectItem>
-              {bpTiersData.filter((t: any) => t.active).sort((a: any, b: any) => a.order - b.order).map((tier: any) => (
-                <SelectItem key={tier.id} value={tier.value}>
-                  {language === 'vi' ? tier.labelVi : tier.labelEn}
                 </SelectItem>
               ))}
             </SelectContent>
