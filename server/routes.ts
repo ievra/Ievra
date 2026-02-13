@@ -10,7 +10,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import { storage } from "./storage";
-import { insertProjectSchema, insertClientSchema, insertInquirySchema, insertServiceSchema, insertArticleSchema, insertHomepageContentSchema, insertPartnerSchema, insertCategorySchema, insertInteractionSchema, insertDealSchema, insertTransactionSchema, insertWarrantyLogSchema, insertSettingsSchema, insertFaqSchema, insertAdvantageSchema, insertJourneyStepSchema, insertAboutPageContentSchema, insertAboutShowcaseServiceSchema, insertAboutProcessStepSchema, insertAboutCoreValueSchema, insertAboutTeamMemberSchema, insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema, insertUserSchema, insertBusinessPartnerSchema, insertBpTransactionSchema, insertBpCategorySchema } from "@shared/schema";
+import { insertProjectSchema, insertClientSchema, insertInquirySchema, insertServiceSchema, insertArticleSchema, insertHomepageContentSchema, insertPartnerSchema, insertCategorySchema, insertInteractionSchema, insertDealSchema, insertTransactionSchema, insertWarrantyLogSchema, insertSettingsSchema, insertFaqSchema, insertAdvantageSchema, insertJourneyStepSchema, insertAboutPageContentSchema, insertAboutShowcaseServiceSchema, insertAboutProcessStepSchema, insertAboutCoreValueSchema, insertAboutTeamMemberSchema, insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema, insertUserSchema, insertBusinessPartnerSchema, insertBpTransactionSchema, insertBpCategorySchema, insertBpStatusSchema } from "@shared/schema";
 import { z } from "zod";
 import { createHash } from "crypto";
 
@@ -1871,6 +1871,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete BP category" });
+    }
+  });
+
+  // BP Statuses routes
+  app.get("/api/bp-statuses", async (req, res) => {
+    try {
+      const { active } = req.query;
+      const filters: any = {};
+      if (active !== undefined) filters.active = active === 'true';
+      const statuses = await storage.getBpStatuses(filters);
+      res.json(statuses);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch BP statuses" });
+    }
+  });
+
+  app.post("/api/bp-statuses", requirePermission('crm'), async (req, res) => {
+    try {
+      const validatedData = insertBpStatusSchema.parse(req.body);
+      const status = await storage.createBpStatus(validatedData);
+      res.status(201).json(status);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to create BP status" });
+    }
+  });
+
+  app.put("/api/bp-statuses/:id", requirePermission('crm'), async (req, res) => {
+    try {
+      const validatedData = insertBpStatusSchema.partial().parse(req.body);
+      const status = await storage.updateBpStatus(req.params.id, validatedData);
+      res.json(status);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to update BP status" });
+    }
+  });
+
+  app.delete("/api/bp-statuses/:id", requirePermission('crm'), async (req, res) => {
+    try {
+      await storage.deleteBpStatus(req.params.id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete BP status" });
     }
   });
 
