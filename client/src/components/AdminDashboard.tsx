@@ -5913,6 +5913,29 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
             />
           </div>
+          <Select value={clientTierFilter} onValueChange={(v) => { setClientTierFilter(v); setCurrentPage(1); }}>
+            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectValue placeholder={language === 'vi' ? 'Tất cả hạng' : 'All tiers'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{language === 'vi' ? 'Tất cả hạng' : 'All tiers'}</SelectItem>
+              {crmTiers.filter((t: any) => t.active).sort((a: any, b: any) => a.order - b.order).map((tier: any) => (
+                <SelectItem key={tier.id} value={tier.value}>
+                  {language === 'vi' ? tier.labelVi : tier.labelEn}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={clientWarrantyFilter} onValueChange={(v) => { setClientWarrantyFilter(v); setCurrentPage(1); }}>
+            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectValue placeholder={language === 'vi' ? 'Tất cả bảo hành' : 'All warranty'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{language === 'vi' ? 'Tất cả bảo hành' : 'All warranty'}</SelectItem>
+              <SelectItem value="active">{language === 'vi' ? 'Còn bảo hành' : 'Active'}</SelectItem>
+              <SelectItem value="expired">{language === 'vi' ? 'Hết bảo hành' : 'Expired'}</SelectItem>
+            </SelectContent>
+          </Select>
           <Select value={clientStageFilter} onValueChange={(v) => { setClientStageFilter(v); setCurrentPage(1); }}>
             <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
               <SelectValue placeholder={language === 'vi' ? 'Tất cả giai đoạn' : 'All stages'} />
@@ -5935,29 +5958,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               {crmStatuses.filter(s => s.active).sort((a, b) => a.order - b.order).map(status => (
                 <SelectItem key={status.id} value={status.value}>
                   {language === 'vi' ? status.labelVi : status.labelEn}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={clientWarrantyFilter} onValueChange={(v) => { setClientWarrantyFilter(v); setCurrentPage(1); }}>
-            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
-              <SelectValue placeholder={language === 'vi' ? 'Tất cả bảo hành' : 'All warranty'} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{language === 'vi' ? 'Tất cả bảo hành' : 'All warranty'}</SelectItem>
-              <SelectItem value="active">{language === 'vi' ? 'Còn bảo hành' : 'Active'}</SelectItem>
-              <SelectItem value="expired">{language === 'vi' ? 'Hết bảo hành' : 'Expired'}</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select value={clientTierFilter} onValueChange={(v) => { setClientTierFilter(v); setCurrentPage(1); }}>
-            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
-              <SelectValue placeholder={language === 'vi' ? 'Tất cả hạng' : 'All tiers'} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{language === 'vi' ? 'Tất cả hạng' : 'All tiers'}</SelectItem>
-              {crmTiers.filter((t: any) => t.active).sort((a: any, b: any) => a.order - b.order).map((tier: any) => (
-                <SelectItem key={tier.id} value={tier.value}>
-                  {language === 'vi' ? tier.labelVi : tier.labelEn}
                 </SelectItem>
               ))}
             </SelectContent>
