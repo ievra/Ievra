@@ -6258,7 +6258,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="lastName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Số điện thoại' : 'Phone'} *</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Số điện thoại' : 'Phone'}</FormLabel>
                           <FormControl>
                             <Input {...field} placeholder="0901234567" data-testid="input-bp-last-name" />
                           </FormControl>
@@ -6313,35 +6313,19 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <FormField
-                      control={businessPartnerForm.control}
-                      name="phone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t('crm.phone')}</FormLabel>
-                          <FormControl>
-                            <Input {...field} placeholder="0901234567" data-testid="input-bp-phone" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={businessPartnerForm.control}
-                      name="company"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{t('crm.company')}</FormLabel>
-                          <FormControl>
-                            <Input {...field} placeholder="ABC Company" data-testid="input-bp-company" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+                  <FormField
+                    control={businessPartnerForm.control}
+                    name="company"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('crm.company')}</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="ABC Company" data-testid="input-bp-company" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
                   <FormField
                     control={businessPartnerForm.control}
