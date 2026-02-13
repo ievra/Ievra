@@ -730,7 +730,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   const bpItemsPerPage = 10;
 
   const filteredBusinessPartners = businessPartners.filter((bp: any) => {
-    if (bpStageFilter !== 'all' && !(bp.stage || '').toLowerCase().includes(bpStageFilter.toLowerCase())) return false;
+    if (bpStageFilter !== 'all' && (bp.stage || '') !== bpStageFilter) return false;
     if (bpStatusFilter !== 'all' && (bp.status || 'active') !== bpStatusFilter) return false;
     if (bpWarrantyFilter !== 'all' && (bp.warrantyStatus || 'none') !== bpWarrantyFilter) return false;
     if (bpTierFilter !== 'all' && (bp.tier || 'silver') !== bpTierFilter) return false;
@@ -6378,9 +6378,24 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>{language === 'vi' ? 'Hạng Mục' : 'Category'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} placeholder={language === 'vi' ? "VD: Xi măng, Kính, Gỗ..." : "E.g.: Cement, Glass, Wood..."} data-testid="select-bp-stage" />
-                          </FormControl>
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <FormControl>
+                              <SelectTrigger data-testid="select-bp-stage">
+                                <SelectValue />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {crmStages
+                                .filter((stage: any) => stage.active)
+                                .sort((a: any, b: any) => a.order - b.order)
+                                .map((stage: any) => (
+                                  <SelectItem key={stage.id} value={stage.value}>
+                                    {language === 'vi' ? stage.labelVi : stage.labelEn}
+                                  </SelectItem>
+                                ))
+                              }
+                            </SelectContent>
+                          </Select>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -6702,7 +6717,12 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Hạng Mục' : 'Category'}</label>
-                        <p className="text-base mt-1">{viewingBusinessPartner.stage || "—"}</p>
+                        <p className="text-base mt-1 capitalize">
+                          {(() => {
+                            const stage = crmStages.find(s => s.value === viewingBusinessPartner.stage);
+                            return stage ? (language === 'vi' ? stage.labelVi : stage.labelEn) : viewingBusinessPartner.stage || "—";
+                          })()}
+                        </p>
                       </div>
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">{t('crm.status')}</label>
@@ -7016,12 +7036,19 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
             />
           </div>
-          <Input
-            value={bpStageFilter === 'all' ? '' : bpStageFilter}
-            onChange={(e) => { setBpStageFilter(e.target.value || 'all'); setBpCurrentPage(1); }}
-            placeholder={language === 'vi' ? 'Lọc hạng mục...' : 'Filter category...'}
-            className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0 h-9"
-          />
+          <Select value={bpStageFilter} onValueChange={(v) => { setBpStageFilter(v); setBpCurrentPage(1); }}>
+            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectValue placeholder={language === 'vi' ? 'Tất cả hạng mục' : 'All categories'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{language === 'vi' ? 'Tất cả hạng mục' : 'All categories'}</SelectItem>
+              {crmStages.filter(s => s.active).sort((a, b) => a.order - b.order).map(stage => (
+                <SelectItem key={stage.id} value={stage.value}>
+                  {language === 'vi' ? stage.labelVi : stage.labelEn}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Select value={bpStatusFilter} onValueChange={(v) => { setBpStatusFilter(v); setBpCurrentPage(1); }}>
             <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
               <SelectValue placeholder={language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'} />
@@ -7143,7 +7170,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           </TableCell>
                           <TableCell className="align-middle text-center">
                             <span className="text-sm" data-testid={`select-bp-stage-${bp.id}`}>
-                              {bp.stage || '—'}
+                              {(() => {
+                                const stage = crmStages.find(s => s.value === bp.stage);
+                                return stage ? (language === 'vi' ? stage.labelVi : stage.labelEn) : bp.stage || '—';
+                              })()}
                             </span>
                           </TableCell>
                           <TableCell className="align-middle text-center">
