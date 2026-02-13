@@ -626,9 +626,6 @@ export default function LookupAdminTab() {
                             <TableCell>
                               <div>
                                 <p className="text-white/70">{formatDate(interaction.date)}</p>
-                                <Badge variant="outline" className="rounded-none border-white/20 text-white/60 mt-1">
-                                  {interactionTypeLabels[interaction.type]?.[language] || interaction.type}
-                                </Badge>
                               </div>
                             </TableCell>
                             <TableCell className="text-white">{interaction.title}</TableCell>
