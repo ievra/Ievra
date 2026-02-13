@@ -584,6 +584,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     queryKey: ['/api/crm-statuses'],
   });
 
+  const { data: bpCategories = [] } = useQuery<any[]>({
+    queryKey: ['/api/bp-categories'],
+  });
+
   // About Page Content Queries
   const { data: aboutContent, isLoading: aboutContentLoading } = useQuery<AboutPageContent>({
     queryKey: ['/api/about-page-content'],
@@ -6369,12 +6373,12 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {crmStages
-                                .filter((stage: any) => stage.active)
+                              {bpCategories
+                                .filter((cat: any) => cat.active)
                                 .sort((a: any, b: any) => a.order - b.order)
-                                .map((stage: any) => (
-                                  <SelectItem key={stage.id} value={stage.value}>
-                                    {language === 'vi' ? stage.labelVi : stage.labelEn}
+                                .map((cat: any) => (
+                                  <SelectItem key={cat.id} value={cat.value}>
+                                    {language === 'vi' ? cat.labelVi : cat.labelEn}
                                   </SelectItem>
                                 ))
                               }
@@ -6703,8 +6707,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Hạng Mục' : 'Category'}</label>
                         <p className="text-base mt-1 capitalize">
                           {(() => {
-                            const stage = crmStages.find(s => s.value === viewingBusinessPartner.stage);
-                            return stage ? (language === 'vi' ? stage.labelVi : stage.labelEn) : viewingBusinessPartner.stage || "—";
+                            const cat = bpCategories.find(s => s.value === viewingBusinessPartner.stage);
+                            return cat ? (language === 'vi' ? cat.labelVi : cat.labelEn) : viewingBusinessPartner.stage || "—";
                           })()}
                         </p>
                       </div>
@@ -7026,9 +7030,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{language === 'vi' ? 'Tất cả hạng mục' : 'All categories'}</SelectItem>
-              {crmStages.filter(s => s.active).sort((a, b) => a.order - b.order).map(stage => (
-                <SelectItem key={stage.id} value={stage.value}>
-                  {language === 'vi' ? stage.labelVi : stage.labelEn}
+              {bpCategories.filter(s => s.active).sort((a, b) => a.order - b.order).map(cat => (
+                <SelectItem key={cat.id} value={cat.value}>
+                  {language === 'vi' ? cat.labelVi : cat.labelEn}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -7127,8 +7131,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             </div>
                             <div className="text-xs text-muted-foreground mt-1">
                               {(() => {
-                                const stage = crmStages.find(s => s.value === bp.stage);
-                                return stage ? (language === 'vi' ? stage.labelVi : stage.labelEn) : bp.stage || '—';
+                                const cat = bpCategories.find(s => s.value === bp.stage);
+                                return cat ? (language === 'vi' ? cat.labelVi : cat.labelEn) : bp.stage || '—';
                               })()}
                             </div>
                           </TableCell>
