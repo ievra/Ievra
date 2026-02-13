@@ -5526,7 +5526,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <DialogHeader>
               <DialogTitle className="text-2xl font-light">{language === 'vi' ? 'Cài Đặt' : 'Settings'}</DialogTitle>
             </DialogHeader>
-            <CrmSettingsManager />
+            <CrmSettingsManager context="client" />
           </DialogContent>
         </Dialog>
 
@@ -6668,7 +6668,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <DialogHeader>
               <DialogTitle className="text-2xl font-light">{language === 'vi' ? 'Cài Đặt' : 'Settings'}</DialogTitle>
             </DialogHeader>
-            <CrmSettingsManager />
+            <CrmSettingsManager context="bp" />
           </DialogContent>
         </Dialog>
 

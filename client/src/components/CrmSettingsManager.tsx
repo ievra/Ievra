@@ -19,7 +19,7 @@ import { insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmSta
 import { z } from "zod";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-export default function CrmSettingsManager() {
+export default function CrmSettingsManager({ context = 'all' }: { context?: 'all' | 'client' | 'bp' }) {
   const { t, language } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -321,13 +321,13 @@ export default function CrmSettingsManager() {
 
   return (
     <div>
-      <Tabs defaultValue="stages" className="w-full">
-              <TabsList className="grid w-full grid-cols-5 bg-black border border-white/10">
-                <TabsTrigger value="stages">{language === 'vi' ? 'Giai Đoạn' : 'Stages'}</TabsTrigger>
-                <TabsTrigger value="bpCategories">{language === 'vi' ? 'Hạng Mục ĐT' : 'BP Categories'}</TabsTrigger>
+      <Tabs defaultValue={context === 'bp' ? 'bpCategories' : 'stages'} className="w-full">
+              <TabsList className={`grid w-full bg-black border border-white/10 ${context === 'all' ? 'grid-cols-5' : 'grid-cols-3'}`}>
+                {context !== 'bp' && <TabsTrigger value="stages">{language === 'vi' ? 'Giai Đoạn' : 'Stages'}</TabsTrigger>}
+                {context !== 'client' && <TabsTrigger value="bpCategories">{language === 'vi' ? 'Hạng Mục ĐT' : 'BP Categories'}</TabsTrigger>}
                 <TabsTrigger value="tiers">{language === 'vi' ? 'Hạng Đối Tác' : 'Partner Tiers'}</TabsTrigger>
-                <TabsTrigger value="statuses">{language === 'vi' ? 'TT Khách Hàng' : 'Client Statuses'}</TabsTrigger>
-                <TabsTrigger value="bpStatuses">{language === 'vi' ? 'TT Đối Tác' : 'BP Statuses'}</TabsTrigger>
+                {context !== 'bp' && <TabsTrigger value="statuses">{language === 'vi' ? 'TT Khách Hàng' : 'Client Statuses'}</TabsTrigger>}
+                {context !== 'client' && <TabsTrigger value="bpStatuses">{language === 'vi' ? 'TT Đối Tác' : 'BP Statuses'}</TabsTrigger>}
               </TabsList>
 
               {/* Pipeline Stages (Client) */}
