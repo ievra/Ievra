@@ -14,8 +14,8 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Pencil, Trash2, Plus } from "lucide-react";
-import type { CrmPipelineStage, CrmCustomerTier, CrmStatus } from "@shared/schema";
-import { insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema } from "@shared/schema";
+import type { CrmPipelineStage, CrmCustomerTier, CrmStatus, BpCategory } from "@shared/schema";
+import { insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema, insertBpCategorySchema } from "@shared/schema";
 import { z } from "zod";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -27,14 +27,17 @@ export default function CrmSettingsManager() {
   const [isStageDialogOpen, setIsStageDialogOpen] = useState(false);
   const [isTierDialogOpen, setIsTierDialogOpen] = useState(false);
   const [isStatusDialogOpen, setIsStatusDialogOpen] = useState(false);
+  const [isBpCategoryDialogOpen, setIsBpCategoryDialogOpen] = useState(false);
   
   const [editingStage, setEditingStage] = useState<CrmPipelineStage | null>(null);
   const [editingTier, setEditingTier] = useState<CrmCustomerTier | null>(null);
   const [editingStatus, setEditingStatus] = useState<CrmStatus | null>(null);
+  const [editingBpCategory, setEditingBpCategory] = useState<BpCategory | null>(null);
 
   const { data: stages = [] } = useQuery<CrmPipelineStage[]>({ queryKey: ['/api/crm-pipeline-stages'] });
   const { data: tiers = [] } = useQuery<CrmCustomerTier[]>({ queryKey: ['/api/crm-customer-tiers'] });
   const { data: statuses = [] } = useQuery<CrmStatus[]>({ queryKey: ['/api/crm-statuses'] });
+  const { data: bpCategories = [] } = useQuery<BpCategory[]>({ queryKey: ['/api/bp-categories'] });
 
   const stageForm = useForm<z.infer<typeof insertCrmPipelineStageSchema>>({
     resolver: zodResolver(insertCrmPipelineStageSchema),
@@ -174,6 +177,52 @@ export default function CrmSettingsManager() {
     },
   });
 
+  const bpCategoryForm = useForm<z.infer<typeof insertBpCategorySchema>>({
+    resolver: zodResolver(insertBpCategorySchema),
+    defaultValues: {
+      value: "",
+      labelEn: "",
+      labelVi: "",
+      order: 0,
+      active: true,
+    },
+  });
+
+  const createBpCategoryMutation = useMutation({
+    mutationFn: async (data: z.infer<typeof insertBpCategorySchema>) => {
+      return await apiRequest('POST', '/api/bp-categories', data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/bp-categories'] });
+      setIsBpCategoryDialogOpen(false);
+      bpCategoryForm.reset();
+      toast({ title: language === 'vi' ? 'Đã tạo hạng mục thành công' : 'Category created successfully' });
+    },
+  });
+
+  const updateBpCategoryMutation = useMutation({
+    mutationFn: async ({ id, ...data }: Partial<BpCategory> & { id: string }) => {
+      return await apiRequest('PUT', `/api/bp-categories/${id}`, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/bp-categories'] });
+      setIsBpCategoryDialogOpen(false);
+      setEditingBpCategory(null);
+      bpCategoryForm.reset();
+      toast({ title: language === 'vi' ? 'Đã cập nhật hạng mục thành công' : 'Category updated successfully' });
+    },
+  });
+
+  const deleteBpCategoryMutation = useMutation({
+    mutationFn: async (id: string) => {
+      return await apiRequest('DELETE', `/api/bp-categories/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/bp-categories'] });
+      toast({ title: language === 'vi' ? 'Đã xóa hạng mục thành công' : 'Category deleted successfully' });
+    },
+  });
+
   const toValue = (label: string) => label.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
 
   const handleStageSubmit = (data: z.infer<typeof insertCrmPipelineStageSchema>) => {
@@ -203,16 +252,26 @@ export default function CrmSettingsManager() {
     }
   };
 
+  const handleBpCategorySubmit = (data: z.infer<typeof insertBpCategorySchema>) => {
+    const submitData = { ...data, value: editingBpCategory ? data.value : toValue(data.labelEn) };
+    if (editingBpCategory) {
+      updateBpCategoryMutation.mutate({ id: editingBpCategory.id, ...submitData });
+    } else {
+      createBpCategoryMutation.mutate(submitData);
+    }
+  };
+
   return (
     <div>
       <Tabs defaultValue="stages" className="w-full">
-              <TabsList className="grid w-full grid-cols-3 bg-black border border-white/10">
-                <TabsTrigger value="stages">{language === 'vi' ? 'Hạng Mục' : 'Categories'}</TabsTrigger>
+              <TabsList className="grid w-full grid-cols-4 bg-black border border-white/10">
+                <TabsTrigger value="stages">{language === 'vi' ? 'Giai Đoạn' : 'Stages'}</TabsTrigger>
+                <TabsTrigger value="bpCategories">{language === 'vi' ? 'Hạng Mục ĐT' : 'BP Categories'}</TabsTrigger>
                 <TabsTrigger value="tiers">{language === 'vi' ? 'Hạng Đối Tác' : 'Partner Tiers'}</TabsTrigger>
                 <TabsTrigger value="statuses">{language === 'vi' ? 'Trạng Thái' : 'Statuses'}</TabsTrigger>
               </TabsList>
 
-              {/* Pipeline Stages */}
+              {/* Pipeline Stages (Client) */}
               <TabsContent value="stages" className="mt-4">
                 <div className="flex justify-end mb-4">
                   <Dialog open={isStageDialogOpen} onOpenChange={setIsStageDialogOpen}>
@@ -231,12 +290,12 @@ export default function CrmSettingsManager() {
                         data-testid="button-add-stage"
                       >
                         <Plus className="h-4 w-4 mr-2" />
-                        {language === 'vi' ? 'Thêm' : 'Add Category'}
+                        {language === 'vi' ? 'Thêm' : 'Add Stage'}
                       </Button>
                     </DialogTrigger>
                     <DialogContent>
                       <DialogHeader>
-                        <DialogTitle>{editingStage ? (language === 'vi' ? 'Sửa Hạng Mục' : 'Edit Category') : (language === 'vi' ? 'Thêm Hạng Mục' : 'Add Category')}</DialogTitle>
+                        <DialogTitle>{editingStage ? (language === 'vi' ? 'Sửa Giai Đoạn' : 'Edit Stage') : (language === 'vi' ? 'Thêm Giai Đoạn' : 'Add Stage')}</DialogTitle>
                       </DialogHeader>
                       <Form {...stageForm}>
                         <form onSubmit={stageForm.handleSubmit(handleStageSubmit)} className="space-y-4">
@@ -347,9 +406,9 @@ export default function CrmSettingsManager() {
                               </AlertDialogTrigger>
                               <AlertDialogContent>
                                 <AlertDialogHeader>
-                                  <AlertDialogTitle>{language === 'vi' ? 'Xóa Hạng Mục' : 'Delete Category'}</AlertDialogTitle>
+                                  <AlertDialogTitle>{language === 'vi' ? 'Xóa Giai Đoạn' : 'Delete Stage'}</AlertDialogTitle>
                                   <AlertDialogDescription>
-                                    {language === 'vi' ? 'Bạn có chắc chắn muốn xóa hạng mục này? Hành động này không thể hoàn tác.' : 'Are you sure you want to delete this category? This action cannot be undone.'}
+                                    {language === 'vi' ? 'Bạn có chắc chắn muốn xóa giai đoạn này? Hành động này không thể hoàn tác.' : 'Are you sure you want to delete this stage? This action cannot be undone.'}
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
@@ -358,6 +417,155 @@ export default function CrmSettingsManager() {
                                     onClick={() => deleteStageMutation.mutate(stage.id)}
                                     data-testid={`button-confirm-delete-stage-${stage.id}`}
                                   >
+                                    {language === 'vi' ? 'Xóa' : 'Delete'}
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TabsContent>
+
+              {/* BP Categories */}
+              <TabsContent value="bpCategories" className="mt-4">
+                <div className="flex justify-end mb-4">
+                  <Dialog open={isBpCategoryDialogOpen} onOpenChange={setIsBpCategoryDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button
+                        onClick={() => {
+                          setEditingBpCategory(null);
+                          bpCategoryForm.reset({
+                            value: "",
+                            labelEn: "",
+                            labelVi: "",
+                            order: bpCategories.length,
+                            active: true,
+                          });
+                        }}
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        {language === 'vi' ? 'Thêm' : 'Add Category'}
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>{editingBpCategory ? (language === 'vi' ? 'Sửa Hạng Mục' : 'Edit Category') : (language === 'vi' ? 'Thêm Hạng Mục' : 'Add Category')}</DialogTitle>
+                      </DialogHeader>
+                      <Form {...bpCategoryForm}>
+                        <form onSubmit={bpCategoryForm.handleSubmit(handleBpCategorySubmit)} className="space-y-4">
+                          <FormField
+                            control={bpCategoryForm.control}
+                            name="labelEn"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</FormLabel>
+                                <FormControl>
+                                  <Input {...field} placeholder="Wood" />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={bpCategoryForm.control}
+                            name="labelVi"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</FormLabel>
+                                <FormControl>
+                                  <Input {...field} placeholder="Gỗ" />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={bpCategoryForm.control}
+                            name="order"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>{language === 'vi' ? 'Thứ tự' : 'Order'}</FormLabel>
+                                <FormControl>
+                                  <Input 
+                                    {...field} 
+                                    type="number" 
+                                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <div className="flex justify-end space-x-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() => {
+                                setIsBpCategoryDialogOpen(false);
+                                setEditingBpCategory(null);
+                                bpCategoryForm.reset();
+                              }}
+                            >
+                              {language === 'vi' ? 'Hủy' : 'Cancel'}
+                            </Button>
+                            <Button type="submit">
+                              {editingBpCategory ? (language === 'vi' ? 'Cập Nhật' : 'Update') : (language === 'vi' ? 'Tạo' : 'Create')}
+                            </Button>
+                          </div>
+                        </form>
+                      </Form>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</TableHead>
+                      <TableHead>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</TableHead>
+                      <TableHead>{language === 'vi' ? 'Thứ tự' : 'Order'}</TableHead>
+                      <TableHead className="text-right">{language === 'vi' ? 'Thao tác' : 'Actions'}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {bpCategories.sort((a, b) => a.order - b.order).map((cat) => (
+                      <TableRow key={cat.id}>
+                        <TableCell>{cat.labelEn}</TableCell>
+                        <TableCell>{cat.labelVi}</TableCell>
+                        <TableCell>{cat.order}</TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setEditingBpCategory(cat);
+                                bpCategoryForm.reset(cat);
+                                setIsBpCategoryDialogOpen(true);
+                              }}
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button variant="outline" size="sm">
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>{language === 'vi' ? 'Xóa Hạng Mục' : 'Delete Category'}</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    {language === 'vi' ? 'Bạn có chắc chắn muốn xóa hạng mục này? Hành động này không thể hoàn tác.' : 'Are you sure you want to delete this category? This action cannot be undone.'}
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>{language === 'vi' ? 'Hủy' : 'Cancel'}</AlertDialogCancel>
+                                  <AlertDialogAction onClick={() => deleteBpCategoryMutation.mutate(cat.id)}>
                                     {language === 'vi' ? 'Xóa' : 'Delete'}
                                   </AlertDialogAction>
                                 </AlertDialogFooter>
