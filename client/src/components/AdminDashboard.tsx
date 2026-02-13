@@ -7092,7 +7092,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         <TableHead className="w-[5%] whitespace-nowrap text-center">{language === 'vi' ? 'Hạng' : 'Rank'}</TableHead>
                         <TableHead className="w-[14%] whitespace-nowrap">
                           <div>{language === 'vi' ? 'Đại Diện' : 'Representative'}</div>
-                          <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Số điện thoại' : 'Phone'}</div>
+                          <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Hạng mục' : 'Category'}</div>
                         </TableHead>
                         <TableHead className="w-[13%] whitespace-nowrap">
                           <div>{t('crm.phone')}</div>
@@ -7106,7 +7106,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           <div>{language === 'vi' ? 'Thu' : 'Income'}</div>
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Chi' : 'Expense'}</div>
                         </TableHead>
-                        <TableHead className="w-[12%] text-center whitespace-nowrap">{language === 'vi' ? 'Hạng Mục' : 'Category'}</TableHead>
                         <TableHead className="w-[13%] text-center whitespace-nowrap">{t('crm.status')}</TableHead>
                         <TableHead className="w-[7%] text-right"></TableHead>
                       </TableRow>
@@ -7127,11 +7126,14 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                               {bp.firstName} {bp.lastName}
                             </div>
                             <div className="text-xs text-muted-foreground mt-1">
-                              {bp.phone || "—"}
+                              {(() => {
+                                const stage = crmStages.find(s => s.value === bp.stage);
+                                return stage ? (language === 'vi' ? stage.labelVi : stage.labelEn) : bp.stage || '—';
+                              })()}
                             </div>
                           </TableCell>
                           <TableCell className="align-middle">
-                            <div className="text-sm truncate">{bp.phone || "—"}</div>
+                            <div className="text-sm truncate">{bp.lastName || bp.phone || "—"}</div>
                             <div className="text-xs text-muted-foreground truncate mt-1" title={bp.email}>
                               {bp.email}
                             </div>
@@ -7151,14 +7153,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             <div className="text-xs text-muted-foreground mt-1 whitespace-nowrap">
                               {Math.round(bpFinances[bp.id]?.refundAmount || 0).toLocaleString('vi-VN')} đ
                             </div>
-                          </TableCell>
-                          <TableCell className="align-middle text-center">
-                            <span className="text-sm" data-testid={`select-bp-stage-${bp.id}`}>
-                              {(() => {
-                                const stage = crmStages.find(s => s.value === bp.stage);
-                                return stage ? (language === 'vi' ? stage.labelVi : stage.labelEn) : bp.stage || '—';
-                              })()}
-                            </span>
                           </TableCell>
                           <TableCell className="align-middle text-center">
                             <span className="text-sm" data-testid={`select-bp-status-${bp.id}`}>
