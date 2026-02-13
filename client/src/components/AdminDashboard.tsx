@@ -7123,7 +7123,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           </TableCell>
                           <TableCell className="align-middle">
                             <div className="font-light whitespace-nowrap">
-                              {bp.firstName} {bp.lastName}
+                              {bp.firstName}
                             </div>
                             <div className="text-xs text-muted-foreground mt-1">
                               {(() => {
@@ -7133,7 +7133,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             </div>
                           </TableCell>
                           <TableCell className="align-middle">
-                            <div className="text-sm truncate">{bp.lastName || bp.phone || "—"}</div>
+                            <div className="text-sm truncate">{bp.lastName || "—"}</div>
                             <div className="text-xs text-muted-foreground truncate mt-1" title={bp.email}>
                               {bp.email}
                             </div>
