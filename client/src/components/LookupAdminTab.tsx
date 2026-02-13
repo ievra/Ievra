@@ -198,15 +198,22 @@ export default function LookupAdminTab() {
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
+    const remaining = 5 - interactionAttachments.length;
+    if (remaining <= 0) {
+      toast({ title: isVi ? "Giới hạn" : "Limit", description: isVi ? "Tối đa 5 hình ảnh" : "Maximum 5 images", variant: "destructive" });
+      return;
+    }
+    const filesToUpload = Array.from(files).slice(0, remaining);
     setUploadingImage(true);
     try {
       const newAttachments: string[] = [];
-      for (let i = 0; i < files.length; i++) {
+      for (let i = 0; i < filesToUpload.length; i++) {
         const formData = new FormData();
-        formData.append('file', files[i]);
+        formData.append('file', filesToUpload[i]);
         const res = await fetch('/api/upload', { method: 'POST', body: formData, credentials: 'include' });
         const data = await res.json();
-        if (data.url) newAttachments.push(data.url);
+        if (data.path) newAttachments.push(data.path);
+        else if (data.url) newAttachments.push(data.url);
       }
       setInteractionAttachments(prev => [...prev, ...newAttachments]);
     } catch {
@@ -954,9 +961,9 @@ export default function LookupAdminTab() {
                     </div>
                   ))}
                 </div>
-                <label className="inline-flex items-center gap-2 cursor-pointer h-10 px-4 border border-white/20 text-white/60 hover:bg-white/10 text-sm transition-colors">
-                  {uploadingImage ? (isVi ? "Đang tải..." : "Uploading...") : (isVi ? "Chọn hình" : "Choose Image")}
-                  <input type="file" accept="image/*" multiple onChange={handleImageUpload} className="hidden" disabled={uploadingImage} />
+                <label className={`inline-flex items-center gap-2 h-10 px-4 border border-white/20 text-sm transition-colors ${interactionAttachments.length >= 5 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer text-white/60 hover:bg-white/10'}`}>
+                  {uploadingImage ? (isVi ? "Đang tải..." : "Uploading...") : (isVi ? `Chọn hình (${interactionAttachments.length}/5)` : `Choose Image (${interactionAttachments.length}/5)`)}
+                  <input type="file" accept="image/*" multiple onChange={handleImageUpload} className="hidden" disabled={uploadingImage || interactionAttachments.length >= 5} />
                 </label>
               </div>
               <div className="flex justify-end gap-3 pt-2">
