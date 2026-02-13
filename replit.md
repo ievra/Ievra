@@ -28,7 +28,7 @@ Preferred communication style: Simple, everyday language.
 The application manages core entities:
 - **Projects**: Portfolio items with categories (residential, commercial, architecture), images, location, and status tracking
 - **Clients**: CRM functionality with contact information, company details, and relationship status
-- **Business Partners (Đối Tác)**: Identical to Clients system - full CRM with contact info, company, stages, statuses, tiers, warranty tracking, and transaction management. Uses separate `business_partners` and `bp_transactions` tables. Shares CRM settings (stages, statuses, tiers) with clients.
+- **Business Partners (Đối Tác)**: Full CRM with contact info, company, categories, statuses, tiers, warranty tracking, and transaction management. Uses separate `business_partners`, `bp_transactions`, and `bp_categories` tables. Has its own category system ("Hạng Mục") separate from client pipeline stages ("Giai Đoạn"). Shares statuses and tiers with clients.
   - **Automatic Warranty Management**: Warranty status is automatically calculated based on warranty expiry date
     - No expiry date set → Status: "None"
     - Expiry date in future → Status: "Active"
