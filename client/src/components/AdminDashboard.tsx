@@ -128,6 +128,7 @@ const clientSchema = z.object({
   intakeDate: z.string().optional(),
   warrantyStatus: z.enum(["none", "active", "expired"]).default("none"),
   warrantyExpiry: z.string().optional(),
+  constructionTimeline: z.number().optional(),
   tier: z.string().default("silver"),
   tags: z.array(z.string()).default([]),
   notes: z.string().optional(),
@@ -956,6 +957,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       address: "",
       intakeDate: "",
       warrantyExpiry: "",
+      constructionTimeline: 0,
       stage: "lead",
       status: "active",
       tier: "silver",
@@ -2497,6 +2499,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       referralRevenue: client.referralRevenue || "0",
       warrantyStatus: (client.warrantyStatus as "none" | "active" | "expired") || "none",
       warrantyExpiry: formatDateForInput(client.warrantyExpiry),
+      constructionTimeline: client.constructionTimeline || 0,
       tier: client.tier || "silver",
       tags: (client.tags as string[]) || [],
       notes: client.notes || "",
@@ -5197,6 +5200,20 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         <FormLabel>{language === 'vi' ? 'Khởi tạo (Ngày tiếp nhận)' : 'Intake Date'}</FormLabel>
                         <FormControl>
                           <Input {...field} type="date" maxLength={10} data-testid="input-client-intake-date" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={clientForm.control}
+                    name="constructionTimeline"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{language === 'vi' ? 'Mục tiêu thi công (ngày)' : 'Construction Timeline (days)'}</FormLabel>
+                        <FormControl>
+                          <Input {...field} type="number" min={0} max={365} placeholder={language === 'vi' ? "VD: 60" : "e.g. 60"} data-testid="input-client-construction-timeline" onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : 0)} value={field.value || ""} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
