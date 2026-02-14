@@ -83,6 +83,8 @@ export const clients = pgTable("clients", {
   referralRevenue: decimal("referral_revenue", { precision: 12, scale: 2 }).notNull().default("0"),
   // Intake date (thời gian tiếp nhận khách hàng)
   intakeDate: timestamp("intake_date"),
+  // Construction Timeline target (number of days)
+  constructionTimeline: integer("construction_timeline"),
   // Warranty & Additional Info
   warrantyStatus: varchar("warranty_status", { length: 30 }).default("none"), // none, active, expired
   warrantyExpiry: timestamp("warranty_expiry"), // Ngày hết hạn bảo hành
