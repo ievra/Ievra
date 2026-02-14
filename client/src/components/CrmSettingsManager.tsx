@@ -397,13 +397,13 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
 
   return (
     <div>
-      <Tabs defaultValue={context === 'bp' ? 'bpTiers' : 'stages'} className="w-full">
+      <Tabs defaultValue={context === 'bp' ? 'bpTiers' : 'tiers'} className="w-full">
               <TabsList className={`grid w-full bg-black border border-white/10 ${context === 'all' ? 'grid-cols-6' : 'grid-cols-3'}`}>
-                {context !== 'bp' && <TabsTrigger value="stages">{language === 'vi' ? 'Giai Đoạn' : 'Stages'}</TabsTrigger>}
-                {context !== 'client' && <TabsTrigger value="bpTiers">{language === 'vi' ? 'Danh Mục' : 'Tiers'}</TabsTrigger>}
                 {context !== 'bp' && <TabsTrigger value="tiers">{language === 'vi' ? 'Hạng Khách' : 'Client Tiers'}</TabsTrigger>}
+                {context !== 'client' && <TabsTrigger value="bpTiers">{language === 'vi' ? 'Danh Mục' : 'Tiers'}</TabsTrigger>}
+                {context !== 'bp' && <TabsTrigger value="stages">{language === 'vi' ? 'Giai Đoạn' : 'Stages'}</TabsTrigger>}
                 {context !== 'client' && <TabsTrigger value="bpCategories">{language === 'vi' ? 'Hạng Mục' : 'Categories'}</TabsTrigger>}
-                {context !== 'bp' && <TabsTrigger value="statuses">{language === 'vi' ? 'TT Khách Hàng' : 'Client Statuses'}</TabsTrigger>}
+                {context !== 'bp' && <TabsTrigger value="statuses">{language === 'vi' ? 'Trạng Thái' : 'Statuses'}</TabsTrigger>}
                 {context !== 'client' && <TabsTrigger value="bpStatuses">{language === 'vi' ? 'Trạng Thái' : 'Statuses'}</TabsTrigger>}
               </TabsList>
 
