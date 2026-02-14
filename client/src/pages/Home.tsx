@@ -131,6 +131,7 @@ export default function Home() {
     email: "",
     phone: "",
     address: "",
+    projectType: "",
     requirements: "",
   });
 
@@ -140,6 +141,7 @@ export default function Home() {
     email: "",
     phone: "",
     address: "",
+    projectType: "",
     requirements: "",
   });
 
@@ -152,6 +154,7 @@ export default function Home() {
         email: "",
         phone: "",
         address: "",
+        projectType: "",
         requirements: "",
       });
       return;
@@ -162,6 +165,7 @@ export default function Home() {
       email: "E-mail",
       phone: language === "vi" ? "Điện thoại" : "Phone",
       address: language === "vi" ? "Địa chỉ" : "Address",
+      projectType: language === "vi" ? "Loại hình (VD: Căn hộ, Nhà hàng, Quán CF...)" : "Project type (e.g. Apartment, Restaurant, Cafe...)",
       requirements:
         language === "vi"
           ? "Yêu cầu / Mô tả dự án"
@@ -173,7 +177,8 @@ export default function Home() {
       email: 200,
       phone: 400,
       address: 600,
-      requirements: 800,
+      projectType: 800,
+      requirements: 1000,
     };
 
     const timeouts: NodeJS.Timeout[] = [];
@@ -206,6 +211,7 @@ export default function Home() {
     typeText("email", texts.email, delays.email);
     typeText("phone", texts.phone, delays.phone);
     typeText("address", texts.address, delays.address);
+    typeText("projectType", texts.projectType, delays.projectType);
     typeText("requirements", texts.requirements, delays.requirements);
 
     return () => {
@@ -459,6 +465,7 @@ export default function Home() {
         email: "",
         phone: "",
         address: "",
+        projectType: "",
         requirements: "",
       });
       queryClient.invalidateQueries({ queryKey: ["/api/inquiries"] });
@@ -567,7 +574,7 @@ export default function Home() {
       email: formData.email,
       phone: formData.phone,
       projectType: "consultation" as const,
-      message: `Address: ${formData.address}\n\nRequirements: ${formData.requirements}`,
+      message: `Address: ${formData.address}${formData.projectType ? `\n\nLoại hình: ${formData.projectType}` : ""}\n\nRequirements: ${formData.requirements}`,
     };
 
     mutation.mutate(inquiryData);
@@ -1289,7 +1296,24 @@ export default function Home() {
                   </div>
                 </div>
 
-                {/* Third row - Requirements */}
+                {/* Third row - Project Type */}
+                <div>
+                  <Input
+                    type="text"
+                    placeholder={placeholders.projectType}
+                    value={formData.projectType}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        projectType: e.target.value,
+                      }))
+                    }
+                    className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
+                    data-testid="input-project-type"
+                  />
+                </div>
+
+                {/* Fourth row - Requirements */}
                 <div>
                   <Textarea
                     placeholder={placeholders.requirements}
