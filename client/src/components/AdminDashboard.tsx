@@ -881,7 +881,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
 
   const bpFinances = useMemo(() => {
     const finances: Record<string, { totalSpending: number; refundAmount: number }> = {};
-    allBpTransactions.forEach((t: any) => {
+    (Array.isArray(allBpTransactions) ? allBpTransactions : []).forEach((t: any) => {
       if (t.status !== "completed" || !t.businessPartnerId) return;
       if (!finances[t.businessPartnerId]) {
         finances[t.businessPartnerId] = { totalSpending: 0, refundAmount: 0 };
