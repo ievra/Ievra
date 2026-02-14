@@ -5,6 +5,7 @@ import {
   crmPipelineStages, crmCustomerTiers, crmStatuses,
   bpCategories, bpStatuses, bpTiers,
   businessPartners, bpTransactions,
+  constructionPhases,
   type User, type InsertUser,
   type Client, type InsertClient,
   type BusinessPartner, type InsertBusinessPartner,
@@ -34,7 +35,8 @@ import {
   type CrmStatus, type InsertCrmStatus,
   type BpCategory, type InsertBpCategory,
   type BpStatus, type InsertBpStatus,
-  type BpTier, type InsertBpTier
+  type BpTier, type InsertBpTier,
+  type ConstructionPhase, type InsertConstructionPhase
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, ne, desc, like, and, or, sql } from "drizzle-orm";
@@ -257,6 +259,12 @@ export interface IStorage {
   createBpTier(tier: InsertBpTier): Promise<BpTier>;
   updateBpTier(id: string, tier: Partial<InsertBpTier>): Promise<BpTier>;
   deleteBpTier(id: string): Promise<void>;
+
+  // Construction Phases
+  getConstructionPhases(filters?: { active?: boolean }): Promise<ConstructionPhase[]>;
+  createConstructionPhase(phase: InsertConstructionPhase): Promise<ConstructionPhase>;
+  updateConstructionPhase(id: string, phase: Partial<InsertConstructionPhase>): Promise<ConstructionPhase>;
+  deleteConstructionPhase(id: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -1503,6 +1511,36 @@ export class DatabaseStorage implements IStorage {
 
   async deleteBpTransaction(id: string): Promise<void> {
     await db.delete(bpTransactions).where(eq(bpTransactions.id, id));
+  }
+
+  // Construction Phases
+  async getConstructionPhases(filters?: { active?: boolean }): Promise<ConstructionPhase[]> {
+    const conditions = [];
+    if (filters?.active !== undefined) conditions.push(eq(constructionPhases.active, filters.active));
+
+    const query = conditions.length > 0
+      ? db.select().from(constructionPhases).where(and(...conditions))
+      : db.select().from(constructionPhases);
+
+    return await query.orderBy(constructionPhases.order);
+  }
+
+  async createConstructionPhase(phase: InsertConstructionPhase): Promise<ConstructionPhase> {
+    const [created] = await db.insert(constructionPhases).values(phase).returning();
+    return created;
+  }
+
+  async updateConstructionPhase(id: string, phase: Partial<InsertConstructionPhase>): Promise<ConstructionPhase> {
+    const [updated] = await db
+      .update(constructionPhases)
+      .set({ ...phase, updatedAt: new Date() })
+      .where(eq(constructionPhases.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteConstructionPhase(id: string): Promise<void> {
+    await db.delete(constructionPhases).where(eq(constructionPhases.id, id));
   }
 }
 

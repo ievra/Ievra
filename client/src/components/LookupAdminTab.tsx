@@ -17,12 +17,13 @@ import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient as qc } from "@/lib/queryClient";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Search, Plus, Pencil, Trash2, Phone, Mail, User, Shield, Calendar, Clock, Briefcase, CreditCard, X, HardHat, PenTool, Eye } from "lucide-react";
-import type { Client, Interaction, Deal, Transaction, WarrantyLog } from "@shared/schema";
+import type { Client, Interaction, Deal, Transaction, WarrantyLog, ConstructionPhase } from "@shared/schema";
 
 const interactionFormSchema = z.object({
   title: z.string().min(1, "Tiêu đề bắt buộc"),
   description: z.string().optional(),
   date: z.string().min(1, "Ngày bắt buộc"),
+  phase: z.string().optional(),
   assignedTo: z.string().optional(),
   nextAction: z.string().optional(),
 });
@@ -105,6 +106,11 @@ export default function LookupAdminTab() {
     queryKey: ['/api/clients'],
   });
 
+  const { data: constructionPhases = [] } = useQuery<ConstructionPhase[]>({
+    queryKey: ['/api/construction-phases', 'active'],
+    queryFn: () => fetch('/api/construction-phases?active=true').then(r => r.json()),
+  });
+
   const { data: interactions = [], isLoading: interactionsLoading } = useQuery<Interaction[]>({
     queryKey: ['/api/interactions', selectedClient?.id],
     queryFn: async () => {
@@ -151,6 +157,7 @@ export default function LookupAdminTab() {
       title: "",
       description: "",
       date: new Date().toISOString().split("T")[0],
+      phase: "",
       assignedTo: "",
       nextAction: "",
     },
@@ -231,6 +238,7 @@ export default function LookupAdminTab() {
         title: data.title,
         description: data.description || undefined,
         date: data.date,
+        phase: data.phase || undefined,
         assignedTo: data.assignedTo || undefined,
         nextAction: data.nextAction || undefined,
         attachments: interactionAttachments.length > 0 ? interactionAttachments : undefined,
@@ -255,6 +263,7 @@ export default function LookupAdminTab() {
         title: data.title,
         description: data.description || undefined,
         date: data.date,
+        phase: data.phase || undefined,
         assignedTo: data.assignedTo || undefined,
         nextAction: data.nextAction || undefined,
         attachments: interactionAttachments,
@@ -466,6 +475,7 @@ export default function LookupAdminTab() {
         title: interaction.title,
         description: interaction.description || "",
         date: interaction.date ? new Date(interaction.date).toISOString().split("T")[0] : "",
+        phase: (interaction as any).phase || "",
         assignedTo: interaction.assignedTo || "",
         nextAction: interaction.nextAction || "",
       });
@@ -476,6 +486,7 @@ export default function LookupAdminTab() {
         title: "",
         description: "",
         date: new Date().toISOString().split("T")[0],
+        phase: "",
         assignedTo: "",
         nextAction: "",
       });
@@ -694,10 +705,11 @@ export default function LookupAdminTab() {
                     <Table>
                       <TableHeader>
                         <TableRow className="border-white/10">
-                          <TableHead className="text-white/60 w-[15%]">{isVi ? "Ngày" : "Date"}</TableHead>
-                          <TableHead className="text-white/60 w-[25%]">{isVi ? "Tiêu đề" : "Title"}</TableHead>
-                          <TableHead className="text-white/60 w-[15%]">{isVi ? "Phụ trách" : "Assigned To"}</TableHead>
-                          <TableHead className="text-white/60 w-[30%]">{isVi ? "Hình ảnh" : "Images"}</TableHead>
+                          <TableHead className="text-white/60 w-[12%]">{isVi ? "Ngày" : "Date"}</TableHead>
+                          <TableHead className="text-white/60 w-[13%]">{isVi ? "Giai đoạn" : "Phase"}</TableHead>
+                          <TableHead className="text-white/60 w-[22%]">{isVi ? "Tiêu đề" : "Title"}</TableHead>
+                          <TableHead className="text-white/60 w-[13%]">{isVi ? "Phụ trách" : "Assigned To"}</TableHead>
+                          <TableHead className="text-white/60 w-[25%]">{isVi ? "Hình ảnh" : "Images"}</TableHead>
                           <TableHead className="text-white/60 w-[15%]">{isVi ? "Thao tác" : "Actions"}</TableHead>
                         </TableRow>
                       </TableHeader>
@@ -706,6 +718,14 @@ export default function LookupAdminTab() {
                           <TableRow key={interaction.id} className="border-white/10">
                             <TableCell>
                               <p className="text-white/70">{formatDate(interaction.date)}</p>
+                            </TableCell>
+                            <TableCell className="text-white/60">
+                              {(() => {
+                                const phaseValue = (interaction as any).phase;
+                                if (!phaseValue) return "—";
+                                const found = constructionPhases.find(p => p.value === phaseValue);
+                                return found ? (isVi ? found.labelVi : found.labelEn) : phaseValue;
+                              })()}
                             </TableCell>
                             <TableCell className="text-white">{interaction.title}</TableCell>
                             <TableCell className="text-white/60">{interaction.assignedTo || "—"}</TableCell>
@@ -997,6 +1017,26 @@ export default function LookupAdminTab() {
                   <FormControl>
                     <Input type="date" {...field} className="bg-transparent border-white/20 text-white rounded-none h-10" />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+              <FormField control={interactionForm.control} name="phase" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white/60">{isVi ? "Giai đoạn" : "Phase"}</FormLabel>
+                  <Select value={field.value || ""} onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger className="bg-transparent border-white/20 text-white rounded-none h-10">
+                        <SelectValue placeholder={isVi ? "Chọn giai đoạn" : "Select phase"} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="bg-black border-white/20 rounded-none">
+                      {constructionPhases.map((p) => (
+                        <SelectItem key={p.id} value={p.value}>
+                          {isVi ? p.labelVi : p.labelEn}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )} />

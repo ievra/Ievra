@@ -14,8 +14,8 @@ import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Pencil, Trash2, Plus } from "lucide-react";
-import type { CrmPipelineStage, CrmCustomerTier, CrmStatus, BpCategory, BpStatus, BpTier } from "@shared/schema";
-import { insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema, insertBpCategorySchema, insertBpStatusSchema, insertBpTierSchema } from "@shared/schema";
+import type { CrmPipelineStage, CrmCustomerTier, CrmStatus, BpCategory, BpStatus, BpTier, ConstructionPhase } from "@shared/schema";
+import { insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema, insertBpCategorySchema, insertBpStatusSchema, insertBpTierSchema, insertConstructionPhaseSchema } from "@shared/schema";
 import { z } from "zod";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -37,6 +37,8 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
   const [editingBpCategory, setEditingBpCategory] = useState<BpCategory | null>(null);
   const [editingBpStatus, setEditingBpStatus] = useState<BpStatus | null>(null);
   const [editingBpTier, setEditingBpTier] = useState<BpTier | null>(null);
+  const [isPhaseDialogOpen, setIsPhaseDialogOpen] = useState(false);
+  const [editingPhase, setEditingPhase] = useState<ConstructionPhase | null>(null);
 
   const { data: stages = [] } = useQuery<CrmPipelineStage[]>({ queryKey: ['/api/crm-pipeline-stages'] });
   const { data: tiers = [] } = useQuery<CrmCustomerTier[]>({ queryKey: ['/api/crm-customer-tiers'] });
@@ -44,6 +46,7 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
   const { data: bpCategories = [] } = useQuery<BpCategory[]>({ queryKey: ['/api/bp-categories'] });
   const { data: bpStatuses = [] } = useQuery<BpStatus[]>({ queryKey: ['/api/bp-statuses'] });
   const { data: bpTiers = [] } = useQuery<BpTier[]>({ queryKey: ['/api/bp-tiers'] });
+  const { data: constructionPhases = [] } = useQuery<ConstructionPhase[]>({ queryKey: ['/api/construction-phases'] });
 
   const stageForm = useForm<z.infer<typeof insertCrmPipelineStageSchema>>({
     resolver: zodResolver(insertCrmPipelineStageSchema),
@@ -339,6 +342,55 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
     },
   });
 
+  const phaseForm = useForm<z.infer<typeof insertConstructionPhaseSchema>>({
+    resolver: zodResolver(insertConstructionPhaseSchema),
+    defaultValues: {
+      value: "",
+      labelEn: "",
+      labelVi: "",
+      order: 0,
+      active: true,
+    },
+  });
+
+  const createPhaseMutation = useMutation({
+    mutationFn: async (data: z.infer<typeof insertConstructionPhaseSchema>) => {
+      return await apiRequest('POST', '/api/construction-phases', data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/construction-phases'] });
+      setIsPhaseDialogOpen(false);
+      phaseForm.reset();
+      toast({ title: language === 'vi' ? 'Đã tạo giai đoạn TC thành công' : 'Construction phase created successfully' });
+    },
+    onError: (error: Error) => {
+      toast({ title: language === 'vi' ? 'Lỗi tạo giai đoạn TC' : 'Failed to create phase', description: error.message, variant: 'destructive' });
+    },
+  });
+
+  const updatePhaseMutation = useMutation({
+    mutationFn: async ({ id, ...data }: Partial<ConstructionPhase> & { id: string }) => {
+      return await apiRequest('PUT', `/api/construction-phases/${id}`, data);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/construction-phases'] });
+      setIsPhaseDialogOpen(false);
+      setEditingPhase(null);
+      phaseForm.reset();
+      toast({ title: language === 'vi' ? 'Đã cập nhật giai đoạn TC thành công' : 'Construction phase updated successfully' });
+    },
+  });
+
+  const deletePhaseMutation = useMutation({
+    mutationFn: async (id: string) => {
+      return await apiRequest('DELETE', `/api/construction-phases/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/construction-phases'] });
+      toast({ title: language === 'vi' ? 'Đã xóa giai đoạn TC thành công' : 'Construction phase deleted successfully' });
+    },
+  });
+
   const toValue = (label: string) => label.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
 
   const handleStageSubmit = (data: z.infer<typeof insertCrmPipelineStageSchema>) => {
@@ -395,16 +447,26 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
     }
   };
 
+  const handlePhaseSubmit = (data: z.infer<typeof insertConstructionPhaseSchema>) => {
+    const submitData = { ...data, value: editingPhase ? data.value : toValue(data.labelEn) };
+    if (editingPhase) {
+      updatePhaseMutation.mutate({ id: editingPhase.id, ...submitData });
+    } else {
+      createPhaseMutation.mutate(submitData);
+    }
+  };
+
   return (
     <div>
       <Tabs defaultValue={context === 'bp' ? 'bpTiers' : 'tiers'} className="w-full">
-              <TabsList className={`grid w-full bg-black border border-white/10 ${context === 'all' ? 'grid-cols-6' : 'grid-cols-3'}`}>
+              <TabsList className={`grid w-full bg-black border border-white/10 ${context === 'all' ? 'grid-cols-7' : 'grid-cols-3'}`}>
                 {context !== 'bp' && <TabsTrigger value="tiers">{language === 'vi' ? 'Hạng Khách' : 'Client Tiers'}</TabsTrigger>}
                 {context !== 'client' && <TabsTrigger value="bpTiers">{language === 'vi' ? 'Danh Mục' : 'Tiers'}</TabsTrigger>}
                 {context !== 'bp' && <TabsTrigger value="stages">{language === 'vi' ? 'Giai Đoạn' : 'Stages'}</TabsTrigger>}
                 {context !== 'client' && <TabsTrigger value="bpCategories">{language === 'vi' ? 'Hạng Mục' : 'Categories'}</TabsTrigger>}
                 {context !== 'bp' && <TabsTrigger value="statuses">{language === 'vi' ? 'Trạng Thái' : 'Statuses'}</TabsTrigger>}
                 {context !== 'client' && <TabsTrigger value="bpStatuses">{language === 'vi' ? 'Trạng Thái' : 'Statuses'}</TabsTrigger>}
+                {context !== 'bp' && <TabsTrigger value="construction_phases">{language === 'vi' ? 'Giai Đoạn TC' : 'Phases'}</TabsTrigger>}
               </TabsList>
 
               {/* Pipeline Stages (Client) */}
@@ -1318,6 +1380,155 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
                                 <AlertDialogFooter>
                                   <AlertDialogCancel>{language === 'vi' ? 'Hủy' : 'Cancel'}</AlertDialogCancel>
                                   <AlertDialogAction onClick={() => deleteBpStatusMutation.mutate(bpStatus.id)}>
+                                    {language === 'vi' ? 'Xóa' : 'Delete'}
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TabsContent>
+
+              {/* Construction Phases */}
+              <TabsContent value="construction_phases" className="mt-4">
+                <div className="flex justify-end mb-4">
+                  <Dialog open={isPhaseDialogOpen} onOpenChange={setIsPhaseDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button
+                        onClick={() => {
+                          setEditingPhase(null);
+                          phaseForm.reset({
+                            value: "",
+                            labelEn: "",
+                            labelVi: "",
+                            order: constructionPhases.length,
+                            active: true,
+                          });
+                        }}
+                      >
+                        <Plus className="h-4 w-4 mr-2" />
+                        {language === 'vi' ? 'Thêm' : 'Add Phase'}
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>{editingPhase ? (language === 'vi' ? 'Sửa Giai Đoạn TC' : 'Edit Phase') : (language === 'vi' ? 'Thêm Giai Đoạn TC' : 'Add Phase')}</DialogTitle>
+                      </DialogHeader>
+                      <Form {...phaseForm}>
+                        <form onSubmit={phaseForm.handleSubmit(handlePhaseSubmit)} className="space-y-4">
+                          <FormField
+                            control={phaseForm.control}
+                            name="labelEn"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</FormLabel>
+                                <FormControl>
+                                  <Input {...field} placeholder="Foundation" />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={phaseForm.control}
+                            name="labelVi"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</FormLabel>
+                                <FormControl>
+                                  <Input {...field} placeholder="Móng" />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={phaseForm.control}
+                            name="order"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>{language === 'vi' ? 'Thứ tự' : 'Order'}</FormLabel>
+                                <FormControl>
+                                  <Input 
+                                    {...field} 
+                                    type="number" 
+                                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                                  />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <div className="flex justify-end space-x-2">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              onClick={() => {
+                                setIsPhaseDialogOpen(false);
+                                setEditingPhase(null);
+                                phaseForm.reset();
+                              }}
+                            >
+                              {language === 'vi' ? 'Hủy' : 'Cancel'}
+                            </Button>
+                            <Button type="submit">
+                              {editingPhase ? (language === 'vi' ? 'Cập Nhật' : 'Update') : (language === 'vi' ? 'Tạo' : 'Create')}
+                            </Button>
+                          </div>
+                        </form>
+                      </Form>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>{language === 'vi' ? 'Nhãn Tiếng Anh' : 'English Label'}</TableHead>
+                      <TableHead>{language === 'vi' ? 'Nhãn Tiếng Việt' : 'Vietnamese Label'}</TableHead>
+                      <TableHead>{language === 'vi' ? 'Thứ tự' : 'Order'}</TableHead>
+                      <TableHead className="text-right">{language === 'vi' ? 'Thao tác' : 'Actions'}</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {constructionPhases.sort((a, b) => a.order - b.order).map((phase) => (
+                      <TableRow key={phase.id}>
+                        <TableCell>{phase.labelEn}</TableCell>
+                        <TableCell>{phase.labelVi}</TableCell>
+                        <TableCell>{phase.order}</TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setEditingPhase(phase);
+                                phaseForm.reset(phase);
+                                setIsPhaseDialogOpen(true);
+                              }}
+                            >
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button variant="outline" size="sm">
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>{language === 'vi' ? 'Xóa Giai Đoạn TC' : 'Delete Phase'}</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    {language === 'vi' ? 'Bạn có chắc chắn muốn xóa giai đoạn này? Hành động này không thể hoàn tác.' : 'Are you sure you want to delete this phase? This action cannot be undone.'}
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>{language === 'vi' ? 'Hủy' : 'Cancel'}</AlertDialogCancel>
+                                  <AlertDialogAction onClick={() => deletePhaseMutation.mutate(phase.id)}>
                                     {language === 'vi' ? 'Xóa' : 'Delete'}
                                   </AlertDialogAction>
                                 </AlertDialogFooter>

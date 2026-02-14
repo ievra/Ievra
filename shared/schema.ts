@@ -293,6 +293,7 @@ export const interactions = pgTable("interactions", {
   outcome: text("outcome"), // Result or notes from interaction
   nextAction: text("next_action"), // Follow-up action required
   nextActionDate: timestamp("next_action_date"),
+  phase: text("phase"),
   attachments: jsonb("attachments").default([]), // Array of file URLs
   createdBy: varchar("created_by").references(() => users.id),
   createdAt: timestamp("created_at").notNull().defaultNow(),
@@ -962,3 +963,23 @@ export type BpStatus = typeof bpStatuses.$inferSelect;
 
 export type InsertBpTier = z.infer<typeof insertBpTierSchema>;
 export type BpTier = typeof bpTiers.$inferSelect;
+
+export const constructionPhases = pgTable("construction_phases", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  value: text("value").notNull().unique(),
+  labelEn: text("label_en").notNull(),
+  labelVi: text("label_vi").notNull(),
+  order: integer("order").notNull().default(0),
+  active: boolean("active").notNull().default(true),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const insertConstructionPhaseSchema = createInsertSchema(constructionPhases).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertConstructionPhase = z.infer<typeof insertConstructionPhaseSchema>;
+export type ConstructionPhase = typeof constructionPhases.$inferSelect;
