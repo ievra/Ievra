@@ -7101,7 +7101,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     <TableHeader>
                       <TableRow>
                         <TableHead className="w-[4%] whitespace-nowrap text-center">{language === 'vi' ? 'STT' : 'NO'}</TableHead>
-                        <TableHead className="w-[5%] whitespace-nowrap text-center">{language === 'vi' ? 'Danh Mục' : 'Tier'}</TableHead>
+                        <TableHead className="w-[8%] whitespace-nowrap text-center">{language === 'vi' ? 'Danh Mục' : 'Tier'}</TableHead>
                         <TableHead className="w-[14%] whitespace-nowrap">
                           <div>{language === 'vi' ? 'Đại Diện' : 'Representative'}</div>
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Hạng mục' : 'Category'}</div>
@@ -7118,7 +7118,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           <div>{language === 'vi' ? 'Thu' : 'Income'}</div>
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Chi' : 'Expense'}</div>
                         </TableHead>
-                        <TableHead className="w-[13%] text-center whitespace-nowrap">{t('crm.status')}</TableHead>
+                        <TableHead className="w-[10%] text-center whitespace-nowrap">{t('crm.status')}</TableHead>
                         <TableHead className="w-[7%] text-right"></TableHead>
                       </TableRow>
                     </TableHeader>
