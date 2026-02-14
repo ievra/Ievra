@@ -3726,13 +3726,24 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     return (
       <div className="space-y-6 p-6">
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
           <Card>
             <CardContent className="p-6 min-h-[90px]">
               <div>
                 <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Tổng Dự Án' : 'Total Projects'}</p>
                 <p className="text-2xl font-light" data-testid="stat-total-projects">
                   {statsLoading ? "..." : stats?.totalProjects || 0}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardContent className="p-6 min-h-[90px]">
+              <div>
+                <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Tổng Đối Tác' : 'Total Partners'}</p>
+                <p className="text-2xl font-light" data-testid="stat-total-partners">
+                  {businessPartnersLoading ? "..." : businessPartners.length}
                 </p>
               </div>
             </CardContent>
