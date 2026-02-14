@@ -594,8 +594,28 @@ export default function LookupAdminTab() {
             <div className="p-4">
               {activeSubTab === "interactions" && (
                 <div className="space-y-4">
-                  <div className="flex justify-end">
-                    <Button onClick={() => openInteractionDialog()} className="h-10 px-4 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      {selectedClient.constructionTimeline ? (
+                        <>
+                          <div>
+                            <span className="text-xs text-white/40">{isVi ? "Mục tiêu" : "Target"}</span>
+                            <p className="text-sm text-white font-light">{selectedClient.constructionTimeline} {isVi ? "ngày" : "days"}</p>
+                          </div>
+                          <div>
+                            <span className="text-xs text-white/40">{isVi ? "Đã ghi" : "Logged"}</span>
+                            <p className="text-sm text-white font-light">{interactions.length} / {selectedClient.constructionTimeline}</p>
+                          </div>
+                        </>
+                      ) : (
+                        <span className="text-xs text-white/30">{isVi ? "Chưa đặt mục tiêu thi công" : "No construction timeline set"}</span>
+                      )}
+                    </div>
+                    <Button
+                      onClick={() => openInteractionDialog()}
+                      disabled={!!selectedClient.constructionTimeline && interactions.length >= selectedClient.constructionTimeline}
+                      className="h-10 px-4 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
                       <Plus className="w-4 h-4 mr-2" />
                       {isVi ? "Thêm nhật ký" : "Add Log"}
                     </Button>
@@ -656,6 +676,18 @@ export default function LookupAdminTab() {
 
               {activeSubTab === "construction_progress" && (
                 <div>
+                  {selectedClient.constructionTimeline ? (
+                    <div className="flex items-center gap-4 mb-4 pb-4 border-b border-white/10">
+                      <div>
+                        <span className="text-xs text-white/40">{isVi ? "Mục tiêu thi công" : "Construction Target"}</span>
+                        <p className="text-sm text-white font-light">{selectedClient.constructionTimeline} {isVi ? "ngày" : "days"}</p>
+                      </div>
+                      <div>
+                        <span className="text-xs text-white/40">{isVi ? "Tiến độ" : "Progress"}</span>
+                        <p className="text-sm text-white font-light">{interactions.length} / {selectedClient.constructionTimeline}</p>
+                      </div>
+                    </div>
+                  ) : null}
                   {interactionsLoading ? (
                     <div className="text-center py-8 text-white/40">{isVi ? "Đang tải..." : "Loading..."}</div>
                   ) : (() => {
