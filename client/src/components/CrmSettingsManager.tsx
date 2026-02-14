@@ -386,7 +386,7 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
                 {context !== 'bp' && <TabsTrigger value="tiers">{language === 'vi' ? 'Hạng Khách' : 'Client Tiers'}</TabsTrigger>}
                 {context !== 'client' && <TabsTrigger value="bpTiers">{language === 'vi' ? 'Hạng Đối Tác' : 'BP Tiers'}</TabsTrigger>}
                 {context !== 'bp' && <TabsTrigger value="statuses">{language === 'vi' ? 'TT Khách Hàng' : 'Client Statuses'}</TabsTrigger>}
-                {context !== 'client' && <TabsTrigger value="bpStatuses">{language === 'vi' ? 'TT Đối Tác' : 'BP Statuses'}</TabsTrigger>}
+                {context !== 'client' && <TabsTrigger value="bpStatuses">{language === 'vi' ? 'Trạng Thái' : 'Statuses'}</TabsTrigger>}
               </TabsList>
 
               {/* Pipeline Stages (Client) */}
