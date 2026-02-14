@@ -340,6 +340,26 @@ export default function LookupAdminTab() {
     },
   });
 
+  const [editingTimeline, setEditingTimeline] = useState(false);
+  const [timelineValue, setTimelineValue] = useState<string>("");
+
+  const updateTimelineMutation = useMutation({
+    mutationFn: async (days: number) => {
+      await apiRequest("PUT", `/api/clients/${selectedClient!.id}`, {
+        constructionTimeline: days,
+      });
+    },
+    onSuccess: (_data, days) => {
+      queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
+      setSelectedClient({ ...selectedClient!, constructionTimeline: days } as Client);
+      setEditingTimeline(false);
+      toast({ title: isVi ? "Thành công" : "Success", description: isVi ? "Đã cập nhật mục tiêu thi công" : "Construction timeline updated" });
+    },
+    onError: (err: Error) => {
+      toast({ title: isVi ? "Lỗi" : "Error", description: err.message, variant: "destructive" });
+    },
+  });
+
   const updateWarrantyMutation = useMutation({
     mutationFn: async () => {
       await apiRequest("PUT", `/api/clients/${selectedClient!.id}`, {
@@ -596,11 +616,48 @@ export default function LookupAdminTab() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      {selectedClient.constructionTimeline ? (
+                      {editingTimeline ? (
+                        <div className="flex items-center gap-2">
+                          <Input
+                            type="number"
+                            min={1}
+                            max={365}
+                            value={timelineValue}
+                            onChange={(e) => setTimelineValue(e.target.value)}
+                            placeholder={isVi ? "Số ngày" : "Days"}
+                            className="w-24 h-8 bg-transparent border-white/20 text-white rounded-none text-sm"
+                            autoFocus
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" && timelineValue) {
+                                updateTimelineMutation.mutate(parseInt(timelineValue));
+                              } else if (e.key === "Escape") {
+                                setEditingTimeline(false);
+                              }
+                            }}
+                          />
+                          <span className="text-xs text-white/40">{isVi ? "ngày" : "days"}</span>
+                          <Button
+                            size="sm"
+                            onClick={() => timelineValue && updateTimelineMutation.mutate(parseInt(timelineValue))}
+                            disabled={!timelineValue || updateTimelineMutation.isPending}
+                            className="h-8 px-3 rounded-none bg-white text-black hover:bg-white/90 text-xs"
+                          >
+                            {isVi ? "Lưu" : "Save"}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setEditingTimeline(false)}
+                            className="h-8 px-2 rounded-none text-white/40 hover:text-white text-xs"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </Button>
+                        </div>
+                      ) : selectedClient.constructionTimeline ? (
                         <>
-                          <div>
+                          <div className="cursor-pointer group" onClick={() => { setTimelineValue(String(selectedClient.constructionTimeline || "")); setEditingTimeline(true); }}>
                             <span className="text-xs text-white/40">{isVi ? "Mục tiêu" : "Target"}</span>
-                            <p className="text-sm text-white font-light">{selectedClient.constructionTimeline} {isVi ? "ngày" : "days"}</p>
+                            <p className="text-sm text-white font-light group-hover:text-white/70">{selectedClient.constructionTimeline} {isVi ? "ngày" : "days"} <Pencil className="w-3 h-3 inline opacity-0 group-hover:opacity-50" /></p>
                           </div>
                           <div>
                             <span className="text-xs text-white/40">{isVi ? "Đã ghi" : "Logged"}</span>
@@ -608,7 +665,14 @@ export default function LookupAdminTab() {
                           </div>
                         </>
                       ) : (
-                        <span className="text-xs text-white/30">{isVi ? "Chưa đặt mục tiêu thi công" : "No construction timeline set"}</span>
+                        <Button
+                          variant="ghost"
+                          onClick={() => { setTimelineValue(""); setEditingTimeline(true); }}
+                          className="h-8 px-3 rounded-none text-white/40 hover:text-white text-xs border border-dashed border-white/20"
+                        >
+                          <Plus className="w-3 h-3 mr-1" />
+                          {isVi ? "Đặt mục tiêu thi công" : "Set construction timeline"}
+                        </Button>
                       )}
                     </div>
                     <Button
@@ -678,9 +742,9 @@ export default function LookupAdminTab() {
                 <div>
                   {selectedClient.constructionTimeline ? (
                     <div className="flex items-center gap-4 mb-4 pb-4 border-b border-white/10">
-                      <div>
+                      <div className="cursor-pointer group" onClick={() => { setTimelineValue(String(selectedClient.constructionTimeline || "")); setEditingTimeline(true); }}>
                         <span className="text-xs text-white/40">{isVi ? "Mục tiêu thi công" : "Construction Target"}</span>
-                        <p className="text-sm text-white font-light">{selectedClient.constructionTimeline} {isVi ? "ngày" : "days"}</p>
+                        <p className="text-sm text-white font-light group-hover:text-white/70">{selectedClient.constructionTimeline} {isVi ? "ngày" : "days"} <Pencil className="w-3 h-3 inline opacity-0 group-hover:opacity-50" /></p>
                       </div>
                       <div>
                         <span className="text-xs text-white/40">{isVi ? "Tiến độ" : "Progress"}</span>
