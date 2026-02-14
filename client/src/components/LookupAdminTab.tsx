@@ -16,7 +16,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient as qc } from "@/lib/queryClient";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Search, Plus, Pencil, Trash2, Phone, Mail, User, Shield, Calendar, Clock, Briefcase, CreditCard, X, HardHat, PenTool, Eye } from "lucide-react";
+import { Search, Plus, Pencil, Trash2, Phone, Mail, User, Shield, Calendar, Clock, Briefcase, CreditCard, X, HardHat, PenTool, Eye, Settings } from "lucide-react";
+import CrmSettingsManager from "@/components/CrmSettingsManager";
 import type { Client, Interaction, Deal, Transaction, WarrantyLog, ConstructionPhase } from "@shared/schema";
 
 const interactionFormSchema = z.object({
@@ -101,6 +102,7 @@ export default function LookupAdminTab() {
   const [warrantyStatus, setWarrantyStatus] = useState("none");
   const [interactionAttachments, setInteractionAttachments] = useState<string[]>([]);
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
 
   const { data: clients = [] } = useQuery<Client[]>({
     queryKey: ['/api/clients'],
@@ -564,7 +566,23 @@ export default function LookupAdminTab() {
           <Search className="w-4 h-4 mr-2" />
           {isVi ? "Tìm kiếm" : "Search"}
         </Button>
+        <Button
+          variant="outline"
+          onClick={() => setIsSettingsDialogOpen(true)}
+          className="h-10 px-4 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10"
+        >
+          <Settings className="w-4 h-4 mr-2" />
+          {isVi ? "Cài Đặt" : "Settings"}
+        </Button>
       </div>
+      <Dialog open={isSettingsDialogOpen} onOpenChange={setIsSettingsDialogOpen}>
+        <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto bg-black border border-white/20 rounded-none">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-light">{isVi ? "Cài Đặt" : "Settings"}</DialogTitle>
+          </DialogHeader>
+          <CrmSettingsManager context="client" />
+        </DialogContent>
+      </Dialog>
       {selectedClient && (
         <>
           <Card className="bg-black border border-white/20 rounded-none">
