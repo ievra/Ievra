@@ -1055,9 +1055,8 @@ export default function LookupAdminTab() {
                 {editingInteraction ? (
                   <AlertDialog>
                     <AlertDialogTrigger asChild>
-                      <Button type="button" variant="outline" className="h-10 px-4 rounded-none border-red-500/30 text-red-400 hover:bg-red-500/10">
-                        <Trash2 className="w-4 h-4 mr-2" />
-                        {isVi ? "Xóa" : "Delete"}
+                      <Button type="button" variant="ghost" size="icon" className="h-10 w-10 rounded-none text-white/40 hover:text-white">
+                        <Trash2 className="w-4 h-4" />
                       </Button>
                     </AlertDialogTrigger>
                     <AlertDialogContent className="bg-black border border-white/20 rounded-none">
@@ -1067,7 +1066,7 @@ export default function LookupAdminTab() {
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel className="rounded-none">{isVi ? "Hủy" : "Cancel"}</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => { deleteInteractionMutation.mutate(editingInteraction.id); setIsInteractionDialogOpen(false); }} className="rounded-none bg-red-600 hover:bg-red-700">{isVi ? "Xóa" : "Delete"}</AlertDialogAction>
+                        <AlertDialogAction onClick={() => { deleteInteractionMutation.mutate(editingInteraction.id); setIsInteractionDialogOpen(false); }} className="rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10">{isVi ? "Xóa" : "Delete"}</AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
@@ -1076,7 +1075,7 @@ export default function LookupAdminTab() {
                   <Button type="button" variant="outline" onClick={() => setIsInteractionDialogOpen(false)} className="h-10 px-4 rounded-none border-white/20 text-white hover:bg-white/10">
                     {isVi ? "Hủy" : "Cancel"}
                   </Button>
-                  <Button type="submit" disabled={createInteractionMutation.isPending || updateInteractionMutation.isPending} className="h-10 px-6 rounded-none bg-white text-black hover:bg-white/90">
+                  <Button type="submit" disabled={createInteractionMutation.isPending || updateInteractionMutation.isPending} className="h-10 px-6 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10">
                     {(createInteractionMutation.isPending || updateInteractionMutation.isPending) ? (isVi ? "Đang lưu..." : "Saving...") : editingInteraction ? (isVi ? "Cập nhật" : "Update") : (isVi ? "Thêm" : "Add")}
                   </Button>
                 </div>
@@ -1143,7 +1142,7 @@ export default function LookupAdminTab() {
                 <Button type="button" variant="outline" onClick={() => setIsWarrantyLogDialogOpen(false)} className="h-10 px-4 rounded-none border-white/20 text-white hover:bg-white/10">
                   {isVi ? "Hủy" : "Cancel"}
                 </Button>
-                <Button type="submit" disabled={createWarrantyLogMutation.isPending || updateWarrantyLogMutation.isPending} className="h-10 px-6 rounded-none bg-white text-black hover:bg-white/90">
+                <Button type="submit" disabled={createWarrantyLogMutation.isPending || updateWarrantyLogMutation.isPending} className="h-10 px-6 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10">
                   {(createWarrantyLogMutation.isPending || updateWarrantyLogMutation.isPending) ? (isVi ? "Đang lưu..." : "Saving...") : editingWarrantyLog ? (isVi ? "Cập nhật" : "Update") : (isVi ? "Thêm" : "Add")}
                 </Button>
               </div>
