@@ -677,7 +677,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     queryKey: ['/api/bp-transactions'],
     queryFn: async () => {
       const response = await fetch('/api/bp-transactions');
-      return response.json();
+      if (!response.ok) return [];
+      const data = await response.json();
+      return Array.isArray(data) ? data : [];
     },
   });
 
@@ -7021,7 +7023,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 <div className="min-w-[120px]">
                   <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Tổng thu' : 'Total Income'}</p>
                   <p className="text-2xl font-semibold mt-1">
-                    {allBpTransactions.reduce((sum: number, t: any) => {
+                    {(Array.isArray(allBpTransactions) ? allBpTransactions : []).reduce((sum: number, t: any) => {
                       if (t.status !== "completed" || t.type !== "payment") return sum;
                       return sum + parseFloat(t.amount || "0");
                     }, 0).toLocaleString('vi-VN', {maximumFractionDigits: 0})} đ
@@ -7038,7 +7040,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 <div className="min-w-[120px]">
                   <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Tổng chi' : 'Total Expense'}</p>
                   <p className="text-2xl font-semibold mt-1">
-                    {allBpTransactions.reduce((sum: number, t: any) => {
+                    {(Array.isArray(allBpTransactions) ? allBpTransactions : []).reduce((sum: number, t: any) => {
                       if (t.status !== "completed" || t.type !== "refund") return sum;
                       return sum + parseFloat(t.amount || "0");
                     }, 0).toLocaleString('vi-VN', {maximumFractionDigits: 0})} đ
