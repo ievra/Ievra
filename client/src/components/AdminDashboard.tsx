@@ -6300,7 +6300,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="tier"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Hạng Đối Tác' : 'Partner Tier'}</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Danh Mục' : 'Tier'}</FormLabel>
                           <Select onValueChange={field.onChange} value={field.value}>
                             <FormControl>
                               <SelectTrigger data-testid="select-bp-tier">
@@ -7034,10 +7034,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           </div>
           <Select value={bpTierFilter} onValueChange={(v) => { setBpTierFilter(v); setBpCurrentPage(1); }}>
             <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
-              <SelectValue placeholder={language === 'vi' ? 'Tất cả hạng' : 'All tiers'} />
+              <SelectValue placeholder={language === 'vi' ? 'Tất cả danh mục' : 'All tiers'} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">{language === 'vi' ? 'Tất cả hạng' : 'All tiers'}</SelectItem>
+              <SelectItem value="all">{language === 'vi' ? 'Tất cả danh mục' : 'All tiers'}</SelectItem>
               {bpTiersData.filter((t: any) => t.active).sort((a: any, b: any) => a.order - b.order).map((tier: any) => (
                 <SelectItem key={tier.id} value={tier.value}>
                   {language === 'vi' ? tier.labelVi : tier.labelEn}
@@ -7101,7 +7101,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     <TableHeader>
                       <TableRow>
                         <TableHead className="w-[4%] whitespace-nowrap text-center">{language === 'vi' ? 'STT' : 'NO'}</TableHead>
-                        <TableHead className="w-[5%] whitespace-nowrap text-center">{language === 'vi' ? 'Hạng' : 'Rank'}</TableHead>
+                        <TableHead className="w-[5%] whitespace-nowrap text-center">{language === 'vi' ? 'Danh Mục' : 'Tier'}</TableHead>
                         <TableHead className="w-[14%] whitespace-nowrap">
                           <div>{language === 'vi' ? 'Đại Diện' : 'Representative'}</div>
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Hạng mục' : 'Category'}</div>
