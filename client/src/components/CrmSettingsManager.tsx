@@ -19,7 +19,7 @@ import { insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmSta
 import { z } from "zod";
 import { useLanguage } from "@/contexts/LanguageContext";
 
-export default function CrmSettingsManager({ context = 'all' }: { context?: 'all' | 'client' | 'bp' }) {
+export default function CrmSettingsManager({ context = 'all' }: { context?: 'all' | 'client' | 'bp' | 'lookup' }) {
   const { t, language } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -458,7 +458,8 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
 
   return (
     <div>
-      <Tabs defaultValue={context === 'bp' ? 'bpTiers' : 'tiers'} className="w-full">
+      <Tabs defaultValue={context === 'bp' ? 'bpTiers' : context === 'lookup' ? 'construction_phases' : 'tiers'} className="w-full">
+              {context !== 'lookup' && (
               <TabsList className={`grid w-full bg-black border border-white/10 ${context === 'all' ? 'grid-cols-7' : 'grid-cols-3'}`}>
                 {context !== 'bp' && <TabsTrigger value="tiers">{language === 'vi' ? 'Hạng Khách' : 'Client Tiers'}</TabsTrigger>}
                 {context !== 'client' && <TabsTrigger value="bpTiers">{language === 'vi' ? 'Danh Mục' : 'Tiers'}</TabsTrigger>}
@@ -468,6 +469,7 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
                 {context !== 'client' && <TabsTrigger value="bpStatuses">{language === 'vi' ? 'Trạng Thái' : 'Statuses'}</TabsTrigger>}
                 {context !== 'bp' && <TabsTrigger value="construction_phases">{language === 'vi' ? 'Giai Đoạn TC' : 'Phases'}</TabsTrigger>}
               </TabsList>
+              )}
 
               {/* Pipeline Stages (Client) */}
               <TabsContent value="stages" className="mt-4">

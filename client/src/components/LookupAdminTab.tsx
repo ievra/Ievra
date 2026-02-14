@@ -580,7 +580,7 @@ export default function LookupAdminTab() {
           <DialogHeader>
             <DialogTitle className="text-2xl font-light">{isVi ? "Cài Đặt" : "Settings"}</DialogTitle>
           </DialogHeader>
-          <CrmSettingsManager context="client" />
+          <CrmSettingsManager context="lookup" />
         </DialogContent>
       </Dialog>
       {selectedClient && (
