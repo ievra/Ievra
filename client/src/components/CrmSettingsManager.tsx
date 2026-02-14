@@ -467,7 +467,7 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
                 {context !== 'client' && <TabsTrigger value="bpCategories">{language === 'vi' ? 'Hạng Mục' : 'Categories'}</TabsTrigger>}
                 {context !== 'bp' && <TabsTrigger value="statuses">{language === 'vi' ? 'Trạng Thái' : 'Statuses'}</TabsTrigger>}
                 {context !== 'client' && <TabsTrigger value="bpStatuses">{language === 'vi' ? 'Trạng Thái' : 'Statuses'}</TabsTrigger>}
-                {context !== 'bp' && <TabsTrigger value="construction_phases">{language === 'vi' ? 'Giai Đoạn TC' : 'Phases'}</TabsTrigger>}
+                {(context === 'all') && <TabsTrigger value="construction_phases">{language === 'vi' ? 'Giai Đoạn TC' : 'Phases'}</TabsTrigger>}
               </TabsList>
               )}
 
