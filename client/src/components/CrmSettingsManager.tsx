@@ -88,6 +88,9 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
       stageForm.reset();
       toast({ title: language === 'vi' ? 'Đã tạo giai đoạn thành công' : 'Pipeline stage created successfully' });
     },
+    onError: (error: Error) => {
+      toast({ title: language === 'vi' ? 'Lỗi tạo giai đoạn' : 'Failed to create stage', description: error.message, variant: 'destructive' });
+    },
   });
 
   const updateStageMutation = useMutation({
@@ -123,6 +126,9 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
       tierForm.reset();
       toast({ title: language === 'vi' ? 'Đã tạo hạng khách thành công' : 'Customer tier created successfully' });
     },
+    onError: (error: Error) => {
+      toast({ title: language === 'vi' ? 'Lỗi tạo hạng khách' : 'Failed to create tier', description: error.message, variant: 'destructive' });
+    },
   });
 
   const updateTierMutation = useMutation({
@@ -157,6 +163,9 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
       setIsStatusDialogOpen(false);
       statusForm.reset();
       toast({ title: language === 'vi' ? 'Đã tạo trạng thái thành công' : 'Status created successfully' });
+    },
+    onError: (error: Error) => {
+      toast({ title: language === 'vi' ? 'Lỗi tạo trạng thái' : 'Failed to create status', description: error.message, variant: 'destructive' });
     },
   });
 
@@ -204,6 +213,9 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
       bpCategoryForm.reset();
       toast({ title: language === 'vi' ? 'Đã tạo hạng mục thành công' : 'Category created successfully' });
     },
+    onError: (error: Error) => {
+      toast({ title: language === 'vi' ? 'Lỗi tạo hạng mục' : 'Failed to create category', description: error.message, variant: 'destructive' });
+    },
   });
 
   const updateBpCategoryMutation = useMutation({
@@ -250,6 +262,9 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
       bpStatusForm.reset();
       toast({ title: language === 'vi' ? 'Đã tạo trạng thái ĐT thành công' : 'BP Status created successfully' });
     },
+    onError: (error: Error) => {
+      toast({ title: language === 'vi' ? 'Lỗi tạo trạng thái' : 'Failed to create status', description: error.message, variant: 'destructive' });
+    },
   });
 
   const updateBpStatusMutation = useMutation({
@@ -295,6 +310,9 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
       setIsBpTierDialogOpen(false);
       bpTierForm.reset();
       toast({ title: language === 'vi' ? 'Đã tạo hạng đối tác thành công' : 'BP Tier created successfully' });
+    },
+    onError: (error: Error) => {
+      toast({ title: language === 'vi' ? 'Lỗi tạo danh mục' : 'Failed to create tier', description: error.message, variant: 'destructive' });
     },
   });
 

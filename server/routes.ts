@@ -2039,10 +2039,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const status = await storage.createCrmStatus(validatedData);
       res.status(201).json(status);
     } catch (error) {
+      fs.appendFileSync('/tmp/crm_status_error.log', `${new Date().toISOString()} - Error: ${error instanceof Error ? error.message : String(error)}\nStack: ${error instanceof Error ? error.stack : 'N/A'}\nBody: ${JSON.stringify(req.body)}\n\n`);
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Validation error", errors: error.errors });
       }
-      res.status(500).json({ message: "Failed to create status" });
+      const errMsg = error instanceof Error ? error.message : String(error);
+      res.status(500).json({ message: "Failed to create status", detail: errMsg });
     }
   });
 
