@@ -5095,7 +5095,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t('crm.email')} *</FormLabel>
+                          <FormLabel>{t('crm.email')}</FormLabel>
                           <FormControl>
                             <Input {...field} type="email" placeholder="email@example.com" data-testid="input-client-email" />
                           </FormControl>
@@ -6256,7 +6256,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="firstName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Đại diện' : 'Representative'} *</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Đại diện' : 'Representative'}</FormLabel>
                           <FormControl>
                             <Input {...field} placeholder={language === 'vi' ? "Nguyễn Văn A" : "John Doe"} data-testid="input-bp-first-name" />
                           </FormControl>
@@ -6286,7 +6286,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t('crm.email')} *</FormLabel>
+                          <FormLabel>{t('crm.email')}</FormLabel>
                           <FormControl>
                             <Input {...field} type="email" placeholder="email@example.com" data-testid="input-bp-email" />
                           </FormControl>
