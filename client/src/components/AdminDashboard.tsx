@@ -6023,7 +6023,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           <TableCell className="align-middle text-center"><span className="text-sm">{startIndex + idx + 1}</span></TableCell>
                           <TableCell className="align-middle text-center">
                             <span className="text-sm font-medium text-white/70">
-                              {clientTier ? (language === 'vi' ? clientTier.labelVi : clientTier.labelEn) : '—'}
+                              {clientTier ? (language === 'vi' ? clientTier.labelVi : clientTier.labelEn) : 'N/A'}
                             </span>
                           </TableCell>
                           <TableCell className="align-middle">
@@ -6070,7 +6070,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             <span className="text-sm" data-testid={`select-client-stage-${client.id}`}>
                               {(() => {
                                 const stage = crmStages.find(s => s.value === client.stage);
-                                return stage ? (language === 'vi' ? stage.labelVi : stage.labelEn) : client.stage || '—';
+                                return stage ? (language === 'vi' ? stage.labelVi : stage.labelEn) : 'N/A';
                               })()}
                             </span>
                           </TableCell>
@@ -6078,7 +6078,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             <span className="text-sm" data-testid={`select-client-status-${client.id}`}>
                               {(() => {
                                 const status = crmStatuses.find(s => s.value === client.status);
-                                return status ? (language === 'vi' ? status.labelVi : status.labelEn) : client.status || '—';
+                                return status ? (language === 'vi' ? status.labelVi : status.labelEn) : 'N/A';
                               })()}
                             </span>
                           </TableCell>
