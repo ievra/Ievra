@@ -382,7 +382,7 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
       <Tabs defaultValue={context === 'bp' ? 'bpCategories' : 'stages'} className="w-full">
               <TabsList className={`grid w-full bg-black border border-white/10 ${context === 'all' ? 'grid-cols-6' : 'grid-cols-3'}`}>
                 {context !== 'bp' && <TabsTrigger value="stages">{language === 'vi' ? 'Giai Đoạn' : 'Stages'}</TabsTrigger>}
-                {context !== 'client' && <TabsTrigger value="bpCategories">{language === 'vi' ? 'Hạng Mục ĐT' : 'BP Categories'}</TabsTrigger>}
+                {context !== 'client' && <TabsTrigger value="bpCategories">{language === 'vi' ? 'Hạng Mục' : 'Categories'}</TabsTrigger>}
                 {context !== 'bp' && <TabsTrigger value="tiers">{language === 'vi' ? 'Hạng Khách' : 'Client Tiers'}</TabsTrigger>}
                 {context !== 'client' && <TabsTrigger value="bpTiers">{language === 'vi' ? 'Hạng Đối Tác' : 'BP Tiers'}</TabsTrigger>}
                 {context !== 'bp' && <TabsTrigger value="statuses">{language === 'vi' ? 'TT Khách Hàng' : 'Client Statuses'}</TabsTrigger>}
