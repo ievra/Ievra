@@ -339,10 +339,7 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
     },
   });
 
-  const toValue = (label: string) => {
-    const base = label.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
-    return `${base}_${Date.now().toString(36)}`;
-  };
+  const toValue = (label: string) => label.toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
 
   const handleStageSubmit = (data: z.infer<typeof insertCrmPipelineStageSchema>) => {
     const submitData = { ...data, value: editingStage ? data.value : toValue(data.labelEn) };

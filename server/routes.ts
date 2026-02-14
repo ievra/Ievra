@@ -1794,8 +1794,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/crm-pipeline-stages", requirePermission('crm'), async (req, res) => {
     try {
       const validatedData = insertCrmPipelineStageSchema.parse(req.body);
-      const stage = await storage.createCrmPipelineStage(validatedData);
-      res.status(201).json(stage);
+      let attempts = 0;
+      let lastError: any;
+      let valueToUse = validatedData.value;
+      while (attempts < 5) {
+        try {
+          const stage = await storage.createCrmPipelineStage({ ...validatedData, value: valueToUse });
+          return res.status(201).json(stage);
+        } catch (err: any) {
+          if (err.message?.includes('unique constraint') && err.message?.includes('value')) {
+            attempts++;
+            valueToUse = `${validatedData.value}_${attempts}`;
+            lastError = err;
+          } else {
+            throw err;
+          }
+        }
+      }
+      throw lastError;
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Validation error", errors: error.errors });
@@ -1842,8 +1858,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/bp-categories", requirePermission('crm'), async (req, res) => {
     try {
       const validatedData = insertBpCategorySchema.parse(req.body);
-      const category = await storage.createBpCategory(validatedData);
-      res.status(201).json(category);
+      let attempts = 0;
+      let lastError: any;
+      let valueToUse = validatedData.value;
+      while (attempts < 5) {
+        try {
+          const category = await storage.createBpCategory({ ...validatedData, value: valueToUse });
+          return res.status(201).json(category);
+        } catch (err: any) {
+          if (err.message?.includes('unique constraint') && err.message?.includes('value')) {
+            attempts++;
+            valueToUse = `${validatedData.value}_${attempts}`;
+            lastError = err;
+          } else {
+            throw err;
+          }
+        }
+      }
+      throw lastError;
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Validation error", errors: error.errors });
@@ -1890,8 +1922,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/bp-statuses", requirePermission('crm'), async (req, res) => {
     try {
       const validatedData = insertBpStatusSchema.parse(req.body);
-      const status = await storage.createBpStatus(validatedData);
-      res.status(201).json(status);
+      let attempts = 0;
+      let lastError: any;
+      let valueToUse = validatedData.value;
+      while (attempts < 5) {
+        try {
+          const status = await storage.createBpStatus({ ...validatedData, value: valueToUse });
+          return res.status(201).json(status);
+        } catch (err: any) {
+          if (err.message?.includes('unique constraint') && err.message?.includes('value')) {
+            attempts++;
+            valueToUse = `${validatedData.value}_${attempts}`;
+            lastError = err;
+          } else {
+            throw err;
+          }
+        }
+      }
+      throw lastError;
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Validation error", errors: error.errors });
@@ -1938,8 +1986,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/bp-tiers", requirePermission('crm'), async (req, res) => {
     try {
       const validatedData = insertBpTierSchema.parse(req.body);
-      const tier = await storage.createBpTier(validatedData);
-      res.status(201).json(tier);
+      let attempts = 0;
+      let lastError: any;
+      let valueToUse = validatedData.value;
+      while (attempts < 5) {
+        try {
+          const tier = await storage.createBpTier({ ...validatedData, value: valueToUse });
+          return res.status(201).json(tier);
+        } catch (err: any) {
+          if (err.message?.includes('unique constraint') && err.message?.includes('value')) {
+            attempts++;
+            valueToUse = `${validatedData.value}_${attempts}`;
+            lastError = err;
+          } else {
+            throw err;
+          }
+        }
+      }
+      throw lastError;
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Validation error", errors: error.errors });
@@ -1987,8 +2051,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/crm-customer-tiers", requirePermission('crm'), async (req, res) => {
     try {
       const validatedData = insertCrmCustomerTierSchema.parse(req.body);
-      const tier = await storage.createCrmCustomerTier(validatedData);
-      res.status(201).json(tier);
+      let attempts = 0;
+      let lastError: any;
+      let valueToUse = validatedData.value;
+      while (attempts < 5) {
+        try {
+          const tier = await storage.createCrmCustomerTier({ ...validatedData, value: valueToUse });
+          return res.status(201).json(tier);
+        } catch (err: any) {
+          if (err.message?.includes('unique constraint') && err.message?.includes('value')) {
+            attempts++;
+            valueToUse = `${validatedData.value}_${attempts}`;
+            lastError = err;
+          } else {
+            throw err;
+          }
+        }
+      }
+      throw lastError;
     } catch (error) {
       if (error instanceof z.ZodError) {
         return res.status(400).json({ message: "Validation error", errors: error.errors });
@@ -2036,8 +2116,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/crm-statuses", requirePermission('crm'), async (req, res) => {
     try {
       const validatedData = insertCrmStatusSchema.parse(req.body);
-      const status = await storage.createCrmStatus(validatedData);
-      res.status(201).json(status);
+      let attempts = 0;
+      let lastError: any;
+      let valueToUse = validatedData.value;
+      while (attempts < 5) {
+        try {
+          const status = await storage.createCrmStatus({ ...validatedData, value: valueToUse });
+          return res.status(201).json(status);
+        } catch (err: any) {
+          if (err.message?.includes('unique constraint') && err.message?.includes('value')) {
+            attempts++;
+            valueToUse = `${validatedData.value}_${attempts}`;
+            lastError = err;
+          } else {
+            throw err;
+          }
+        }
+      }
+      throw lastError;
     } catch (error) {
       fs.appendFileSync('/tmp/crm_status_error.log', `${new Date().toISOString()} - Error: ${error instanceof Error ? error.message : String(error)}\nStack: ${error instanceof Error ? error.stack : 'N/A'}\nBody: ${JSON.stringify(req.body)}\n\n`);
       if (error instanceof z.ZodError) {
