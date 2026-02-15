@@ -859,14 +859,13 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
 
   // Memoized client financial calculations (calculate once, reuse for all clients)
   const clientFinances = useMemo(() => {
-    const finances: Record<string, { totalSpending: number; commission: number }> = {};
+    const finances: Record<string, { totalSpending: number; refundAmount: number; commission: number }> = {};
     
-    // Group transactions by clientId for efficient calculation
     allTransactions.forEach((t: any) => {
       if (t.status !== "completed" || !t.clientId) return;
       
       if (!finances[t.clientId]) {
-        finances[t.clientId] = { totalSpending: 0, commission: 0 };
+        finances[t.clientId] = { totalSpending: 0, refundAmount: 0, commission: 0 };
       }
       
       const amount = parseFloat(t.amount || "0");
@@ -874,7 +873,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       if (t.type === "payment") {
         finances[t.clientId].totalSpending += amount;
       } else if (t.type === "refund") {
-        finances[t.clientId].totalSpending -= amount;
+        finances[t.clientId].refundAmount += amount;
       } else if (t.type === "commission") {
         finances[t.clientId].commission += amount;
       }
