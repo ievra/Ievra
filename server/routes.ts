@@ -565,7 +565,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put("/api/clients/:id", requirePermission('clients'), requirePermission('crm'), async (req, res) => {
     try {
-      const validatedData = insertClientSchema.partial().parse(req.body);
+      const body = { ...req.body };
+      const nullableFields: Record<string, boolean> = {};
+      for (const key of ['warrantyExpiry', 'intakeDate']) {
+        if (body[key] === null) {
+          nullableFields[key] = true;
+          delete body[key];
+        }
+      }
+      const validatedData = insertClientSchema.partial().parse(body);
+      for (const key of Object.keys(nullableFields)) {
+        (validatedData as any)[key] = null;
+      }
       const client = await storage.updateClient(req.params.id, validatedData);
       res.json(client);
     } catch (error) {
