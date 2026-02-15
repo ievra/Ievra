@@ -5888,7 +5888,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <CardContent className="p-6 min-h-[90px]">
               <div className="flex items-center justify-between">
                 <div className="min-w-[120px]">
-                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Tổng doanh thu' : 'Total Revenue'}</p>
+                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Doanh thu thiết kế' : 'Design Revenue'}</p>
                   <p className="text-2xl font-semibold mt-1">
                     {allTransactions.reduce((sum, t) => {
                       if (t.status !== "completed") return sum;
