@@ -522,8 +522,8 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
       <Tabs defaultValue={context === 'bp' ? 'bpTiers' : context === 'lookup' ? 'construction_phases' : 'tiers'} className="w-full">
               {context === 'lookup' ? (
               <TabsList className="grid w-full bg-black border border-white/10 grid-cols-2">
-                <TabsTrigger value="construction_phases">{language === 'vi' ? 'Giai Đoạn TC' : 'Construction Phases'}</TabsTrigger>
-                <TabsTrigger value="design_phases">{language === 'vi' ? 'Giai Đoạn TK' : 'Design Phases'}</TabsTrigger>
+                <TabsTrigger value="construction_phases">{language === 'vi' ? 'Giai Đoạn Thi Công' : 'Construction Phases'}</TabsTrigger>
+                <TabsTrigger value="design_phases">{language === 'vi' ? 'Giai Đoạn Thiết Kế' : 'Design Phases'}</TabsTrigger>
               </TabsList>
               ) : (
               <TabsList className={`grid w-full bg-black border border-white/10 ${context === 'all' ? 'grid-cols-8' : 'grid-cols-3'}`}>
