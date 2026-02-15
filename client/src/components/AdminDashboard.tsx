@@ -6239,7 +6239,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           </Dialog>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <Card className="bg-black border-white/10 rounded-none">
             <CardContent className="p-6 min-h-[90px]">
               <div className="flex items-center justify-between">
@@ -6256,29 +6256,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <CardContent className="p-6 min-h-[90px]">
               <div className="flex items-center justify-between">
                 <div className="min-w-[120px]">
-                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Doanh thu thiết kế' : 'Design Revenue'}</p>
+                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Tổng doanh thu' : 'Total Revenue'}</p>
                   <p className="text-2xl font-semibold mt-1">
-                    {allTransactions.filter(t => t.category === 'design' || !t.category).reduce((sum, t) => {
-                      if (t.status !== "completed") return sum;
-                      const amount = parseFloat(t.amount || "0");
-                      if (t.type === "payment") return sum + amount;
-                      if (t.type === "refund") return sum - amount;
-                      return sum;
-                    }, 0).toLocaleString('vi-VN', {maximumFractionDigits: 0})} đ
-                  </p>
-                </div>
-                <TrendingUp className="h-8 w-8 text-muted-foreground" />
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-black border-white/10 rounded-none">
-            <CardContent className="p-6 min-h-[90px]">
-              <div className="flex items-center justify-between">
-                <div className="min-w-[120px]">
-                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Doanh thu thi công' : 'Construction Revenue'}</p>
-                  <p className="text-2xl font-semibold mt-1">
-                    {allTransactions.filter(t => t.category === 'construction').reduce((sum, t) => {
+                    {allTransactions.filter(t => t.category === 'design' || t.category === 'construction' || !t.category).reduce((sum, t) => {
                       if (t.status !== "completed") return sum;
                       const amount = parseFloat(t.amount || "0");
                       if (t.type === "payment") return sum + amount;
