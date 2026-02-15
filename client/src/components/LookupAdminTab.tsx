@@ -18,7 +18,7 @@ import { apiRequest, queryClient as qc } from "@/lib/queryClient";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Search, Plus, Pencil, Trash2, Phone, Mail, User, Shield, Calendar, Clock, Briefcase, CreditCard, X, HardHat, PenTool, Eye, Settings, ChevronLeft, ChevronRight, Check } from "lucide-react";
 import CrmSettingsManager from "@/components/CrmSettingsManager";
-import type { Client, Interaction, Deal, Transaction, WarrantyLog, ConstructionPhase } from "@shared/schema";
+import type { Client, Interaction, Deal, Transaction, WarrantyLog, ConstructionPhase, DesignPhase } from "@shared/schema";
 
 const interactionFormSchema = z.object({
   title: z.string().min(1, "Tiêu đề bắt buộc"),
@@ -103,6 +103,10 @@ export default function LookupAdminTab() {
   const [interactionAttachments, setInteractionAttachments] = useState<string[]>([]);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
+  const [isDesignInteractionDialogOpen, setIsDesignInteractionDialogOpen] = useState(false);
+  const [editingDesignInteraction, setEditingDesignInteraction] = useState<Interaction | null>(null);
+  const [viewingDesignInteraction, setViewingDesignInteraction] = useState<Interaction | null>(null);
+  const [designInteractionAttachments, setDesignInteractionAttachments] = useState<string[]>([]);
 
   const { data: clients = [] } = useQuery<Client[]>({
     queryKey: ['/api/clients'],
@@ -111,6 +115,11 @@ export default function LookupAdminTab() {
   const { data: constructionPhases = [] } = useQuery<ConstructionPhase[]>({
     queryKey: ['/api/construction-phases', 'active'],
     queryFn: () => fetch('/api/construction-phases?active=true').then(r => r.json()),
+  });
+
+  const { data: designPhases = [] } = useQuery<DesignPhase[]>({
+    queryKey: ['/api/design-phases', 'active'],
+    queryFn: () => fetch('/api/design-phases?active=true').then(r => r.json()),
   });
 
   const { data: interactions = [], isLoading: interactionsLoading } = useQuery<Interaction[]>({
@@ -122,6 +131,9 @@ export default function LookupAdminTab() {
     },
     enabled: !!selectedClient?.id,
   });
+
+  const constructionInteractions = interactions.filter(i => i.type !== "design");
+  const designInteractions = interactions.filter(i => i.type === "design");
 
   const { data: deals = [], isLoading: dealsLoading } = useQuery<Deal[]>({
     queryKey: ['/api/deals', selectedClient?.id],
@@ -154,6 +166,18 @@ export default function LookupAdminTab() {
   });
 
   const interactionForm = useForm<InteractionFormData>({
+    resolver: zodResolver(interactionFormSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      date: new Date().toISOString().split("T")[0],
+      phase: "",
+      assignedTo: "",
+      nextAction: "",
+    },
+  });
+
+  const designInteractionForm = useForm<InteractionFormData>({
     resolver: zodResolver(interactionFormSchema),
     defaultValues: {
       title: "",
@@ -354,6 +378,9 @@ export default function LookupAdminTab() {
   const [editingTimeline, setEditingTimeline] = useState(false);
   const [timelineValue, setTimelineValue] = useState<string>("");
 
+  const [editingDesignTimeline, setEditingDesignTimeline] = useState(false);
+  const [designTimelineValue, setDesignTimelineValue] = useState<string>("");
+
   const updateTimelineMutation = useMutation({
     mutationFn: async (days: number) => {
       await apiRequest("PUT", `/api/clients/${selectedClient!.id}`, {
@@ -365,6 +392,23 @@ export default function LookupAdminTab() {
       setSelectedClient({ ...selectedClient!, constructionTimeline: days } as Client);
       setEditingTimeline(false);
       toast({ title: isVi ? "Thành công" : "Success", description: isVi ? "Đã cập nhật mục tiêu thi công" : "Construction timeline updated" });
+    },
+    onError: (err: Error) => {
+      toast({ title: isVi ? "Lỗi" : "Error", description: err.message, variant: "destructive" });
+    },
+  });
+
+  const updateDesignTimelineMutation = useMutation({
+    mutationFn: async (days: number) => {
+      await apiRequest("PUT", `/api/clients/${selectedClient!.id}`, {
+        designTimeline: days,
+      });
+    },
+    onSuccess: (_data, days) => {
+      queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
+      setSelectedClient({ ...selectedClient!, designTimeline: days } as Client);
+      setEditingDesignTimeline(false);
+      toast({ title: isVi ? "Thành công" : "Success", description: isVi ? "Đã cập nhật mục tiêu thiết kế" : "Design timeline updated" });
     },
     onError: (err: Error) => {
       toast({ title: isVi ? "Lỗi" : "Error", description: err.message, variant: "destructive" });
@@ -520,12 +564,137 @@ export default function LookupAdminTab() {
     setIsDealDialogOpen(true);
   };
 
+  const createDesignInteractionMutation = useMutation({
+    mutationFn: async (data: InteractionFormData) => {
+      const body = {
+        clientId: selectedClient!.id,
+        type: "design",
+        title: data.title,
+        description: data.description || undefined,
+        date: data.date,
+        phase: data.phase || undefined,
+        assignedTo: data.assignedTo || undefined,
+        nextAction: data.nextAction || undefined,
+        attachments: designInteractionAttachments.length > 0 ? designInteractionAttachments : undefined,
+      };
+      await apiRequest("POST", "/api/interactions", body);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/interactions', selectedClient?.id] });
+      setIsDesignInteractionDialogOpen(false);
+      setDesignInteractionAttachments([]);
+      designInteractionForm.reset();
+      toast({ title: isVi ? "Thành công" : "Success", description: isVi ? "Đã thêm nhật ký thiết kế" : "Design log added" });
+    },
+    onError: (err: Error) => {
+      toast({ title: isVi ? "Lỗi" : "Error", description: err.message, variant: "destructive" });
+    },
+  });
+
+  const updateDesignInteractionMutation = useMutation({
+    mutationFn: async (data: InteractionFormData) => {
+      const body = {
+        title: data.title,
+        description: data.description || undefined,
+        date: data.date,
+        phase: data.phase || undefined,
+        assignedTo: data.assignedTo || undefined,
+        nextAction: data.nextAction || undefined,
+        attachments: designInteractionAttachments,
+      };
+      await apiRequest("PUT", `/api/interactions/${editingDesignInteraction!.id}`, body);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/interactions', selectedClient?.id] });
+      setIsDesignInteractionDialogOpen(false);
+      setEditingDesignInteraction(null);
+      setDesignInteractionAttachments([]);
+      designInteractionForm.reset();
+      toast({ title: isVi ? "Thành công" : "Success", description: isVi ? "Đã cập nhật nhật ký" : "Log updated" });
+    },
+    onError: (err: Error) => {
+      toast({ title: isVi ? "Lỗi" : "Error", description: err.message, variant: "destructive" });
+    },
+  });
+
+  const deleteDesignInteractionMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiRequest("DELETE", `/api/interactions/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/interactions', selectedClient?.id] });
+      toast({ title: isVi ? "Đã xóa" : "Deleted", description: isVi ? "Đã xóa nhật ký thiết kế" : "Design log deleted" });
+    },
+  });
+
   const onInteractionSubmit = (data: InteractionFormData) => {
     if (editingInteraction) {
       updateInteractionMutation.mutate(data);
     } else {
       createInteractionMutation.mutate(data);
     }
+  };
+
+  const openDesignInteractionDialog = (interaction?: Interaction) => {
+    if (interaction) {
+      setEditingDesignInteraction(interaction);
+      designInteractionForm.reset({
+        title: interaction.title,
+        description: interaction.description || "",
+        date: interaction.date ? new Date(interaction.date).toISOString().split("T")[0] : "",
+        phase: (interaction as any).phase || "",
+        assignedTo: interaction.assignedTo || "",
+        nextAction: interaction.nextAction || "",
+      });
+      setDesignInteractionAttachments(Array.isArray(interaction.attachments) ? (interaction.attachments as string[]) : []);
+    } else {
+      setEditingDesignInteraction(null);
+      designInteractionForm.reset({
+        title: "",
+        description: "",
+        date: new Date().toISOString().split("T")[0],
+        phase: "",
+        assignedTo: "",
+        nextAction: "",
+      });
+      setDesignInteractionAttachments([]);
+    }
+    setIsDesignInteractionDialogOpen(true);
+  };
+
+  const onDesignInteractionSubmit = (data: InteractionFormData) => {
+    if (editingDesignInteraction) {
+      updateDesignInteractionMutation.mutate(data);
+    } else {
+      createDesignInteractionMutation.mutate(data);
+    }
+  };
+
+  const handleDesignImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    const remaining = 5 - designInteractionAttachments.length;
+    if (remaining <= 0) {
+      toast({ title: isVi ? "Giới hạn" : "Limit", description: isVi ? "Tối đa 5 hình ảnh" : "Maximum 5 images", variant: "destructive" });
+      return;
+    }
+    const filesToUpload = Array.from(files).slice(0, remaining);
+    setUploadingImage(true);
+    try {
+      const newAttachments: string[] = [];
+      for (let i = 0; i < filesToUpload.length; i++) {
+        const formData = new FormData();
+        formData.append('file', filesToUpload[i]);
+        const res = await fetch('/api/upload', { method: 'POST', body: formData, credentials: 'include' });
+        const data = await res.json();
+        if (data.path) newAttachments.push(data.path);
+        else if (data.url) newAttachments.push(data.url);
+      }
+      setDesignInteractionAttachments(prev => [...prev, ...newAttachments]);
+    } catch {
+      toast({ title: isVi ? "Lỗi" : "Error", description: isVi ? "Lỗi tải hình" : "Upload failed", variant: "destructive" });
+    }
+    setUploadingImage(false);
   };
 
   const onDealSubmit = (data: DealFormData) => {
@@ -702,7 +871,7 @@ export default function LookupAdminTab() {
                           </div>
                           <div>
                             <span className="text-xs text-white/40">{isVi ? "Đã ghi" : "Logged"}</span>
-                            <p className="text-sm text-white font-light">{interactions.length} / {selectedClient.constructionTimeline}</p>
+                            <p className="text-sm text-white font-light">{constructionInteractions.length} / {selectedClient.constructionTimeline}</p>
                           </div>
                         </>
                       ) : (
@@ -717,7 +886,7 @@ export default function LookupAdminTab() {
                     </div>
                     <Button
                       onClick={() => openInteractionDialog()}
-                      disabled={!!selectedClient.constructionTimeline && interactions.length >= selectedClient.constructionTimeline}
+                      disabled={!!selectedClient.constructionTimeline && constructionInteractions.length >= selectedClient.constructionTimeline}
                       className="h-10 px-4 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed"
                     >
                       <Plus className="w-4 h-4 mr-2" />
@@ -726,7 +895,7 @@ export default function LookupAdminTab() {
                   </div>
                   {interactionsLoading ? (
                     <div className="text-center py-8 text-white/40">{isVi ? "Đang tải..." : "Loading..."}</div>
-                  ) : interactions.length === 0 ? (
+                  ) : constructionInteractions.length === 0 ? (
                     <div className="text-center py-12">
                       <p className="text-white/30 font-light">{isVi ? "Chưa có nhật ký thi công" : "No construction logs yet"}</p>
                     </div>
@@ -744,7 +913,7 @@ export default function LookupAdminTab() {
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {interactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
+                        {constructionInteractions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
                           <TableRow key={interaction.id} className="border-white/10">
                             <TableCell className="text-white/40 text-sm">{index + 1}</TableCell>
                             <TableCell>
@@ -790,46 +959,151 @@ export default function LookupAdminTab() {
               )}
 
               {activeSubTab === "design_progress" && (
-                <div>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      {editingDesignTimeline ? (
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => setDesignTimelineValue(String(Math.max(1, parseInt(designTimelineValue || "0") - 1)))}
+                            className="text-white/30 hover:text-white transition-colors p-0.5"
+                          >
+                            <ChevronLeft className="w-4 h-4" />
+                          </button>
+                          <input
+                            type="number"
+                            min={1}
+                            max={365}
+                            value={designTimelineValue}
+                            onChange={(e) => setDesignTimelineValue(e.target.value)}
+                            placeholder={isVi ? "Số ngày" : "Days"}
+                            className="w-14 h-7 bg-transparent border-b border-white/20 text-white text-center text-sm focus:outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            autoFocus
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" && designTimelineValue) {
+                                updateDesignTimelineMutation.mutate(parseInt(designTimelineValue));
+                              } else if (e.key === "Escape") {
+                                setEditingDesignTimeline(false);
+                              }
+                            }}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setDesignTimelineValue(String(Math.min(365, parseInt(designTimelineValue || "0") + 1)))}
+                            className="text-white/30 hover:text-white transition-colors p-0.5"
+                          >
+                            <ChevronRight className="w-4 h-4" />
+                          </button>
+                          <span className="text-xs text-white/40 ml-1">{isVi ? "ngày" : "days"}</span>
+                          <button
+                            type="button"
+                            onClick={() => designTimelineValue && updateDesignTimelineMutation.mutate(parseInt(designTimelineValue))}
+                            disabled={!designTimelineValue || updateDesignTimelineMutation.isPending}
+                            className="text-white/40 hover:text-white transition-colors ml-1 disabled:opacity-30"
+                          >
+                            <Check className="w-4 h-4" />
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setEditingDesignTimeline(false)}
+                            className="text-white/30 hover:text-white/60 transition-colors"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      ) : selectedClient.designTimeline ? (
+                        <>
+                          <div className="cursor-pointer group" onClick={() => { setDesignTimelineValue(String(selectedClient.designTimeline || "")); setEditingDesignTimeline(true); }}>
+                            <span className="text-xs text-white/40">{isVi ? "Mục tiêu" : "Target"}</span>
+                            <p className="text-sm text-white font-light group-hover:text-white/70">{selectedClient.designTimeline} {isVi ? "ngày" : "days"} <Pencil className="w-3 h-3 inline opacity-0 group-hover:opacity-50" /></p>
+                          </div>
+                          <div>
+                            <span className="text-xs text-white/40">{isVi ? "Đã ghi" : "Logged"}</span>
+                            <p className="text-sm text-white font-light">{designInteractions.length} / {selectedClient.designTimeline}</p>
+                          </div>
+                        </>
+                      ) : (
+                        <Button
+                          onClick={() => { setDesignTimelineValue(""); setEditingDesignTimeline(true); }}
+                          className="h-10 px-4 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10"
+                        >
+                          <Plus className="w-4 h-4 mr-2" />
+                          {isVi ? "Đặt mục tiêu thiết kế" : "Set design timeline"}
+                        </Button>
+                      )}
+                    </div>
+                    <Button
+                      onClick={() => openDesignInteractionDialog()}
+                      disabled={!!selectedClient.designTimeline && designInteractions.length >= selectedClient.designTimeline}
+                      className="h-10 px-4 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      {isVi ? "Thêm nhật ký" : "Add Log"}
+                    </Button>
+                  </div>
                   {interactionsLoading ? (
                     <div className="text-center py-8 text-white/40">{isVi ? "Đang tải..." : "Loading..."}</div>
-                  ) : (() => {
-                    const designItems = interactions.filter(i => ["design"].includes(i.type)).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-                    return designItems.length === 0 ? (
-                      <div className="text-center py-12">
-                        <p className="text-white/30 font-light">{isVi ? "Chưa có tiến độ thiết kế" : "No design progress yet"}</p>
-                      </div>
-                    ) : (
-                      <div className="relative">
-                        <div className="absolute left-[7px] top-3 bottom-3 w-[1px] bg-white/10" />
-                        <div className="space-y-6">
-                          {designItems.map((item) => (
-                            <div key={item.id} className="flex gap-6 relative">
-                              <div className="relative z-10 mt-1.5">
-                                <div className="w-[15px] h-[15px] rounded-full border-2 border-white/30 bg-black" />
-                              </div>
-                              <div className="flex-1 pb-2">
-                                <div className="flex items-center gap-3 mb-1">
-                                  <Badge variant="outline" className="rounded-none border-white/20 text-white/60">
-                                    {interactionTypeLabels[item.type]?.[language] || item.type}
-                                  </Badge>
-                                  <span className="text-xs text-white/30">{formatDate(item.date)}</span>
+                  ) : designInteractions.length === 0 ? (
+                    <div className="text-center py-12">
+                      <p className="text-white/30 font-light">{isVi ? "Chưa có nhật ký thiết kế" : "No design logs yet"}</p>
+                    </div>
+                  ) : (
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="border-white/10">
+                          <TableHead className="text-white/60 w-[5%]">#</TableHead>
+                          <TableHead className="text-white/60 w-[11%]">{isVi ? "Ngày" : "Date"}</TableHead>
+                          <TableHead className="text-white/60 w-[12%]">{isVi ? "Giai đoạn" : "Phase"}</TableHead>
+                          <TableHead className="text-white/60 w-[20%]">{isVi ? "Tiêu đề" : "Title"}</TableHead>
+                          <TableHead className="text-white/60 w-[12%]">{isVi ? "Phụ trách" : "Assigned To"}</TableHead>
+                          <TableHead className="text-white/60 w-[25%]">{isVi ? "Hình ảnh" : "Images"}</TableHead>
+                          <TableHead className="text-white/60 w-[15%]">{isVi ? "Thao tác" : "Actions"}</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {designInteractions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
+                          <TableRow key={interaction.id} className="border-white/10">
+                            <TableCell className="text-white/40 text-sm">{index + 1}</TableCell>
+                            <TableCell>
+                              <p className="text-white/70">{formatDate(interaction.date)}</p>
+                            </TableCell>
+                            <TableCell className="text-white/60">
+                              {(() => {
+                                const phaseValue = (interaction as any).phase;
+                                if (!phaseValue) return "—";
+                                const found = designPhases.find(p => p.value === phaseValue);
+                                return found ? (isVi ? found.labelVi : found.labelEn) : phaseValue;
+                              })()}
+                            </TableCell>
+                            <TableCell className="text-white">{interaction.title}</TableCell>
+                            <TableCell className="text-white/60">{interaction.assignedTo || "—"}</TableCell>
+                            <TableCell>
+                              {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
+                                <div className="flex gap-1">
+                                  {(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (
+                                    <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10" />
+                                  ))}
                                 </div>
-                                <h4 className="text-white font-light text-base mb-1">{item.title}</h4>
-                                {item.description && <p className="text-white/50 text-sm font-light">{item.description}</p>}
-                                {item.outcome && (
-                                  <p className="text-white/40 text-sm font-light mt-1">{isVi ? "Kết quả:" : "Outcome:"} {item.outcome}</p>
-                                )}
-                                {item.nextAction && (
-                                  <p className="text-white/30 text-xs mt-1">{isVi ? "Bước tiếp theo:" : "Next:"} {item.nextAction}</p>
-                                )}
+                              ) : (
+                                <span className="text-white/30">—</span>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex gap-1">
+                                <Button variant="ghost" size="icon" onClick={() => setViewingDesignInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
+                                  <Eye className="w-3.5 h-3.5" />
+                                </Button>
+                                <Button variant="ghost" size="icon" onClick={() => openDesignInteractionDialog(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
+                                  <Pencil className="w-3.5 h-3.5" />
+                                </Button>
                               </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })()}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  )}
                 </div>
               )}
 
@@ -1203,6 +1477,177 @@ export default function LookupAdminTab() {
                   <span className="text-xs text-white/40 block mb-2">{isVi ? "Hình ảnh đính kèm" : "Attachments"} ({(viewingInteraction.attachments as string[]).length}/5)</span>
                   <div className="grid grid-cols-3 gap-2">
                     {(viewingInteraction.attachments as string[]).map((url, idx) => (
+                      <a key={idx} href={url} target="_blank" rel="noopener noreferrer">
+                        <img src={url} alt="" className="w-full h-32 object-cover border border-white/10 hover:border-white/40 transition-colors cursor-pointer" />
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+      <Dialog open={isDesignInteractionDialogOpen} onOpenChange={setIsDesignInteractionDialogOpen}>
+        <DialogContent className="bg-black border border-white/20 rounded-none max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-white font-light">
+              {editingDesignInteraction ? (isVi ? "Sửa nhật ký thiết kế" : "Edit Design Log") : (isVi ? "Thêm nhật ký thiết kế" : "Add Design Log")}
+            </DialogTitle>
+          </DialogHeader>
+          <Form {...designInteractionForm}>
+            <form onSubmit={designInteractionForm.handleSubmit(onDesignInteractionSubmit)} className="space-y-4">
+              <FormField control={designInteractionForm.control} name="date" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white/60">{isVi ? "Ngày" : "Date"}</FormLabel>
+                  <FormControl>
+                    <Input type="date" {...field} className="bg-transparent border-white/20 text-white rounded-none h-10" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+              <FormField control={designInteractionForm.control} name="phase" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white/60">{isVi ? "Giai đoạn" : "Phase"}</FormLabel>
+                  <Select value={field.value || ""} onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger className="bg-transparent border-white/20 text-white rounded-none h-10">
+                        <SelectValue placeholder={isVi ? "Chọn giai đoạn" : "Select phase"} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="bg-black border-white/20 rounded-none">
+                      {designPhases.map((p) => (
+                        <SelectItem key={p.id} value={p.value}>
+                          {isVi ? p.labelVi : p.labelEn}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )} />
+              <FormField control={designInteractionForm.control} name="title" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white/60">{isVi ? "Tiêu đề" : "Title"}</FormLabel>
+                  <FormControl>
+                    <Input {...field} className="bg-transparent border-white/20 text-white rounded-none h-10" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+              <FormField control={designInteractionForm.control} name="description" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white/60">{isVi ? "Mô tả" : "Description"}</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} className="bg-transparent border-white/20 text-white rounded-none min-h-[80px]" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+              <FormField control={designInteractionForm.control} name="assignedTo" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white/60">{isVi ? "Phụ trách" : "Assigned To"}</FormLabel>
+                  <FormControl>
+                    <Input {...field} className="bg-transparent border-white/20 text-white rounded-none h-10" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+              <FormField control={designInteractionForm.control} name="nextAction" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white/60">{isVi ? "Đề xuất" : "Proposal"}</FormLabel>
+                  <FormControl>
+                    <Textarea {...field} className="bg-transparent border-white/20 text-white rounded-none min-h-[60px]" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+              <div>
+                <label className="text-sm text-white/60 mb-2 block">{isVi ? "Hình ảnh đính kèm" : "Attachments"}</label>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {designInteractionAttachments.map((url, idx) => (
+                    <div key={idx} className="relative group">
+                      <img src={url} alt="" className="w-20 h-20 object-cover border border-white/10" />
+                      <button type="button" onClick={() => setDesignInteractionAttachments(prev => prev.filter((_, i) => i !== idx))} className="absolute -top-1 -right-1 w-5 h-5 bg-red-600 text-white text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">×</button>
+                    </div>
+                  ))}
+                </div>
+                <label className={`inline-flex items-center gap-2 h-10 px-4 border border-white/20 text-sm transition-colors ${designInteractionAttachments.length >= 5 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer text-white/60 hover:bg-white/10'}`}>
+                  {uploadingImage ? (isVi ? "Đang tải..." : "Uploading...") : (isVi ? `Chọn hình (${designInteractionAttachments.length}/5)` : `Choose Image (${designInteractionAttachments.length}/5)`)}
+                  <input type="file" accept="image/*" multiple onChange={handleDesignImageUpload} className="hidden" disabled={uploadingImage || designInteractionAttachments.length >= 5} />
+                </label>
+              </div>
+              <div className="flex justify-between pt-2">
+                {editingDesignInteraction ? (
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button type="button" variant="ghost" size="icon" className="h-10 w-10 rounded-none text-white/40 hover:text-white">
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent className="bg-black border border-white/20 rounded-none">
+                      <AlertDialogHeader>
+                        <AlertDialogTitle className="text-white">{isVi ? "Xác nhận xóa" : "Confirm Delete"}</AlertDialogTitle>
+                        <AlertDialogDescription>{isVi ? "Bạn có chắc muốn xóa nhật ký này?" : "Are you sure you want to delete this log?"}</AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel className="rounded-none">{isVi ? "Hủy" : "Cancel"}</AlertDialogCancel>
+                        <AlertDialogAction onClick={() => { deleteDesignInteractionMutation.mutate(editingDesignInteraction.id); setIsDesignInteractionDialogOpen(false); }} className="rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10">{isVi ? "Xóa" : "Delete"}</AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
+                ) : <div />}
+                <div className="flex gap-3">
+                  <Button type="button" variant="outline" onClick={() => setIsDesignInteractionDialogOpen(false)} className="h-10 px-4 rounded-none border-white/20 text-white hover:bg-white/10">
+                    {isVi ? "Hủy" : "Cancel"}
+                  </Button>
+                  <Button type="submit" disabled={createDesignInteractionMutation.isPending || updateDesignInteractionMutation.isPending} className="h-10 px-6 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10">
+                    {(createDesignInteractionMutation.isPending || updateDesignInteractionMutation.isPending) ? (isVi ? "Đang lưu..." : "Saving...") : editingDesignInteraction ? (isVi ? "Cập nhật" : "Update") : (isVi ? "Thêm" : "Add")}
+                  </Button>
+                </div>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={!!viewingDesignInteraction} onOpenChange={(open) => { if (!open) setViewingDesignInteraction(null); }}>
+        <DialogContent className="bg-black border border-white/20 rounded-none max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-white font-light">{isVi ? "Chi tiết nhật ký" : "Log Details"}</DialogTitle>
+          </DialogHeader>
+          {viewingDesignInteraction && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <span className="text-xs text-white/40">{isVi ? "Ngày" : "Date"}</span>
+                  <p className="text-white font-light">{formatDate(viewingDesignInteraction.date)}</p>
+                </div>
+                <div>
+                  <span className="text-xs text-white/40">{isVi ? "Phụ trách" : "Assigned To"}</span>
+                  <p className="text-white font-light">{viewingDesignInteraction.assignedTo || "—"}</p>
+                </div>
+              </div>
+              <div>
+                <span className="text-xs text-white/40">{isVi ? "Tiêu đề" : "Title"}</span>
+                <p className="text-white font-light">{viewingDesignInteraction.title}</p>
+              </div>
+              {viewingDesignInteraction.description && (
+                <div>
+                  <span className="text-xs text-white/40">{isVi ? "Mô tả" : "Description"}</span>
+                  <p className="text-white/70 font-light text-sm">{viewingDesignInteraction.description}</p>
+                </div>
+              )}
+              {viewingDesignInteraction.nextAction && (
+                <div>
+                  <span className="text-xs text-white/40">{isVi ? "Đề xuất" : "Proposal"}</span>
+                  <p className="text-white/70 font-light text-sm">{viewingDesignInteraction.nextAction}</p>
+                </div>
+              )}
+              {Array.isArray(viewingDesignInteraction.attachments) && viewingDesignInteraction.attachments.length > 0 && (
+                <div>
+                  <span className="text-xs text-white/40 block mb-2">{isVi ? "Hình ảnh đính kèm" : "Attachments"} ({(viewingDesignInteraction.attachments as string[]).length}/5)</span>
+                  <div className="grid grid-cols-3 gap-2">
+                    {(viewingDesignInteraction.attachments as string[]).map((url, idx) => (
                       <a key={idx} href={url} target="_blank" rel="noopener noreferrer">
                         <img src={url} alt="" className="w-full h-32 object-cover border border-white/10 hover:border-white/40 transition-colors cursor-pointer" />
                       </a>
