@@ -6428,7 +6428,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">{t('crm.company')}</div>
                         </TableHead>
                         <TableHead className="w-[12%] whitespace-nowrap">
-                          <div>{language === 'vi' ? 'Đã Thanh Toán' : 'Paid'}</div>
+                          <div>{language === 'vi' ? 'Thanh Toán' : 'Paid'}</div>
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Hoàn Trả' : 'Refund'}</div>
                         </TableHead>
                         <TableHead className="w-[11%] text-center whitespace-nowrap">{t('crm.warrantyStatus')}</TableHead>
