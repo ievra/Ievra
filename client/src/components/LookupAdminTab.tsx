@@ -734,17 +734,19 @@ export default function LookupAdminTab() {
                     <Table>
                       <TableHeader>
                         <TableRow className="border-white/10">
-                          <TableHead className="text-white/60 w-[12%]">{isVi ? "Ngày" : "Date"}</TableHead>
-                          <TableHead className="text-white/60 w-[13%]">{isVi ? "Giai đoạn" : "Phase"}</TableHead>
-                          <TableHead className="text-white/60 w-[22%]">{isVi ? "Tiêu đề" : "Title"}</TableHead>
-                          <TableHead className="text-white/60 w-[13%]">{isVi ? "Phụ trách" : "Assigned To"}</TableHead>
+                          <TableHead className="text-white/60 w-[5%]">#</TableHead>
+                          <TableHead className="text-white/60 w-[11%]">{isVi ? "Ngày" : "Date"}</TableHead>
+                          <TableHead className="text-white/60 w-[12%]">{isVi ? "Giai đoạn" : "Phase"}</TableHead>
+                          <TableHead className="text-white/60 w-[20%]">{isVi ? "Tiêu đề" : "Title"}</TableHead>
+                          <TableHead className="text-white/60 w-[12%]">{isVi ? "Phụ trách" : "Assigned To"}</TableHead>
                           <TableHead className="text-white/60 w-[25%]">{isVi ? "Hình ảnh" : "Images"}</TableHead>
                           <TableHead className="text-white/60 w-[15%]">{isVi ? "Thao tác" : "Actions"}</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
-                        {interactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction) => (
+                        {interactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
                           <TableRow key={interaction.id} className="border-white/10">
+                            <TableCell className="text-white/40 text-sm">{index + 1}</TableCell>
                             <TableCell>
                               <p className="text-white/70">{formatDate(interaction.date)}</p>
                             </TableCell>
