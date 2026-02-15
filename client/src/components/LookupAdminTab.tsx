@@ -641,58 +641,136 @@ export default function LookupAdminTab() {
 
             <div className="p-4">
               {activeSubTab === "construction_progress" && (
-                <div>
-                  {selectedClient.constructionTimeline ? (
-                    <div className="flex items-center gap-4 mb-4 pb-4 border-b border-white/10">
-                      <div className="cursor-pointer group" onClick={() => { setTimelineValue(String(selectedClient.constructionTimeline || "")); setEditingTimeline(true); }}>
-                        <span className="text-xs text-white/40">{isVi ? "Mục tiêu thi công" : "Construction Target"}</span>
-                        <p className="text-sm text-white font-light group-hover:text-white/70">{selectedClient.constructionTimeline} {isVi ? "ngày" : "days"} <Pencil className="w-3 h-3 inline opacity-0 group-hover:opacity-50" /></p>
-                      </div>
-                      <div>
-                        <span className="text-xs text-white/40">{isVi ? "Tiến độ" : "Progress"}</span>
-                        <p className="text-sm text-white font-light">{interactions.length} / {selectedClient.constructionTimeline}</p>
-                      </div>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      {editingTimeline ? (
+                        <div className="flex items-center gap-2">
+                          <Input
+                            type="number"
+                            min={1}
+                            max={365}
+                            value={timelineValue}
+                            onChange={(e) => setTimelineValue(e.target.value)}
+                            placeholder={isVi ? "Số ngày" : "Days"}
+                            className="w-24 h-8 bg-transparent border-white/20 text-white rounded-none text-sm"
+                            autoFocus
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter" && timelineValue) {
+                                updateTimelineMutation.mutate(parseInt(timelineValue));
+                              } else if (e.key === "Escape") {
+                                setEditingTimeline(false);
+                              }
+                            }}
+                          />
+                          <span className="text-xs text-white/40">{isVi ? "ngày" : "days"}</span>
+                          <Button
+                            size="sm"
+                            onClick={() => timelineValue && updateTimelineMutation.mutate(parseInt(timelineValue))}
+                            disabled={!timelineValue || updateTimelineMutation.isPending}
+                            className="h-8 px-3 rounded-none bg-white text-black hover:bg-white/90 text-xs"
+                          >
+                            {isVi ? "Lưu" : "Save"}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            onClick={() => setEditingTimeline(false)}
+                            className="h-8 px-2 rounded-none text-white/40 hover:text-white text-xs"
+                          >
+                            <X className="w-3.5 h-3.5" />
+                          </Button>
+                        </div>
+                      ) : selectedClient.constructionTimeline ? (
+                        <>
+                          <div className="cursor-pointer group" onClick={() => { setTimelineValue(String(selectedClient.constructionTimeline || "")); setEditingTimeline(true); }}>
+                            <span className="text-xs text-white/40">{isVi ? "Mục tiêu" : "Target"}</span>
+                            <p className="text-sm text-white font-light group-hover:text-white/70">{selectedClient.constructionTimeline} {isVi ? "ngày" : "days"} <Pencil className="w-3 h-3 inline opacity-0 group-hover:opacity-50" /></p>
+                          </div>
+                          <div>
+                            <span className="text-xs text-white/40">{isVi ? "Đã ghi" : "Logged"}</span>
+                            <p className="text-sm text-white font-light">{interactions.length} / {selectedClient.constructionTimeline}</p>
+                          </div>
+                        </>
+                      ) : (
+                        <Button
+                          onClick={() => { setTimelineValue(""); setEditingTimeline(true); }}
+                          className="h-10 px-4 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10"
+                        >
+                          <Plus className="w-4 h-4 mr-2" />
+                          {isVi ? "Đặt mục tiêu thi công" : "Set construction timeline"}
+                        </Button>
+                      )}
                     </div>
-                  ) : null}
+                    <Button
+                      onClick={() => openInteractionDialog()}
+                      disabled={!!selectedClient.constructionTimeline && interactions.length >= selectedClient.constructionTimeline}
+                      className="h-10 px-4 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      <Plus className="w-4 h-4 mr-2" />
+                      {isVi ? "Thêm nhật ký" : "Add Log"}
+                    </Button>
+                  </div>
                   {interactionsLoading ? (
                     <div className="text-center py-8 text-white/40">{isVi ? "Đang tải..." : "Loading..."}</div>
-                  ) : (() => {
-                    const constructionItems = interactions.filter(i => ["visit", "site_survey", "acceptance", "meeting"].includes(i.type)).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-                    return constructionItems.length === 0 ? (
-                      <div className="text-center py-12">
-                        <p className="text-white/30 font-light">{isVi ? "Chưa có tiến độ công trình" : "No construction progress yet"}</p>
-                      </div>
-                    ) : (
-                      <div className="relative">
-                        <div className="absolute left-[7px] top-3 bottom-3 w-[1px] bg-white/10" />
-                        <div className="space-y-6">
-                          {constructionItems.map((item) => (
-                            <div key={item.id} className="flex gap-6 relative">
-                              <div className="relative z-10 mt-1.5">
-                                <div className="w-[15px] h-[15px] rounded-full border-2 border-white/30 bg-black" />
-                              </div>
-                              <div className="flex-1 pb-2">
-                                <div className="flex items-center gap-3 mb-1">
-                                  <Badge variant="outline" className="rounded-none border-white/20 text-white/60">
-                                    {interactionTypeLabels[item.type]?.[language] || item.type}
-                                  </Badge>
-                                  <span className="text-xs text-white/30">{formatDate(item.date)}</span>
+                  ) : interactions.length === 0 ? (
+                    <div className="text-center py-12">
+                      <p className="text-white/30 font-light">{isVi ? "Chưa có nhật ký thi công" : "No construction logs yet"}</p>
+                    </div>
+                  ) : (
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="border-white/10">
+                          <TableHead className="text-white/60 w-[12%]">{isVi ? "Ngày" : "Date"}</TableHead>
+                          <TableHead className="text-white/60 w-[13%]">{isVi ? "Giai đoạn" : "Phase"}</TableHead>
+                          <TableHead className="text-white/60 w-[22%]">{isVi ? "Tiêu đề" : "Title"}</TableHead>
+                          <TableHead className="text-white/60 w-[13%]">{isVi ? "Phụ trách" : "Assigned To"}</TableHead>
+                          <TableHead className="text-white/60 w-[25%]">{isVi ? "Hình ảnh" : "Images"}</TableHead>
+                          <TableHead className="text-white/60 w-[15%]">{isVi ? "Thao tác" : "Actions"}</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {interactions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction) => (
+                          <TableRow key={interaction.id} className="border-white/10">
+                            <TableCell>
+                              <p className="text-white/70">{formatDate(interaction.date)}</p>
+                            </TableCell>
+                            <TableCell className="text-white/60">
+                              {(() => {
+                                const phaseValue = (interaction as any).phase;
+                                if (!phaseValue) return "—";
+                                const found = constructionPhases.find(p => p.value === phaseValue);
+                                return found ? (isVi ? found.labelVi : found.labelEn) : phaseValue;
+                              })()}
+                            </TableCell>
+                            <TableCell className="text-white">{interaction.title}</TableCell>
+                            <TableCell className="text-white/60">{interaction.assignedTo || "—"}</TableCell>
+                            <TableCell>
+                              {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
+                                <div className="flex gap-1">
+                                  {(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (
+                                    <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10" />
+                                  ))}
                                 </div>
-                                <h4 className="text-white font-light text-base mb-1">{item.title}</h4>
-                                {item.description && <p className="text-white/50 text-sm font-light">{item.description}</p>}
-                                {item.outcome && (
-                                  <p className="text-white/40 text-sm font-light mt-1">{isVi ? "Kết quả:" : "Outcome:"} {item.outcome}</p>
-                                )}
-                                {item.nextAction && (
-                                  <p className="text-white/30 text-xs mt-1">{isVi ? "Bước tiếp theo:" : "Next:"} {item.nextAction}</p>
-                                )}
+                              ) : (
+                                <span className="text-white/30">—</span>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex gap-1">
+                                <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
+                                  <Eye className="w-3.5 h-3.5" />
+                                </Button>
+                                <Button variant="ghost" size="icon" onClick={() => openInteractionDialog(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
+                                  <Pencil className="w-3.5 h-3.5" />
+                                </Button>
                               </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    );
-                  })()}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  )}
                 </div>
               )}
 
