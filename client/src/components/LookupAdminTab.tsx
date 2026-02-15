@@ -627,7 +627,7 @@ export default function LookupAdminTab() {
                 { key: "design_progress" as const, vi: "Tiến độ thiết kế", en: "Design Progress" },
                 { key: "construction_progress" as const, vi: "Tiến độ công trình", en: "Construction Progress" },
                 { key: "transactions" as const, vi: "Giao dịch", en: "Transactions" },
-                { key: "warranty" as const, vi: "Bảo hành", en: "Warranty" },
+                { key: "warranty" as const, vi: "Nhật ký bảo hành", en: "Warranty Log" },
               ]).map((tab) => (
                 <button
                   key={tab.key}
