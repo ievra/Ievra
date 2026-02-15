@@ -6,6 +6,7 @@ import {
   bpCategories, bpStatuses, bpTiers,
   businessPartners, bpTransactions,
   constructionPhases,
+  designPhases,
   type User, type InsertUser,
   type Client, type InsertClient,
   type BusinessPartner, type InsertBusinessPartner,
@@ -36,7 +37,8 @@ import {
   type BpCategory, type InsertBpCategory,
   type BpStatus, type InsertBpStatus,
   type BpTier, type InsertBpTier,
-  type ConstructionPhase, type InsertConstructionPhase
+  type ConstructionPhase, type InsertConstructionPhase,
+  type DesignPhase, type InsertDesignPhase
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, ne, desc, like, and, or, sql } from "drizzle-orm";
@@ -265,6 +267,12 @@ export interface IStorage {
   createConstructionPhase(phase: InsertConstructionPhase): Promise<ConstructionPhase>;
   updateConstructionPhase(id: string, phase: Partial<InsertConstructionPhase>): Promise<ConstructionPhase>;
   deleteConstructionPhase(id: string): Promise<void>;
+
+  // Design Phases
+  getDesignPhases(filters?: { active?: boolean }): Promise<DesignPhase[]>;
+  createDesignPhase(phase: InsertDesignPhase): Promise<DesignPhase>;
+  updateDesignPhase(id: string, phase: Partial<InsertDesignPhase>): Promise<DesignPhase>;
+  deleteDesignPhase(id: string): Promise<void>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -1541,6 +1549,36 @@ export class DatabaseStorage implements IStorage {
 
   async deleteConstructionPhase(id: string): Promise<void> {
     await db.delete(constructionPhases).where(eq(constructionPhases.id, id));
+  }
+
+  // Design Phases
+  async getDesignPhases(filters?: { active?: boolean }): Promise<DesignPhase[]> {
+    const conditions = [];
+    if (filters?.active !== undefined) conditions.push(eq(designPhases.active, filters.active));
+
+    const query = conditions.length > 0
+      ? db.select().from(designPhases).where(and(...conditions))
+      : db.select().from(designPhases);
+
+    return await query.orderBy(designPhases.order);
+  }
+
+  async createDesignPhase(phase: InsertDesignPhase): Promise<DesignPhase> {
+    const [created] = await db.insert(designPhases).values(phase).returning();
+    return created;
+  }
+
+  async updateDesignPhase(id: string, phase: Partial<InsertDesignPhase>): Promise<DesignPhase> {
+    const [updated] = await db
+      .update(designPhases)
+      .set({ ...phase, updatedAt: new Date() })
+      .where(eq(designPhases.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteDesignPhase(id: string): Promise<void> {
+    await db.delete(designPhases).where(eq(designPhases.id, id));
   }
 }
 
