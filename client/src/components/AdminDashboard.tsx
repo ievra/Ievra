@@ -3782,7 +3782,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           <Card>
             <CardContent className="p-6 min-h-[90px]">
               <div>
-                <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Doanh Thu (Năm)' : 'Revenue (YTD)'}</p>
+                <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Tổng Doanh Thu' : 'Total Revenue'}</p>
                 <p className="text-2xl font-light" data-testid="stat-revenue">
                   {statsLoading ? "..." : stats?.revenue || "0 ₫"}
                 </p>
