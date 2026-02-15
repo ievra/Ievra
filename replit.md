@@ -28,6 +28,12 @@ Preferred communication style: Simple, everyday language.
 The application manages core entities:
 - **Projects**: Portfolio items with categories (residential, commercial, architecture), images, location, and status tracking
 - **Clients**: CRM functionality with contact information, company details, and relationship status
+  - **Transaction Categories**: Client transactions are categorized into 3 types:
+    - Design Revenue (Doanh Thu Thiết Kế) - category: 'design' (default, also matches null/empty)
+    - Construction Revenue (Doanh Thu Thi Công) - category: 'construction'
+    - Other Transactions (Giao Dịch Khác) - category: 'other'
+  - Each category has its own section in the edit form and view dialog
+  - Summary cards show separate totals for Design Revenue and Construction Revenue
 - **Business Partners (Đối Tác)**: Full CRM with contact info, company, categories, statuses, tiers, warranty tracking, and transaction management. Uses completely separate tables: `business_partners`, `bp_transactions`, `bp_categories`, `bp_statuses`, and `bp_tiers`. Has its own category system ("Hạng Mục"), status system ("TT Đối Tác"), and tier system ("Hạng Đối Tác") - all completely independent from client settings. Client settings show: Giai Đoạn (stages), Hạng Khách (client tiers), TT Khách Hàng (client statuses). BP settings show: Hạng Mục ĐT (categories), Hạng Đối Tác (BP tiers), TT Đối Tác (BP statuses).
   - **Automatic Warranty Management**: Warranty status is automatically calculated based on warranty expiry date
     - No expiry date set → Status: "None"
