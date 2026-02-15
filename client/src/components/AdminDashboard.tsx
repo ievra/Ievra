@@ -6276,7 +6276,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <CardContent className="p-6 min-h-[90px]">
               <div className="flex items-center justify-between">
                 <div className="min-w-[120px]">
-                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Còn bảo hành' : 'Active Warranty'}</p>
+                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Đang bảo hành' : 'Active Warranty'}</p>
                   <p className="text-2xl font-semibold mt-1">
                     {clients.filter(c => c.warrantyStatus === 'active').length}
                   </p>
