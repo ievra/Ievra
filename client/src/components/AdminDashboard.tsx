@@ -6480,9 +6480,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           </TableCell>
                           <TableCell className="align-middle text-center">
                             <div className="text-sm capitalize" data-testid={`text-client-warranty-${client.id}`}>
-                              {t(`crm.warranty.${client.warrantyStatus || 'none'}`)}
+                              {client.warrantyStatus && client.warrantyStatus !== 'none' ? t(`crm.warranty.${client.warrantyStatus}`) : ''}
                             </div>
-                            {client.warrantyExpiry && (
+                            {client.warrantyExpiry && client.warrantyStatus && client.warrantyStatus !== 'none' && (
                               <div className="text-xs text-muted-foreground mt-1">
                                 {new Date(client.warrantyExpiry).toLocaleDateString('vi-VN')}
                               </div>
