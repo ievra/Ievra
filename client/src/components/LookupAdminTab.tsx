@@ -16,7 +16,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient as qc } from "@/lib/queryClient";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Search, Plus, Pencil, Trash2, Phone, Mail, User, Shield, Calendar, Clock, Briefcase, CreditCard, X, HardHat, PenTool, Eye, Settings } from "lucide-react";
+import { Search, Plus, Pencil, Trash2, Phone, Mail, User, Shield, Calendar, Clock, Briefcase, CreditCard, X, HardHat, PenTool, Eye, Settings, ChevronLeft, ChevronRight, Check } from "lucide-react";
 import CrmSettingsManager from "@/components/CrmSettingsManager";
 import type { Client, Interaction, Deal, Transaction, WarrantyLog, ConstructionPhase } from "@shared/schema";
 
@@ -645,15 +645,22 @@ export default function LookupAdminTab() {
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
                       {editingTimeline ? (
-                        <div className="flex items-center gap-2">
-                          <Input
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            type="button"
+                            onClick={() => setTimelineValue(String(Math.max(1, parseInt(timelineValue || "0") - 1)))}
+                            className="text-white/30 hover:text-white transition-colors p-0.5"
+                          >
+                            <ChevronLeft className="w-4 h-4" />
+                          </button>
+                          <input
                             type="number"
                             min={1}
                             max={365}
                             value={timelineValue}
                             onChange={(e) => setTimelineValue(e.target.value)}
                             placeholder={isVi ? "Số ngày" : "Days"}
-                            className="w-24 h-8 bg-transparent border-white/20 text-white rounded-none text-sm"
+                            className="w-14 h-7 bg-transparent border-b border-white/20 text-white text-center text-sm focus:outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                             autoFocus
                             onKeyDown={(e) => {
                               if (e.key === "Enter" && timelineValue) {
@@ -663,23 +670,29 @@ export default function LookupAdminTab() {
                               }
                             }}
                           />
-                          <span className="text-xs text-white/40">{isVi ? "ngày" : "days"}</span>
-                          <Button
-                            size="sm"
+                          <button
+                            type="button"
+                            onClick={() => setTimelineValue(String(Math.min(365, parseInt(timelineValue || "0") + 1)))}
+                            className="text-white/30 hover:text-white transition-colors p-0.5"
+                          >
+                            <ChevronRight className="w-4 h-4" />
+                          </button>
+                          <span className="text-xs text-white/40 ml-1">{isVi ? "ngày" : "days"}</span>
+                          <button
+                            type="button"
                             onClick={() => timelineValue && updateTimelineMutation.mutate(parseInt(timelineValue))}
                             disabled={!timelineValue || updateTimelineMutation.isPending}
-                            className="h-8 px-3 rounded-none bg-white text-black hover:bg-white/90 text-xs"
+                            className="text-white/40 hover:text-white transition-colors ml-1 disabled:opacity-30"
                           >
-                            {isVi ? "Lưu" : "Save"}
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
+                            <Check className="w-4 h-4" />
+                          </button>
+                          <button
+                            type="button"
                             onClick={() => setEditingTimeline(false)}
-                            className="h-8 px-2 rounded-none text-white/40 hover:text-white text-xs"
+                            className="text-white/30 hover:text-white/60 transition-colors"
                           >
                             <X className="w-3.5 h-3.5" />
-                          </Button>
+                          </button>
                         </div>
                       ) : selectedClient.constructionTimeline ? (
                         <>
