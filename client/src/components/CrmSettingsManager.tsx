@@ -520,7 +520,12 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
   return (
     <div>
       <Tabs defaultValue={context === 'bp' ? 'bpTiers' : context === 'lookup' ? 'construction_phases' : 'tiers'} className="w-full">
-              {context !== 'lookup' && (
+              {context === 'lookup' ? (
+              <TabsList className="grid w-full bg-black border border-white/10 grid-cols-2">
+                <TabsTrigger value="construction_phases">{language === 'vi' ? 'Giai Đoạn TC' : 'Construction Phases'}</TabsTrigger>
+                <TabsTrigger value="design_phases">{language === 'vi' ? 'Giai Đoạn TK' : 'Design Phases'}</TabsTrigger>
+              </TabsList>
+              ) : (
               <TabsList className={`grid w-full bg-black border border-white/10 ${context === 'all' ? 'grid-cols-8' : 'grid-cols-3'}`}>
                 {context !== 'bp' && <TabsTrigger value="tiers">{language === 'vi' ? 'Hạng Khách' : 'Client Tiers'}</TabsTrigger>}
                 {context !== 'client' && <TabsTrigger value="bpTiers">{language === 'vi' ? 'Danh Mục' : 'Tiers'}</TabsTrigger>}
@@ -528,8 +533,8 @@ export default function CrmSettingsManager({ context = 'all' }: { context?: 'all
                 {context !== 'client' && <TabsTrigger value="bpCategories">{language === 'vi' ? 'Hạng Mục' : 'Categories'}</TabsTrigger>}
                 {context !== 'bp' && <TabsTrigger value="statuses">{language === 'vi' ? 'Trạng Thái' : 'Statuses'}</TabsTrigger>}
                 {context !== 'client' && <TabsTrigger value="bpStatuses">{language === 'vi' ? 'Trạng Thái' : 'Statuses'}</TabsTrigger>}
-                {(context === 'all' || context === 'lookup') && <TabsTrigger value="construction_phases">{language === 'vi' ? 'Giai Đoạn TC' : 'Construction Phases'}</TabsTrigger>}
-                {(context === 'all' || context === 'lookup') && <TabsTrigger value="design_phases">{language === 'vi' ? 'Giai Đoạn TK' : 'Design Phases'}</TabsTrigger>}
+                {context === 'all' && <TabsTrigger value="construction_phases">{language === 'vi' ? 'Giai Đoạn TC' : 'Construction Phases'}</TabsTrigger>}
+                {context === 'all' && <TabsTrigger value="design_phases">{language === 'vi' ? 'Giai Đoạn TK' : 'Design Phases'}</TabsTrigger>}
               </TabsList>
               )}
 
