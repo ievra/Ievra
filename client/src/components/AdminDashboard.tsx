@@ -2654,7 +2654,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         ...data,
         warrantyStatus, // Auto-set based on expiry date
         intakeDate: data.intakeDate && data.intakeDate.trim() !== "" ? data.intakeDate : undefined,
-        warrantyExpiry: data.warrantyExpiry && data.warrantyExpiry.trim() !== "" ? data.warrantyExpiry : undefined,
+        warrantyExpiry: data.warrantyExpiry && data.warrantyExpiry.trim() !== "" ? data.warrantyExpiry : null,
         phone: data.phone && data.phone.trim() !== "" ? data.phone : undefined,
         company: data.company && data.company.trim() !== "" ? data.company : undefined,
         address: data.address && data.address.trim() !== "" ? data.address : undefined,
