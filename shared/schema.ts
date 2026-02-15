@@ -984,3 +984,23 @@ export const insertConstructionPhaseSchema = createInsertSchema(constructionPhas
 
 export type InsertConstructionPhase = z.infer<typeof insertConstructionPhaseSchema>;
 export type ConstructionPhase = typeof constructionPhases.$inferSelect;
+
+export const designPhases = pgTable("design_phases", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  value: text("value").notNull().unique(),
+  labelEn: text("label_en").notNull(),
+  labelVi: text("label_vi").notNull(),
+  order: integer("order").notNull().default(0),
+  active: boolean("active").notNull().default(true),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const insertDesignPhaseSchema = createInsertSchema(designPhases).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertDesignPhase = z.infer<typeof insertDesignPhaseSchema>;
+export type DesignPhase = typeof designPhases.$inferSelect;
