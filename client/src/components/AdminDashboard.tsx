@@ -5211,20 +5211,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     )}
                   />
 
-                  <FormField
-                    control={clientForm.control}
-                    name="constructionTimeline"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{language === 'vi' ? 'Mục tiêu thi công (ngày)' : 'Construction Timeline (days)'}</FormLabel>
-                        <FormControl>
-                          <Input {...field} type="number" min={0} max={365} placeholder={language === 'vi' ? "VD: 60" : "e.g. 60"} data-testid="input-client-construction-timeline" onChange={(e) => field.onChange(e.target.value ? parseInt(e.target.value) : 0)} value={field.value || ""} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
                   <div className="grid grid-cols-2 gap-4">
                     <FormField
                       control={clientForm.control}
