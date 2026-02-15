@@ -1223,7 +1223,7 @@ export default function LookupAdminTab() {
                                 </Button>
                                 <AlertDialog>
                                   <AlertDialogTrigger asChild>
-                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-red-400/60 hover:text-red-400">
+                                    <Button variant="ghost" size="icon" className="h-8 w-8 text-white/40 hover:text-white">
                                       <Trash2 className="w-3.5 h-3.5" />
                                     </Button>
                                   </AlertDialogTrigger>
