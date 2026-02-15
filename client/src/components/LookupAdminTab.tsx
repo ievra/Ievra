@@ -695,11 +695,10 @@ export default function LookupAdminTab() {
                         </>
                       ) : (
                         <Button
-                          variant="ghost"
                           onClick={() => { setTimelineValue(""); setEditingTimeline(true); }}
-                          className="h-8 px-3 rounded-none text-white/40 hover:text-white text-xs border border-dashed border-white/20"
+                          className="h-10 px-4 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10"
                         >
-                          <Plus className="w-3 h-3 mr-1" />
+                          <Plus className="w-4 h-4 mr-2" />
                           {isVi ? "Đặt mục tiêu thi công" : "Set construction timeline"}
                         </Button>
                       )}
