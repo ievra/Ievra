@@ -331,6 +331,7 @@ export const transactions = pgTable("transactions", {
   type: varchar("type", { length: 20 }).notNull().default("payment"), // payment, refund, commission
   status: varchar("status", { length: 20 }).notNull().default("completed"), // pending, completed, cancelled
   paymentDate: timestamp("payment_date").notNull().defaultNow(),
+  category: varchar("category", { length: 20 }).notNull().default("design"),
   notes: text("notes"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
