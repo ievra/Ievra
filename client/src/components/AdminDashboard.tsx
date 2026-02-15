@@ -283,6 +283,7 @@ const transactionSchema = z.object({
   status: z.string().optional(),
   paymentDate: z.string().optional(),
   notes: z.string().optional(),
+  category: z.string().optional(),
 });
 
 const bpTransactionSchema = z.object({
@@ -436,6 +437,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [editingTransaction, setEditingTransaction] = useState<any | null>(null);
+  const [transactionCategory, setTransactionCategory] = useState<string>("design");
   
   // Partner Logo state
   const [partnerLogoFile, setPartnerLogoFile] = useState<File | null>(null);
@@ -3695,6 +3697,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       status: transaction.status || "",
       paymentDate: transaction.paymentDate ? new Date(transaction.paymentDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0],
       notes: transaction.notes || "",
+      category: transaction.category || "design",
     });
     setIsTransactionDialogOpen(true);
   };
@@ -3706,6 +3709,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         amount: String(Math.round(parseFloat(data.amount.replace(/[^0-9.]/g, '')))),
         type: data.type || "payment",
         status: data.status || "completed",
+        category: data.category || transactionCategory,
       };
       if (editingTransaction) {
         await updateTransactionMutation.mutateAsync({ id: editingTransaction.id, data: cleanedData });
@@ -5316,6 +5320,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
 
                   {/* Transaction Management - Only show when editing */}
                   {editingClient && (
+                    <>
+                    {/* Design Revenue Section */}
                     <div className="pt-6 mt-6">
                       <div className="flex justify-between items-center mb-4">
                         <h3 className="text-lg font-medium">{language === 'vi' ? 'Doanh Thu Thiết Kế' : 'Design Revenue'}</h3>
@@ -5325,6 +5331,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           size="icon"
                           onClick={() => {
                             setEditingTransaction(null);
+                            setTransactionCategory("design");
                             transactionForm.reset({
                               clientId: editingClient.id,
                               amount: "",
@@ -5334,6 +5341,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                               status: "completed",
                               paymentDate: new Date().toISOString().split('T')[0],
                               notes: "",
+                              category: "design",
                             });
                             setIsTransactionDialogOpen(true);
                           }}
@@ -5345,11 +5353,13 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       
                       {transactionsLoading ? (
                         <div className="text-sm text-white/50">{language === 'vi' ? 'Đang tải...' : 'Loading...'}</div>
-                      ) : !Array.isArray(transactions) || transactions.length === 0 ? (
-                        <div className="text-sm text-white/50">{language === 'vi' ? 'Chưa có giao dịch nào' : 'No transactions yet'}</div>
-                      ) : (
+                      ) : (() => {
+                        const filtered = Array.isArray(transactions) ? transactions.filter((t: any) => t.category === 'design' || !t.category) : [];
+                        return filtered.length === 0 ? (
+                          <div className="text-sm text-white/50">{language === 'vi' ? 'Chưa có giao dịch nào' : 'No transactions yet'}</div>
+                        ) : (
                         <div className="border border-white/30 rounded-none max-h-48 overflow-y-auto bg-black">
-                          {transactions.map((transaction: any) => (
+                          {filtered.map((transaction: any) => (
                             <div key={transaction.id} className="flex items-center justify-between px-2 py-2 border-b border-white/20 last:border-b-0 hover:bg-white/5 transition-colors">
                               <div className="flex-1 space-y-1">
                                 <div className="flex items-center gap-2">
@@ -5382,6 +5392,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                   size="icon"
                                   onClick={() => {
                                     setEditingTransaction(transaction);
+                                    setTransactionCategory("design");
                                     transactionForm.reset({
                                       clientId: transaction.clientId,
                                       amount: transaction.amount,
@@ -5391,6 +5402,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                       status: transaction.status || "completed",
                                       paymentDate: transaction.paymentDate ? new Date(transaction.paymentDate).toISOString().split('T')[0] : "",
                                       notes: transaction.notes || "",
+                                      category: transaction.category || "design",
                                     });
                                     setIsTransactionDialogOpen(true);
                                   }}
@@ -5437,8 +5449,274 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             </div>
                           ))}
                         </div>
-                      )}
+                        );
+                      })()}
                     </div>
+
+                    {/* Construction Revenue Section */}
+                    <div className="pt-6 mt-6">
+                      <div className="flex justify-between items-center mb-4">
+                        <h3 className="text-lg font-medium">{language === 'vi' ? 'Doanh Thu Thi Công' : 'Construction Revenue'}</h3>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          onClick={() => {
+                            setEditingTransaction(null);
+                            setTransactionCategory("construction");
+                            transactionForm.reset({
+                              clientId: editingClient.id,
+                              amount: "",
+                              title: "",
+                              description: "",
+                              type: "payment",
+                              status: "completed",
+                              paymentDate: new Date().toISOString().split('T')[0],
+                              notes: "",
+                              category: "construction",
+                            });
+                            setIsTransactionDialogOpen(true);
+                          }}
+                          className="bg-black border-white/30 hover:border-white hover:bg-white/10 rounded-none h-8 w-8"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      
+                      {transactionsLoading ? (
+                        <div className="text-sm text-white/50">{language === 'vi' ? 'Đang tải...' : 'Loading...'}</div>
+                      ) : (() => {
+                        const filtered = Array.isArray(transactions) ? transactions.filter((t: any) => t.category === 'construction') : [];
+                        return filtered.length === 0 ? (
+                          <div className="text-sm text-white/50">{language === 'vi' ? 'Chưa có giao dịch nào' : 'No transactions yet'}</div>
+                        ) : (
+                        <div className="border border-white/30 rounded-none max-h-48 overflow-y-auto bg-black">
+                          {filtered.map((transaction: any) => (
+                            <div key={transaction.id} className="flex items-center justify-between px-2 py-2 border-b border-white/20 last:border-b-0 hover:bg-white/5 transition-colors">
+                              <div className="flex-1 space-y-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-sm font-medium text-white">{transaction.title}</span>
+                                  <span className="text-[10px] px-1.5 py-0.5 bg-white/10 text-white/70 rounded-none">
+                                    {transaction.type === "payment" ? (language === 'vi' ? "Thanh toán" : "Payment") : transaction.type === "refund" ? (language === 'vi' ? "Hoàn tiền" : "Refund") : "—"}
+                                  </span>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm font-semibold text-white">{Math.round(parseFloat(transaction.amount)).toLocaleString('vi-VN')} đ</span>
+                                  <div className="flex items-center gap-2">
+                                    {transaction.status === "completed" && transaction.paymentDate && (
+                                      <span className="text-[10px] text-white/50">
+                                        {new Date(transaction.paymentDate).toLocaleDateString('vi-VN')}
+                                      </span>
+                                    )}
+                                    <span className="text-[10px] text-white/50">
+                                      {transaction.status === "pending" ? (language === 'vi' ? "Đang chờ" : "Pending") : transaction.status === "completed" ? (language === 'vi' ? "Hoàn thành" : "Completed") : transaction.status === "cancelled" ? (language === 'vi' ? "Đã hủy" : "Cancelled") : "—"}
+                                    </span>
+                                  </div>
+                                </div>
+                                {transaction.description && (
+                                  <p className="text-[10px] text-white/50">{transaction.description}</p>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-0.5 ml-2">
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => {
+                                    setEditingTransaction(transaction);
+                                    setTransactionCategory("construction");
+                                    transactionForm.reset({
+                                      clientId: transaction.clientId,
+                                      amount: transaction.amount,
+                                      title: transaction.title,
+                                      description: transaction.description || "",
+                                      type: transaction.type || "payment",
+                                      status: transaction.status || "completed",
+                                      paymentDate: transaction.paymentDate ? new Date(transaction.paymentDate).toISOString().split('T')[0] : "",
+                                      notes: transaction.notes || "",
+                                      category: transaction.category || "construction",
+                                    });
+                                    setIsTransactionDialogOpen(true);
+                                  }}
+                                  className="h-6 w-6 text-white hover:text-white hover:bg-white/20 rounded-none"
+                                >
+                                  <Pencil className="h-3 w-3" />
+                                </Button>
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-6 w-6 text-white hover:text-white hover:bg-white/20 rounded-none"
+                                    >
+                                      <X className="h-3 w-3" />
+                                    </Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent className="bg-black/95 backdrop-blur-xl border border-white/20 rounded-none">
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>{language === 'vi' ? 'Xóa giao dịch' : 'Delete Transaction'}</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        {language === 'vi'
+                                          ? <>Bạn có chắc chắn muốn xóa giao dịch <strong>"{transaction.title}"</strong>?<br />Hành động này không thể hoàn tác.</>
+                                          : <>Are you sure you want to delete transaction <strong>"{transaction.title}"</strong>?<br />This action cannot be undone.</>
+                                        }
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel className="bg-black border-white/30 hover:border-white hover:bg-white/10 rounded-none h-10 px-4">
+                                        {language === 'vi' ? 'Hủy' : 'Cancel'}
+                                      </AlertDialogCancel>
+                                      <AlertDialogAction
+                                        onClick={() => deleteTransactionMutation.mutate(transaction.id)}
+                                        className="bg-white hover:bg-white/90 text-black rounded-none h-10 px-4"
+                                        disabled={deleteTransactionMutation.isPending}
+                                      >
+                                        {deleteTransactionMutation.isPending ? (language === 'vi' ? "Đang xóa..." : "Deleting...") : (language === 'vi' ? "Xóa" : "Delete")}
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        );
+                      })()}
+                    </div>
+
+                    {/* Other Transactions Section */}
+                    <div className="pt-6 mt-6">
+                      <div className="flex justify-between items-center mb-4">
+                        <h3 className="text-lg font-medium">{language === 'vi' ? 'Giao Dịch Khác' : 'Other Transactions'}</h3>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          onClick={() => {
+                            setEditingTransaction(null);
+                            setTransactionCategory("other");
+                            transactionForm.reset({
+                              clientId: editingClient.id,
+                              amount: "",
+                              title: "",
+                              description: "",
+                              type: "payment",
+                              status: "completed",
+                              paymentDate: new Date().toISOString().split('T')[0],
+                              notes: "",
+                              category: "other",
+                            });
+                            setIsTransactionDialogOpen(true);
+                          }}
+                          className="bg-black border-white/30 hover:border-white hover:bg-white/10 rounded-none h-8 w-8"
+                        >
+                          <Plus className="h-4 w-4" />
+                        </Button>
+                      </div>
+                      
+                      {transactionsLoading ? (
+                        <div className="text-sm text-white/50">{language === 'vi' ? 'Đang tải...' : 'Loading...'}</div>
+                      ) : (() => {
+                        const filtered = Array.isArray(transactions) ? transactions.filter((t: any) => t.category === 'other') : [];
+                        return filtered.length === 0 ? (
+                          <div className="text-sm text-white/50">{language === 'vi' ? 'Chưa có giao dịch nào' : 'No transactions yet'}</div>
+                        ) : (
+                        <div className="border border-white/30 rounded-none max-h-48 overflow-y-auto bg-black">
+                          {filtered.map((transaction: any) => (
+                            <div key={transaction.id} className="flex items-center justify-between px-2 py-2 border-b border-white/20 last:border-b-0 hover:bg-white/5 transition-colors">
+                              <div className="flex-1 space-y-1">
+                                <div className="flex items-center gap-2">
+                                  <span className="text-sm font-medium text-white">{transaction.title}</span>
+                                  <span className="text-[10px] px-1.5 py-0.5 bg-white/10 text-white/70 rounded-none">
+                                    {transaction.type === "payment" ? (language === 'vi' ? "Thanh toán" : "Payment") : transaction.type === "refund" ? (language === 'vi' ? "Hoàn tiền" : "Refund") : "—"}
+                                  </span>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                  <span className="text-sm font-semibold text-white">{Math.round(parseFloat(transaction.amount)).toLocaleString('vi-VN')} đ</span>
+                                  <div className="flex items-center gap-2">
+                                    {transaction.status === "completed" && transaction.paymentDate && (
+                                      <span className="text-[10px] text-white/50">
+                                        {new Date(transaction.paymentDate).toLocaleDateString('vi-VN')}
+                                      </span>
+                                    )}
+                                    <span className="text-[10px] text-white/50">
+                                      {transaction.status === "pending" ? (language === 'vi' ? "Đang chờ" : "Pending") : transaction.status === "completed" ? (language === 'vi' ? "Hoàn thành" : "Completed") : transaction.status === "cancelled" ? (language === 'vi' ? "Đã hủy" : "Cancelled") : "—"}
+                                    </span>
+                                  </div>
+                                </div>
+                                {transaction.description && (
+                                  <p className="text-[10px] text-white/50">{transaction.description}</p>
+                                )}
+                              </div>
+                              <div className="flex items-center gap-0.5 ml-2">
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => {
+                                    setEditingTransaction(transaction);
+                                    setTransactionCategory("other");
+                                    transactionForm.reset({
+                                      clientId: transaction.clientId,
+                                      amount: transaction.amount,
+                                      title: transaction.title,
+                                      description: transaction.description || "",
+                                      type: transaction.type || "payment",
+                                      status: transaction.status || "completed",
+                                      paymentDate: transaction.paymentDate ? new Date(transaction.paymentDate).toISOString().split('T')[0] : "",
+                                      notes: transaction.notes || "",
+                                      category: transaction.category || "other",
+                                    });
+                                    setIsTransactionDialogOpen(true);
+                                  }}
+                                  className="h-6 w-6 text-white hover:text-white hover:bg-white/20 rounded-none"
+                                >
+                                  <Pencil className="h-3 w-3" />
+                                </Button>
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-6 w-6 text-white hover:text-white hover:bg-white/20 rounded-none"
+                                    >
+                                      <X className="h-3 w-3" />
+                                    </Button>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent className="bg-black/95 backdrop-blur-xl border border-white/20 rounded-none">
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>{language === 'vi' ? 'Xóa giao dịch' : 'Delete Transaction'}</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        {language === 'vi'
+                                          ? <>Bạn có chắc chắn muốn xóa giao dịch <strong>"{transaction.title}"</strong>?<br />Hành động này không thể hoàn tác.</>
+                                          : <>Are you sure you want to delete transaction <strong>"{transaction.title}"</strong>?<br />This action cannot be undone.</>
+                                        }
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel className="bg-black border-white/30 hover:border-white hover:bg-white/10 rounded-none h-10 px-4">
+                                        {language === 'vi' ? 'Hủy' : 'Cancel'}
+                                      </AlertDialogCancel>
+                                      <AlertDialogAction
+                                        onClick={() => deleteTransactionMutation.mutate(transaction.id)}
+                                        className="bg-white hover:bg-white/90 text-black rounded-none h-10 px-4"
+                                        disabled={deleteTransactionMutation.isPending}
+                                      >
+                                        {deleteTransactionMutation.isPending ? (language === 'vi' ? "Đang xóa..." : "Deleting...") : (language === 'vi' ? "Xóa" : "Delete")}
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        );
+                      })()}
+                    </div>
+                    </>
                   )}
 
                   <FormField
@@ -5670,16 +5948,18 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     </div>
                   )}
 
-                  {/* Transaction History */}
+                  {/* Transaction History - Design Revenue */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium border-b pb-2">{language === 'vi' ? 'Lịch sử giao dịch' : 'Transaction History'}</h3>
+                    <h3 className="text-lg font-medium border-b pb-2">{language === 'vi' ? 'Doanh Thu Thiết Kế' : 'Design Revenue'}</h3>
                     {viewTransactionsLoading ? (
                       <div className="text-sm text-white/50">{language === 'vi' ? 'Đang tải...' : 'Loading...'}</div>
-                    ) : !Array.isArray(viewTransactions) || viewTransactions.length === 0 ? (
-                      <div className="text-sm text-white/50">{language === 'vi' ? 'Chưa có giao dịch nào' : 'No transactions yet'}</div>
-                    ) : (
+                    ) : (() => {
+                      const filtered = Array.isArray(viewTransactions) ? viewTransactions.filter((t: any) => t.category === 'design' || !t.category) : [];
+                      return filtered.length === 0 ? (
+                        <div className="text-sm text-white/50">{language === 'vi' ? 'Chưa có giao dịch nào' : 'No transactions yet'}</div>
+                      ) : (
                       <div className="border border-white/30 rounded-none max-h-64 overflow-y-auto bg-black">
-                        {viewTransactions.map((transaction: any) => (
+                        {filtered.map((transaction: any) => (
                           <div key={transaction.id} className="flex items-center justify-between px-3 py-3 border-b border-white/20 last:border-b-0 hover:bg-white/5 transition-colors">
                             <div className="flex-1 space-y-1">
                               <div className="flex items-center gap-2">
@@ -5708,7 +5988,96 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           </div>
                         ))}
                       </div>
-                    )}
+                      );
+                    })()}
+                  </div>
+
+                  {/* Transaction History - Construction Revenue */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium border-b pb-2">{language === 'vi' ? 'Doanh Thu Thi Công' : 'Construction Revenue'}</h3>
+                    {viewTransactionsLoading ? (
+                      <div className="text-sm text-white/50">{language === 'vi' ? 'Đang tải...' : 'Loading...'}</div>
+                    ) : (() => {
+                      const filtered = Array.isArray(viewTransactions) ? viewTransactions.filter((t: any) => t.category === 'construction') : [];
+                      return filtered.length === 0 ? (
+                        <div className="text-sm text-white/50">{language === 'vi' ? 'Chưa có giao dịch nào' : 'No transactions yet'}</div>
+                      ) : (
+                      <div className="border border-white/30 rounded-none max-h-64 overflow-y-auto bg-black">
+                        {filtered.map((transaction: any) => (
+                          <div key={transaction.id} className="flex items-center justify-between px-3 py-3 border-b border-white/20 last:border-b-0 hover:bg-white/5 transition-colors">
+                            <div className="flex-1 space-y-1">
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm font-medium text-white">{transaction.title}</span>
+                                <span className="text-[10px] px-1.5 py-0.5 bg-white/10 text-white/70 rounded-none">
+                                  {transaction.type === "payment" ? (language === 'vi' ? "Thanh toán" : "Payment") : transaction.type === "refund" ? (language === 'vi' ? "Hoàn tiền" : "Refund") : "—"}
+                                </span>
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm font-semibold text-white">{Math.round(parseFloat(transaction.amount)).toLocaleString('vi-VN')} đ</span>
+                                <div className="flex items-center gap-2">
+                                  {transaction.status === "completed" && transaction.paymentDate && (
+                                    <span className="text-[10px] text-white/50">
+                                      {new Date(transaction.paymentDate).toLocaleDateString('vi-VN')}
+                                    </span>
+                                  )}
+                                  <span className="text-[10px] text-white/50">
+                                    {transaction.status === "pending" ? (language === 'vi' ? "Đang chờ" : "Pending") : transaction.status === "completed" ? (language === 'vi' ? "Hoàn thành" : "Completed") : transaction.status === "cancelled" ? (language === 'vi' ? "Đã hủy" : "Cancelled") : "—"}
+                                  </span>
+                                </div>
+                              </div>
+                              {transaction.description && (
+                                <p className="text-[10px] text-white/50">{transaction.description}</p>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      );
+                    })()}
+                  </div>
+
+                  {/* Transaction History - Other Transactions */}
+                  <div className="space-y-4">
+                    <h3 className="text-lg font-medium border-b pb-2">{language === 'vi' ? 'Giao Dịch Khác' : 'Other Transactions'}</h3>
+                    {viewTransactionsLoading ? (
+                      <div className="text-sm text-white/50">{language === 'vi' ? 'Đang tải...' : 'Loading...'}</div>
+                    ) : (() => {
+                      const filtered = Array.isArray(viewTransactions) ? viewTransactions.filter((t: any) => t.category === 'other') : [];
+                      return filtered.length === 0 ? (
+                        <div className="text-sm text-white/50">{language === 'vi' ? 'Chưa có giao dịch nào' : 'No transactions yet'}</div>
+                      ) : (
+                      <div className="border border-white/30 rounded-none max-h-64 overflow-y-auto bg-black">
+                        {filtered.map((transaction: any) => (
+                          <div key={transaction.id} className="flex items-center justify-between px-3 py-3 border-b border-white/20 last:border-b-0 hover:bg-white/5 transition-colors">
+                            <div className="flex-1 space-y-1">
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm font-medium text-white">{transaction.title}</span>
+                                <span className="text-[10px] px-1.5 py-0.5 bg-white/10 text-white/70 rounded-none">
+                                  {transaction.type === "payment" ? (language === 'vi' ? "Thanh toán" : "Payment") : transaction.type === "refund" ? (language === 'vi' ? "Hoàn tiền" : "Refund") : "—"}
+                                </span>
+                              </div>
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm font-semibold text-white">{Math.round(parseFloat(transaction.amount)).toLocaleString('vi-VN')} đ</span>
+                                <div className="flex items-center gap-2">
+                                  {transaction.status === "completed" && transaction.paymentDate && (
+                                    <span className="text-[10px] text-white/50">
+                                      {new Date(transaction.paymentDate).toLocaleDateString('vi-VN')}
+                                    </span>
+                                  )}
+                                  <span className="text-[10px] text-white/50">
+                                    {transaction.status === "pending" ? (language === 'vi' ? "Đang chờ" : "Pending") : transaction.status === "completed" ? (language === 'vi' ? "Hoàn thành" : "Completed") : transaction.status === "cancelled" ? (language === 'vi' ? "Đã hủy" : "Cancelled") : "—"}
+                                  </span>
+                                </div>
+                              </div>
+                              {transaction.description && (
+                                <p className="text-[10px] text-white/50">{transaction.description}</p>
+                              )}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      );
+                    })()}
                   </div>
 
                   <div className="flex justify-end pt-4 border-t">
@@ -5871,7 +6240,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           </Dialog>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
           <Card className="bg-black border-white/10 rounded-none">
             <CardContent className="p-6 min-h-[90px]">
               <div className="flex items-center justify-between">
@@ -5890,7 +6259,27 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 <div className="min-w-[120px]">
                   <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Doanh thu thiết kế' : 'Design Revenue'}</p>
                   <p className="text-2xl font-semibold mt-1">
-                    {allTransactions.reduce((sum, t) => {
+                    {allTransactions.filter(t => t.category === 'design' || !t.category).reduce((sum, t) => {
+                      if (t.status !== "completed") return sum;
+                      const amount = parseFloat(t.amount || "0");
+                      if (t.type === "payment") return sum + amount;
+                      if (t.type === "refund") return sum - amount;
+                      return sum;
+                    }, 0).toLocaleString('vi-VN', {maximumFractionDigits: 0})} đ
+                  </p>
+                </div>
+                <TrendingUp className="h-8 w-8 text-muted-foreground" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-black border-white/10 rounded-none">
+            <CardContent className="p-6 min-h-[90px]">
+              <div className="flex items-center justify-between">
+                <div className="min-w-[120px]">
+                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Doanh thu thi công' : 'Construction Revenue'}</p>
+                  <p className="text-2xl font-semibold mt-1">
+                    {allTransactions.filter(t => t.category === 'construction').reduce((sum, t) => {
                       if (t.status !== "completed") return sum;
                       const amount = parseFloat(t.amount || "0");
                       if (t.type === "payment") return sum + amount;
