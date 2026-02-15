@@ -1331,7 +1331,7 @@ export default function LookupAdminTab() {
                   {interactionAttachments.map((url, idx) => (
                     <div key={idx} className="relative group">
                       <img src={url} alt="" className="w-20 h-20 object-cover border border-white/10" />
-                      <button type="button" onClick={() => setInteractionAttachments(prev => prev.filter((_, i) => i !== idx))} className="absolute -top-1 -right-1 w-5 h-5 bg-red-600 text-white text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">×</button>
+                      <button type="button" onClick={() => setInteractionAttachments(prev => prev.filter((_, i) => i !== idx))} className="absolute -top-1 -right-1 w-5 h-5 text-white/60 hover:text-white text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">×</button>
                     </div>
                   ))}
                 </div>
@@ -1568,7 +1568,7 @@ export default function LookupAdminTab() {
                   {designInteractionAttachments.map((url, idx) => (
                     <div key={idx} className="relative group">
                       <img src={url} alt="" className="w-20 h-20 object-cover border border-white/10" />
-                      <button type="button" onClick={() => setDesignInteractionAttachments(prev => prev.filter((_, i) => i !== idx))} className="absolute -top-1 -right-1 w-5 h-5 bg-red-600 text-white text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">×</button>
+                      <button type="button" onClick={() => setDesignInteractionAttachments(prev => prev.filter((_, i) => i !== idx))} className="absolute -top-1 -right-1 w-5 h-5 text-white/60 hover:text-white text-xs flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">×</button>
                     </div>
                   ))}
                 </div>
