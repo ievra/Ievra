@@ -10,7 +10,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import { storage } from "./storage";
-import { insertProjectSchema, insertClientSchema, insertInquirySchema, insertServiceSchema, insertArticleSchema, insertHomepageContentSchema, insertPartnerSchema, insertCategorySchema, insertInteractionSchema, insertDealSchema, insertTransactionSchema, insertWarrantyLogSchema, insertSettingsSchema, insertFaqSchema, insertAdvantageSchema, insertJourneyStepSchema, insertAboutPageContentSchema, insertAboutShowcaseServiceSchema, insertAboutProcessStepSchema, insertAboutCoreValueSchema, insertAboutTeamMemberSchema, insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema, insertUserSchema, insertBusinessPartnerSchema, insertBpTransactionSchema, insertBpCategorySchema, insertBpStatusSchema, insertBpTierSchema, insertConstructionPhaseSchema } from "@shared/schema";
+import { insertProjectSchema, insertClientSchema, insertInquirySchema, insertServiceSchema, insertArticleSchema, insertHomepageContentSchema, insertPartnerSchema, insertCategorySchema, insertInteractionSchema, insertDealSchema, insertTransactionSchema, insertWarrantyLogSchema, insertSettingsSchema, insertFaqSchema, insertAdvantageSchema, insertJourneyStepSchema, insertAboutPageContentSchema, insertAboutShowcaseServiceSchema, insertAboutProcessStepSchema, insertAboutCoreValueSchema, insertAboutTeamMemberSchema, insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema, insertUserSchema, insertBusinessPartnerSchema, insertBpTransactionSchema, insertBpCategorySchema, insertBpStatusSchema, insertBpTierSchema, insertConstructionPhaseSchema, insertDesignPhaseSchema } from "@shared/schema";
 import { z } from "zod";
 import { createHash } from "crypto";
 
@@ -2363,6 +2363,71 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete construction phase" });
+    }
+  });
+
+  // Design Phases
+  app.get("/api/design-phases", async (req, res) => {
+    try {
+      const { active } = req.query;
+      const filters: any = {};
+      if (active !== undefined) filters.active = active === 'true';
+      
+      const phases = await storage.getDesignPhases(filters);
+      res.json(phases);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch design phases" });
+    }
+  });
+
+  app.post("/api/design-phases", requirePermission('crm'), async (req, res) => {
+    try {
+      const validatedData = insertDesignPhaseSchema.parse(req.body);
+      let attempts = 0;
+      let lastError: any;
+      let valueToUse = validatedData.value;
+      while (attempts < 5) {
+        try {
+          const phase = await storage.createDesignPhase({ ...validatedData, value: valueToUse });
+          return res.status(201).json(phase);
+        } catch (err: any) {
+          if (err.message?.includes('unique constraint') && err.message?.includes('value')) {
+            attempts++;
+            valueToUse = `${validatedData.value}_${attempts}`;
+            lastError = err;
+          } else {
+            throw err;
+          }
+        }
+      }
+      throw lastError;
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to create design phase" });
+    }
+  });
+
+  app.put("/api/design-phases/:id", requirePermission('crm'), async (req, res) => {
+    try {
+      const validatedData = insertDesignPhaseSchema.partial().parse(req.body);
+      const phase = await storage.updateDesignPhase(req.params.id, validatedData);
+      res.json(phase);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Validation error", errors: error.errors });
+      }
+      res.status(500).json({ message: "Failed to update design phase" });
+    }
+  });
+
+  app.delete("/api/design-phases/:id", requirePermission('crm'), async (req, res) => {
+    try {
+      await storage.deleteDesignPhase(req.params.id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete design phase" });
     }
   });
 
