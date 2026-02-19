@@ -194,17 +194,7 @@ export default function Layout({ children }: LayoutProps) {
 
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-40 bg-black flex flex-col">
-          <div className="flex items-center justify-between py-4 px-6">
-            <Link
-              href="/"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <img
-                src={logoSrc}
-                alt="IEVRA Design & Build"
-                className="h-6 w-auto"
-              />
-            </Link>
+          <div className="flex items-center justify-end py-4 px-6">
             <button
               className="text-white p-2"
               onClick={() => setMobileMenuOpen(false)}
