@@ -792,115 +792,122 @@ export default function LookupAdminTab() {
 
           <Card className="bg-black border border-white/20 rounded-none">
             <CardContent className="p-6">
-              <div className="flex items-center justify-center gap-10 flex-wrap">
-                {(() => {
-                  const hasTimeline = !!selectedClient.designTimeline;
-                  const progress = hasTimeline ? Math.min(100, Math.round((designInteractions.length / selectedClient.designTimeline!) * 100)) : 0;
-                  const size = 90;
-                  const strokeWidth = 10;
-                  const radius = (size - strokeWidth) / 2;
-                  const circumference = 2 * Math.PI * radius;
-                  const filled = (progress / 100) * circumference;
-                  const gap = circumference - filled;
-                  return (
-                    <div className="flex flex-col items-center gap-3">
-                      <div className="relative" style={{ width: size, height: size }}>
-                        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="transform -rotate-90">
-                          <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#555" strokeWidth={strokeWidth} />
-                          {progress > 0 && (
-                            <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#bbb" strokeWidth={strokeWidth} strokeDasharray={`${filled} ${gap}`} className="transition-all duration-700 ease-out" />
-                          )}
-                        </svg>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-base font-medium text-white/70">{progress}%</span>
+              <div className="space-y-6">
+                <div className="flex items-center justify-center gap-16">
+                  {(() => {
+                    const hasTimeline = !!selectedClient.designTimeline;
+                    const progress = hasTimeline ? Math.min(100, Math.round((designInteractions.length / selectedClient.designTimeline!) * 100)) : 0;
+                    const size = 90;
+                    const strokeWidth = 10;
+                    const radius = (size - strokeWidth) / 2;
+                    const circumference = 2 * Math.PI * radius;
+                    const filled = (progress / 100) * circumference;
+                    const gap = circumference - filled;
+                    return (
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="relative" style={{ width: size, height: size }}>
+                          <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="transform -rotate-90">
+                            <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#555" strokeWidth={strokeWidth} />
+                            {progress > 0 && (
+                              <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#bbb" strokeWidth={strokeWidth} strokeDasharray={`${filled} ${gap}`} className="transition-all duration-700 ease-out" />
+                            )}
+                          </svg>
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="text-base font-medium text-white/70">{progress}%</span>
+                          </div>
                         </div>
+                        <p className="text-sm text-white/50 font-light">{isVi ? "Tiến Độ Thiết Kế" : "Design Progress"}</p>
                       </div>
-                      <p className="text-sm text-white/50 font-light">{isVi ? "Thiết Kế" : "Design"}</p>
-                    </div>
-                  );
-                })()}
-                {(() => {
-                  const hasTimeline = !!selectedClient.constructionTimeline;
-                  const progress = hasTimeline ? Math.min(100, Math.round((constructionInteractions.length / selectedClient.constructionTimeline!) * 100)) : 0;
-                  const size = 90;
-                  const strokeWidth = 10;
-                  const radius = (size - strokeWidth) / 2;
-                  const circumference = 2 * Math.PI * radius;
-                  const filled = (progress / 100) * circumference;
-                  const gap = circumference - filled;
-                  return (
-                    <div className="flex flex-col items-center gap-3">
-                      <div className="relative" style={{ width: size, height: size }}>
-                        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="transform -rotate-90">
-                          <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#555" strokeWidth={strokeWidth} />
-                          {progress > 0 && (
-                            <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#bbb" strokeWidth={strokeWidth} strokeDasharray={`${filled} ${gap}`} className="transition-all duration-700 ease-out" />
-                          )}
-                        </svg>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-base font-medium text-white/70">{progress}%</span>
+                    );
+                  })()}
+                  <div className="w-px h-16 bg-white/10" />
+                  {(() => {
+                    const designTx = transactions.filter((tx: any) => !tx.category || tx.category === "design");
+                    const designCompleted = designTx.filter((tx: any) => tx.status === "completed").length;
+                    const designTotal = designTx.length;
+                    const progress = designTotal > 0 ? Math.round((designCompleted / designTotal) * 100) : 0;
+                    const size = 90;
+                    const strokeWidth = 10;
+                    const radius = (size - strokeWidth) / 2;
+                    const circumference = 2 * Math.PI * radius;
+                    const filled = (progress / 100) * circumference;
+                    const gap = circumference - filled;
+                    return (
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="relative" style={{ width: size, height: size }}>
+                          <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="transform -rotate-90">
+                            <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#555" strokeWidth={strokeWidth} />
+                            {progress > 0 && (
+                              <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#bbb" strokeWidth={strokeWidth} strokeDasharray={`${filled} ${gap}`} className="transition-all duration-700 ease-out" />
+                            )}
+                          </svg>
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="text-base font-medium text-white/70">{progress}%</span>
+                          </div>
                         </div>
+                        <p className="text-sm text-white/50 font-light">{isVi ? "Thanh Toán Thiết Kế" : "Design Payment"}</p>
                       </div>
-                      <p className="text-sm text-white/50 font-light">{isVi ? "Thi Công" : "Construction"}</p>
-                    </div>
-                  );
-                })()}
-                {(() => {
-                  const designTx = transactions.filter((tx: any) => !tx.category || tx.category === "design");
-                  const designCompleted = designTx.filter((tx: any) => tx.status === "completed").length;
-                  const designTotal = designTx.length;
-                  const progress = designTotal > 0 ? Math.round((designCompleted / designTotal) * 100) : 0;
-                  const size = 90;
-                  const strokeWidth = 10;
-                  const radius = (size - strokeWidth) / 2;
-                  const circumference = 2 * Math.PI * radius;
-                  const filled = (progress / 100) * circumference;
-                  const gap = circumference - filled;
-                  return (
-                    <div className="flex flex-col items-center gap-3">
-                      <div className="relative" style={{ width: size, height: size }}>
-                        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="transform -rotate-90">
-                          <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#555" strokeWidth={strokeWidth} />
-                          {progress > 0 && (
-                            <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#bbb" strokeWidth={strokeWidth} strokeDasharray={`${filled} ${gap}`} className="transition-all duration-700 ease-out" />
-                          )}
-                        </svg>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-base font-medium text-white/70">{progress}%</span>
+                    );
+                  })()}
+                </div>
+                <div className="border-t border-white/10" />
+                <div className="flex items-center justify-center gap-16">
+                  {(() => {
+                    const hasTimeline = !!selectedClient.constructionTimeline;
+                    const progress = hasTimeline ? Math.min(100, Math.round((constructionInteractions.length / selectedClient.constructionTimeline!) * 100)) : 0;
+                    const size = 90;
+                    const strokeWidth = 10;
+                    const radius = (size - strokeWidth) / 2;
+                    const circumference = 2 * Math.PI * radius;
+                    const filled = (progress / 100) * circumference;
+                    const gap = circumference - filled;
+                    return (
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="relative" style={{ width: size, height: size }}>
+                          <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="transform -rotate-90">
+                            <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#555" strokeWidth={strokeWidth} />
+                            {progress > 0 && (
+                              <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#bbb" strokeWidth={strokeWidth} strokeDasharray={`${filled} ${gap}`} className="transition-all duration-700 ease-out" />
+                            )}
+                          </svg>
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="text-base font-medium text-white/70">{progress}%</span>
+                          </div>
                         </div>
+                        <p className="text-sm text-white/50 font-light">{isVi ? "Tiến Độ Thi Công" : "Construction Progress"}</p>
                       </div>
-                      <p className="text-sm text-white/50 font-light">{isVi ? "TT Thiết Kế" : "Design Pay"}</p>
-                    </div>
-                  );
-                })()}
-                {(() => {
-                  const constructionTx = transactions.filter((tx: any) => tx.category === "construction");
-                  const constructionCompleted = constructionTx.filter((tx: any) => tx.status === "completed").length;
-                  const constructionTotal = constructionTx.length;
-                  const progress = constructionTotal > 0 ? Math.round((constructionCompleted / constructionTotal) * 100) : 0;
-                  const size = 90;
-                  const strokeWidth = 10;
-                  const radius = (size - strokeWidth) / 2;
-                  const circumference = 2 * Math.PI * radius;
-                  const filled = (progress / 100) * circumference;
-                  const gap = circumference - filled;
-                  return (
-                    <div className="flex flex-col items-center gap-3">
-                      <div className="relative" style={{ width: size, height: size }}>
-                        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="transform -rotate-90">
-                          <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#555" strokeWidth={strokeWidth} />
-                          {progress > 0 && (
-                            <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#bbb" strokeWidth={strokeWidth} strokeDasharray={`${filled} ${gap}`} className="transition-all duration-700 ease-out" />
-                          )}
-                        </svg>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-base font-medium text-white/70">{progress}%</span>
+                    );
+                  })()}
+                  <div className="w-px h-16 bg-white/10" />
+                  {(() => {
+                    const constructionTx = transactions.filter((tx: any) => tx.category === "construction");
+                    const constructionCompleted = constructionTx.filter((tx: any) => tx.status === "completed").length;
+                    const constructionTotal = constructionTx.length;
+                    const progress = constructionTotal > 0 ? Math.round((constructionCompleted / constructionTotal) * 100) : 0;
+                    const size = 90;
+                    const strokeWidth = 10;
+                    const radius = (size - strokeWidth) / 2;
+                    const circumference = 2 * Math.PI * radius;
+                    const filled = (progress / 100) * circumference;
+                    const gap = circumference - filled;
+                    return (
+                      <div className="flex flex-col items-center gap-3">
+                        <div className="relative" style={{ width: size, height: size }}>
+                          <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="transform -rotate-90">
+                            <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#555" strokeWidth={strokeWidth} />
+                            {progress > 0 && (
+                              <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#bbb" strokeWidth={strokeWidth} strokeDasharray={`${filled} ${gap}`} className="transition-all duration-700 ease-out" />
+                            )}
+                          </svg>
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="text-base font-medium text-white/70">{progress}%</span>
+                          </div>
                         </div>
+                        <p className="text-sm text-white/50 font-light">{isVi ? "Thanh Toán Thi Công" : "Construction Payment"}</p>
                       </div>
-                      <p className="text-sm text-white/50 font-light">{isVi ? "TT Thi Công" : "Constr. Pay"}</p>
-                    </div>
-                  );
-                })()}
+                    );
+                  })()}
+                </div>
               </div>
             </CardContent>
           </Card>
