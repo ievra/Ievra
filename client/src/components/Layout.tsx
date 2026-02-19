@@ -193,7 +193,7 @@ export default function Layout({ children }: LayoutProps) {
       </header>
 
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-black flex flex-col">
+        <div className="fixed inset-0 z-[60] bg-black flex flex-col">
           <div className="flex items-center justify-end py-4 px-6">
             <button
               className="text-white p-2"
