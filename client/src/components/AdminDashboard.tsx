@@ -7511,10 +7511,12 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     <TableHeader>
                       <TableRow>
                         <TableHead className="w-[4%] whitespace-nowrap text-center">{language === 'vi' ? 'STT' : 'NO'}</TableHead>
-                        <TableHead className="w-[8%] whitespace-nowrap text-center">{language === 'vi' ? 'Danh Mục' : 'Tier'}</TableHead>
-                        <TableHead className="w-[14%] whitespace-nowrap">
-                          <div>{language === 'vi' ? 'Đại Diện' : 'Representative'}</div>
+                        <TableHead className="w-[10%] whitespace-nowrap text-center">
+                          <div>{language === 'vi' ? 'Danh Mục' : 'Tier'}</div>
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Hạng mục' : 'Category'}</div>
+                        </TableHead>
+                        <TableHead className="w-[12%] whitespace-nowrap">
+                          <div>{language === 'vi' ? 'Đại Diện' : 'Representative'}</div>
                         </TableHead>
                         <TableHead className="w-[13%] whitespace-nowrap">
                           <div>{t('crm.phone')}</div>
@@ -7539,19 +7541,19 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         <TableRow key={bp.id} data-testid={`row-bp-${bp.id}`} className="relative h-16">
                           <TableCell className="align-middle text-center"><span className="text-sm">{bpStartIndex + idx + 1}</span></TableCell>
                           <TableCell className="align-middle text-center">
-                            <span className="text-sm text-white/70 whitespace-nowrap">
+                            <div className="text-sm whitespace-nowrap">
                               {bpTier ? (language === 'vi' ? bpTier.labelVi : bpTier.labelEn) : '—'}
-                            </span>
-                          </TableCell>
-                          <TableCell className="align-middle">
-                            <div className="font-light whitespace-nowrap">
-                              {bp.firstName}
                             </div>
-                            <div className="text-xs text-muted-foreground mt-1">
+                            <div className="text-xs text-muted-foreground mt-1 whitespace-nowrap">
                               {(() => {
                                 const cat = bpCategories.find(s => s.value === bp.stage);
                                 return cat ? (language === 'vi' ? cat.labelVi : cat.labelEn) : bp.stage || '—';
                               })()}
+                            </div>
+                          </TableCell>
+                          <TableCell className="align-middle">
+                            <div className="whitespace-nowrap">
+                              {bp.firstName}
                             </div>
                           </TableCell>
                           <TableCell className="align-middle">
