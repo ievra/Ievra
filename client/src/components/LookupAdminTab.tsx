@@ -1174,54 +1174,71 @@ export default function LookupAdminTab() {
                     <div className="text-center py-12">
                       <p className="text-white/30 font-light">{isVi ? "Chưa có giao dịch nào" : "No transactions yet"}</p>
                     </div>
-                  ) : (
-                    <Table>
-                      <TableHeader>
-                        <TableRow className="border-white/10">
-                          <TableHead className="text-white/60 w-[25%]">
-                            <div>
-                              <span>{isVi ? "Ngày" : "Date"}</span>
-                              <p className="text-xs font-normal text-white/30">{isVi ? "Tiêu đề" : "Title"}</p>
-                            </div>
-                          </TableHead>
-                          <TableHead className="text-white/60 w-[20%]">{isVi ? "Số tiền" : "Amount"}</TableHead>
-                          <TableHead className="text-white/60 w-[30%]">{isVi ? "Ghi chú" : "Notes"}</TableHead>
-                          <TableHead className="text-white/60 w-[25%] text-right">
-                            <div>
-                              <span>{isVi ? "Loại" : "Type"}</span>
-                              <p className="text-xs font-normal text-white/30">{isVi ? "Trạng thái" : "Status"}</p>
-                            </div>
-                          </TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {transactions.map((tx) => (
-                          <TableRow key={tx.id} className="border-white/10">
-                            <TableCell>
-                              <div>
-                                <p className="text-white/70">{formatDate(tx.paymentDate)}</p>
-                                <p className="text-sm text-white/50">{tx.title}</p>
-                              </div>
-                            </TableCell>
-                            <TableCell className={`font-light ${tx.type === "refund" ? "text-red-400" : "text-white"}`}>
-                              {tx.type === "refund" ? "-" : "+"}{formatCurrency(tx.amount)}
-                            </TableCell>
-                            <TableCell className="text-white/60 truncate">{tx.notes || tx.description || "—"}</TableCell>
-                            <TableCell className="text-right">
-                              <div className="space-y-1 flex flex-col items-end">
-                                <Badge variant="outline" className={`rounded-none ${tx.type === "refund" ? "border-red-500/40 text-red-400" : tx.type === "commission" ? "border-yellow-500/40 text-yellow-400" : "border-white/20 text-white/60"}`}>
-                                  {tx.type === "refund" ? (isVi ? "Hoàn trả" : "Refund") : tx.type === "commission" ? (isVi ? "Hoa hồng" : "Commission") : (isVi ? "Thanh toán" : "Payment")}
-                                </Badge>
-                                <Badge variant="outline" className={`rounded-none ${tx.status === "completed" ? "border-white/20 text-white/60" : tx.status === "cancelled" ? "border-red-500/40 text-red-400" : "border-white/20 text-white/60"}`}>
-                                  {tx.status === "completed" ? (isVi ? "Hoàn tất" : "Completed") : tx.status === "cancelled" ? (isVi ? "Đã hủy" : "Cancelled") : (isVi ? "Chờ xử lý" : "Pending")}
-                                </Badge>
-                              </div>
-                            </TableCell>
-                          </TableRow>
+                  ) : (() => {
+                    const designTx = transactions.filter((tx: any) => !tx.category || tx.category === "design");
+                    const constructionTx = transactions.filter((tx: any) => tx.category === "construction");
+                    const otherTx = transactions.filter((tx: any) => tx.category === "other");
+                    const sections = [
+                      { label: isVi ? "Thanh Toán Thiết Kế" : "Design Payments", items: designTx },
+                      { label: isVi ? "Thanh Toán Thi Công" : "Construction Payments", items: constructionTx },
+                      { label: isVi ? "Giao Dịch Khác" : "Other Transactions", items: otherTx },
+                    ].filter(s => s.items.length > 0);
+                    return (
+                      <div className="space-y-6">
+                        {sections.map((section) => (
+                          <div key={section.label}>
+                            <h4 className="text-sm font-light text-white/50 mb-3 tracking-wider">{section.label}</h4>
+                            <Table>
+                              <TableHeader>
+                                <TableRow className="border-white/10">
+                                  <TableHead className="text-white/60 w-[25%]">
+                                    <div>
+                                      <span>{isVi ? "Ngày" : "Date"}</span>
+                                      <p className="text-xs font-normal text-white/30">{isVi ? "Tiêu đề" : "Title"}</p>
+                                    </div>
+                                  </TableHead>
+                                  <TableHead className="text-white/60 w-[20%]">{isVi ? "Số tiền" : "Amount"}</TableHead>
+                                  <TableHead className="text-white/60 w-[30%]">{isVi ? "Ghi chú" : "Notes"}</TableHead>
+                                  <TableHead className="text-white/60 w-[25%] text-right">
+                                    <div>
+                                      <span>{isVi ? "Loại" : "Type"}</span>
+                                      <p className="text-xs font-normal text-white/30">{isVi ? "Trạng thái" : "Status"}</p>
+                                    </div>
+                                  </TableHead>
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody>
+                                {section.items.map((tx) => (
+                                  <TableRow key={tx.id} className="border-white/10">
+                                    <TableCell>
+                                      <div>
+                                        <p className="text-white/70">{formatDate(tx.paymentDate)}</p>
+                                        <p className="text-sm text-white/50">{tx.title}</p>
+                                      </div>
+                                    </TableCell>
+                                    <TableCell className={`font-light ${tx.type === "refund" ? "text-red-400" : "text-white"}`}>
+                                      {tx.type === "refund" ? "-" : "+"}{formatCurrency(tx.amount)}
+                                    </TableCell>
+                                    <TableCell className="text-white/60 truncate">{tx.notes || tx.description || "—"}</TableCell>
+                                    <TableCell className="text-right">
+                                      <div className="space-y-1 flex flex-col items-end">
+                                        <Badge variant="outline" className={`rounded-none ${tx.type === "refund" ? "border-red-500/40 text-red-400" : tx.type === "commission" ? "border-yellow-500/40 text-yellow-400" : "border-white/20 text-white/60"}`}>
+                                          {tx.type === "refund" ? (isVi ? "Hoàn trả" : "Refund") : tx.type === "commission" ? (isVi ? "Hoa hồng" : "Commission") : (isVi ? "Thanh toán" : "Payment")}
+                                        </Badge>
+                                        <Badge variant="outline" className={`rounded-none ${tx.status === "completed" ? "border-white/20 text-white/60" : tx.status === "cancelled" ? "border-red-500/40 text-red-400" : "border-white/20 text-white/60"}`}>
+                                          {tx.status === "completed" ? (isVi ? "Hoàn tất" : "Completed") : tx.status === "cancelled" ? (isVi ? "Đã hủy" : "Cancelled") : (isVi ? "Chờ xử lý" : "Pending")}
+                                        </Badge>
+                                      </div>
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </div>
                         ))}
-                      </TableBody>
-                    </Table>
-                  )}
+                      </div>
+                    );
+                  })()}
                 </div>
               )}
 
