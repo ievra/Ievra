@@ -792,64 +792,56 @@ export default function LookupAdminTab() {
 
           <Card className="bg-black border border-white/20 rounded-none">
             <CardContent className="p-6">
-              <div className="flex items-center justify-center gap-12 flex-wrap">
+              <div className="flex items-center justify-center gap-16 flex-wrap">
                 {(() => {
                   const hasTimeline = !!selectedClient.designTimeline;
                   const progress = hasTimeline ? Math.min(100, Math.round((designInteractions.length / selectedClient.designTimeline!) * 100)) : 0;
-                  const radius = 44;
-                  const strokeWidth = 8;
-                  const normalizedRadius = radius - strokeWidth / 2;
-                  const circumference = 2 * Math.PI * normalizedRadius;
-                  const strokeDashoffset = circumference - (progress / 100) * circumference;
+                  const size = 90;
+                  const strokeWidth = 10;
+                  const radius = (size - strokeWidth) / 2;
+                  const circumference = 2 * Math.PI * radius;
+                  const filled = (progress / 100) * circumference;
+                  const gap = circumference - filled;
                   return (
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="relative">
-                        <svg width={radius * 2} height={radius * 2} className="transform -rotate-90">
-                          <circle cx={radius} cy={radius} r={normalizedRadius} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={strokeWidth} />
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="relative" style={{ width: size, height: size }}>
+                        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="transform -rotate-90">
+                          <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#555" strokeWidth={strokeWidth} />
                           {progress > 0 && (
-                            <circle cx={radius} cy={radius} r={normalizedRadius} fill="none" stroke={progress >= 100 ? "#4ade80" : "rgba(255,255,255,0.5)"} strokeWidth={strokeWidth} strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} strokeLinecap="round" className="transition-all duration-700 ease-out" />
+                            <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#bbb" strokeWidth={strokeWidth} strokeDasharray={`${filled} ${gap}`} className="transition-all duration-700 ease-out" />
                           )}
                         </svg>
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-sm font-light text-white/50">{progress}%</span>
+                          <span className="text-base font-medium text-white/70">{progress}%</span>
                         </div>
                       </div>
-                      <div className="text-center">
-                        <p className="text-xs text-white/40 font-light">{isVi ? "Thiết Kế" : "Design"}</p>
-                        {hasTimeline && (
-                          <p className="text-xs text-white/30 mt-0.5">{designInteractions.length} / {selectedClient.designTimeline}</p>
-                        )}
-                      </div>
+                      <p className="text-sm text-white/50 font-light">{isVi ? "Thiết Kế" : "Design"}</p>
                     </div>
                   );
                 })()}
                 {(() => {
                   const hasTimeline = !!selectedClient.constructionTimeline;
                   const progress = hasTimeline ? Math.min(100, Math.round((constructionInteractions.length / selectedClient.constructionTimeline!) * 100)) : 0;
-                  const radius = 44;
-                  const strokeWidth = 8;
-                  const normalizedRadius = radius - strokeWidth / 2;
-                  const circumference = 2 * Math.PI * normalizedRadius;
-                  const strokeDashoffset = circumference - (progress / 100) * circumference;
+                  const size = 90;
+                  const strokeWidth = 10;
+                  const radius = (size - strokeWidth) / 2;
+                  const circumference = 2 * Math.PI * radius;
+                  const filled = (progress / 100) * circumference;
+                  const gap = circumference - filled;
                   return (
-                    <div className="flex flex-col items-center gap-2">
-                      <div className="relative">
-                        <svg width={radius * 2} height={radius * 2} className="transform -rotate-90">
-                          <circle cx={radius} cy={radius} r={normalizedRadius} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={strokeWidth} />
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="relative" style={{ width: size, height: size }}>
+                        <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="transform -rotate-90">
+                          <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#555" strokeWidth={strokeWidth} />
                           {progress > 0 && (
-                            <circle cx={radius} cy={radius} r={normalizedRadius} fill="none" stroke={progress >= 100 ? "#4ade80" : "rgba(255,255,255,0.5)"} strokeWidth={strokeWidth} strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} strokeLinecap="round" className="transition-all duration-700 ease-out" />
+                            <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#bbb" strokeWidth={strokeWidth} strokeDasharray={`${filled} ${gap}`} className="transition-all duration-700 ease-out" />
                           )}
                         </svg>
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-sm font-light text-white/50">{progress}%</span>
+                          <span className="text-base font-medium text-white/70">{progress}%</span>
                         </div>
                       </div>
-                      <div className="text-center">
-                        <p className="text-xs text-white/40 font-light">{isVi ? "Thi Công" : "Construction"}</p>
-                        {hasTimeline && (
-                          <p className="text-xs text-white/30 mt-0.5">{constructionInteractions.length} / {selectedClient.constructionTimeline}</p>
-                        )}
-                      </div>
+                      <p className="text-sm text-white/50 font-light">{isVi ? "Thi Công" : "Construction"}</p>
                     </div>
                   );
                 })()}
