@@ -7539,7 +7539,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         <TableRow key={bp.id} data-testid={`row-bp-${bp.id}`} className="relative h-16">
                           <TableCell className="align-middle text-center"><span className="text-sm">{bpStartIndex + idx + 1}</span></TableCell>
                           <TableCell className="align-middle text-center">
-                            <span className="text-sm font-light text-white/70">
+                            <span className="text-sm text-white/70 whitespace-nowrap">
                               {bpTier ? (language === 'vi' ? bpTier.labelVi : bpTier.labelEn) : '—'}
                             </span>
                           </TableCell>
