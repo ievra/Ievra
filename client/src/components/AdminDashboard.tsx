@@ -114,6 +114,7 @@ const clientSchema = z.object({
   lastName: z.string().min(1, "Last name is required"),
   email: z.string().email("Valid email is required"),
   phone: z.string().optional(),
+  position: z.string().optional(),
   company: z.string().optional(),
   address: z.string().optional(),
   stage: z.string().default("lead"),
@@ -7541,6 +7542,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         </TableHead>
                         <TableHead className="w-[12%] whitespace-nowrap">
                           <div>{language === 'vi' ? 'Đại Diện' : 'Representative'}</div>
+                          <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Chức vụ' : 'Position'}</div>
                         </TableHead>
                         <TableHead className="w-[13%] whitespace-nowrap">
                           <div>{t('crm.phone')}</div>
