@@ -790,64 +790,72 @@ export default function LookupAdminTab() {
             </CardContent>
           </Card>
 
-          {(selectedClient.designTimeline || selectedClient.constructionTimeline) && (
-            <Card className="bg-black border border-white/20 rounded-none">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-center gap-12 flex-wrap">
-                  {selectedClient.designTimeline && (() => {
-                    const progress = Math.min(100, Math.round((designInteractions.length / selectedClient.designTimeline) * 100));
-                    const radius = 40;
-                    const strokeWidth = 7;
-                    const normalizedRadius = radius - strokeWidth / 2;
-                    const circumference = 2 * Math.PI * normalizedRadius;
-                    const strokeDashoffset = circumference - (progress / 100) * circumference;
-                    return (
-                      <div className="flex flex-col items-center gap-2">
-                        <div className="relative">
-                          <svg width={radius * 2} height={radius * 2} className="transform -rotate-90">
-                            <circle cx={radius} cy={radius} r={normalizedRadius} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth={strokeWidth} />
-                            <circle cx={radius} cy={radius} r={normalizedRadius} fill="none" stroke={progress >= 100 ? "#4ade80" : "rgba(255,255,255,0.6)"} strokeWidth={strokeWidth} strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} strokeLinecap="round" className="transition-all duration-700 ease-out" />
-                          </svg>
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-sm font-light text-white">{progress}%</span>
-                          </div>
-                        </div>
-                        <div className="text-center">
-                          <p className="text-xs text-white/40">{isVi ? "Thiết kế" : "Design"}</p>
-                          <p className="text-xs text-white/60">{designInteractions.length} / {selectedClient.designTimeline} {isVi ? "ngày" : "days"}</p>
+          <Card className="bg-black border border-white/20 rounded-none">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-center gap-12 flex-wrap">
+                {(() => {
+                  const hasTimeline = !!selectedClient.designTimeline;
+                  const progress = hasTimeline ? Math.min(100, Math.round((designInteractions.length / selectedClient.designTimeline!) * 100)) : 0;
+                  const radius = 44;
+                  const strokeWidth = 8;
+                  const normalizedRadius = radius - strokeWidth / 2;
+                  const circumference = 2 * Math.PI * normalizedRadius;
+                  const strokeDashoffset = circumference - (progress / 100) * circumference;
+                  return (
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="relative">
+                        <svg width={radius * 2} height={radius * 2} className="transform -rotate-90">
+                          <circle cx={radius} cy={radius} r={normalizedRadius} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={strokeWidth} />
+                          {progress > 0 && (
+                            <circle cx={radius} cy={radius} r={normalizedRadius} fill="none" stroke={progress >= 100 ? "#4ade80" : "rgba(255,255,255,0.5)"} strokeWidth={strokeWidth} strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} strokeLinecap="round" className="transition-all duration-700 ease-out" />
+                          )}
+                        </svg>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="text-sm font-light text-white/50">{progress}%</span>
                         </div>
                       </div>
-                    );
-                  })()}
-                  {selectedClient.constructionTimeline && (() => {
-                    const progress = Math.min(100, Math.round((constructionInteractions.length / selectedClient.constructionTimeline) * 100));
-                    const radius = 40;
-                    const strokeWidth = 7;
-                    const normalizedRadius = radius - strokeWidth / 2;
-                    const circumference = 2 * Math.PI * normalizedRadius;
-                    const strokeDashoffset = circumference - (progress / 100) * circumference;
-                    return (
-                      <div className="flex flex-col items-center gap-2">
-                        <div className="relative">
-                          <svg width={radius * 2} height={radius * 2} className="transform -rotate-90">
-                            <circle cx={radius} cy={radius} r={normalizedRadius} fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth={strokeWidth} />
-                            <circle cx={radius} cy={radius} r={normalizedRadius} fill="none" stroke={progress >= 100 ? "#4ade80" : "rgba(255,255,255,0.6)"} strokeWidth={strokeWidth} strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} strokeLinecap="round" className="transition-all duration-700 ease-out" />
-                          </svg>
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-sm font-light text-white">{progress}%</span>
-                          </div>
-                        </div>
-                        <div className="text-center">
-                          <p className="text-xs text-white/40">{isVi ? "Thi công" : "Construction"}</p>
-                          <p className="text-xs text-white/60">{constructionInteractions.length} / {selectedClient.constructionTimeline} {isVi ? "ngày" : "days"}</p>
+                      <div className="text-center">
+                        <p className="text-xs text-white/40 font-light">{isVi ? "Thiết Kế" : "Design"}</p>
+                        {hasTimeline && (
+                          <p className="text-xs text-white/30 mt-0.5">{designInteractions.length} / {selectedClient.designTimeline}</p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })()}
+                {(() => {
+                  const hasTimeline = !!selectedClient.constructionTimeline;
+                  const progress = hasTimeline ? Math.min(100, Math.round((constructionInteractions.length / selectedClient.constructionTimeline!) * 100)) : 0;
+                  const radius = 44;
+                  const strokeWidth = 8;
+                  const normalizedRadius = radius - strokeWidth / 2;
+                  const circumference = 2 * Math.PI * normalizedRadius;
+                  const strokeDashoffset = circumference - (progress / 100) * circumference;
+                  return (
+                    <div className="flex flex-col items-center gap-2">
+                      <div className="relative">
+                        <svg width={radius * 2} height={radius * 2} className="transform -rotate-90">
+                          <circle cx={radius} cy={radius} r={normalizedRadius} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={strokeWidth} />
+                          {progress > 0 && (
+                            <circle cx={radius} cy={radius} r={normalizedRadius} fill="none" stroke={progress >= 100 ? "#4ade80" : "rgba(255,255,255,0.5)"} strokeWidth={strokeWidth} strokeDasharray={circumference} strokeDashoffset={strokeDashoffset} strokeLinecap="round" className="transition-all duration-700 ease-out" />
+                          )}
+                        </svg>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="text-sm font-light text-white/50">{progress}%</span>
                         </div>
                       </div>
-                    );
-                  })()}
-                </div>
-              </CardContent>
-            </Card>
-          )}
+                      <div className="text-center">
+                        <p className="text-xs text-white/40 font-light">{isVi ? "Thi Công" : "Construction"}</p>
+                        {hasTimeline && (
+                          <p className="text-xs text-white/30 mt-0.5">{constructionInteractions.length} / {selectedClient.constructionTimeline}</p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+            </CardContent>
+          </Card>
 
           <div className="border border-white/20">
             <div className="flex border-b border-white/20 overflow-x-auto">
