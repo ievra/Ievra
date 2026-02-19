@@ -869,10 +869,7 @@ export default function LookupAdminTab() {
                           <span className="text-base font-medium text-white/70">{progress}%</span>
                         </div>
                       </div>
-                      <div className="text-center">
-                        <p className="text-sm text-white/50 font-light">{isVi ? "TT Thiết Kế" : "Design Pay"}</p>
-                        <p className="text-xs text-white/30">{designCompleted}/{designTotal}</p>
-                      </div>
+                      <p className="text-sm text-white/50 font-light">{isVi ? "TT Thiết Kế" : "Design Pay"}</p>
                     </div>
                   );
                 })()}
@@ -900,10 +897,7 @@ export default function LookupAdminTab() {
                           <span className="text-base font-medium text-white/70">{progress}%</span>
                         </div>
                       </div>
-                      <div className="text-center">
-                        <p className="text-sm text-white/50 font-light">{isVi ? "TT Thi Công" : "Constr. Pay"}</p>
-                        <p className="text-xs text-white/30">{constructionCompleted}/{constructionTotal}</p>
-                      </div>
+                      <p className="text-sm text-white/50 font-light">{isVi ? "TT Thi Công" : "Constr. Pay"}</p>
                     </div>
                   );
                 })()}
