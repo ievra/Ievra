@@ -983,6 +983,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       lastName: "",
       email: "",
       phone: "",
+      position: "",
       company: "",
       address: "",
       intakeDate: "",
@@ -2687,6 +2688,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       lastName: bp.lastName,
       email: bp.email,
       phone: bp.phone || "",
+      position: bp.position || "",
       company: bp.company || "",
       address: bp.address || "",
       intakeDate: formatDateForInput(bp.intakeDate),
@@ -6603,6 +6605,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 lastName: "",
                 email: "",
                 phone: "",
+                position: "",
                 company: "",
                 address: "",
                 stage: "lead",
@@ -6628,6 +6631,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     lastName: "",
                     email: "",
                     phone: "",
+                    position: "",
                     company: "",
                     address: "",
                     stage: "lead",
@@ -6703,6 +6707,22 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       )}
                     />
 
+                    <FormField
+                      control={businessPartnerForm.control}
+                      name="position"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Chức vụ' : 'Position'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} value={field.value || ""} placeholder={language === 'vi' ? "Giám đốc" : "Director"} data-testid="input-bp-position" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
                     <FormField
                       control={businessPartnerForm.control}
                       name="tier"
@@ -7096,6 +7116,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Đại diện' : 'Representative'}</label>
                         <p className="text-base mt-1">{viewingBusinessPartner.firstName} {viewingBusinessPartner.lastName}</p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Chức vụ' : 'Position'}</label>
+                        <p className="text-base mt-1">{viewingBusinessPartner.position || "—"}</p>
                       </div>
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">{t('crm.email')}</label>
@@ -7555,6 +7579,11 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             <div className="whitespace-nowrap">
                               {bp.firstName}
                             </div>
+                            {bp.position && (
+                              <div className="text-xs text-muted-foreground mt-0.5 whitespace-nowrap">
+                                {bp.position}
+                              </div>
+                            )}
                           </TableCell>
                           <TableCell className="align-middle">
                             <div className="text-sm truncate">{bp.lastName || "—"}</div>

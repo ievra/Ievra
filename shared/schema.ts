@@ -102,6 +102,7 @@ export const businessPartners = pgTable("business_partners", {
   lastName: text("last_name").notNull(),
   email: text("email").notNull(),
   phone: text("phone"),
+  position: text("position"),
   company: text("company"),
   address: text("address"),
   dateOfBirth: timestamp("date_of_birth"),
