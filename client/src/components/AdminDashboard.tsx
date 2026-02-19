@@ -6591,9 +6591,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     }
     return (
       <div className="space-y-6 p-6">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <h2 className="text-2xl font-sans font-light">{language === 'vi' ? 'Quản Lý Đối Tác' : 'Business Partner Management'}</h2>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-shrink-0">
             <Dialog open={isBusinessPartnerDialogOpen} onOpenChange={(open) => {
             setIsBusinessPartnerDialogOpen(open);
             if (!open) {
@@ -7430,7 +7430,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           </Card>
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
             <Input
@@ -7440,45 +7440,47 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
             />
           </div>
-          <Select value={bpTierFilter} onValueChange={(v) => { setBpTierFilter(v); setBpCurrentPage(1); }}>
-            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
-              <SelectValue placeholder={language === 'vi' ? 'Tất cả danh mục' : 'All tiers'} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{language === 'vi' ? 'Tất cả danh mục' : 'All tiers'}</SelectItem>
-              {bpTiersData.filter((t: any) => t.active).sort((a: any, b: any) => a.order - b.order).map((tier: any) => (
-                <SelectItem key={tier.id} value={tier.value}>
-                  {language === 'vi' ? tier.labelVi : tier.labelEn}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={bpStageFilter} onValueChange={(v) => { setBpStageFilter(v); setBpCurrentPage(1); }}>
-            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
-              <SelectValue placeholder={language === 'vi' ? 'Tất cả hạng mục' : 'All categories'} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{language === 'vi' ? 'Tất cả hạng mục' : 'All categories'}</SelectItem>
-              {bpCategories.filter(s => s.active).sort((a, b) => a.order - b.order).map(cat => (
-                <SelectItem key={cat.id} value={cat.value}>
-                  {language === 'vi' ? cat.labelVi : cat.labelEn}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={bpStatusFilter} onValueChange={(v) => { setBpStatusFilter(v); setBpCurrentPage(1); }}>
-            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
-              <SelectValue placeholder={language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'}</SelectItem>
-              {bpStatuses.filter(s => s.active).sort((a, b) => a.order - b.order).map(status => (
-                <SelectItem key={status.id} value={status.value}>
-                  {language === 'vi' ? status.labelVi : status.labelEn}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="grid grid-cols-3 sm:flex gap-2 sm:gap-4">
+            <Select value={bpTierFilter} onValueChange={(v) => { setBpTierFilter(v); setBpCurrentPage(1); }}>
+              <SelectTrigger className="w-full sm:w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0 text-xs sm:text-sm">
+                <SelectValue placeholder={language === 'vi' ? 'Tất cả danh mục' : 'All tiers'} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{language === 'vi' ? 'Tất cả danh mục' : 'All tiers'}</SelectItem>
+                {bpTiersData.filter((t: any) => t.active).sort((a: any, b: any) => a.order - b.order).map((tier: any) => (
+                  <SelectItem key={tier.id} value={tier.value}>
+                    {language === 'vi' ? tier.labelVi : tier.labelEn}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={bpStageFilter} onValueChange={(v) => { setBpStageFilter(v); setBpCurrentPage(1); }}>
+              <SelectTrigger className="w-full sm:w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0 text-xs sm:text-sm">
+                <SelectValue placeholder={language === 'vi' ? 'Tất cả hạng mục' : 'All categories'} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{language === 'vi' ? 'Tất cả hạng mục' : 'All categories'}</SelectItem>
+                {bpCategories.filter(s => s.active).sort((a, b) => a.order - b.order).map(cat => (
+                  <SelectItem key={cat.id} value={cat.value}>
+                    {language === 'vi' ? cat.labelVi : cat.labelEn}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={bpStatusFilter} onValueChange={(v) => { setBpStatusFilter(v); setBpCurrentPage(1); }}>
+              <SelectTrigger className="w-full sm:w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0 text-xs sm:text-sm">
+                <SelectValue placeholder={language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'}</SelectItem>
+                {bpStatuses.filter(s => s.active).sort((a, b) => a.order - b.order).map(status => (
+                  <SelectItem key={status.id} value={status.value}>
+                    {language === 'vi' ? status.labelVi : status.labelEn}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         <Card>
@@ -7505,7 +7507,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             ) : (
               <>
                 <div className="overflow-x-auto">
-                  <Table className="table-fixed w-full">
+                  <Table className="table-fixed min-w-[800px] w-full">
                     <TableHeader>
                       <TableRow>
                         <TableHead className="w-[4%] whitespace-nowrap text-center">{language === 'vi' ? 'STT' : 'NO'}</TableHead>
@@ -7614,13 +7616,13 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   </Table>
                 </div>
                 <div className="p-4">
-                  <div className="flex items-center justify-center gap-2">
+                  <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-2">
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => setBpCurrentPage(1)}
                       disabled={bpCurrentPage === 1}
-                      className="text-xs min-w-[60px]"
+                      className="text-xs min-w-[40px] sm:min-w-[60px] px-1 sm:px-3"
                     >
                       {language === 'vi' ? 'ĐẦU' : 'FIRST'}
                     </Button>
@@ -7629,7 +7631,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       size="sm"
                       onClick={() => setBpCurrentPage(prev => Math.max(1, prev - 1))}
                       disabled={bpCurrentPage === 1}
-                      className="text-xs min-w-[60px]"
+                      className="text-xs min-w-[40px] sm:min-w-[60px] px-1 sm:px-3"
                     >
                       {language === 'vi' ? 'TRƯỚC' : 'PREV'}
                     </Button>
@@ -7649,7 +7651,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       size="sm"
                       onClick={() => setBpCurrentPage(prev => Math.min(bpTotalPages, prev + 1))}
                       disabled={bpCurrentPage === bpTotalPages}
-                      className="text-xs min-w-[60px]"
+                      className="text-xs min-w-[40px] sm:min-w-[60px] px-1 sm:px-3"
                     >
                       {language === 'vi' ? 'SAU' : 'NEXT'}
                     </Button>
@@ -7658,7 +7660,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       size="sm"
                       onClick={() => setBpCurrentPage(bpTotalPages)}
                       disabled={bpCurrentPage === bpTotalPages}
-                      className="text-xs min-w-[60px]"
+                      className="text-xs min-w-[40px] sm:min-w-[60px] px-1 sm:px-3"
                     >
                       {language === 'vi' ? 'CUỐI' : 'LAST'}
                     </Button>
