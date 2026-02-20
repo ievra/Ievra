@@ -1,99 +1,132 @@
 import { useState, useEffect, useRef } from "react";
-import { Search, Phone, User, Shield, Calendar, FileText, ArrowRight, Clock, CheckCircle, AlertCircle, XCircle, Briefcase, CreditCard } from "lucide-react";
+import { createPortal } from "react-dom";
+import { Search, ArrowRight, Clock, ChevronLeft, ChevronRight, X, Eye } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableRow, TableCell } from "@/components/ui/table";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useLanguage } from "@/contexts/LanguageContext";
+
+interface LookupPhase {
+  id: string;
+  value: string;
+  labelVi: string;
+  labelEn: string;
+}
+
+interface LookupInteraction {
+  id: string;
+  type: string;
+  title: string;
+  description: string | null;
+  date: string;
+  outcome: string | null;
+  nextAction: string | null;
+  nextActionDate: string | null;
+  phase: string | null;
+  attachments: string[] | null;
+  assignedTo: string | null;
+  category: string | null;
+}
+
+interface LookupTransaction {
+  id: string;
+  title: string;
+  description: string | null;
+  amount: string;
+  type: string;
+  status: string;
+  paymentDate: string;
+  category: string | null;
+}
+
+interface LookupWarrantyLog {
+  id: string;
+  title: string;
+  description: string | null;
+  date: string;
+  assignedTo: string | null;
+  status: string | null;
+  attachments: string[] | null;
+}
 
 interface LookupResult {
   client: {
     firstName: string;
     lastName: string;
+    phone: string | null;
+    email: string | null;
+    company: string | null;
+    address: string | null;
     stage: string;
     tier: string;
     warrantyStatus: string | null;
     warrantyExpiry: string | null;
+    designTimeline: number | null;
+    constructionTimeline: number | null;
+    designPhaseTargets: Record<string, number> | null;
+    constructionPhaseTargets: Record<string, number> | null;
   };
-  deals: Array<{
-    title: string;
-    stage: string;
-    value: string;
-    expectedCloseDate: string | null;
-    actualCloseDate: string | null;
-    description: string | null;
-    createdAt: string;
-  }>;
-  interactions: Array<{
-    type: string;
-    title: string;
-    description: string | null;
-    date: string;
-    outcome: string | null;
-    nextAction: string | null;
-    nextActionDate: string | null;
-  }>;
-  transactions: Array<{
-    title: string;
-    description: string | null;
-    amount: string;
-    type: string;
-    status: string;
-    paymentDate: string;
-  }>;
+  interactions: LookupInteraction[];
+  transactions: LookupTransaction[];
+  warrantyLogs: LookupWarrantyLog[];
+  designPhases: LookupPhase[];
+  constructionPhases: LookupPhase[];
 }
-
-const stageLabels: Record<string, { vi: string; en: string }> = {
-  lead: { vi: "Tiềm năng", en: "Lead" },
-  prospect: { vi: "Quan tâm", en: "Prospect" },
-  contract: { vi: "Hợp đồng", en: "Contract" },
-  delivery: { vi: "Thi công", en: "Delivery" },
-  aftercare: { vi: "Hậu mãi", en: "Aftercare" },
-};
-
-const dealStageLabels: Record<string, { vi: string; en: string }> = {
-  proposal: { vi: "Đề xuất", en: "Proposal" },
-  negotiation: { vi: "Đàm phán", en: "Negotiation" },
-  contract: { vi: "Hợp đồng", en: "Contract" },
-  delivery: { vi: "Thi công", en: "Delivery" },
-  completed: { vi: "Hoàn thành", en: "Completed" },
-  lost: { vi: "Thất bại", en: "Lost" },
-};
-
-const interactionTypeLabels: Record<string, { vi: string; en: string }> = {
-  visit: { vi: "Khảo sát", en: "Site Visit" },
-  meeting: { vi: "Họp", en: "Meeting" },
-  site_survey: { vi: "Khảo sát hiện trạng", en: "Site Survey" },
-  design: { vi: "Thiết kế", en: "Design" },
-  acceptance: { vi: "Nghiệm thu", en: "Acceptance" },
-  call: { vi: "Gọi điện", en: "Phone Call" },
-  email: { vi: "Email", en: "Email" },
-};
-
-const tierLabels: Record<string, { vi: string; en: string }> = {
-  silver: { vi: "Bạc", en: "Silver" },
-  gold: { vi: "Vàng", en: "Gold" },
-  platinum: { vi: "Bạch Kim", en: "Platinum" },
-  vip: { vi: "VIP", en: "VIP" },
-};
 
 export default function Lookup() {
   const { language } = useLanguage();
+  const isVi = language === "vi";
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<LookupResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [searched, setSearched] = useState(false);
-  const [activeTab, setActiveTab] = useState<"timeline" | "deals" | "transactions">("timeline");
+  const [activeTab, setActiveTab] = useState<"design" | "construction" | "warranty">("design");
   const [typedPlaceholder, setTypedPlaceholder] = useState("");
-  const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const placeholderText = language === "vi" ? "Nhập số điện thoại của bạn..." : "Enter your phone number...";
+  const [lightboxImages, setLightboxImages] = useState<string[]>([]);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [viewingLog, setViewingLog] = useState<LookupWarrantyLog | null>(null);
+  const [viewingInteraction, setViewingInteraction] = useState<LookupInteraction | null>(null);
+
+  const openLightbox = (images: string[], index: number) => {
+    setLightboxImages(images);
+    setLightboxIndex(index);
+    document.body.style.overflow = "hidden";
+  };
+  const closeLightbox = () => {
+    setLightboxImages([]);
+    document.body.style.overflow = "";
+  };
+
+  useEffect(() => {
+    if (lightboxImages.length === 0) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") setLightboxIndex((prev) => (prev - 1 + lightboxImages.length) % lightboxImages.length);
+      if (e.key === "ArrowRight") setLightboxIndex((prev) => (prev + 1) % lightboxImages.length);
+    };
+    const preventScroll = (e: Event) => e.preventDefault();
+    window.addEventListener("keydown", handleKey);
+    document.addEventListener("wheel", preventScroll, { passive: false });
+    document.addEventListener("touchmove", preventScroll, { passive: false });
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", handleKey);
+      document.removeEventListener("wheel", preventScroll);
+      document.removeEventListener("touchmove", preventScroll);
+      document.body.style.overflow = "";
+    };
+  }, [lightboxImages]);
+
+  const placeholderText = isVi ? "Nhập số điện thoại của bạn..." : "Enter your phone number...";
 
   useEffect(() => {
     const text = placeholderText;
     let index = 0;
     setTypedPlaceholder('');
-
     const interval = setInterval(() => {
       if (index <= text.length) {
         setTypedPlaceholder(text.slice(0, index));
@@ -102,61 +135,197 @@ export default function Lookup() {
         clearInterval(interval);
       }
     }, 50);
-
     return () => clearInterval(interval);
   }, [language]);
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!phone.trim() || phone.trim().length < 6) return;
-
     setLoading(true);
     setError(null);
     setResult(null);
     setSearched(true);
-
     try {
       const res = await fetch(`/api/lookup?phone=${encodeURIComponent(phone.trim())}`);
       const data = await res.json();
       if (!res.ok) {
-        setError(data.message || (language === "vi" ? "Không tìm thấy" : "Not found"));
+        setError(data.message || (isVi ? "Không tìm thấy" : "Not found"));
       } else {
         setResult(data);
       }
     } catch {
-      setError(language === "vi" ? "Đã xảy ra lỗi. Vui lòng thử lại." : "An error occurred. Please try again.");
+      setError(isVi ? "Đã xảy ra lỗi. Vui lòng thử lại." : "An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   const formatDate = (dateStr: string) => {
-    return new Date(dateStr).toLocaleDateString(language === "vi" ? "vi-VN" : "en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+    return new Date(dateStr).toLocaleDateString(isVi ? "vi-VN" : "en-US", {
+      year: "numeric", month: "long", day: "numeric",
     });
   };
 
-  const formatCurrency = (amount: string) => {
-    return parseFloat(amount).toLocaleString("vi-VN") + " đ";
+  const designInteractions = result ? result.interactions.filter(i => i.type === "design") : [];
+  const constructionInteractions = result ? result.interactions.filter(i => i.type !== "design") : [];
+  const designPhases = result?.designPhases || [];
+  const constructionPhases = result?.constructionPhases || [];
+  const transactions = result?.transactions || [];
+
+  const renderCircle = (item: { label: string; progress: number; type: string }, phases: LookupPhase[], phaseTargets: Record<string, number>, circleInteractions: LookupInteraction[]) => {
+    const vb = 100;
+    const sw = 10;
+    const r = (vb - sw) / 2;
+    const circ = 2 * Math.PI * r;
+    const filled = (item.progress / 100) * circ;
+    const gap = circ - filled;
+    return (
+      <div className="flex flex-col items-center p-4">
+        <div className="relative w-full aspect-square max-w-[180px]">
+          <svg viewBox={`0 0 ${vb} ${vb}`} className="w-full h-full transform -rotate-90">
+            <circle cx={vb/2} cy={vb/2} r={r} fill="none" stroke="#555" strokeWidth={sw} />
+            {item.progress > 0 && (
+              <circle cx={vb/2} cy={vb/2} r={r} fill="none" stroke="#bbb" strokeWidth={sw} strokeDasharray={`${filled} ${gap}`} className="transition-all duration-700 ease-out" />
+            )}
+          </svg>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-2xl font-medium text-white/70">{item.progress}%</span>
+          </div>
+        </div>
+        <p className="text-sm text-white/50 font-light mt-3">{item.label}</p>
+        {phases.length > 0 && (
+          <div className="w-full mt-4 space-y-2">
+            {phases.map((phase) => {
+              const target = phaseTargets[phase.value] || 0;
+              const logged = circleInteractions.filter((int) => int.phase === phase.value).length;
+              const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 0;
+              return (
+                <div key={phase.id} className="space-y-0.5">
+                  <div className="flex justify-between items-center">
+                    <span className="text-[11px] text-white/50 truncate max-w-[70%]">{isVi ? phase.labelVi : phase.labelEn}</span>
+                    <span className="text-[11px] text-white/40">{pct}%</span>
+                  </div>
+                  <div className="w-full h-2 bg-white/10 overflow-hidden">
+                    <div className="h-full bg-white/50 transition-all duration-700 ease-out" style={{ width: `${pct}%` }} />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+        {(item.type === "design_payment" || item.type === "construction_payment") && (() => {
+          const paymentTx = item.type === "design_payment"
+            ? transactions.filter((t) => !t.category || t.category === "design")
+            : transactions.filter((t) => t.category === "construction");
+          if (paymentTx.length === 0) return null;
+          return (
+            <div className="w-full mt-4 space-y-2">
+              {[...paymentTx].reverse().map((tx, txIdx) => {
+                const pct = tx.status === "completed" ? 100 : 0;
+                return (
+                  <div key={tx.id || txIdx} className="space-y-0.5">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[11px] text-white/50 truncate max-w-[70%]">{tx.title || tx.description || `${isVi ? "Giao dịch" : "Transaction"} ${txIdx + 1}`}</span>
+                      <span className="text-[11px] text-white/40">{pct}%</span>
+                    </div>
+                    <div className="w-full h-2 bg-white/10 overflow-hidden">
+                      <div className="h-full bg-white/50 transition-all duration-700 ease-out" style={{ width: `${pct}%` }} />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })()}
+      </div>
+    );
   };
 
-  const getStageIcon = (stage: string) => {
-    switch (stage) {
-      case "completed": return <CheckCircle className="w-4 h-4 text-green-400" />;
-      case "lost": return <XCircle className="w-4 h-4 text-red-400" />;
-      case "delivery": return <Clock className="w-4 h-4 text-blue-400" />;
-      default: return <AlertCircle className="w-4 h-4 text-white/40" />;
-    }
-  };
-
-  const getWarrantyColor = (status: string | null) => {
-    switch (status) {
-      case "active": return "text-green-400 border-green-400/30";
-      case "expired": return "text-red-400 border-red-400/30";
-      default: return "text-white/40 border-white/10";
-    }
+  const renderInteractionTable = (interactions: LookupInteraction[], phases: LookupPhase[]) => {
+    return (
+      <div className="space-y-0">
+        {phases.map((phase, phaseIdx) => {
+          const phaseInteractions = interactions.filter(i => i.phase === phase.value).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+          return (
+            <div key={phase.id}>
+              {phaseIdx > 0 && <div className="border-t border-white/20 my-0" />}
+              <div className="py-3 px-2">
+                <span className="text-sm font-medium text-white/70">{isVi ? phase.labelVi : phase.labelEn}</span>
+              </div>
+              {phaseInteractions.length > 0 && (
+                <Table>
+                  <TableBody>
+                    {phaseInteractions.map((interaction, index) => (
+                      <TableRow key={interaction.id} className="border-white/10">
+                        <TableCell className="text-white/40 text-sm w-[5%]">{index + 1}</TableCell>
+                        <TableCell className="w-[15%]">
+                          <p className="text-white/70">{formatDate(interaction.date)}</p>
+                        </TableCell>
+                        <TableCell className="text-white w-[30%]">{interaction.title}</TableCell>
+                        <TableCell className="text-white/60 w-[15%]">{interaction.assignedTo || "—"}</TableCell>
+                        <TableCell className="w-[20%]">
+                          {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
+                            <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>
+                              {(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (
+                                <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />
+                              ))}
+                            </div>
+                          ) : (
+                            <span className="text-white/30">—</span>
+                          )}
+                        </TableCell>
+                        <TableCell className="w-[15%]">
+                          <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
+                            <Eye className="w-3.5 h-3.5" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              )}
+            </div>
+          );
+        })}
+        {(() => {
+          const orphaned = interactions.filter(i => !i.phase || !phases.some(p => p.value === i.phase));
+          if (orphaned.length === 0) return null;
+          return (
+            <div>
+              <div className="border-t border-white/20 my-0" />
+              <div className="py-3 px-2">
+                <span className="text-sm font-medium text-white/40">{isVi ? "Khác" : "Other"}</span>
+              </div>
+              <Table>
+                <TableBody>
+                  {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
+                    <TableRow key={interaction.id} className="border-white/10">
+                      <TableCell className="text-white/40 text-sm w-[5%]">{index + 1}</TableCell>
+                      <TableCell className="w-[15%]"><p className="text-white/70">{formatDate(interaction.date)}</p></TableCell>
+                      <TableCell className="text-white w-[30%]">{interaction.title}</TableCell>
+                      <TableCell className="text-white/60 w-[15%]">{interaction.assignedTo || "—"}</TableCell>
+                      <TableCell className="w-[20%]">
+                        {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
+                          <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>{(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (<img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />))}</div>
+                        ) : (<span className="text-white/30">—</span>)}
+                      </TableCell>
+                      <TableCell className="w-[15%]">
+                        <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white"><Eye className="w-3.5 h-3.5" /></Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          );
+        })()}
+        {interactions.length === 0 && phases.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-white/30 font-light">{isVi ? "Chưa có nhật ký" : "No logs yet"}</p>
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -164,10 +333,10 @@ export default function Lookup() {
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="max-w-3xl mx-auto mb-16">
           <h1 className="text-4xl md:text-5xl font-light text-white mb-4 tracking-wide text-center">
-            {language === "vi" ? "TRA CỨU" : "LOOKUP"}
+            {isVi ? "TRA CỨU" : "LOOKUP"}
           </h1>
           <p className="text-white/60 font-light text-lg mb-10 text-center">
-            {language === "vi"
+            {isVi
               ? "Nhập số điện thoại để tra cứu tiến độ dự án, nhật ký hoạt động và thông tin bảo hành."
               : "Enter your phone number to check project progress, activity log and warranty information."}
           </p>
@@ -207,248 +376,116 @@ export default function Lookup() {
         )}
 
         {result && (
-          <div className="max-w-5xl mx-auto space-y-8 animate-in fade-in duration-500">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="border border-white/10 p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <User className="w-5 h-5 text-white/40" />
-                  <span className="text-white/40 text-xs uppercase tracking-widest">
-                    {language === "vi" ? "Khách hàng" : "Customer"}
-                  </span>
-                </div>
-                <h2 className="text-2xl font-light text-white mb-2">
+          <div className="max-w-5xl mx-auto space-y-6 animate-in fade-in duration-500">
+            <div className="border border-white/20 p-6">
+              <div className="space-y-1">
+                <h3 className="text-2xl font-light text-white">
                   {result.client.lastName} {result.client.firstName}
-                </h2>
-                <div className="flex items-center gap-3 mt-3">
-                  <span className="text-xs uppercase tracking-wider border border-white/20 px-3 py-1 text-white/60">
-                    {tierLabels[result.client.tier]?.[language] || result.client.tier}
-                  </span>
-                  <span className="text-xs uppercase tracking-wider border border-white/20 px-3 py-1 text-white/60">
-                    {stageLabels[result.client.stage]?.[language] || result.client.stage}
-                  </span>
+                </h3>
+                <div className="flex flex-wrap items-center gap-4 text-sm text-white/60 pl-0.5">
+                  {result.client.phone && <span>{result.client.phone}</span>}
+                  {result.client.phone && result.client.email && <span className="text-white/20">-</span>}
+                  {result.client.email && <span>{result.client.email}</span>}
                 </div>
-              </div>
-
-              <div className="border border-white/10 p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <Shield className="w-5 h-5 text-white/40" />
-                  <span className="text-white/40 text-xs uppercase tracking-widest">
-                    {language === "vi" ? "Bảo hành" : "Warranty"}
-                  </span>
-                </div>
-                <div className={`text-lg font-light mb-1 ${getWarrantyColor(result.client.warrantyStatus).split(' ')[0]}`}>
-                  {result.client.warrantyStatus === "active"
-                    ? (language === "vi" ? "Đang hiệu lực" : "Active")
-                    : result.client.warrantyStatus === "expired"
-                    ? (language === "vi" ? "Đã hết hạn" : "Expired")
-                    : (language === "vi" ? "Chưa có" : "None")}
-                </div>
-                {result.client.warrantyExpiry && (
-                  <p className="text-white/40 text-sm font-light">
-                    {language === "vi" ? "Hết hạn: " : "Expires: "}
-                    {formatDate(result.client.warrantyExpiry)}
-                  </p>
+                {(result.client.company || result.client.address) && (
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-white/40 pl-0.5">
+                    {result.client.company && <span>{result.client.company}</span>}
+                    {result.client.company && result.client.address && <span className="text-white/20">-</span>}
+                    {result.client.address && <span>{result.client.address}</span>}
+                  </div>
                 )}
               </div>
+            </div>
 
-              <div className="border border-white/10 p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <FileText className="w-5 h-5 text-white/40" />
-                  <span className="text-white/40 text-xs uppercase tracking-widest">
-                    {language === "vi" ? "Tổng quan" : "Overview"}
-                  </span>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <p className="text-2xl font-light text-white">{result.deals.length}</p>
-                    <p className="text-white/40 text-xs uppercase tracking-wider">
-                      {language === "vi" ? "Hợp đồng" : "Deals"}
-                    </p>
+            <div className="border border-white/20 p-6">
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-sm font-medium text-white/70 tracking-wider uppercase mb-4 pb-2 border-b border-white/10">{isVi ? "Tiến Độ Thiết Kế" : "Design Progress"}</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    {renderCircle(
+                      { label: isVi ? "Tiến Độ" : "Progress", progress: (() => { const has = !!result.client.designTimeline; return has ? Math.min(100, Math.round((designInteractions.length / result.client.designTimeline!) * 100)) : 0; })(), type: "design_progress" },
+                      designPhases, (result.client.designPhaseTargets || {}), designInteractions
+                    )}
+                    {renderCircle(
+                      { label: isVi ? "Thanh Toán" : "Payment", progress: (() => { const tx = transactions.filter(t => !t.category || t.category === "design"); const done = tx.filter(t => t.status === "completed").length; return tx.length > 0 ? Math.round((done / tx.length) * 100) : 0; })(), type: "design_payment" },
+                      [], {}, []
+                    )}
                   </div>
-                  <div>
-                    <p className="text-2xl font-light text-white">{result.interactions.length}</p>
-                    <p className="text-white/40 text-xs uppercase tracking-wider">
-                      {language === "vi" ? "Hoạt động" : "Activities"}
-                    </p>
+                </div>
+                <div>
+                  <h3 className="text-sm font-medium text-white/70 tracking-wider uppercase mb-4 pb-2 border-b border-white/10">{isVi ? "Tiến Độ Thi Công" : "Construction Progress"}</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    {renderCircle(
+                      { label: isVi ? "Tiến Độ" : "Progress", progress: (() => { const has = !!result.client.constructionTimeline; return has ? Math.min(100, Math.round((constructionInteractions.length / result.client.constructionTimeline!) * 100)) : 0; })(), type: "construction_progress" },
+                      constructionPhases, (result.client.constructionPhaseTargets || {}), constructionInteractions
+                    )}
+                    {renderCircle(
+                      { label: isVi ? "Thanh Toán" : "Payment", progress: (() => { const tx = transactions.filter(t => t.category === "construction"); const done = tx.filter(t => t.status === "completed").length; return tx.length > 0 ? Math.round((done / tx.length) * 100) : 0; })(), type: "construction_payment" },
+                      [], {}, []
+                    )}
                   </div>
                 </div>
               </div>
             </div>
 
-            <div className="border border-white/10">
-              <div className="flex border-b border-white/10">
+            <div className="border border-white/20">
+              <div className="flex border-b border-white/20 overflow-x-auto">
                 {([
-                  { key: "timeline" as const, vi: "Nhật ký", en: "Timeline", icon: Clock },
-                  { key: "deals" as const, vi: "Hợp đồng", en: "Deals", icon: Briefcase },
-                  { key: "transactions" as const, vi: "Giao dịch", en: "Transactions", icon: CreditCard },
-                ]).map(tab => (
+                  { key: "design" as const, vi: "Tiến độ thiết kế", en: "Design Progress" },
+                  { key: "construction" as const, vi: "Tiến độ thi công", en: "Construction Progress" },
+                  { key: "warranty" as const, vi: "Nhật ký bảo hành", en: "Warranty Log" },
+                ]).map((tab) => (
                   <button
                     key={tab.key}
                     onClick={() => setActiveTab(tab.key)}
-                    className={`flex items-center gap-2 px-6 py-4 text-sm font-light tracking-wider uppercase transition-colors ${
-                      activeTab === tab.key
-                        ? "text-white border-b-2 border-white -mb-[1px]"
-                        : "text-white/40 hover:text-white/70"
-                    }`}
+                    className={`flex items-center gap-2 px-5 py-3 text-sm font-light tracking-wider whitespace-nowrap transition-colors ${activeTab === tab.key ? "text-white border-b-2 border-white -mb-[1px]" : "text-white/40 hover:text-white/70"}`}
                   >
-                    <tab.icon className="w-4 h-4" />
-                    {language === "vi" ? tab.vi : tab.en}
+                    {isVi ? tab.vi : tab.en}
                   </button>
                 ))}
               </div>
 
-              <div className="p-6">
-                {activeTab === "timeline" && (
-                  <div>
-                    {result.interactions.length === 0 ? (
+              <div className="p-4">
+                {activeTab === "design" && renderInteractionTable(designInteractions, designPhases)}
+                {activeTab === "construction" && renderInteractionTable(constructionInteractions, constructionPhases)}
+                {activeTab === "warranty" && (
+                  <div className="space-y-0">
+                    {(result.warrantyLogs || []).length === 0 ? (
                       <div className="text-center py-12">
-                        <Clock className="w-10 h-10 text-white/10 mx-auto mb-3" />
-                        <p className="text-white/30 font-light">
-                          {language === "vi" ? "Chưa có hoạt động nào" : "No activities yet"}
-                        </p>
+                        <p className="text-white/30 font-light">{isVi ? "Chưa có nhật ký bảo hành" : "No warranty logs yet"}</p>
                       </div>
                     ) : (
-                      <div className="relative">
-                        <div className="absolute left-[7px] top-3 bottom-3 w-[1px] bg-white/10" />
-                        <div className="space-y-6">
-                          {result.interactions.map((interaction, idx) => (
-                            <div key={idx} className="flex gap-6 relative">
-                              <div className="relative z-10 mt-1.5">
-                                <div className="w-[15px] h-[15px] rounded-full border-2 border-white/30 bg-black" />
-                              </div>
-                              <div className="flex-1 pb-6">
-                                <div className="flex items-center gap-3 mb-1">
-                                  <span className="text-xs uppercase tracking-wider text-white/30">
-                                    {interactionTypeLabels[interaction.type]?.[language] || interaction.type}
-                                  </span>
-                                  <span className="text-white/20">·</span>
-                                  <span className="text-xs text-white/30">{formatDate(interaction.date)}</span>
-                                </div>
-                                <h4 className="text-white font-light text-base mb-1">{interaction.title}</h4>
-                                {interaction.description && (
-                                  <p className="text-white/50 text-sm font-light">{interaction.description}</p>
-                                )}
-                                {interaction.outcome && (
-                                  <div className="mt-2 flex items-start gap-2">
-                                    <ArrowRight className="w-3 h-3 text-white/30 mt-1 flex-shrink-0" />
-                                    <span className="text-white/40 text-sm font-light">{interaction.outcome}</span>
+                      <Table>
+                        <TableBody>
+                          {result.warrantyLogs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((log, index) => (
+                            <TableRow key={log.id} className="border-white/10">
+                              <TableCell className="text-white/40 text-sm w-[5%]">{index + 1}</TableCell>
+                              <TableCell className="w-[15%]">
+                                <p className="text-white/70">{formatDate(log.date)}</p>
+                              </TableCell>
+                              <TableCell className="text-white w-[25%]">{log.title}</TableCell>
+                              <TableCell className="text-white/50 w-[20%]">{log.description ? (log.description.length > 50 ? log.description.substring(0, 50) + "..." : log.description) : "—"}</TableCell>
+                              <TableCell className="text-white/60 w-[15%]">{log.assignedTo || "—"}</TableCell>
+                              <TableCell className="w-[10%]">
+                                {Array.isArray(log.attachments) && log.attachments.length > 0 ? (
+                                  <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(log.attachments as string[], 0)}>
+                                    {(log.attachments as string[]).slice(0, 3).map((url, idx) => (
+                                      <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />
+                                    ))}
                                   </div>
+                                ) : (
+                                  <span className="text-white/30">—</span>
                                 )}
-                                {interaction.nextAction && (
-                                  <div className="mt-2 border-l-2 border-white/10 pl-3">
-                                    <p className="text-white/30 text-xs uppercase tracking-wider mb-0.5">
-                                      {language === "vi" ? "Bước tiếp theo" : "Next step"}
-                                    </p>
-                                    <p className="text-white/50 text-sm font-light">{interaction.nextAction}</p>
-                                    {interaction.nextActionDate && (
-                                      <p className="text-white/30 text-xs mt-0.5">{formatDate(interaction.nextActionDate)}</p>
-                                    )}
-                                  </div>
-                                )}
-                              </div>
-                            </div>
+                              </TableCell>
+                              <TableCell className="w-[10%]">
+                                <Button variant="ghost" size="icon" onClick={() => setViewingLog(log)} className="h-8 w-8 text-white/40 hover:text-white">
+                                  <Eye className="w-3.5 h-3.5" />
+                                </Button>
+                              </TableCell>
+                            </TableRow>
                           ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {activeTab === "deals" && (
-                  <div>
-                    {result.deals.length === 0 ? (
-                      <div className="text-center py-12">
-                        <Briefcase className="w-10 h-10 text-white/10 mx-auto mb-3" />
-                        <p className="text-white/30 font-light">
-                          {language === "vi" ? "Chưa có hợp đồng nào" : "No deals yet"}
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        {result.deals.map((deal, idx) => (
-                          <div key={idx} className="border border-white/10 p-5 hover:bg-white/[0.02] transition-colors">
-                            <div className="flex items-start justify-between mb-3">
-                              <div>
-                                <h4 className="text-white font-light text-lg">{deal.title}</h4>
-                                {deal.description && (
-                                  <p className="text-white/40 text-sm font-light mt-1">{deal.description}</p>
-                                )}
-                              </div>
-                              <div className="flex items-center gap-2">
-                                {getStageIcon(deal.stage)}
-                                <span className="text-xs uppercase tracking-wider border border-white/20 px-3 py-1 text-white/60">
-                                  {dealStageLabels[deal.stage]?.[language] || deal.stage}
-                                </span>
-                              </div>
-                            </div>
-                            <div className="flex items-center gap-6 text-sm">
-                              <div>
-                                <span className="text-white/30 text-xs uppercase tracking-wider">
-                                  {language === "vi" ? "Giá trị" : "Value"}
-                                </span>
-                                <p className="text-white font-light">{formatCurrency(deal.value)}</p>
-                              </div>
-                              {deal.expectedCloseDate && (
-                                <div>
-                                  <span className="text-white/30 text-xs uppercase tracking-wider">
-                                    {language === "vi" ? "Dự kiến" : "Expected"}
-                                  </span>
-                                  <p className="text-white/60 font-light">{formatDate(deal.expectedCloseDate)}</p>
-                                </div>
-                              )}
-                              {deal.actualCloseDate && (
-                                <div>
-                                  <span className="text-white/30 text-xs uppercase tracking-wider">
-                                    {language === "vi" ? "Hoàn thành" : "Completed"}
-                                  </span>
-                                  <p className="text-white/60 font-light">{formatDate(deal.actualCloseDate)}</p>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
-
-                {activeTab === "transactions" && (
-                  <div>
-                    {result.transactions.length === 0 ? (
-                      <div className="text-center py-12">
-                        <CreditCard className="w-10 h-10 text-white/10 mx-auto mb-3" />
-                        <p className="text-white/30 font-light">
-                          {language === "vi" ? "Chưa có giao dịch nào" : "No transactions yet"}
-                        </p>
-                      </div>
-                    ) : (
-                      <div className="space-y-3">
-                        {result.transactions.map((tx, idx) => (
-                          <div key={idx} className="flex items-center justify-between border-b border-white/5 pb-3 last:border-b-0">
-                            <div className="flex items-center gap-4">
-                              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                                tx.type === "refund" ? "bg-red-500/10" : tx.type === "commission" ? "bg-yellow-500/10" : "bg-green-500/10"
-                              }`}>
-                                <CreditCard className={`w-4 h-4 ${
-                                  tx.type === "refund" ? "text-red-400" : tx.type === "commission" ? "text-yellow-400" : "text-green-400"
-                                }`} />
-                              </div>
-                              <div>
-                                <p className="text-white font-light text-sm">{tx.title}</p>
-                                {tx.description && <p className="text-white/30 text-xs font-light">{tx.description}</p>}
-                              </div>
-                            </div>
-                            <div className="text-right">
-                              <p className={`font-light ${
-                                tx.type === "refund" ? "text-red-400" : "text-white"
-                              }`}>
-                                {tx.type === "refund" ? "-" : "+"}{formatCurrency(tx.amount)}
-                              </p>
-                              <p className="text-white/30 text-xs">{formatDate(tx.paymentDate)}</p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
+                        </TableBody>
+                      </Table>
                     )}
                   </div>
                 )}
@@ -456,8 +493,96 @@ export default function Lookup() {
             </div>
           </div>
         )}
-
       </div>
+
+      <Dialog open={!!viewingLog} onOpenChange={() => setViewingLog(null)}>
+        <DialogContent className="max-w-lg bg-black border border-white/20 rounded-none">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-light">{viewingLog?.title}</DialogTitle>
+          </DialogHeader>
+          {viewingLog && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div><span className="text-white/40">{isVi ? "Ngày" : "Date"}</span><p className="text-white">{formatDate(viewingLog.date)}</p></div>
+                <div><span className="text-white/40">{isVi ? "Phụ trách" : "Assigned To"}</span><p className="text-white">{viewingLog.assignedTo || "—"}</p></div>
+                {viewingLog.status && <div><span className="text-white/40">{isVi ? "Trạng thái" : "Status"}</span><p className="text-white">{viewingLog.status}</p></div>}
+              </div>
+              {viewingLog.description && (
+                <div><span className="text-white/40 text-sm">{isVi ? "Mô tả" : "Description"}</span><p className="text-white text-sm mt-1">{viewingLog.description}</p></div>
+              )}
+              {Array.isArray(viewingLog.attachments) && viewingLog.attachments.length > 0 && (
+                <div>
+                  <span className="text-white/40 text-sm">{isVi ? "Tệp đính kèm" : "Attachments"}</span>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {(viewingLog.attachments as string[]).map((url, idx) => (
+                      <div key={idx} onClick={() => openLightbox(viewingLog.attachments as string[], idx)} className="cursor-pointer">
+                        <img src={url} alt="" className="w-20 h-20 object-cover border border-white/10 hover:border-white/40 transition-colors" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={!!viewingInteraction} onOpenChange={() => setViewingInteraction(null)}>
+        <DialogContent className="max-w-lg bg-black border border-white/20 rounded-none">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-light">{viewingInteraction?.title}</DialogTitle>
+          </DialogHeader>
+          {viewingInteraction && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div><span className="text-white/40">{isVi ? "Ngày" : "Date"}</span><p className="text-white">{formatDate(viewingInteraction.date)}</p></div>
+                <div><span className="text-white/40">{isVi ? "Phụ trách" : "Assigned To"}</span><p className="text-white">{viewingInteraction.assignedTo || "—"}</p></div>
+              </div>
+              {viewingInteraction.description && (
+                <div><span className="text-white/40 text-sm">{isVi ? "Mô tả" : "Description"}</span><p className="text-white text-sm mt-1">{viewingInteraction.description}</p></div>
+              )}
+              {viewingInteraction.outcome && (
+                <div><span className="text-white/40 text-sm">{isVi ? "Kết quả" : "Outcome"}</span><p className="text-white text-sm mt-1">{viewingInteraction.outcome}</p></div>
+              )}
+              {Array.isArray(viewingInteraction.attachments) && viewingInteraction.attachments.length > 0 && (
+                <div>
+                  <span className="text-white/40 text-sm">{isVi ? "Tệp đính kèm" : "Attachments"}</span>
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {(viewingInteraction.attachments as string[]).map((url, idx) => (
+                      <div key={idx} onClick={() => openLightbox(viewingInteraction.attachments as string[], idx)} className="cursor-pointer">
+                        <img src={url} alt="" className="w-20 h-20 object-cover border border-white/10 hover:border-white/40 transition-colors" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {lightboxImages.length > 0 && createPortal(
+        <div className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center overflow-hidden" onClick={closeLightbox} onWheel={(e) => e.preventDefault()} onTouchMove={(e) => e.preventDefault()}>
+          <button type="button" onClick={(e) => { e.stopPropagation(); closeLightbox(); }} className="absolute top-4 right-4 text-white/60 hover:text-white z-10 p-2">
+            <X className="w-6 h-6" />
+          </button>
+          {lightboxImages.length > 1 && (
+            <button type="button" onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length); }} className="absolute left-4 text-white/60 hover:text-white z-10 p-2">
+              <ChevronLeft className="w-8 h-8" />
+            </button>
+          )}
+          <img src={lightboxImages[lightboxIndex]} alt="" className="max-w-[90vw] max-h-[90vh] object-contain" onClick={(e) => e.stopPropagation()} />
+          {lightboxImages.length > 1 && (
+            <button type="button" onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex + 1) % lightboxImages.length); }} className="absolute right-4 text-white/60 hover:text-white z-10 p-2">
+              <ChevronRight className="w-8 h-8" />
+            </button>
+          )}
+          <div className="absolute bottom-4 text-white/50 text-sm">
+            {lightboxIndex + 1} / {lightboxImages.length}
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 }

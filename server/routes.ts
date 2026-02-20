@@ -473,31 +473,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const clientInteractions = await storage.getInteractions(client.id);
-      const clientDeals = await storage.getDeals({ clientId: client.id });
       const clientTransactions = await storage.getTransactions(client.id);
+      const clientWarrantyLogs = await storage.getWarrantyLogs(client.id);
+      const designPhases = await storage.getDesignPhases({});
+      const constructionPhases = await storage.getConstructionPhases({});
 
       const safeClient = {
         firstName: client.firstName,
         lastName: client.lastName,
+        phone: client.phone,
+        email: client.email,
+        company: client.company,
+        address: client.address,
         stage: client.stage,
         tier: client.tier,
         warrantyStatus: client.warrantyStatus,
         warrantyExpiry: client.warrantyExpiry,
+        designTimeline: client.designTimeline,
+        constructionTimeline: client.constructionTimeline,
+        designPhaseTargets: client.designPhaseTargets,
+        constructionPhaseTargets: client.constructionPhaseTargets,
       };
-
-      const safeDeals = clientDeals.map(d => ({
-        title: d.title,
-        stage: d.stage,
-        value: d.value,
-        expectedCloseDate: d.expectedCloseDate,
-        actualCloseDate: d.actualCloseDate,
-        description: d.description,
-        createdAt: d.createdAt,
-      }));
 
       const safeInteractions = clientInteractions
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
         .map(i => ({
+          id: i.id,
           type: i.type,
           title: i.title,
           description: i.description,
@@ -505,22 +506,40 @@ export async function registerRoutes(app: Express): Promise<Server> {
           outcome: i.outcome,
           nextAction: i.nextAction,
           nextActionDate: i.nextActionDate,
+          phase: (i as any).phase,
+          attachments: (i as any).attachments,
+          assignedTo: (i as any).assignedTo,
+          category: (i as any).category,
         }));
 
       const safeTransactions = clientTransactions.map(t => ({
+        id: t.id,
         title: t.title,
         description: t.description,
         amount: t.amount,
         type: t.type,
         status: t.status,
         paymentDate: t.paymentDate,
+        category: (t as any).category,
+      }));
+
+      const safeWarrantyLogs = clientWarrantyLogs.map((w: any) => ({
+        id: w.id,
+        title: w.title,
+        description: w.description,
+        date: w.date,
+        assignedTo: w.assignedTo,
+        status: w.status,
+        attachments: w.attachments,
       }));
 
       res.json({
         client: safeClient,
-        deals: safeDeals,
         interactions: safeInteractions,
         transactions: safeTransactions,
+        warrantyLogs: safeWarrantyLogs,
+        designPhases,
+        constructionPhases,
       });
     } catch (error) {
       res.status(500).json({ message: "Đã xảy ra lỗi khi tra cứu" });
