@@ -1549,12 +1549,13 @@ export default function LookupAdminTab() {
                     <Table>
                       <TableHeader>
                         <TableRow className="border-white/10">
-                          <TableHead className="text-white/60 w-[15%]">{isVi ? "Ngày" : "Date"}</TableHead>
-                          <TableHead className="text-white/60 w-[20%]">{isVi ? "Tiêu đề" : "Title"}</TableHead>
-                          <TableHead className="text-white/60 w-[12%]">{isVi ? "Phụ trách" : "Assigned To"}</TableHead>
-                          <TableHead className="text-white/60 w-[18%]">{isVi ? "Đính kèm" : "Attachments"}</TableHead>
-                          <TableHead className="text-white/60 w-[12%] text-right">{isVi ? "Trạng thái" : "Status"}</TableHead>
-                          <TableHead className="text-white/60 w-[10%]">{isVi ? "Thao tác" : "Actions"}</TableHead>
+                          <TableHead className="text-white/60 w-[12%]">{isVi ? "Ngày" : "Date"}</TableHead>
+                          <TableHead className="text-white/60 w-[15%]">{isVi ? "Tiêu đề" : "Title"}</TableHead>
+                          <TableHead className="text-white/60 w-[18%]">{isVi ? "Mô tả" : "Description"}</TableHead>
+                          <TableHead className="text-white/60 w-[10%]">{isVi ? "Phụ trách" : "Assigned To"}</TableHead>
+                          <TableHead className="text-white/60 w-[15%]">{isVi ? "Đính kèm" : "Attachments"}</TableHead>
+                          <TableHead className="text-white/60 w-[10%] text-right">{isVi ? "Trạng thái" : "Status"}</TableHead>
+                          <TableHead className="text-white/60 w-[8%]">{isVi ? "Thao tác" : "Actions"}</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -1562,6 +1563,7 @@ export default function LookupAdminTab() {
                           <TableRow key={log.id} className="border-white/10">
                             <TableCell className="text-white/70">{formatDate(log.date)}</TableCell>
                             <TableCell className="text-white">{log.title}</TableCell>
+                            <TableCell className="text-white/60 text-sm">{log.description ? (log.description.length > 50 ? log.description.slice(0, 50) + "…" : log.description) : "—"}</TableCell>
                             <TableCell className="text-white/60">{log.assignedTo || "—"}</TableCell>
                             <TableCell>
                               {Array.isArray(log.attachments) && log.attachments.length > 0 ? (
