@@ -10103,12 +10103,13 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 ))}
               </div>
             ) : (
-              <Table className="table-fixed [&_td]:py-2 [&_th]:py-2">
+              <div className="overflow-x-auto">
+              <Table className="min-w-[700px] [&_td]:py-2 [&_th]:py-2">
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[50px] whitespace-nowrap text-center">{language === 'vi' ? 'STT' : 'NO'}</TableHead>
                     <TableHead className="w-[120px] whitespace-nowrap text-left">{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
-                    <TableHead className="min-w-[120px] whitespace-nowrap text-left">{language === 'vi' ? 'Tiêu Đề' : 'Title'}</TableHead>
+                    <TableHead className="whitespace-nowrap text-left">{language === 'vi' ? 'Tiêu Đề' : 'Title'}</TableHead>
                     <TableHead className="w-[80px] whitespace-nowrap text-left">{language === 'vi' ? 'Ngôn Ngữ' : 'Lang'}</TableHead>
                     <TableHead className="w-[120px] whitespace-nowrap text-left">{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
                     <TableHead className="w-[120px] whitespace-nowrap text-left">{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
@@ -10253,6 +10254,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   })()}
                 </TableBody>
               </Table>
+              </div>
             )}
             {uniqueArticleSlugs.length > 0 && (
               <div className="p-4 border-t border-white/10">
