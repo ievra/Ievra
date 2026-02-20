@@ -280,7 +280,7 @@ export default function About() {
               {(aboutContent?.missionVisionImageData || aboutContent?.missionVisionImage) && (
                 <div className="relative overflow-hidden bg-white/5 aspect-[4/5] max-h-[600px]">
                   <img
-                    src={aboutContent.missionVisionImageData || aboutContent.missionVisionImage}
+                    src={aboutContent.missionVisionImageData || aboutContent.missionVisionImage || undefined}
                     alt={language === "vi" ? "Sứ mệnh và Tầm nhìn" : "Mission and Vision"}
                     className="w-full h-full object-cover"
                     onError={(e) => {

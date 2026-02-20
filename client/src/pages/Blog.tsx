@@ -375,13 +375,13 @@ export default function Blog() {
 
         {/* Search Box with Year Filter */}
         <div className="max-w-2xl mx-auto mb-12">
-          <div className="flex items-end gap-8 pb-4">
+          <div className="flex items-end gap-8 pb-4 border-b border-white/20">
             <Input
               type="text"
               placeholder={searchPlaceholder}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="bg-transparent text-white placeholder-white/60 px-0 py-0 text-lg font-light rounded-none focus-visible:ring-0 flex-1"
+              className="bg-transparent text-white placeholder-white/60 px-0 py-0 text-lg font-light rounded-none focus-visible:ring-0 border-0 flex-1"
               data-testid="input-search"
             />
             {availableYears.length > 0 && (
@@ -417,10 +417,10 @@ export default function Blog() {
             <button
               key={category.value}
               onClick={() => setActiveCategory(category.value)}
-              className={`text-sm font-light tracking-widest uppercase transition-colors duration-300 ${
+              className={`text-sm font-light tracking-widest uppercase transition-all duration-300 pb-1 border-b-2 ${
                 activeCategory === category.value 
-                  ? 'text-white' 
-                  : 'text-white/60 hover:text-white'
+                  ? 'text-white border-white' 
+                  : 'text-white/60 hover:text-white border-transparent hover:border-white/30'
               }`}
               data-testid={`filter-${category.value}`}
             >
