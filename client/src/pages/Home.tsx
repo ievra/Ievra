@@ -596,7 +596,7 @@ export default function Home() {
                 }
               </h2>
             </div>
-            <div className="flex items-start justify-between">
+            <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
               <div className="max-w-4xl">
                 <p className="text-2xl md:text-3xl font-light text-foreground leading-relaxed scroll-animate">
                   {language === "vi"
@@ -605,7 +605,7 @@ export default function Home() {
                   }
                 </p>
               </div>
-              <div className="flex-shrink-0 ml-8">
+              <div className="flex-shrink-0 sm:ml-8">
                 <Button
                   variant="ghost"
                   size="default"
@@ -757,7 +757,7 @@ export default function Home() {
                 }
               </h2>
             </div>
-            <div className="flex items-start justify-between">
+            <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
               <div className="max-w-4xl">
                 <p className="text-2xl md:text-3xl font-light text-foreground leading-relaxed scroll-animate">
                   {language === "vi"
@@ -766,7 +766,7 @@ export default function Home() {
                   }
                 </p>
               </div>
-              <div className="flex-shrink-0 ml-8">
+              <div className="flex-shrink-0 sm:ml-8">
                 <Button
                   variant="ghost"
                   size="default"
@@ -963,7 +963,7 @@ export default function Home() {
                           )
                         }
                       >
-                        <div className="flex items-center gap-8">
+                        <div className="flex items-center gap-3 sm:gap-8">
                           <span className="text-white/40 font-light text-lg">[{stepNumberPadded}]</span>
                           <h3 className="text-xl md:text-2xl font-light text-white">
                             {title}
@@ -1075,7 +1075,7 @@ export default function Home() {
               }
             </h2>
           </div>
-          <div className="flex items-start justify-between">
+          <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
             <div className="max-w-4xl">
               <p
                 className="text-2xl md:text-3xl font-light text-foreground leading-relaxed scroll-animate"
@@ -1175,7 +1175,7 @@ export default function Home() {
                 }
               </h2>
             </div>
-            <div className="flex items-start justify-between">
+            <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
               <div className="max-w-4xl">
                 <p
                   className="text-2xl md:text-3xl font-light text-foreground leading-relaxed scroll-animate"
@@ -1400,7 +1400,7 @@ export default function Home() {
                       )
                     }
                   >
-                    <div className="flex items-center gap-8">
+                    <div className="flex items-center gap-3 sm:gap-8">
                       <span className="text-white/40 font-light text-lg">
                         [{String(index + 1).padStart(2, "0")}]
                       </span>

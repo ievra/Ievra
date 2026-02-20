@@ -67,7 +67,7 @@ export default function About() {
   return (
     <main className="ml-16">
       {/* Hero Section */}
-      <section className="relative h-screen min-h-[600px] bg-black overflow-hidden -ml-16">
+      <section className="relative h-screen min-h-[600px] bg-black overflow-hidden lg:-ml-16">
         <div className="relative h-screen">
           {/* Background Images Slider */}
           {aboutContent?.heroImages && aboutContent.heroImages.length > 0 ? (
@@ -124,7 +124,7 @@ export default function About() {
       </section>
       {/* Principles Section */}
       {principles.length > 0 && aboutContent && (
-        <section className="py-20 bg-black -ml-16">
+        <section className="py-20 bg-black lg:-ml-16">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-16">
               <h2 className="text-sm font-light tracking-widest text-white/60 uppercase mb-4">
@@ -152,7 +152,7 @@ export default function About() {
       )}
       {/* Architecture Showcase Section */}
       {((aboutContent?.showcaseBannerImageData || aboutContent?.showcaseBannerImage) || showcaseServices.length > 0) && (
-        <section className="relative h-[80vh] min-h-[600px] bg-black overflow-hidden -ml-16">
+        <section className="relative h-[80vh] min-h-[600px] bg-black overflow-hidden lg:-ml-16">
           {(aboutContent?.showcaseBannerImageData || aboutContent?.showcaseBannerImage) && (
             <div
               className="absolute inset-0 bg-cover bg-center"
@@ -197,7 +197,7 @@ export default function About() {
       )}
       {/* Stats Section */}
       {aboutContent && (
-        <section className="py-20 bg-black -ml-16">
+        <section className="py-20 bg-black lg:-ml-16">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               <div className="text-center space-y-2">
@@ -238,7 +238,7 @@ export default function About() {
       )}
       {/* Company History Section */}
       {aboutContent?.historyContentEn && aboutContent?.historyContentVi && (
-        <section className="py-20 bg-black -ml-16">
+        <section className="py-20 bg-black lg:-ml-16">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-12">
               <h2 className="text-sm font-light tracking-widest text-white/60 uppercase mb-4">
@@ -273,7 +273,7 @@ export default function About() {
       )}
       {/* Mission & Vision Section - Image LEFT, Content RIGHT */}
       {(aboutContent?.missionContentEn || aboutContent?.visionContentEn) && (
-        <section className="py-20 bg-black -ml-16">
+        <section className="py-20 bg-black lg:-ml-16">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
               {/* Image LEFT */}
@@ -321,7 +321,7 @@ export default function About() {
       )}
       {/* Core Values Section */}
       {coreValues.length > 0 && aboutContent && (
-        <section className="py-20 bg-black -ml-16">
+        <section className="py-20 bg-black lg:-ml-16">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-16">
               <h2 className="text-sm font-light tracking-widest text-white/60 uppercase mb-4">
@@ -349,7 +349,7 @@ export default function About() {
       )}
       {/* Team Members Section */}
       {teamMembers.length > 0 && aboutContent && (
-        <section className="py-20 bg-black -ml-16 overflow-hidden">
+        <section className="py-20 bg-black lg:-ml-16 overflow-hidden">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-16">
               <h2 className="text-sm font-light tracking-widest text-white/60 uppercase mb-4">
@@ -420,10 +420,10 @@ export default function About() {
                         isExpanded ? 'max-w-[800px] opacity-100' : 'max-w-0 opacity-0'
                       }`}
                     >
-                      <div className="w-[800px] pl-12 pr-8 py-8">
-                        <div className="flex gap-8 items-start">
+                      <div className="w-[800px] max-w-[calc(100vw-120px)] pl-6 md:pl-12 pr-4 md:pr-8 py-8">
+                        <div className="flex gap-4 md:gap-8 items-start">
                           {(member.imageData || member.image) && (
-                            <div className="flex-shrink-0 w-64">
+                            <div className="flex-shrink-0 w-40 md:w-64">
                               <div className="aspect-[9/16] overflow-hidden bg-white/10">
                                 <img 
                                   src={member.imageData || member.image} 
@@ -484,7 +484,7 @@ export default function About() {
       )}
       {/* Process Section */}
       {processSteps.length > 0 && aboutContent && (
-        <section className="py-20 bg-black -ml-16">
+        <section className="py-20 bg-black lg:-ml-16">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-16">
               <h2 className="text-sm font-light tracking-widest text-white/60 uppercase mb-4">

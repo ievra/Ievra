@@ -334,7 +334,7 @@ export default function Contact() {
                       )
                     }
                   >
-                    <div className="flex items-center gap-8">
+                    <div className="flex items-center gap-3 sm:gap-8">
                       <span className="text-white/40 font-light text-lg">
                         [{String(index + 1).padStart(2, "0")}]
                       </span>

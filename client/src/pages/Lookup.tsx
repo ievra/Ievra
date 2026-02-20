@@ -530,7 +530,7 @@ export default function Lookup() {
             </div>
 
             <div className="border border-white/20">
-              <div className="flex border-b border-white/20 overflow-x-auto">
+              <div className="flex flex-wrap border-b border-white/20">
                 {([
                   { key: "design" as const, vi: "Tiến độ thiết kế", en: "Design Progress" },
                   { key: "construction" as const, vi: "Tiến độ thi công", en: "Construction Progress" },

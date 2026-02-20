@@ -214,7 +214,7 @@ export default function Portfolio() {
     const pageNumbers = getPageNumbers();
 
     return (
-      <div className="flex items-center justify-center gap-4 mt-16">
+      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4 mt-16">
         {/* First page button */}
         <button
           onClick={() => setCurrentPage(1)}
@@ -357,7 +357,7 @@ export default function Portfolio() {
         </div>
 
         {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-8 mb-12">
+        <div className="flex flex-wrap justify-center gap-4 sm:gap-8 mb-12">
           {categories.map((category) => (
             <button
               key={category.value}
