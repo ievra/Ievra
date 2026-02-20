@@ -546,6 +546,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/lookup/verify", async (req, res) => {
+    try {
+      const { phone, identityCard } = req.body;
+      if (!phone || !identityCard) {
+        return res.status(400).json({ message: "Vui lòng nhập đầy đủ thông tin" });
+      }
+      const normalizedPhone = phone.trim().replace(/[\s\-\.]/g, '');
+      const allClients = await storage.getClients();
+      const client = allClients.find(c => {
+        if (!c.phone) return false;
+        const clientPhone = c.phone.replace(/[\s\-\.]/g, '');
+        return clientPhone === normalizedPhone || clientPhone.endsWith(normalizedPhone) || normalizedPhone.endsWith(clientPhone);
+      });
+      if (!client) {
+        return res.status(404).json({ message: "Không tìm thấy khách hàng" });
+      }
+      if (!client.identityCard) {
+        return res.status(400).json({ message: "Chưa có thông tin CCCD/CMND trong hệ thống" });
+      }
+      const normalizedInput = identityCard.trim().replace(/[\s\-\.]/g, '');
+      const normalizedStored = client.identityCard.trim().replace(/[\s\-\.]/g, '');
+      if (normalizedInput !== normalizedStored) {
+        return res.status(403).json({ message: "CCCD/CMND không khớp" });
+      }
+      res.json({ verified: true });
+    } catch (error) {
+      res.status(500).json({ message: "Đã xảy ra lỗi khi xác minh" });
+    }
+  });
+
   // Clients routes
   app.get("/api/clients", async (req, res) => {
     try {

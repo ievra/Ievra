@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { Search, ArrowRight, Clock, ChevronLeft, ChevronRight, X, Eye } from "lucide-react";
+import { Search, ArrowRight, Clock, ChevronLeft, ChevronRight, X, Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableRow, TableCell } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useToast } from "@/hooks/use-toast";
 
 interface LookupPhase {
   id: string;
@@ -90,6 +91,11 @@ export default function Lookup() {
   const [lightboxIndex, setLightboxIndex] = useState(0);
   const [viewingLog, setViewingLog] = useState<LookupWarrantyLog | null>(null);
   const [viewingInteraction, setViewingInteraction] = useState<LookupInteraction | null>(null);
+  const [infoRevealed, setInfoRevealed] = useState(false);
+  const [showCccdDialog, setShowCccdDialog] = useState(false);
+  const [cccdInput, setCccdInput] = useState("");
+  const [verifying, setVerifying] = useState(false);
+  const { toast } = useToast();
 
   const openLightbox = (images: string[], index: number) => {
     setLightboxImages(images);
@@ -145,6 +151,7 @@ export default function Lookup() {
     setError(null);
     setResult(null);
     setSearched(true);
+    setInfoRevealed(false);
     try {
       const res = await fetch(`/api/lookup?phone=${encodeURIComponent(phone.trim())}`);
       const data = await res.json();
@@ -157,6 +164,30 @@ export default function Lookup() {
       setError(isVi ? "Đã xảy ra lỗi. Vui lòng thử lại." : "An error occurred. Please try again.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleVerifyCccd = async () => {
+    if (!cccdInput.trim() || !phone.trim()) return;
+    setVerifying(true);
+    try {
+      const res = await fetch("/api/lookup/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone: phone.trim(), identityCard: cccdInput.trim() }),
+      });
+      const data = await res.json();
+      if (res.ok && data.verified) {
+        setInfoRevealed(true);
+        setShowCccdDialog(false);
+        toast({ title: isVi ? "Xác minh thành công" : "Verification successful" });
+      } else {
+        toast({ title: data.message || (isVi ? "Xác minh thất bại" : "Verification failed"), variant: "destructive" });
+      }
+    } catch {
+      toast({ title: isVi ? "Đã xảy ra lỗi" : "An error occurred", variant: "destructive" });
+    } finally {
+      setVerifying(false);
     }
   };
 
@@ -379,18 +410,35 @@ export default function Lookup() {
           <div className="max-w-7xl mx-auto space-y-6 animate-in fade-in duration-500">
             <div className="border border-white/20 p-6">
               <div className="space-y-1">
-                <h3 className="text-2xl font-light text-white">
-                  {(() => {
-                    const last = result.client.lastName || "";
-                    const first = result.client.firstName || "";
-                    const nameParts = `${last} ${first}`.trim().split(" ");
-                    return nameParts.map((p, i) => i === 0 ? p : "*".repeat(p.length)).join(" ");
-                  })()}
-                </h3>
+                <div className="flex items-center gap-3">
+                  <h3 className="text-2xl font-light text-white">
+                    {infoRevealed ? `${result.client.lastName} ${result.client.firstName}` : (() => {
+                      const last = result.client.lastName || "";
+                      const first = result.client.firstName || "";
+                      const nameParts = `${last} ${first}`.trim().split(" ");
+                      return nameParts.map((p, i) => i === 0 ? p : "*".repeat(p.length)).join(" ");
+                    })()}
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (infoRevealed) {
+                        setInfoRevealed(false);
+                      } else {
+                        setShowCccdDialog(true);
+                        setCccdInput("");
+                      }
+                    }}
+                    className="text-white/40 hover:text-white transition-colors p-1"
+                    title={infoRevealed ? (isVi ? "Ẩn thông tin" : "Hide info") : (isVi ? "Hiển thị thông tin" : "Show info")}
+                  >
+                    {infoRevealed ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
                 <div className="flex flex-wrap items-center gap-4 text-sm text-white/60 pl-0.5">
-                  {result.client.phone && <span>{result.client.phone.slice(0, 3) + "*".repeat(Math.max(0, result.client.phone.length - 3))}</span>}
+                  {result.client.phone && <span>{infoRevealed ? result.client.phone : result.client.phone.slice(0, 3) + "*".repeat(Math.max(0, result.client.phone.length - 3))}</span>}
                   {result.client.phone && result.client.email && <span className="text-white/20">-</span>}
-                  {result.client.email && <span>{(() => {
+                  {result.client.email && <span>{infoRevealed ? result.client.email : (() => {
                     const atIdx = result.client.email.indexOf("@");
                     if (atIdx <= 0) return "*".repeat(result.client.email.length);
                     const local = result.client.email.slice(0, atIdx);
@@ -400,9 +448,9 @@ export default function Lookup() {
                 </div>
                 {(result.client.company || result.client.address) && (
                   <div className="flex flex-wrap items-center gap-4 text-sm text-white/40 pl-0.5">
-                    {result.client.company && <span>{"*".repeat(16)}</span>}
+                    {result.client.company && <span>{infoRevealed ? result.client.company : "*".repeat(16)}</span>}
                     {result.client.company && result.client.address && <span className="text-white/20">-</span>}
-                    {result.client.address && <span>{"*".repeat(16)}</span>}
+                    {result.client.address && <span>{infoRevealed ? result.client.address : "*".repeat(16)}</span>}
                   </div>
                 )}
               </div>
@@ -505,6 +553,41 @@ export default function Lookup() {
           </div>
         )}
       </div>
+
+      <Dialog open={showCccdDialog} onOpenChange={setShowCccdDialog}>
+        <DialogContent className="max-w-sm bg-black border border-white/20 rounded-none">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-light">{isVi ? "Xác minh danh tính" : "Verify Identity"}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-white/60">{isVi ? "Nhập số CCCD/CMND trên hợp đồng để xem toàn bộ thông tin" : "Enter ID card number from your contract to view full information"}</p>
+            <Input
+              value={cccdInput}
+              onChange={(e) => setCccdInput(e.target.value)}
+              placeholder={isVi ? "Nhập số CCCD/CMND" : "Enter ID card number"}
+              className="bg-transparent border-white/30 rounded-none"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && cccdInput.trim()) {
+                  e.preventDefault();
+                  handleVerifyCccd();
+                }
+              }}
+            />
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setShowCccdDialog(false)} className="rounded-none border-white/30">
+                {isVi ? "Hủy" : "Cancel"}
+              </Button>
+              <Button
+                onClick={handleVerifyCccd}
+                disabled={verifying || !cccdInput.trim()}
+                className="rounded-none"
+              >
+                {verifying ? (isVi ? "Đang xác minh..." : "Verifying...") : (isVi ? "Xác minh" : "Verify")}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={!!viewingLog} onOpenChange={() => setViewingLog(null)}>
         <DialogContent className="max-w-lg bg-black border border-white/20 rounded-none">
