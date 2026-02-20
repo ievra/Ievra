@@ -3851,9 +3851,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     }
     return (
       <div className="space-y-6 p-6">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <h2 className="text-2xl font-sans font-light min-h-[36px]">{language === 'vi' ? 'Quản Lý Dự Án' : 'Projects Management'}</h2>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-shrink-0">
             <Dialog open={isProjectDialogOpen} onOpenChange={setIsProjectDialogOpen}>
               <DialogTrigger asChild>
                 <Button data-testid="button-add-project" className="h-10 px-4 min-w-[140px] justify-center">
@@ -4775,8 +4775,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           </DialogContent>
         </Dialog>
 
-        <div className="flex items-center gap-4">
-          <div className="relative flex-1">
+        <div className="flex flex-col gap-3">
+          <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
             <Input
               value={projectSearchQuery}
@@ -4785,39 +4785,41 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
             />
           </div>
-          <Select value={projectCategoryFilter} onValueChange={(v) => { setProjectCategoryFilter(v); setProjectsPage(1); }}>
-            <SelectTrigger className="w-[180px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
-              <SelectValue placeholder={language === 'vi' ? 'Tất cả danh mục' : 'All categories'} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{language === 'vi' ? 'Tất cả danh mục' : 'All categories'}</SelectItem>
-              {categories.filter(c => c.type === 'project' && c.active).map(cat => (
-                <SelectItem key={cat.id} value={cat.slug}>{language === 'vi' && cat.nameVi ? cat.nameVi : cat.name}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={projectYearFilter} onValueChange={(v) => { setProjectYearFilter(v); setProjectsPage(1); }}>
-            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
-              <SelectValue placeholder={language === 'vi' ? 'Tất cả các năm' : 'All years'} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{language === 'vi' ? 'Tất cả các năm' : 'All years'}</SelectItem>
-              {projectYears.map(year => (
-                <SelectItem key={year} value={String(year)}>{year}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={projectStatusFilter} onValueChange={(v) => { setProjectStatusFilter(v); setProjectsPage(1); }}>
-            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
-              <SelectValue placeholder={language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'}</SelectItem>
-              <SelectItem value="draft">{language === 'vi' ? 'Bản Nháp' : 'Draft'}</SelectItem>
-              <SelectItem value="published">{language === 'vi' ? 'Đã Đăng' : 'Published'}</SelectItem>
-              <SelectItem value="archived">{language === 'vi' ? 'Lưu Trữ' : 'Archived'}</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="grid grid-cols-3 gap-2">
+            <Select value={projectCategoryFilter} onValueChange={(v) => { setProjectCategoryFilter(v); setProjectsPage(1); }}>
+              <SelectTrigger className="w-full bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+                <SelectValue placeholder={language === 'vi' ? 'Tất cả danh mục' : 'All categories'} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{language === 'vi' ? 'Tất cả danh mục' : 'All categories'}</SelectItem>
+                {categories.filter(c => c.type === 'project' && c.active).map(cat => (
+                  <SelectItem key={cat.id} value={cat.slug}>{language === 'vi' && cat.nameVi ? cat.nameVi : cat.name}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={projectYearFilter} onValueChange={(v) => { setProjectYearFilter(v); setProjectsPage(1); }}>
+              <SelectTrigger className="w-full bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+                <SelectValue placeholder={language === 'vi' ? 'Tất cả các năm' : 'All years'} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{language === 'vi' ? 'Tất cả các năm' : 'All years'}</SelectItem>
+                {projectYears.map(year => (
+                  <SelectItem key={year} value={String(year)}>{year}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={projectStatusFilter} onValueChange={(v) => { setProjectStatusFilter(v); setProjectsPage(1); }}>
+              <SelectTrigger className="w-full bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+                <SelectValue placeholder={language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'}</SelectItem>
+                <SelectItem value="draft">{language === 'vi' ? 'Bản Nháp' : 'Draft'}</SelectItem>
+                <SelectItem value="published">{language === 'vi' ? 'Đã Đăng' : 'Published'}</SelectItem>
+                <SelectItem value="archived">{language === 'vi' ? 'Lưu Trữ' : 'Archived'}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         <Card>
