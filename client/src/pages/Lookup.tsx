@@ -181,7 +181,7 @@ export default function Lookup() {
     const gap = circ - filled;
     return (
       <div className="flex flex-col items-center p-4">
-        <div className="relative w-full aspect-square max-w-[180px]">
+        <div className="relative w-full aspect-square max-w-[240px]">
           <svg viewBox={`0 0 ${vb} ${vb}`} className="w-full h-full transform -rotate-90">
             <circle cx={vb/2} cy={vb/2} r={r} fill="none" stroke="#555" strokeWidth={sw} />
             {item.progress > 0 && (
@@ -189,7 +189,7 @@ export default function Lookup() {
             )}
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-2xl font-medium text-white/70">{item.progress}%</span>
+            <span className="text-3xl font-medium text-white/70">{item.progress}%</span>
           </div>
         </div>
         <p className="text-sm text-white/50 font-light mt-3">{item.label}</p>
@@ -376,7 +376,7 @@ export default function Lookup() {
         )}
 
         {result && (
-          <div className="max-w-5xl mx-auto space-y-6 animate-in fade-in duration-500">
+          <div className="max-w-7xl mx-auto space-y-6 animate-in fade-in duration-500">
             <div className="border border-white/20 p-6">
               <div className="space-y-1">
                 <h3 className="text-2xl font-light text-white">
