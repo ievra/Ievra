@@ -10895,13 +10895,14 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 <p className="text-muted-foreground">{language === 'vi' ? 'Tạo người dùng admin đầu tiên để bắt đầu.' : 'Create your first admin user to get started.'}</p>
               </div>
             ) : (
-              <Table className="table-fixed">
+              <div className="overflow-x-auto">
+              <Table className="min-w-[650px]">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[150px] whitespace-nowrap">{language === 'vi' ? 'Tên Đăng Nhập' : 'Username'}</TableHead>
-                    <TableHead className="w-[160px] whitespace-nowrap">{language === 'vi' ? 'Tên Hiển Thị' : 'Display Name'}</TableHead>
-                    <TableHead className="w-[120px] whitespace-nowrap">{language === 'vi' ? 'Vai Trò' : 'Role'}</TableHead>
-                    <TableHead>{language === 'vi' ? 'Quyền Hạn' : 'Permissions'}</TableHead>
+                    <TableHead className="w-[130px] whitespace-nowrap">{language === 'vi' ? 'Tên Đăng Nhập' : 'Username'}</TableHead>
+                    <TableHead className="w-[130px] whitespace-nowrap">{language === 'vi' ? 'Tên Hiển Thị' : 'Display Name'}</TableHead>
+                    <TableHead className="w-[100px] whitespace-nowrap">{language === 'vi' ? 'Vai Trò' : 'Role'}</TableHead>
+                    <TableHead className="whitespace-nowrap">{language === 'vi' ? 'Quyền Hạn' : 'Permissions'}</TableHead>
                     <TableHead className="w-[100px] text-right whitespace-nowrap"></TableHead>
                   </TableRow>
                 </TableHeader>
@@ -10987,6 +10988,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   ))}
                 </TableBody>
               </Table>
+              </div>
             )}
           </CardContent>
         </Card>
