@@ -792,124 +792,36 @@ export default function LookupAdminTab() {
 
           <Card className="bg-black border border-white/20 rounded-none">
             <CardContent className="p-6">
-              <div className="grid grid-cols-2 gap-8">
-                <div className="flex flex-col items-center gap-4">
-                  {(() => {
-                    const hasTimeline = !!selectedClient.designTimeline;
-                    const progress = hasTimeline ? Math.min(100, Math.round((designInteractions.length / selectedClient.designTimeline!) * 100)) : 0;
-                    const size = 120;
-                    const strokeWidth = 12;
-                    const radius = (size - strokeWidth) / 2;
-                    const circumference = 2 * Math.PI * radius;
-                    const filled = (progress / 100) * circumference;
-                    const gap = circumference - filled;
-                    return (
-                      <>
-                        <div className="relative" style={{ width: size, height: size }}>
-                          <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="transform -rotate-90">
-                            <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#555" strokeWidth={strokeWidth} />
-                            {progress > 0 && (
-                              <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#bbb" strokeWidth={strokeWidth} strokeDasharray={`${filled} ${gap}`} className="transition-all duration-700 ease-out" />
-                            )}
-                          </svg>
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-xl font-medium text-white/70">{progress}%</span>
-                          </div>
+              <div className="grid grid-cols-2 gap-4">
+                {[
+                  { label: isVi ? "Tiến Độ Thiết Kế" : "Design Progress", progress: (() => { const has = !!selectedClient.designTimeline; return has ? Math.min(100, Math.round((designInteractions.length / selectedClient.designTimeline!) * 100)) : 0; })() },
+                  { label: isVi ? "Thanh Toán Thiết Kế" : "Design Payment", progress: (() => { const tx = transactions.filter((t: any) => !t.category || t.category === "design"); const done = tx.filter((t: any) => t.status === "completed").length; return tx.length > 0 ? Math.round((done / tx.length) * 100) : 0; })() },
+                  { label: isVi ? "Tiến Độ Thi Công" : "Construction Progress", progress: (() => { const has = !!selectedClient.constructionTimeline; return has ? Math.min(100, Math.round((constructionInteractions.length / selectedClient.constructionTimeline!) * 100)) : 0; })() },
+                  { label: isVi ? "Thanh Toán Thi Công" : "Construction Payment", progress: (() => { const tx = transactions.filter((t: any) => t.category === "construction"); const done = tx.filter((t: any) => t.status === "completed").length; return tx.length > 0 ? Math.round((done / tx.length) * 100) : 0; })() },
+                ].map((item, i) => {
+                  const vb = 100;
+                  const sw = 10;
+                  const r = (vb - sw) / 2;
+                  const circ = 2 * Math.PI * r;
+                  const filled = (item.progress / 100) * circ;
+                  const gap = circ - filled;
+                  return (
+                    <div key={i} className={`flex flex-col items-center p-4 ${i < 2 ? "border-b border-white/10" : ""}`}>
+                      <div className="relative w-full aspect-square max-w-[180px]">
+                        <svg viewBox={`0 0 ${vb} ${vb}`} className="w-full h-full transform -rotate-90">
+                          <circle cx={vb/2} cy={vb/2} r={r} fill="none" stroke="#555" strokeWidth={sw} />
+                          {item.progress > 0 && (
+                            <circle cx={vb/2} cy={vb/2} r={r} fill="none" stroke="#bbb" strokeWidth={sw} strokeDasharray={`${filled} ${gap}`} className="transition-all duration-700 ease-out" />
+                          )}
+                        </svg>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="text-2xl font-medium text-white/70">{item.progress}%</span>
                         </div>
-                        <p className="text-sm text-white/50 font-light">{isVi ? "Tiến Độ Thiết Kế" : "Design Progress"}</p>
-                      </>
-                    );
-                  })()}
-                </div>
-                <div className="flex flex-col items-center gap-4">
-                  {(() => {
-                    const designTx = transactions.filter((tx: any) => !tx.category || tx.category === "design");
-                    const designCompleted = designTx.filter((tx: any) => tx.status === "completed").length;
-                    const designTotal = designTx.length;
-                    const progress = designTotal > 0 ? Math.round((designCompleted / designTotal) * 100) : 0;
-                    const size = 120;
-                    const strokeWidth = 12;
-                    const radius = (size - strokeWidth) / 2;
-                    const circumference = 2 * Math.PI * radius;
-                    const filled = (progress / 100) * circumference;
-                    const gap = circumference - filled;
-                    return (
-                      <>
-                        <div className="relative" style={{ width: size, height: size }}>
-                          <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="transform -rotate-90">
-                            <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#555" strokeWidth={strokeWidth} />
-                            {progress > 0 && (
-                              <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#bbb" strokeWidth={strokeWidth} strokeDasharray={`${filled} ${gap}`} className="transition-all duration-700 ease-out" />
-                            )}
-                          </svg>
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-xl font-medium text-white/70">{progress}%</span>
-                          </div>
-                        </div>
-                        <p className="text-sm text-white/50 font-light">{isVi ? "Thanh Toán Thiết Kế" : "Design Payment"}</p>
-                      </>
-                    );
-                  })()}
-                </div>
-                <div className="col-span-2 border-t border-white/10" />
-                <div className="flex flex-col items-center gap-4">
-                  {(() => {
-                    const hasTimeline = !!selectedClient.constructionTimeline;
-                    const progress = hasTimeline ? Math.min(100, Math.round((constructionInteractions.length / selectedClient.constructionTimeline!) * 100)) : 0;
-                    const size = 120;
-                    const strokeWidth = 12;
-                    const radius = (size - strokeWidth) / 2;
-                    const circumference = 2 * Math.PI * radius;
-                    const filled = (progress / 100) * circumference;
-                    const gap = circumference - filled;
-                    return (
-                      <>
-                        <div className="relative" style={{ width: size, height: size }}>
-                          <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="transform -rotate-90">
-                            <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#555" strokeWidth={strokeWidth} />
-                            {progress > 0 && (
-                              <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#bbb" strokeWidth={strokeWidth} strokeDasharray={`${filled} ${gap}`} className="transition-all duration-700 ease-out" />
-                            )}
-                          </svg>
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-xl font-medium text-white/70">{progress}%</span>
-                          </div>
-                        </div>
-                        <p className="text-sm text-white/50 font-light">{isVi ? "Tiến Độ Thi Công" : "Construction Progress"}</p>
-                      </>
-                    );
-                  })()}
-                </div>
-                <div className="flex flex-col items-center gap-4">
-                  {(() => {
-                    const constructionTx = transactions.filter((tx: any) => tx.category === "construction");
-                    const constructionCompleted = constructionTx.filter((tx: any) => tx.status === "completed").length;
-                    const constructionTotal = constructionTx.length;
-                    const progress = constructionTotal > 0 ? Math.round((constructionCompleted / constructionTotal) * 100) : 0;
-                    const size = 120;
-                    const strokeWidth = 12;
-                    const radius = (size - strokeWidth) / 2;
-                    const circumference = 2 * Math.PI * radius;
-                    const filled = (progress / 100) * circumference;
-                    const gap = circumference - filled;
-                    return (
-                      <>
-                        <div className="relative" style={{ width: size, height: size }}>
-                          <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} className="transform -rotate-90">
-                            <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#555" strokeWidth={strokeWidth} />
-                            {progress > 0 && (
-                              <circle cx={size/2} cy={size/2} r={radius} fill="none" stroke="#bbb" strokeWidth={strokeWidth} strokeDasharray={`${filled} ${gap}`} className="transition-all duration-700 ease-out" />
-                            )}
-                          </svg>
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-xl font-medium text-white/70">{progress}%</span>
-                          </div>
-                        </div>
-                        <p className="text-sm text-white/50 font-light">{isVi ? "Thanh Toán Thi Công" : "Construction Payment"}</p>
-                      </>
-                    );
-                  })()}
-                </div>
+                      </div>
+                      <p className="text-sm text-white/50 font-light mt-3">{item.label}</p>
+                    </div>
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
