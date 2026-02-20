@@ -4775,8 +4775,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           </DialogContent>
         </Dialog>
 
-        <div className="flex flex-col gap-3">
-          <div className="relative">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
             <Input
               value={projectSearchQuery}
@@ -4785,7 +4785,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
             />
           </div>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-3 gap-3 flex-shrink-0">
             <Select value={projectCategoryFilter} onValueChange={(v) => { setProjectCategoryFilter(v); setProjectsPage(1); }}>
               <SelectTrigger className="w-full bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
                 <SelectValue placeholder={language === 'vi' ? 'Tất cả danh mục' : 'All categories'} />
