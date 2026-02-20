@@ -420,24 +420,30 @@ export default function LookupAdminTab() {
   const updateDesignPhaseTargetMutation = useMutation({
     mutationFn: async ({ phaseValue, target }: { phaseValue: string; target: number }) => {
       const currentTargets = (selectedClient?.designPhaseTargets as Record<string, number>) || {};
+      const newTargets = { ...currentTargets, [phaseValue]: target };
       await apiRequest("PUT", `/api/clients/${selectedClient!.id}`, {
-        designPhaseTargets: { ...currentTargets, [phaseValue]: target },
+        designPhaseTargets: newTargets,
       });
+      return newTargets;
     },
-    onSuccess: () => {
+    onSuccess: (newTargets) => {
       queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
+      setSelectedClient({ ...selectedClient!, designPhaseTargets: newTargets } as Client);
     },
   });
 
   const updateConstructionPhaseTargetMutation = useMutation({
     mutationFn: async ({ phaseValue, target }: { phaseValue: string; target: number }) => {
       const currentTargets = (selectedClient?.constructionPhaseTargets as Record<string, number>) || {};
+      const newTargets = { ...currentTargets, [phaseValue]: target };
       await apiRequest("PUT", `/api/clients/${selectedClient!.id}`, {
-        constructionPhaseTargets: { ...currentTargets, [phaseValue]: target },
+        constructionPhaseTargets: newTargets,
       });
+      return newTargets;
     },
-    onSuccess: () => {
+    onSuccess: (newTargets) => {
       queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
+      setSelectedClient({ ...selectedClient!, constructionPhaseTargets: newTargets } as Client);
     },
   });
 
