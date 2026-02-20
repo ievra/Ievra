@@ -223,7 +223,7 @@ export default function Lookup() {
         }),
       });
       if (res.ok) {
-        setSupportSent(true);
+        setSupportMessage("");
         toast({ title: isVi ? "Đã gửi yêu cầu hỗ trợ" : "Support request sent" });
       } else {
         toast({ title: isVi ? "Gửi thất bại. Vui lòng thử lại." : "Failed to send. Please try again.", variant: "destructive" });
@@ -607,61 +607,55 @@ export default function Lookup() {
               <h3 className="text-sm font-medium text-white/70 tracking-wider uppercase mb-6 pb-2 border-b border-white/10">
                 {isVi ? "Yêu Cầu Hỗ Trợ" : "Support Request"}
               </h3>
-              {supportSent ? (
-                <div className="text-center py-8">
-                  <p className="text-white/60 font-light">{isVi ? "Yêu cầu của bạn đã được gửi. Chúng tôi sẽ liên hệ sớm nhất." : "Your request has been sent. We will contact you shortly."}</p>
-                </div>
-              ) : (
-                <form onSubmit={handleSupportSubmit}>
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Input
-                        type="text"
-                        value={`${result.client.lastName} ${result.client.firstName}`.trim()}
-                        readOnly
-                        className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 py-4 text-white/50 focus-visible:ring-0 cursor-default"
-                      />
-                      <Input
-                        type="email"
-                        value={result.client.email || ""}
-                        readOnly
-                        placeholder={isVi ? "Email" : "Email"}
-                        className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 py-4 text-white/50 placeholder-white/30 focus-visible:ring-0 cursor-default"
-                      />
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <Input
-                        type="tel"
-                        value={result.client.phone || phone.trim()}
-                        readOnly
-                        className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 py-4 text-white/50 focus-visible:ring-0 cursor-default"
-                      />
-                      <Input
-                        type="text"
-                        value={result.client.address || ""}
-                        readOnly
-                        placeholder={isVi ? "Địa chỉ dự án" : "Project address"}
-                        className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 py-4 text-white/50 placeholder-white/30 focus-visible:ring-0 cursor-default"
-                      />
-                    </div>
-                    <Textarea
-                      placeholder={isVi ? "Nhập yêu cầu hoặc ghi chú..." : "Enter your request or notes..."}
-                      value={supportMessage}
-                      onChange={(e) => setSupportMessage(e.target.value)}
-                      className="bg-transparent border border-white/20 rounded-none px-0 py-4 text-white placeholder-white/40 focus:border-white/50 focus-visible:ring-0 min-h-[120px] resize-none"
+              <form onSubmit={handleSupportSubmit}>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Input
+                      type="text"
+                      value={`${result.client.lastName} ${result.client.firstName}`.trim()}
+                      readOnly
+                      className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 py-4 text-white/50 focus-visible:ring-0 cursor-default"
                     />
-                    <div className="flex justify-center pt-2">
-                      <Button
-                        type="submit"
-                        disabled={submittingSupport || !supportMessage.trim()}
-                        className="bg-transparent border border-white/30 text-white hover:border-white hover:bg-white/10 px-8 py-3 font-light tracking-widest uppercase transition-all duration-300 rounded-none"
-                      >
-                        {submittingSupport ? (isVi ? "Đang gửi..." : "Sending...") : (isVi ? "GỬI YÊU CẦU" : "SEND REQUEST")}
-                      </Button>
-                    </div>
+                    <Input
+                      type="email"
+                      value={result.client.email || ""}
+                      readOnly
+                      placeholder={isVi ? "Email" : "Email"}
+                      className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 py-4 text-white/50 placeholder-white/30 focus-visible:ring-0 cursor-default"
+                    />
                   </div>
-                </form>
-              )}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Input
+                      type="tel"
+                      value={result.client.phone || phone.trim()}
+                      readOnly
+                      className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 py-4 text-white/50 focus-visible:ring-0 cursor-default"
+                    />
+                    <Input
+                      type="text"
+                      value={result.client.address || ""}
+                      readOnly
+                      placeholder={isVi ? "Địa chỉ dự án" : "Project address"}
+                      className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 py-4 text-white/50 placeholder-white/30 focus-visible:ring-0 cursor-default"
+                    />
+                  </div>
+                  <Textarea
+                    placeholder={isVi ? "Nhập yêu cầu hoặc ghi chú..." : "Enter your request or notes..."}
+                    value={supportMessage}
+                    onChange={(e) => setSupportMessage(e.target.value)}
+                    className="bg-transparent border border-white/20 rounded-none px-0 py-4 text-white placeholder-white/40 focus:border-white/50 focus-visible:ring-0 min-h-[120px] resize-none"
+                  />
+                  <div className="flex justify-center pt-2">
+                    <Button
+                      type="submit"
+                      disabled={submittingSupport || !supportMessage.trim()}
+                      className="bg-transparent border border-white/30 text-white hover:border-white hover:bg-white/10 px-8 py-3 font-light tracking-widest uppercase transition-all duration-300 rounded-none"
+                    >
+                      {submittingSupport ? (isVi ? "Đang gửi..." : "Sending...") : (isVi ? "GỬI YÊU CẦU" : "SEND REQUEST")}
+                    </Button>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
         )}
