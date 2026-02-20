@@ -182,7 +182,12 @@ export default function Lookup() {
         setShowCccdDialog(false);
         toast({ title: isVi ? "Xác minh thành công" : "Verification successful" });
       } else {
-        toast({ title: data.message || (isVi ? "Xác minh thất bại" : "Verification failed"), variant: "destructive" });
+        const msg = res.status === 403
+          ? (isVi ? "CCCD/CMND không khớp" : "ID card number does not match")
+          : res.status === 400
+          ? (isVi ? "Chưa có thông tin CCCD/CMND trong hệ thống" : "No ID card information in the system")
+          : (isVi ? "Xác minh thất bại" : "Verification failed");
+        toast({ title: msg, variant: "destructive" });
       }
     } catch {
       toast({ title: isVi ? "Đã xảy ra lỗi" : "An error occurred", variant: "destructive" });
