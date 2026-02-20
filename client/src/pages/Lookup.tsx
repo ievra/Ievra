@@ -648,7 +648,7 @@ export default function Lookup() {
                       placeholder={isVi ? "Nhập yêu cầu hoặc ghi chú..." : "Enter your request or notes..."}
                       value={supportMessage}
                       onChange={(e) => setSupportMessage(e.target.value)}
-                      className="bg-transparent border border-white/20 rounded-none px-3 py-4 text-white placeholder-white/40 focus:border-white/50 focus-visible:ring-0 min-h-[120px] resize-none"
+                      className="bg-transparent border border-white/20 rounded-none px-0 py-4 text-white placeholder-white/40 focus:border-white/50 focus-visible:ring-0 min-h-[120px] resize-none"
                     />
                     <div className="flex justify-center pt-2">
                       <Button
