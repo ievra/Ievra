@@ -132,8 +132,17 @@ export default function LookupAdminTab() {
       if (e.key === "ArrowLeft") setLightboxIndex((prev) => (prev - 1 + lightboxImages.length) % lightboxImages.length);
       if (e.key === "ArrowRight") setLightboxIndex((prev) => (prev + 1) % lightboxImages.length);
     };
+    const preventScroll = (e: Event) => e.preventDefault();
     window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
+    document.addEventListener("wheel", preventScroll, { passive: false });
+    document.addEventListener("touchmove", preventScroll, { passive: false });
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", handleKey);
+      document.removeEventListener("wheel", preventScroll);
+      document.removeEventListener("touchmove", preventScroll);
+      document.body.style.overflow = "";
+    };
   }, [lightboxImages]);
 
   const { data: clients = [] } = useQuery<Client[]>({
@@ -2106,7 +2115,7 @@ export default function LookupAdminTab() {
         </DialogContent>
       </Dialog>
       {lightboxImages.length > 0 && (
-        <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center" onClick={closeLightbox}>
+        <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center overflow-hidden" onClick={closeLightbox} onWheel={(e) => e.preventDefault()} onTouchMove={(e) => e.preventDefault()}>
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); closeLightbox(); }}
