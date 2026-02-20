@@ -131,6 +131,7 @@ const clientSchema = z.object({
   warrantyExpiry: z.string().optional(),
   constructionTimeline: z.number().optional(),
   tier: z.string().default("silver"),
+  identityCard: z.string().optional(),
   tags: z.array(z.string()).default([]),
   notes: z.string().optional(),
 });
@@ -972,6 +973,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       referredById: "",
       referralCount: 0,
       referralRevenue: "0",
+      identityCard: "",
       tags: [],
       notes: "",
     },
@@ -2506,6 +2508,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       warrantyExpiry: formatDateForInput(client.warrantyExpiry),
       constructionTimeline: client.constructionTimeline || 0,
       tier: client.tier || "silver",
+      identityCard: client.identityCard || "",
       tags: (client.tags as string[]) || [],
       notes: client.notes || "",
     });
@@ -5037,6 +5040,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 referralRevenue: "0",
                 warrantyStatus: "none",
                 warrantyExpiry: "",
+                identityCard: "",
                 tags: [],
                 notes: "",
               });
@@ -5056,6 +5060,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     stage: "lead",
                     status: "active",
                     tier: "silver",
+                    identityCard: "",
                     orderCount: 0,
                     referredById: "",
                     referralCount: 0,
@@ -5194,6 +5199,20 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         <FormLabel>{t('crm.address')}</FormLabel>
                         <FormControl>
                           <Input {...field} placeholder="123 Nguyễn Huệ, Quận 1, TP.HCM" data-testid="input-client-address" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={clientForm.control}
+                    name="identityCard"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{language === 'vi' ? 'CCCD/CMND' : 'Identity Card'}</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="0123456789XX" />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

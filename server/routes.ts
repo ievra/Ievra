@@ -455,21 +455,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/lookup", async (req, res) => {
     try {
-      const { phone } = req.query;
+      const { phone, identityCard } = req.query;
       if (!phone || typeof phone !== 'string' || phone.trim().length < 6) {
         return res.status(400).json({ message: "Vui lòng nhập số điện thoại hợp lệ" });
       }
+      if (!identityCard || typeof identityCard !== 'string' || identityCard.trim().length < 6) {
+        return res.status(400).json({ message: "Vui lòng nhập số CCCD/CMND hợp lệ" });
+      }
 
       const normalizedPhone = phone.trim().replace(/[\s\-\.]/g, '');
+      const normalizedCard = identityCard.trim().replace(/[\s\-\.]/g, '');
       const allClients = await storage.getClients();
       const client = allClients.find(c => {
         if (!c.phone) return false;
         const clientPhone = c.phone.replace(/[\s\-\.]/g, '');
-        return clientPhone === normalizedPhone || clientPhone.endsWith(normalizedPhone) || normalizedPhone.endsWith(clientPhone);
+        const phoneMatch = clientPhone === normalizedPhone || clientPhone.endsWith(normalizedPhone) || normalizedPhone.endsWith(clientPhone);
+        if (!phoneMatch) return false;
+        if (!c.identityCard) return false;
+        const clientCard = c.identityCard.replace(/[\s\-\.]/g, '');
+        return clientCard === normalizedCard;
       });
 
       if (!client) {
-        return res.status(404).json({ message: "Không tìm thấy thông tin khách hàng với số điện thoại này" });
+        return res.status(404).json({ message: "Không tìm thấy thông tin khách hàng. Vui lòng kiểm tra lại số điện thoại và CCCD/CMND." });
       }
 
       const clientInteractions = await storage.getInteractions(client.id);
