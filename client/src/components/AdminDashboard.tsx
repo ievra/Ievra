@@ -5923,11 +5923,20 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   {/* Financial Information */}
                   <div className="space-y-4">
                     <h3 className="text-lg font-medium border-b pb-2">{t('crm.financialInfo')}</h3>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-3 gap-4">
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Đã Thanh Toán' : 'Total Revenue'}</label>
                         <p className="text-base mt-1 font-semibold">
                           {Math.round(clientFinances[viewingClient.id]?.totalSpending || 0).toLocaleString('vi-VN')} đ
+                        </p>
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Chưa Thanh Toán' : 'Pending Payment'}</label>
+                        <p className="text-base mt-1 font-semibold">
+                          {(() => {
+                            const pending = Array.isArray(viewTransactions) ? viewTransactions.filter((t: any) => t.status === 'pending' && t.type === 'payment').reduce((sum: number, t: any) => sum + parseFloat(t.amount || "0"), 0) : 0;
+                            return Math.round(pending).toLocaleString('vi-VN');
+                          })()} đ
                         </p>
                       </div>
                       <div>
