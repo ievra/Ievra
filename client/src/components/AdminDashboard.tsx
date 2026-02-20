@@ -7442,46 +7442,37 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <Card className="bg-black border-white/10 rounded-none">
             <CardContent className="p-6 min-h-[90px]">
-              <div className="flex items-center justify-between">
-                <div className="min-w-[120px]">
-                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Tổng đối tác' : 'Total Partners'}</p>
-                  <p className="text-2xl font-semibold mt-1">{businessPartners.length}</p>
-                </div>
-                <Users className="h-8 w-8 text-muted-foreground" />
+              <div>
+                <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Tổng đối tác' : 'Total Partners'}</p>
+                <p className="text-2xl font-semibold mt-1">{businessPartners.length}</p>
               </div>
             </CardContent>
           </Card>
           
           <Card className="bg-black border-white/10 rounded-none">
             <CardContent className="p-6 min-h-[90px]">
-              <div className="flex items-center justify-between">
-                <div className="min-w-[120px]">
-                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Tổng thu' : 'Total Income'}</p>
-                  <p className="text-2xl font-semibold mt-1">
-                    {(Array.isArray(allBpTransactions) ? allBpTransactions : []).reduce((sum: number, t: any) => {
-                      if (t.status !== "completed" || t.type !== "payment") return sum;
-                      return sum + parseFloat(t.amount || "0");
-                    }, 0).toLocaleString('vi-VN', {maximumFractionDigits: 0})} đ
-                  </p>
-                </div>
-                <TrendingUp className="h-8 w-8 text-muted-foreground" />
+              <div>
+                <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Tổng thu' : 'Total Income'}</p>
+                <p className="text-2xl font-semibold mt-1">
+                  {(Array.isArray(allBpTransactions) ? allBpTransactions : []).reduce((sum: number, t: any) => {
+                    if (t.status !== "completed" || t.type !== "payment") return sum;
+                    return sum + parseFloat(t.amount || "0");
+                  }, 0).toLocaleString('vi-VN', {maximumFractionDigits: 0})} đ
+                </p>
               </div>
             </CardContent>
           </Card>
           
           <Card className="bg-black border-white/10 rounded-none">
             <CardContent className="p-6 min-h-[90px]">
-              <div className="flex items-center justify-between">
-                <div className="min-w-[120px]">
-                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Tổng chi' : 'Total Expense'}</p>
-                  <p className="text-2xl font-semibold mt-1">
-                    {(Array.isArray(allBpTransactions) ? allBpTransactions : []).reduce((sum: number, t: any) => {
-                      if (t.status !== "completed" || t.type !== "refund") return sum;
-                      return sum + parseFloat(t.amount || "0");
-                    }, 0).toLocaleString('vi-VN', {maximumFractionDigits: 0})} đ
-                  </p>
-                </div>
-                <TrendingUp className="h-8 w-8 text-muted-foreground" />
+              <div>
+                <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Tổng chi' : 'Total Expense'}</p>
+                <p className="text-2xl font-semibold mt-1">
+                  {(Array.isArray(allBpTransactions) ? allBpTransactions : []).reduce((sum: number, t: any) => {
+                    if (t.status !== "completed" || t.type !== "refund") return sum;
+                    return sum + parseFloat(t.amount || "0");
+                  }, 0).toLocaleString('vi-VN', {maximumFractionDigits: 0})} đ
+                </p>
               </div>
             </CardContent>
           </Card>
