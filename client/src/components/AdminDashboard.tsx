@@ -5880,6 +5880,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         <label className="text-sm font-medium text-muted-foreground">{t('crm.address')}</label>
                         <p className="text-base mt-1">{viewingClient.address || "—"}</p>
                       </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'CCCD/CMND' : 'Identity Card'}</label>
+                        <p className="text-base mt-1">{viewingClient.identityCard || "—"}</p>
+                      </div>
                     </div>
                   </div>
 
