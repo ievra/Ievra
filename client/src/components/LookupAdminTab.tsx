@@ -118,8 +118,12 @@ export default function LookupAdminTab() {
   const openLightbox = (images: string[], index: number) => {
     setLightboxImages(images);
     setLightboxIndex(index);
+    document.body.style.overflow = "hidden";
   };
-  const closeLightbox = () => setLightboxImages([]);
+  const closeLightbox = () => {
+    setLightboxImages([]);
+    document.body.style.overflow = "";
+  };
 
   useEffect(() => {
     if (lightboxImages.length === 0) return;
