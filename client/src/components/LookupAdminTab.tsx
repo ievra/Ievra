@@ -915,52 +915,61 @@ export default function LookupAdminTab() {
 
           <Card className="bg-black border border-white/20 rounded-none">
             <CardContent className="p-6">
-              <div className="grid grid-cols-2 gap-4">
-                {(() => {
-                  const items = [
-                    { label: isVi ? "Tiến Độ Thiết Kế" : "Design Progress", progress: (() => { const has = !!selectedClient.designTimeline; return has ? Math.min(100, Math.round((designInteractions.length / selectedClient.designTimeline!) * 100)) : 0; })(), type: "design_progress" as const },
-                    { label: isVi ? "Thanh Toán Thiết Kế" : "Design Payment", progress: (() => { const tx = transactions.filter((t: any) => !t.category || t.category === "design"); const done = tx.filter((t: any) => t.status === "completed").length; return tx.length > 0 ? Math.round((done / tx.length) * 100) : 0; })(), type: "design_payment" as const },
-                    { label: isVi ? "Tiến Độ Thi Công" : "Construction Progress", progress: (() => { const has = !!selectedClient.constructionTimeline; return has ? Math.min(100, Math.round((constructionInteractions.length / selectedClient.constructionTimeline!) * 100)) : 0; })(), type: "construction_progress" as const },
-                    { label: isVi ? "Thanh Toán Thi Công" : "Construction Payment", progress: (() => { const tx = transactions.filter((t: any) => t.category === "construction"); const done = tx.filter((t: any) => t.status === "completed").length; return tx.length > 0 ? Math.round((done / tx.length) * 100) : 0; })(), type: "construction_payment" as const },
-                  ];
-                  return items.map((item, i) => {
-                    const vb = 100;
-                    const sw = 10;
-                    const r = (vb - sw) / 2;
-                    const circ = 2 * Math.PI * r;
-                    const filled = (item.progress / 100) * circ;
-                    const gap = circ - filled;
-                    const phases = item.type === "design_progress" ? designPhases : item.type === "construction_progress" ? constructionPhases : [];
-                    const phaseTargets = item.type === "design_progress"
-                      ? ((selectedClient.designPhaseTargets as Record<string, number>) || {})
-                      : item.type === "construction_progress"
-                        ? ((selectedClient.constructionPhaseTargets as Record<string, number>) || {})
-                        : {};
-                    const interactions = item.type === "design_progress" ? designInteractions : item.type === "construction_progress" ? constructionInteractions : [];
-                    return (
-                      <div key={i} className={`flex flex-col items-center p-4 ${i < 2 ? "border-b border-white/10" : ""}`}>
-                        <div className="relative w-full aspect-square max-w-[180px]">
-                          <svg viewBox={`0 0 ${vb} ${vb}`} className="w-full h-full transform -rotate-90">
-                            <circle cx={vb/2} cy={vb/2} r={r} fill="none" stroke="#555" strokeWidth={sw} />
-                            {item.progress > 0 && (
-                              <circle cx={vb/2} cy={vb/2} r={r} fill="none" stroke="#bbb" strokeWidth={sw} strokeDasharray={`${filled} ${gap}`} className="transition-all duration-700 ease-out" />
-                            )}
-                          </svg>
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-2xl font-medium text-white/70">{item.progress}%</span>
-                          </div>
+              {(() => {
+                const renderCircle = (item: { label: string; progress: number; type: string }, phases: any[], phaseTargets: Record<string, number>, circleInteractions: any[]) => {
+                  const vb = 100;
+                  const sw = 10;
+                  const r = (vb - sw) / 2;
+                  const circ = 2 * Math.PI * r;
+                  const filled = (item.progress / 100) * circ;
+                  const gap = circ - filled;
+                  return (
+                    <div className="flex flex-col items-center p-4">
+                      <div className="relative w-full aspect-square max-w-[180px]">
+                        <svg viewBox={`0 0 ${vb} ${vb}`} className="w-full h-full transform -rotate-90">
+                          <circle cx={vb/2} cy={vb/2} r={r} fill="none" stroke="#555" strokeWidth={sw} />
+                          {item.progress > 0 && (
+                            <circle cx={vb/2} cy={vb/2} r={r} fill="none" stroke="#bbb" strokeWidth={sw} strokeDasharray={`${filled} ${gap}`} className="transition-all duration-700 ease-out" />
+                          )}
+                        </svg>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="text-2xl font-medium text-white/70">{item.progress}%</span>
                         </div>
-                        <p className="text-sm text-white/50 font-light mt-3">{item.label}</p>
-                        {phases.length > 0 && (
+                      </div>
+                      <p className="text-sm text-white/50 font-light mt-3">{item.label}</p>
+                      {phases.length > 0 && (
+                        <div className="w-full mt-4 space-y-2">
+                          {phases.map((phase: any) => {
+                            const target = phaseTargets[phase.value] || 0;
+                            const logged = circleInteractions.filter((int) => (int as any).phase === phase.value).length;
+                            const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 0;
+                            return (
+                              <div key={phase.id} className="space-y-0.5">
+                                <div className="flex justify-between items-center">
+                                  <span className="text-[11px] text-white/50 truncate max-w-[70%]">{isVi ? phase.labelVi : phase.labelEn}</span>
+                                  <span className="text-[11px] text-white/40">{pct}%</span>
+                                </div>
+                                <div className="w-full h-2 bg-white/10 overflow-hidden">
+                                  <div className="h-full bg-white/50 transition-all duration-700 ease-out" style={{ width: `${pct}%` }} />
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                      {(item.type === "design_payment" || item.type === "construction_payment") && (() => {
+                        const paymentTx = item.type === "design_payment"
+                          ? transactions.filter((t: any) => !t.category || t.category === "design")
+                          : transactions.filter((t: any) => t.category === "construction");
+                        if (paymentTx.length === 0) return null;
+                        return (
                           <div className="w-full mt-4 space-y-2">
-                            {phases.map((phase) => {
-                              const target = phaseTargets[phase.value] || 0;
-                              const logged = interactions.filter((int) => (int as any).phase === phase.value).length;
-                              const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 0;
+                            {paymentTx.map((tx: any, txIdx: number) => {
+                              const pct = tx.status === "completed" ? 100 : 0;
                               return (
-                                <div key={phase.id} className="space-y-0.5">
+                                <div key={tx.id || txIdx} className="space-y-0.5">
                                   <div className="flex justify-between items-center">
-                                    <span className="text-[11px] text-white/50 truncate max-w-[70%]">{isVi ? phase.labelVi : phase.labelEn}</span>
+                                    <span className="text-[11px] text-white/50 truncate max-w-[70%]">{tx.title || tx.description || `${isVi ? "Giao dịch" : "Transaction"} ${txIdx + 1}`}</span>
                                     <span className="text-[11px] text-white/40">{pct}%</span>
                                   </div>
                                   <div className="w-full h-2 bg-white/10 overflow-hidden">
@@ -970,36 +979,34 @@ export default function LookupAdminTab() {
                               );
                             })}
                           </div>
-                        )}
-                        {(item.type === "design_payment" || item.type === "construction_payment") && (() => {
-                          const paymentTx = item.type === "design_payment"
-                            ? transactions.filter((t: any) => !t.category || t.category === "design")
-                            : transactions.filter((t: any) => t.category === "construction");
-                          if (paymentTx.length === 0) return null;
-                          return (
-                            <div className="w-full mt-4 space-y-2">
-                              {paymentTx.map((tx: any, txIdx: number) => {
-                                const pct = tx.status === "completed" ? 100 : 0;
-                                return (
-                                  <div key={tx.id || txIdx} className="space-y-0.5">
-                                    <div className="flex justify-between items-center">
-                                      <span className="text-[11px] text-white/50 truncate max-w-[70%]">{tx.title || tx.description || `${isVi ? "Giao dịch" : "Transaction"} ${txIdx + 1}`}</span>
-                                      <span className="text-[11px] text-white/40">{pct}%</span>
-                                    </div>
-                                    <div className="w-full h-2 bg-white/10 overflow-hidden">
-                                      <div className="h-full bg-white/50 transition-all duration-700 ease-out" style={{ width: `${pct}%` }} />
-                                    </div>
-                                  </div>
-                                );
-                              })}
-                            </div>
-                          );
-                        })()}
+                        );
+                      })()}
+                    </div>
+                  );
+                };
+                const designProgressItem = { label: isVi ? "Tiến Độ" : "Progress", progress: (() => { const has = !!selectedClient.designTimeline; return has ? Math.min(100, Math.round((designInteractions.length / selectedClient.designTimeline!) * 100)) : 0; })(), type: "design_progress" };
+                const designPaymentItem = { label: isVi ? "Thanh Toán" : "Payment", progress: (() => { const tx = transactions.filter((t: any) => !t.category || t.category === "design"); const done = tx.filter((t: any) => t.status === "completed").length; return tx.length > 0 ? Math.round((done / tx.length) * 100) : 0; })(), type: "design_payment" };
+                const constructionProgressItem = { label: isVi ? "Tiến Độ" : "Progress", progress: (() => { const has = !!selectedClient.constructionTimeline; return has ? Math.min(100, Math.round((constructionInteractions.length / selectedClient.constructionTimeline!) * 100)) : 0; })(), type: "construction_progress" };
+                const constructionPaymentItem = { label: isVi ? "Thanh Toán" : "Payment", progress: (() => { const tx = transactions.filter((t: any) => t.category === "construction"); const done = tx.filter((t: any) => t.status === "completed").length; return tx.length > 0 ? Math.round((done / tx.length) * 100) : 0; })(), type: "construction_payment" };
+                return (
+                  <div className="space-y-6">
+                    <div>
+                      <h3 className="text-sm font-medium text-white/70 tracking-wider uppercase mb-4 pb-2 border-b border-white/10">{isVi ? "Tiến Độ Thiết Kế" : "Design Progress"}</h3>
+                      <div className="grid grid-cols-2 gap-4">
+                        {renderCircle(designProgressItem, designPhases, (selectedClient.designPhaseTargets as Record<string, number>) || {}, designInteractions)}
+                        {renderCircle(designPaymentItem, [], {}, [])}
                       </div>
-                    );
-                  });
-                })()}
-              </div>
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-medium text-white/70 tracking-wider uppercase mb-4 pb-2 border-b border-white/10">{isVi ? "Tiến Độ Thi Công" : "Construction Progress"}</h3>
+                      <div className="grid grid-cols-2 gap-4">
+                        {renderCircle(constructionProgressItem, constructionPhases, (selectedClient.constructionPhaseTargets as Record<string, number>) || {}, constructionInteractions)}
+                        {renderCircle(constructionPaymentItem, [], {}, [])}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
             </CardContent>
           </Card>
 
