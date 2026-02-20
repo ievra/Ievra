@@ -409,6 +409,7 @@ export const warrantyLogs = pgTable("warranty_logs", {
   title: text("title").notNull(),
   description: text("description"),
   assignedTo: text("assigned_to"),
+  attachments: text("attachments").array(),
   status: varchar("status", { length: 20 }).notNull().default("pending"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),

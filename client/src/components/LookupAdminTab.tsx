@@ -102,6 +102,7 @@ export default function LookupAdminTab() {
   const [warrantyExpiry, setWarrantyExpiry] = useState("");
   const [warrantyStatus, setWarrantyStatus] = useState("none");
   const [interactionAttachments, setInteractionAttachments] = useState<string[]>([]);
+  const [warrantyLogAttachments, setWarrantyLogAttachments] = useState<string[]>([]);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [isSettingsDialogOpen, setIsSettingsDialogOpen] = useState(false);
   const [isDesignInteractionDialogOpen, setIsDesignInteractionDialogOpen] = useState(false);
@@ -253,6 +254,33 @@ export default function LookupAdminTab() {
         else if (data.url) newAttachments.push(data.url);
       }
       setInteractionAttachments(prev => [...prev, ...newAttachments]);
+    } catch {
+      toast({ title: isVi ? "Lỗi" : "Error", description: isVi ? "Lỗi tải hình" : "Upload failed", variant: "destructive" });
+    }
+    setUploadingImage(false);
+  };
+
+  const handleWarrantyImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+    const remaining = 5 - warrantyLogAttachments.length;
+    if (remaining <= 0) {
+      toast({ title: isVi ? "Giới hạn" : "Limit", description: isVi ? "Tối đa 5 hình ảnh" : "Maximum 5 images", variant: "destructive" });
+      return;
+    }
+    const filesToUpload = Array.from(files).slice(0, remaining);
+    setUploadingImage(true);
+    try {
+      const newAttachments: string[] = [];
+      for (let i = 0; i < filesToUpload.length; i++) {
+        const formData = new FormData();
+        formData.append('file', filesToUpload[i]);
+        const res = await fetch('/api/upload', { method: 'POST', body: formData, credentials: 'include' });
+        const data = await res.json();
+        if (data.path) newAttachments.push(data.path);
+        else if (data.url) newAttachments.push(data.url);
+      }
+      setWarrantyLogAttachments(prev => [...prev, ...newAttachments]);
     } catch {
       toast({ title: isVi ? "Lỗi" : "Error", description: isVi ? "Lỗi tải hình" : "Upload failed", variant: "destructive" });
     }
@@ -490,6 +518,8 @@ export default function LookupAdminTab() {
         clientId: selectedClient!.id,
         title: data.title,
         description: data.description || undefined,
+        assignedTo: data.assignedTo || undefined,
+        attachments: warrantyLogAttachments.length > 0 ? warrantyLogAttachments : undefined,
         date: data.date,
         status: data.status,
       });
@@ -497,6 +527,7 @@ export default function LookupAdminTab() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/warranty-logs', selectedClient?.id] });
       setIsWarrantyLogDialogOpen(false);
+      setWarrantyLogAttachments([]);
       warrantyLogForm.reset();
       toast({ title: isVi ? "Thành công" : "Success", description: isVi ? "Đã thêm nhật ký bảo hành" : "Warranty log added" });
     },
@@ -510,6 +541,8 @@ export default function LookupAdminTab() {
       await apiRequest("PUT", `/api/warranty-logs/${editingWarrantyLog!.id}`, {
         title: data.title,
         description: data.description || undefined,
+        assignedTo: data.assignedTo || undefined,
+        attachments: warrantyLogAttachments,
         date: data.date,
         status: data.status,
       });
@@ -518,6 +551,7 @@ export default function LookupAdminTab() {
       queryClient.invalidateQueries({ queryKey: ['/api/warranty-logs', selectedClient?.id] });
       setIsWarrantyLogDialogOpen(false);
       setEditingWarrantyLog(null);
+      setWarrantyLogAttachments([]);
       warrantyLogForm.reset();
       toast({ title: isVi ? "Thành công" : "Success", description: isVi ? "Đã cập nhật nhật ký bảo hành" : "Warranty log updated" });
     },
@@ -539,6 +573,7 @@ export default function LookupAdminTab() {
   const openWarrantyLogDialog = (log?: WarrantyLog) => {
     if (log) {
       setEditingWarrantyLog(log);
+      setWarrantyLogAttachments(Array.isArray(log.attachments) ? (log.attachments as string[]) : []);
       warrantyLogForm.reset({
         title: log.title,
         description: log.description || "",
@@ -548,6 +583,7 @@ export default function LookupAdminTab() {
       });
     } else {
       setEditingWarrantyLog(null);
+      setWarrantyLogAttachments([]);
       warrantyLogForm.reset({
         title: "",
         description: "",
@@ -1672,7 +1708,7 @@ export default function LookupAdminTab() {
         </DialogContent>
       </Dialog>
       <Dialog open={isWarrantyLogDialogOpen} onOpenChange={setIsWarrantyLogDialogOpen}>
-        <DialogContent className="bg-black border border-white/20 rounded-none max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogContent className="bg-black border border-white/20 rounded-none max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-white font-light">
               {editingWarrantyLog ? (isVi ? "Sửa nhật ký bảo hành" : "Edit Warranty Log") : (isVi ? "Thêm nhật ký bảo hành" : "Add Warranty Log")}
@@ -1734,6 +1770,21 @@ export default function LookupAdminTab() {
                   <FormMessage />
                 </FormItem>
               )} />
+              <div>
+                <label className="text-sm text-white/60 mb-2 block">{isVi ? "Hình ảnh đính kèm" : "Attachments"}</label>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {warrantyLogAttachments.map((url, idx) => (
+                    <div key={idx} className="relative group">
+                      <img src={url} alt="" className="w-20 h-20 object-cover border border-white/10" />
+                      <button type="button" onClick={() => setWarrantyLogAttachments(prev => prev.filter((_, i) => i !== idx))} className="absolute -top-2 -right-2 w-7 h-7 text-white/60 hover:text-white text-base font-light flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">×</button>
+                    </div>
+                  ))}
+                </div>
+                <label className={`inline-flex items-center gap-2 h-10 px-4 border border-white/20 text-sm transition-colors ${warrantyLogAttachments.length >= 5 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer text-white/60 hover:bg-white/10'}`}>
+                  {uploadingImage ? (isVi ? "Đang tải..." : "Uploading...") : (isVi ? `Chọn hình (${warrantyLogAttachments.length}/5)` : `Choose Image (${warrantyLogAttachments.length}/5)`)}
+                  <input type="file" accept="image/*" multiple onChange={handleWarrantyImageUpload} className="hidden" disabled={uploadingImage || warrantyLogAttachments.length >= 5} />
+                </label>
+              </div>
               <div className="flex justify-end gap-3 pt-2">
                 <Button type="button" variant="outline" onClick={() => setIsWarrantyLogDialogOpen(false)} className="h-10 px-4 rounded-none border-white/20 text-white hover:bg-white/10">
                   {isVi ? "Hủy" : "Cancel"}
