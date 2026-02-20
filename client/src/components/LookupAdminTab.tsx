@@ -1190,6 +1190,17 @@ export default function LookupAdminTab() {
                             </div>
                             {phaseInteractions.length > 0 && (
                               <Table>
+                                <TableHeader>
+                                  <TableRow className="border-white/10">
+                                    <TableHead className="text-white/40 w-[4%]">#</TableHead>
+                                    <TableHead className="text-white/40 w-[12%]">{isVi ? "Ngày" : "Date"}</TableHead>
+                                    <TableHead className="text-white/40 w-[20%]">{isVi ? "Tiêu đề" : "Title"}</TableHead>
+                                    <TableHead className="text-white/40 w-[12%]">{isVi ? "Phụ trách" : "Assigned"}</TableHead>
+                                    <TableHead className="text-white/40 w-[15%]">{isVi ? "Đề xuất" : "Suggestion"}</TableHead>
+                                    <TableHead className="text-white/40 w-[22%]">{isVi ? "Hình ảnh" : "Images"}</TableHead>
+                                    <TableHead className="text-white/40 w-[15%]"></TableHead>
+                                  </TableRow>
+                                </TableHeader>
                                 <TableBody>
                                   {phaseInteractions.map((interaction, index) => (
                                     <TableRow key={interaction.id} className="border-white/10">
@@ -1239,6 +1250,17 @@ export default function LookupAdminTab() {
                               <span className="text-sm font-medium text-white/40">{isVi ? "Khác" : "Other"}</span>
                             </div>
                             <Table>
+                              <TableHeader>
+                                <TableRow className="border-white/10">
+                                  <TableHead className="text-white/40 w-[4%]">#</TableHead>
+                                  <TableHead className="text-white/40 w-[12%]">{isVi ? "Ngày" : "Date"}</TableHead>
+                                  <TableHead className="text-white/40 w-[20%]">{isVi ? "Tiêu đề" : "Title"}</TableHead>
+                                  <TableHead className="text-white/40 w-[12%]">{isVi ? "Phụ trách" : "Assigned"}</TableHead>
+                                  <TableHead className="text-white/40 w-[15%]">{isVi ? "Đề xuất" : "Suggestion"}</TableHead>
+                                  <TableHead className="text-white/40 w-[22%]">{isVi ? "Hình ảnh" : "Images"}</TableHead>
+                                  <TableHead className="text-white/40 w-[15%]"></TableHead>
+                                </TableRow>
+                              </TableHeader>
                               <TableBody>
                                 {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
                                   <TableRow key={interaction.id} className="border-white/10">
@@ -1436,6 +1458,17 @@ export default function LookupAdminTab() {
                             </div>
                             {phaseInteractions.length > 0 && (
                               <Table>
+                                <TableHeader>
+                                  <TableRow className="border-white/10">
+                                    <TableHead className="text-white/40 w-[4%]">#</TableHead>
+                                    <TableHead className="text-white/40 w-[12%]">{isVi ? "Ngày" : "Date"}</TableHead>
+                                    <TableHead className="text-white/40 w-[20%]">{isVi ? "Tiêu đề" : "Title"}</TableHead>
+                                    <TableHead className="text-white/40 w-[12%]">{isVi ? "Phụ trách" : "Assigned"}</TableHead>
+                                    <TableHead className="text-white/40 w-[15%]">{isVi ? "Đề xuất" : "Suggestion"}</TableHead>
+                                    <TableHead className="text-white/40 w-[22%]">{isVi ? "Hình ảnh" : "Images"}</TableHead>
+                                    <TableHead className="text-white/40 w-[15%]"></TableHead>
+                                  </TableRow>
+                                </TableHeader>
                                 <TableBody>
                                   {phaseInteractions.map((interaction, index) => (
                                     <TableRow key={interaction.id} className="border-white/10">
@@ -1485,6 +1518,17 @@ export default function LookupAdminTab() {
                               <span className="text-sm font-medium text-white/40">{isVi ? "Khác" : "Other"}</span>
                             </div>
                             <Table>
+                              <TableHeader>
+                                <TableRow className="border-white/10">
+                                  <TableHead className="text-white/40 w-[4%]">#</TableHead>
+                                  <TableHead className="text-white/40 w-[12%]">{isVi ? "Ngày" : "Date"}</TableHead>
+                                  <TableHead className="text-white/40 w-[20%]">{isVi ? "Tiêu đề" : "Title"}</TableHead>
+                                  <TableHead className="text-white/40 w-[12%]">{isVi ? "Phụ trách" : "Assigned"}</TableHead>
+                                  <TableHead className="text-white/40 w-[15%]">{isVi ? "Đề xuất" : "Suggestion"}</TableHead>
+                                  <TableHead className="text-white/40 w-[22%]">{isVi ? "Hình ảnh" : "Images"}</TableHead>
+                                  <TableHead className="text-white/40 w-[15%]"></TableHead>
+                                </TableRow>
+                              </TableHeader>
                               <TableBody>
                                 {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
                                   <TableRow key={interaction.id} className="border-white/10">
