@@ -4844,7 +4844,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 <p className="text-muted-foreground">{language === 'vi' ? 'Tạo dự án đầu tiên để bắt đầu.' : 'Create your first project to get started.'}</p>
               </div>
             ) : (
-              <Table className="table-fixed [&_td]:py-2 [&_th]:py-2">
+              <div className="overflow-x-auto">
+              <Table className="min-w-[900px] [&_td]:py-2 [&_th]:py-2">
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[50px] whitespace-nowrap text-center">{language === 'vi' ? 'STT' : 'NO'}</TableHead>
@@ -4852,7 +4853,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     <TableHead className="w-[110px] whitespace-nowrap text-left">{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
                     <TableHead className="w-[110px] whitespace-nowrap text-left">{language === 'vi' ? 'Phong Cách' : 'Style'}</TableHead>
                     <TableHead className="w-[90px] whitespace-nowrap text-left">{language === 'vi' ? 'Diện Tích' : 'Area'}</TableHead>
-                    <TableHead className="min-w-[120px] whitespace-nowrap text-left">{language === 'vi' ? 'Dự Án' : 'Project'}</TableHead>
+                    <TableHead className="whitespace-nowrap text-left">{language === 'vi' ? 'Dự Án' : 'Project'}</TableHead>
                     <TableHead className="w-[80px] whitespace-nowrap text-left">{language === 'vi' ? 'Ngôn Ngữ' : 'Lang'}</TableHead>
                     <TableHead className="w-[120px] whitespace-nowrap text-left">{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
                     <TableHead className="w-[120px] whitespace-nowrap text-left">{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
@@ -4949,6 +4950,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   })}
                 </TableBody>
               </Table>
+              </div>
             )}
             {uniqueProjectSlugs.length > 0 && (
               <div className="p-4 border-t border-white/10">
