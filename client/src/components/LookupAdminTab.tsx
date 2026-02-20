@@ -839,8 +839,8 @@ export default function LookupAdminTab() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-end gap-4">
-        <h2 className="text-xl font-light text-white whitespace-nowrap leading-none pb-[9px]">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-end gap-3 sm:gap-4">
+        <h2 className="text-xl font-light text-white whitespace-nowrap leading-none sm:pb-[9px]">
           {isVi ? "Tra Cứu Khách Hàng" : "Client Lookup"}
         </h2>
         <div className="relative flex-1">
@@ -854,18 +854,20 @@ export default function LookupAdminTab() {
             className="bg-transparent border-white/20 text-white pl-10 rounded-none h-10"
           />
         </div>
-        <Button onClick={handleSearch} className="h-10 px-6 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10">
-          <Search className="w-4 h-4 mr-2" />
-          {isVi ? "Tìm kiếm" : "Search"}
-        </Button>
-        <Button
-          variant="outline"
-          onClick={() => setIsSettingsDialogOpen(true)}
-          className="h-10 px-4 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10"
-        >
-          <Settings className="w-4 h-4 mr-2" />
-          {isVi ? "Cài Đặt" : "Settings"}
-        </Button>
+        <div className="flex gap-2 flex-shrink-0">
+          <Button onClick={handleSearch} className="h-10 px-6 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10">
+            <Search className="w-4 h-4 mr-2" />
+            {isVi ? "Tìm kiếm" : "Search"}
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => setIsSettingsDialogOpen(true)}
+            className="h-10 px-4 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10"
+          >
+            <Settings className="w-4 h-4 mr-2" />
+            {isVi ? "Cài Đặt" : "Settings"}
+          </Button>
+        </div>
       </div>
       <Dialog open={isSettingsDialogOpen} onOpenChange={setIsSettingsDialogOpen}>
         <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto bg-black border border-white/20 rounded-none">
