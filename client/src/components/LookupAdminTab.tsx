@@ -931,6 +931,20 @@ export default function LookupAdminTab() {
                             <span className="text-xs text-white/40">{isVi ? "Mục tiêu" : "Target"}</span>
                             <p className="text-sm text-white font-light group-hover:text-white/70">{selectedClient.constructionTimeline} {isVi ? "ngày" : "days"} <Pencil className="w-3 h-3 inline opacity-0 group-hover:opacity-50" /></p>
                           </div>
+                          {constructionPhases.length > 0 && (() => {
+                            const cTargets = (selectedClient.constructionPhaseTargets as Record<string, number>) || {};
+                            const allocated = constructionPhases.reduce((sum, p) => sum + (cTargets[p.value] || 0), 0);
+                            const remaining = (selectedClient.constructionTimeline || 0) - allocated;
+                            return (
+                              <div>
+                                <span className="text-xs text-white/40">{isVi ? "Phân bổ" : "Allocated"}</span>
+                                <p className="text-sm font-light">
+                                  <span className="text-white/60">{constructionPhases.map(p => cTargets[p.value] || 0).join(" - ")}</span>
+                                  {remaining !== 0 && <span className="text-yellow-400/70 ml-2">({remaining > 0 ? "+" : ""}{remaining})</span>}
+                                </p>
+                              </div>
+                            );
+                          })()}
                           <div>
                             <span className="text-xs text-white/40">{isVi ? "Đã ghi" : "Logged"}</span>
                             <p className="text-sm text-white font-light">{constructionInteractions.length} / {selectedClient.constructionTimeline}</p>
@@ -963,6 +977,8 @@ export default function LookupAdminTab() {
                         const phaseInteractions = constructionInteractions.filter(i => (i as any).phase === phase.value).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
                         const phaseTargets = (selectedClient.constructionPhaseTargets as Record<string, number>) || {};
                         const phaseTarget = phaseTargets[phase.value] || 0;
+                        const otherAllocated = constructionPhases.filter(p => p.value !== phase.value).reduce((sum, p) => sum + (phaseTargets[p.value] || 0), 0);
+                        const maxForPhase = Math.max(0, (selectedClient.constructionTimeline || 99) - otherAllocated);
                         return (
                           <div key={phase.id}>
                             {phaseIdx > 0 && <div className="border-t border-white/20 my-0" />}
@@ -974,21 +990,25 @@ export default function LookupAdminTab() {
                                     <input
                                       type="number"
                                       min={0}
-                                      max={99}
+                                      max={maxForPhase}
                                       value={phaseTargetValue}
-                                      onChange={(e) => setPhaseTargetValue(e.target.value)}
+                                      onChange={(e) => {
+                                        const val = parseInt(e.target.value) || 0;
+                                        setPhaseTargetValue(String(Math.min(val, maxForPhase)));
+                                      }}
                                       className="w-10 h-6 bg-transparent border-b border-white/20 text-white text-center text-xs focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                       autoFocus
                                       onKeyDown={(e) => {
                                         if (e.key === "Enter" && phaseTargetValue) {
-                                          updateConstructionPhaseTargetMutation.mutate({ phaseValue: phase.value, target: parseInt(phaseTargetValue) });
+                                          updateConstructionPhaseTargetMutation.mutate({ phaseValue: phase.value, target: Math.min(parseInt(phaseTargetValue), maxForPhase) });
                                           setEditingPhaseTarget(null);
                                         } else if (e.key === "Escape") {
                                           setEditingPhaseTarget(null);
                                         }
                                       }}
                                     />
-                                    <button type="button" onClick={() => { if (phaseTargetValue) { updateConstructionPhaseTargetMutation.mutate({ phaseValue: phase.value, target: parseInt(phaseTargetValue) }); } setEditingPhaseTarget(null); }} className="text-white/40 hover:text-white"><Check className="w-3 h-3" /></button>
+                                    <span className="text-[10px] text-white/30">/{maxForPhase}</span>
+                                    <button type="button" onClick={() => { if (phaseTargetValue) { updateConstructionPhaseTargetMutation.mutate({ phaseValue: phase.value, target: Math.min(parseInt(phaseTargetValue), maxForPhase) }); } setEditingPhaseTarget(null); }} className="text-white/40 hover:text-white"><Check className="w-3 h-3" /></button>
                                     <button type="button" onClick={() => setEditingPhaseTarget(null)} className="text-white/30 hover:text-white/60"><X className="w-3 h-3" /></button>
                                   </div>
                                 ) : (
@@ -1146,6 +1166,20 @@ export default function LookupAdminTab() {
                             <span className="text-xs text-white/40">{isVi ? "Mục tiêu" : "Target"}</span>
                             <p className="text-sm text-white font-light group-hover:text-white/70">{selectedClient.designTimeline} {isVi ? "ngày" : "days"} <Pencil className="w-3 h-3 inline opacity-0 group-hover:opacity-50" /></p>
                           </div>
+                          {designPhases.length > 0 && (() => {
+                            const dTargets = (selectedClient.designPhaseTargets as Record<string, number>) || {};
+                            const allocated = designPhases.reduce((sum, p) => sum + (dTargets[p.value] || 0), 0);
+                            const remaining = (selectedClient.designTimeline || 0) - allocated;
+                            return (
+                              <div>
+                                <span className="text-xs text-white/40">{isVi ? "Phân bổ" : "Allocated"}</span>
+                                <p className="text-sm font-light">
+                                  <span className="text-white/60">{designPhases.map(p => dTargets[p.value] || 0).join(" - ")}</span>
+                                  {remaining !== 0 && <span className="text-yellow-400/70 ml-2">({remaining > 0 ? "+" : ""}{remaining})</span>}
+                                </p>
+                              </div>
+                            );
+                          })()}
                           <div>
                             <span className="text-xs text-white/40">{isVi ? "Đã ghi" : "Logged"}</span>
                             <p className="text-sm text-white font-light">{designInteractions.length} / {selectedClient.designTimeline}</p>
@@ -1178,6 +1212,8 @@ export default function LookupAdminTab() {
                         const phaseInteractions = designInteractions.filter(i => (i as any).phase === phase.value).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
                         const phaseTargets = (selectedClient.designPhaseTargets as Record<string, number>) || {};
                         const phaseTarget = phaseTargets[phase.value] || 0;
+                        const otherAllocated = designPhases.filter(p => p.value !== phase.value).reduce((sum, p) => sum + (phaseTargets[p.value] || 0), 0);
+                        const maxForPhase = Math.max(0, (selectedClient.designTimeline || 99) - otherAllocated);
                         return (
                           <div key={phase.id}>
                             {phaseIdx > 0 && <div className="border-t border-white/20 my-0" />}
@@ -1189,21 +1225,25 @@ export default function LookupAdminTab() {
                                     <input
                                       type="number"
                                       min={0}
-                                      max={99}
+                                      max={maxForPhase}
                                       value={phaseTargetValue}
-                                      onChange={(e) => setPhaseTargetValue(e.target.value)}
+                                      onChange={(e) => {
+                                        const val = parseInt(e.target.value) || 0;
+                                        setPhaseTargetValue(String(Math.min(val, maxForPhase)));
+                                      }}
                                       className="w-10 h-6 bg-transparent border-b border-white/20 text-white text-center text-xs focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                       autoFocus
                                       onKeyDown={(e) => {
                                         if (e.key === "Enter" && phaseTargetValue) {
-                                          updateDesignPhaseTargetMutation.mutate({ phaseValue: phase.value, target: parseInt(phaseTargetValue) });
+                                          updateDesignPhaseTargetMutation.mutate({ phaseValue: phase.value, target: Math.min(parseInt(phaseTargetValue), maxForPhase) });
                                           setEditingPhaseTarget(null);
                                         } else if (e.key === "Escape") {
                                           setEditingPhaseTarget(null);
                                         }
                                       }}
                                     />
-                                    <button type="button" onClick={() => { if (phaseTargetValue) { updateDesignPhaseTargetMutation.mutate({ phaseValue: phase.value, target: parseInt(phaseTargetValue) }); } setEditingPhaseTarget(null); }} className="text-white/40 hover:text-white"><Check className="w-3 h-3" /></button>
+                                    <span className="text-[10px] text-white/30">/{maxForPhase}</span>
+                                    <button type="button" onClick={() => { if (phaseTargetValue) { updateDesignPhaseTargetMutation.mutate({ phaseValue: phase.value, target: Math.min(parseInt(phaseTargetValue), maxForPhase) }); } setEditingPhaseTarget(null); }} className="text-white/40 hover:text-white"><Check className="w-3 h-3" /></button>
                                     <button type="button" onClick={() => setEditingPhaseTarget(null)} className="text-white/30 hover:text-white/60"><X className="w-3 h-3" /></button>
                                   </div>
                                 ) : (
