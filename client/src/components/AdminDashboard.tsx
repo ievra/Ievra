@@ -4785,7 +4785,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
             />
           </div>
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-3">
             <Select value={projectCategoryFilter} onValueChange={(v) => { setProjectCategoryFilter(v); setProjectsPage(1); }}>
               <SelectTrigger className="w-full bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
                 <SelectValue placeholder={language === 'vi' ? 'Tất cả danh mục' : 'All categories'} />
@@ -6359,7 +6359,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
             />
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <Select value={clientTierFilter} onValueChange={(v) => { setClientTierFilter(v); setCurrentPage(1); }}>
               <SelectTrigger className="w-full bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
                 <SelectValue placeholder={language === 'vi' ? 'Tất cả hạng' : 'All tiers'} />
@@ -7483,7 +7483,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           </Card>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
             <Input
@@ -7493,7 +7493,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
             />
           </div>
-          <div className="grid grid-cols-3 sm:flex gap-2 sm:gap-4">
+          <div className="grid grid-cols-3 sm:flex gap-3 sm:gap-4">
             <Select value={bpTierFilter} onValueChange={(v) => { setBpTierFilter(v); setBpCurrentPage(1); }}>
               <SelectTrigger className="w-full sm:w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0 text-xs sm:text-sm">
                 <SelectValue placeholder={language === 'vi' ? 'Tất cả danh mục' : 'All tiers'} />
@@ -7748,7 +7748,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       <div className="space-y-6 p-6">
         <h2 className="text-2xl font-sans font-light min-h-[36px]">{language === 'vi' ? 'Quản Lý Yêu Cầu' : 'Inquiry Management'}</h2>
 
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
             <Input
@@ -7759,7 +7759,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             />
           </div>
           <Select value={inquiryStatusFilter} onValueChange={(val) => { setInquiryStatusFilter(val); setInquiriesPage(1); }}>
-            <SelectTrigger className="w-40">
+            <SelectTrigger className="w-full sm:w-40">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -8646,7 +8646,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         {/* Partners Management Section */}
         <Card className="bg-black border-white/10">
           <CardHeader>
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
               <div>
                 <CardTitle className="text-white">{language === 'vi' ? 'Quản Lý Đối Tác' : 'Partners Management'}</CardTitle>
                 <p className="text-sm text-white/50 mt-1">
@@ -8855,7 +8855,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         {/* FAQ Management Section */}
         <Card className="bg-black border-white/10">
           <CardHeader>
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
               <CardTitle className="text-white">{language === 'vi' ? 'Quản Lý FAQ' : 'FAQ Management'}</CardTitle>
               <Button
                 onClick={() => {
@@ -9050,7 +9050,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         {/* Advantages Management Section */}
         <Card>
           <CardHeader>
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
               <CardTitle>{language === 'vi' ? 'Quản Lý Ưu Điểm (Tại Sao Chọn Chúng Tôi)' : 'Advantages Management (Why Choose Us)'}</CardTitle>
               <Button
                 onClick={() => {
@@ -9232,7 +9232,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         {/* Journey Steps Management Section */}
         <Card>
           <CardHeader>
-            <div className="flex justify-between items-center">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
               <CardTitle>{language === 'vi' ? 'Quản Lý Các Bước Hành Trình (Quy Trình Thiết Kế)' : 'Journey Steps Management (Design Process)'}</CardTitle>
               <Button
                 onClick={() => {
@@ -9567,9 +9567,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           </AlertDialogContent>
         </AlertDialog>
 
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <h2 className="text-2xl font-sans font-light min-h-[36px]">{language === 'vi' ? 'Quản Lý Bài Viết' : 'Articles Management'}</h2>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-shrink-0">
             <Dialog open={isArticleDialogOpen} onOpenChange={setIsArticleDialogOpen}>
               <DialogTrigger asChild>
                 <Button 
@@ -10058,7 +10058,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             </DialogContent>
             </Dialog>
 
-        <div className="flex items-center gap-4">
+        <div className="flex flex-col gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
             <Input
@@ -10068,8 +10068,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
             />
           </div>
+          <div className="grid grid-cols-2 gap-3">
           <Select value={articleCategoryFilter} onValueChange={(v) => { setArticleCategoryFilter(v); setArticlesPage(1); }}>
-            <SelectTrigger className="w-[180px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+            <SelectTrigger className="w-full bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
               <SelectValue placeholder={language === 'vi' ? 'Tất cả danh mục' : 'All categories'} />
             </SelectTrigger>
             <SelectContent>
@@ -10080,7 +10081,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             </SelectContent>
           </Select>
           <Select value={articleStatusFilter} onValueChange={(v) => { setArticleStatusFilter(v); setArticlesPage(1); }}>
-            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+            <SelectTrigger className="w-full bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
               <SelectValue placeholder={language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'} />
             </SelectTrigger>
             <SelectContent>
@@ -10090,6 +10091,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               <SelectItem value="archived">{language === 'vi' ? 'Lưu Trữ' : 'Archived'}</SelectItem>
             </SelectContent>
           </Select>
+          </div>
         </div>
 
         <Card>
@@ -10322,7 +10324,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     }
     return (
       <div className="space-y-6 p-6">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <div>
             <h2 className="text-2xl font-sans font-light">Partners Management</h2>
             <p className="text-sm text-white/50 mt-1">
@@ -10633,7 +10635,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
 
     return (
       <div className="space-y-6 p-6">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <div>
             <h2 className="text-2xl font-sans font-light min-h-[36px]">{language === 'vi' ? 'Quản Lý Người Dùng' : 'User Management'}</h2>
             <p className="text-sm text-white/50 mt-1">
