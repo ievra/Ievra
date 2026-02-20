@@ -107,6 +107,8 @@ export default function LookupAdminTab() {
   const [editingDesignInteraction, setEditingDesignInteraction] = useState<Interaction | null>(null);
   const [viewingDesignInteraction, setViewingDesignInteraction] = useState<Interaction | null>(null);
   const [designInteractionAttachments, setDesignInteractionAttachments] = useState<string[]>([]);
+  const [editingPhaseTarget, setEditingPhaseTarget] = useState<string | null>(null);
+  const [phaseTargetValue, setPhaseTargetValue] = useState("");
 
   const { data: clients = [] } = useQuery<Client[]>({
     queryKey: ['/api/clients'],
@@ -412,6 +414,30 @@ export default function LookupAdminTab() {
     },
     onError: (err: Error) => {
       toast({ title: isVi ? "Lỗi" : "Error", description: err.message, variant: "destructive" });
+    },
+  });
+
+  const updateDesignPhaseTargetMutation = useMutation({
+    mutationFn: async ({ phaseValue, target }: { phaseValue: string; target: number }) => {
+      const currentTargets = (selectedClient?.designPhaseTargets as Record<string, number>) || {};
+      await apiRequest("PUT", `/api/clients/${selectedClient!.id}`, {
+        designPhaseTargets: { ...currentTargets, [phaseValue]: target },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
+    },
+  });
+
+  const updateConstructionPhaseTargetMutation = useMutation({
+    mutationFn: async ({ phaseValue, target }: { phaseValue: string; target: number }) => {
+      const currentTargets = (selectedClient?.constructionPhaseTargets as Record<string, number>) || {};
+      await apiRequest("PUT", `/api/clients/${selectedClient!.id}`, {
+        constructionPhaseTargets: { ...currentTargets, [phaseValue]: target },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
     },
   });
 
@@ -931,65 +957,131 @@ export default function LookupAdminTab() {
                   </div>
                   {interactionsLoading ? (
                     <div className="text-center py-8 text-white/40">{isVi ? "Đang tải..." : "Loading..."}</div>
-                  ) : constructionInteractions.length === 0 ? (
-                    <div className="text-center py-12">
-                      <p className="text-white/30 font-light">{isVi ? "Chưa có nhật ký thi công" : "No construction logs yet"}</p>
-                    </div>
                   ) : (
-                    <Table>
-                      <TableHeader>
-                        <TableRow className="border-white/10">
-                          <TableHead className="text-white/60 w-[5%]">#</TableHead>
-                          <TableHead className="text-white/60 w-[11%]">{isVi ? "Ngày" : "Date"}</TableHead>
-                          <TableHead className="text-white/60 w-[12%]">{isVi ? "Giai đoạn" : "Phase"}</TableHead>
-                          <TableHead className="text-white/60 w-[20%]">{isVi ? "Tiêu đề" : "Title"}</TableHead>
-                          <TableHead className="text-white/60 w-[12%]">{isVi ? "Phụ trách" : "Assigned To"}</TableHead>
-                          <TableHead className="text-white/60 w-[25%]">{isVi ? "Hình ảnh" : "Images"}</TableHead>
-                          <TableHead className="text-white/60 w-[15%]">{isVi ? "Thao tác" : "Actions"}</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {constructionInteractions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
-                          <TableRow key={interaction.id} className="border-white/10">
-                            <TableCell className="text-white/40 text-sm">{index + 1}</TableCell>
-                            <TableCell>
-                              <p className="text-white/70">{formatDate(interaction.date)}</p>
-                            </TableCell>
-                            <TableCell className="text-white/60">
-                              {(() => {
-                                const phaseValue = (interaction as any).phase;
-                                if (!phaseValue) return "—";
-                                const found = constructionPhases.find(p => p.value === phaseValue);
-                                return found ? (isVi ? found.labelVi : found.labelEn) : phaseValue;
-                              })()}
-                            </TableCell>
-                            <TableCell className="text-white">{interaction.title}</TableCell>
-                            <TableCell className="text-white/60">{interaction.assignedTo || "—"}</TableCell>
-                            <TableCell>
-                              {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
-                                <div className="flex gap-1">
-                                  {(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (
-                                    <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10" />
-                                  ))}
-                                </div>
-                              ) : (
-                                <span className="text-white/30">—</span>
-                              )}
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex gap-1">
-                                <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
-                                  <Eye className="w-3.5 h-3.5" />
-                                </Button>
-                                <Button variant="ghost" size="icon" onClick={() => openInteractionDialog(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
-                                  <Pencil className="w-3.5 h-3.5" />
-                                </Button>
+                    <div className="space-y-0">
+                      {constructionPhases.map((phase, phaseIdx) => {
+                        const phaseInteractions = constructionInteractions.filter(i => (i as any).phase === phase.value).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                        const phaseTargets = (selectedClient.constructionPhaseTargets as Record<string, number>) || {};
+                        const phaseTarget = phaseTargets[phase.value] || 0;
+                        return (
+                          <div key={phase.id}>
+                            {phaseIdx > 0 && <div className="border-t border-white/20 my-0" />}
+                            <div className="flex items-center justify-between py-3 px-2">
+                              <span className="text-sm font-medium text-white/70">{isVi ? phase.labelVi : phase.labelEn}</span>
+                              <div className="flex items-center gap-2">
+                                {editingPhaseTarget === `construction_${phase.value}` ? (
+                                  <div className="flex items-center gap-1">
+                                    <input
+                                      type="number"
+                                      min={0}
+                                      max={99}
+                                      value={phaseTargetValue}
+                                      onChange={(e) => setPhaseTargetValue(e.target.value)}
+                                      className="w-10 h-6 bg-transparent border-b border-white/20 text-white text-center text-xs focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                      autoFocus
+                                      onKeyDown={(e) => {
+                                        if (e.key === "Enter" && phaseTargetValue) {
+                                          updateConstructionPhaseTargetMutation.mutate({ phaseValue: phase.value, target: parseInt(phaseTargetValue) });
+                                          setEditingPhaseTarget(null);
+                                        } else if (e.key === "Escape") {
+                                          setEditingPhaseTarget(null);
+                                        }
+                                      }}
+                                    />
+                                    <button type="button" onClick={() => { if (phaseTargetValue) { updateConstructionPhaseTargetMutation.mutate({ phaseValue: phase.value, target: parseInt(phaseTargetValue) }); } setEditingPhaseTarget(null); }} className="text-white/40 hover:text-white"><Check className="w-3 h-3" /></button>
+                                    <button type="button" onClick={() => setEditingPhaseTarget(null)} className="text-white/30 hover:text-white/60"><X className="w-3 h-3" /></button>
+                                  </div>
+                                ) : (
+                                  <span
+                                    className="text-xs text-white/40 cursor-pointer hover:text-white/60"
+                                    onClick={() => { setPhaseTargetValue(String(phaseTarget || "")); setEditingPhaseTarget(`construction_${phase.value}`); }}
+                                  >
+                                    {phaseInteractions.length}{phaseTarget > 0 ? ` / ${phaseTarget}` : ""} <Pencil className="w-2.5 h-2.5 inline opacity-0 group-hover:opacity-50" />
+                                  </span>
+                                )}
                               </div>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                            </div>
+                            {phaseInteractions.length > 0 && (
+                              <Table>
+                                <TableBody>
+                                  {phaseInteractions.map((interaction, index) => (
+                                    <TableRow key={interaction.id} className="border-white/10">
+                                      <TableCell className="text-white/40 text-sm w-[5%]">{index + 1}</TableCell>
+                                      <TableCell className="w-[15%]">
+                                        <p className="text-white/70">{formatDate(interaction.date)}</p>
+                                      </TableCell>
+                                      <TableCell className="text-white w-[25%]">{interaction.title}</TableCell>
+                                      <TableCell className="text-white/60 w-[15%]">{interaction.assignedTo || "—"}</TableCell>
+                                      <TableCell className="w-[25%]">
+                                        {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
+                                          <div className="flex gap-1">
+                                            {(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (
+                                              <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10" />
+                                            ))}
+                                          </div>
+                                        ) : (
+                                          <span className="text-white/30">—</span>
+                                        )}
+                                      </TableCell>
+                                      <TableCell className="w-[15%]">
+                                        <div className="flex gap-1">
+                                          <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
+                                            <Eye className="w-3.5 h-3.5" />
+                                          </Button>
+                                          <Button variant="ghost" size="icon" onClick={() => openInteractionDialog(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
+                                            <Pencil className="w-3.5 h-3.5" />
+                                          </Button>
+                                        </div>
+                                      </TableCell>
+                                    </TableRow>
+                                  ))}
+                                </TableBody>
+                              </Table>
+                            )}
+                          </div>
+                        );
+                      })}
+                      {(() => {
+                        const orphaned = constructionInteractions.filter(i => !(i as any).phase || !constructionPhases.some(p => p.value === (i as any).phase));
+                        if (orphaned.length === 0) return null;
+                        return (
+                          <div>
+                            <div className="border-t border-white/20 my-0" />
+                            <div className="py-3 px-2">
+                              <span className="text-sm font-medium text-white/40">{isVi ? "Khác" : "Other"}</span>
+                            </div>
+                            <Table>
+                              <TableBody>
+                                {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
+                                  <TableRow key={interaction.id} className="border-white/10">
+                                    <TableCell className="text-white/40 text-sm w-[5%]">{index + 1}</TableCell>
+                                    <TableCell className="w-[15%]"><p className="text-white/70">{formatDate(interaction.date)}</p></TableCell>
+                                    <TableCell className="text-white w-[25%]">{interaction.title}</TableCell>
+                                    <TableCell className="text-white/60 w-[15%]">{interaction.assignedTo || "—"}</TableCell>
+                                    <TableCell className="w-[25%]">
+                                      {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
+                                        <div className="flex gap-1">{(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (<img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10" />))}</div>
+                                      ) : (<span className="text-white/30">—</span>)}
+                                    </TableCell>
+                                    <TableCell className="w-[15%]">
+                                      <div className="flex gap-1">
+                                        <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white"><Eye className="w-3.5 h-3.5" /></Button>
+                                        <Button variant="ghost" size="icon" onClick={() => openInteractionDialog(interaction)} className="h-8 w-8 text-white/40 hover:text-white"><Pencil className="w-3.5 h-3.5" /></Button>
+                                      </div>
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </div>
+                        );
+                      })()}
+                      {constructionInteractions.length === 0 && constructionPhases.length === 0 && (
+                        <div className="text-center py-12">
+                          <p className="text-white/30 font-light">{isVi ? "Chưa có nhật ký thi công" : "No construction logs yet"}</p>
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
               )}
@@ -1080,65 +1172,131 @@ export default function LookupAdminTab() {
                   </div>
                   {interactionsLoading ? (
                     <div className="text-center py-8 text-white/40">{isVi ? "Đang tải..." : "Loading..."}</div>
-                  ) : designInteractions.length === 0 ? (
-                    <div className="text-center py-12">
-                      <p className="text-white/30 font-light">{isVi ? "Chưa có nhật ký thiết kế" : "No design logs yet"}</p>
-                    </div>
                   ) : (
-                    <Table>
-                      <TableHeader>
-                        <TableRow className="border-white/10">
-                          <TableHead className="text-white/60 w-[5%]">#</TableHead>
-                          <TableHead className="text-white/60 w-[11%]">{isVi ? "Ngày" : "Date"}</TableHead>
-                          <TableHead className="text-white/60 w-[12%]">{isVi ? "Giai đoạn" : "Phase"}</TableHead>
-                          <TableHead className="text-white/60 w-[20%]">{isVi ? "Tiêu đề" : "Title"}</TableHead>
-                          <TableHead className="text-white/60 w-[12%]">{isVi ? "Phụ trách" : "Assigned To"}</TableHead>
-                          <TableHead className="text-white/60 w-[25%]">{isVi ? "Hình ảnh" : "Images"}</TableHead>
-                          <TableHead className="text-white/60 w-[15%]">{isVi ? "Thao tác" : "Actions"}</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {designInteractions.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
-                          <TableRow key={interaction.id} className="border-white/10">
-                            <TableCell className="text-white/40 text-sm">{index + 1}</TableCell>
-                            <TableCell>
-                              <p className="text-white/70">{formatDate(interaction.date)}</p>
-                            </TableCell>
-                            <TableCell className="text-white/60">
-                              {(() => {
-                                const phaseValue = (interaction as any).phase;
-                                if (!phaseValue) return "—";
-                                const found = designPhases.find(p => p.value === phaseValue);
-                                return found ? (isVi ? found.labelVi : found.labelEn) : phaseValue;
-                              })()}
-                            </TableCell>
-                            <TableCell className="text-white">{interaction.title}</TableCell>
-                            <TableCell className="text-white/60">{interaction.assignedTo || "—"}</TableCell>
-                            <TableCell>
-                              {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
-                                <div className="flex gap-1">
-                                  {(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (
-                                    <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10" />
-                                  ))}
-                                </div>
-                              ) : (
-                                <span className="text-white/30">—</span>
-                              )}
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex gap-1">
-                                <Button variant="ghost" size="icon" onClick={() => setViewingDesignInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
-                                  <Eye className="w-3.5 h-3.5" />
-                                </Button>
-                                <Button variant="ghost" size="icon" onClick={() => openDesignInteractionDialog(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
-                                  <Pencil className="w-3.5 h-3.5" />
-                                </Button>
+                    <div className="space-y-0">
+                      {designPhases.map((phase, phaseIdx) => {
+                        const phaseInteractions = designInteractions.filter(i => (i as any).phase === phase.value).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                        const phaseTargets = (selectedClient.designPhaseTargets as Record<string, number>) || {};
+                        const phaseTarget = phaseTargets[phase.value] || 0;
+                        return (
+                          <div key={phase.id}>
+                            {phaseIdx > 0 && <div className="border-t border-white/20 my-0" />}
+                            <div className="flex items-center justify-between py-3 px-2">
+                              <span className="text-sm font-medium text-white/70">{isVi ? phase.labelVi : phase.labelEn}</span>
+                              <div className="flex items-center gap-2">
+                                {editingPhaseTarget === `design_${phase.value}` ? (
+                                  <div className="flex items-center gap-1">
+                                    <input
+                                      type="number"
+                                      min={0}
+                                      max={99}
+                                      value={phaseTargetValue}
+                                      onChange={(e) => setPhaseTargetValue(e.target.value)}
+                                      className="w-10 h-6 bg-transparent border-b border-white/20 text-white text-center text-xs focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                      autoFocus
+                                      onKeyDown={(e) => {
+                                        if (e.key === "Enter" && phaseTargetValue) {
+                                          updateDesignPhaseTargetMutation.mutate({ phaseValue: phase.value, target: parseInt(phaseTargetValue) });
+                                          setEditingPhaseTarget(null);
+                                        } else if (e.key === "Escape") {
+                                          setEditingPhaseTarget(null);
+                                        }
+                                      }}
+                                    />
+                                    <button type="button" onClick={() => { if (phaseTargetValue) { updateDesignPhaseTargetMutation.mutate({ phaseValue: phase.value, target: parseInt(phaseTargetValue) }); } setEditingPhaseTarget(null); }} className="text-white/40 hover:text-white"><Check className="w-3 h-3" /></button>
+                                    <button type="button" onClick={() => setEditingPhaseTarget(null)} className="text-white/30 hover:text-white/60"><X className="w-3 h-3" /></button>
+                                  </div>
+                                ) : (
+                                  <span
+                                    className="text-xs text-white/40 cursor-pointer hover:text-white/60"
+                                    onClick={() => { setPhaseTargetValue(String(phaseTarget || "")); setEditingPhaseTarget(`design_${phase.value}`); }}
+                                  >
+                                    {phaseInteractions.length}{phaseTarget > 0 ? ` / ${phaseTarget}` : ""} <Pencil className="w-2.5 h-2.5 inline opacity-0 group-hover:opacity-50" />
+                                  </span>
+                                )}
                               </div>
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
+                            </div>
+                            {phaseInteractions.length > 0 && (
+                              <Table>
+                                <TableBody>
+                                  {phaseInteractions.map((interaction, index) => (
+                                    <TableRow key={interaction.id} className="border-white/10">
+                                      <TableCell className="text-white/40 text-sm w-[5%]">{index + 1}</TableCell>
+                                      <TableCell className="w-[15%]">
+                                        <p className="text-white/70">{formatDate(interaction.date)}</p>
+                                      </TableCell>
+                                      <TableCell className="text-white w-[25%]">{interaction.title}</TableCell>
+                                      <TableCell className="text-white/60 w-[15%]">{interaction.assignedTo || "—"}</TableCell>
+                                      <TableCell className="w-[25%]">
+                                        {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
+                                          <div className="flex gap-1">
+                                            {(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (
+                                              <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10" />
+                                            ))}
+                                          </div>
+                                        ) : (
+                                          <span className="text-white/30">—</span>
+                                        )}
+                                      </TableCell>
+                                      <TableCell className="w-[15%]">
+                                        <div className="flex gap-1">
+                                          <Button variant="ghost" size="icon" onClick={() => setViewingDesignInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
+                                            <Eye className="w-3.5 h-3.5" />
+                                          </Button>
+                                          <Button variant="ghost" size="icon" onClick={() => openDesignInteractionDialog(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
+                                            <Pencil className="w-3.5 h-3.5" />
+                                          </Button>
+                                        </div>
+                                      </TableCell>
+                                    </TableRow>
+                                  ))}
+                                </TableBody>
+                              </Table>
+                            )}
+                          </div>
+                        );
+                      })}
+                      {(() => {
+                        const orphaned = designInteractions.filter(i => !(i as any).phase || !designPhases.some(p => p.value === (i as any).phase));
+                        if (orphaned.length === 0) return null;
+                        return (
+                          <div>
+                            <div className="border-t border-white/20 my-0" />
+                            <div className="py-3 px-2">
+                              <span className="text-sm font-medium text-white/40">{isVi ? "Khác" : "Other"}</span>
+                            </div>
+                            <Table>
+                              <TableBody>
+                                {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
+                                  <TableRow key={interaction.id} className="border-white/10">
+                                    <TableCell className="text-white/40 text-sm w-[5%]">{index + 1}</TableCell>
+                                    <TableCell className="w-[15%]"><p className="text-white/70">{formatDate(interaction.date)}</p></TableCell>
+                                    <TableCell className="text-white w-[25%]">{interaction.title}</TableCell>
+                                    <TableCell className="text-white/60 w-[15%]">{interaction.assignedTo || "—"}</TableCell>
+                                    <TableCell className="w-[25%]">
+                                      {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
+                                        <div className="flex gap-1">{(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (<img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10" />))}</div>
+                                      ) : (<span className="text-white/30">—</span>)}
+                                    </TableCell>
+                                    <TableCell className="w-[15%]">
+                                      <div className="flex gap-1">
+                                        <Button variant="ghost" size="icon" onClick={() => setViewingDesignInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white"><Eye className="w-3.5 h-3.5" /></Button>
+                                        <Button variant="ghost" size="icon" onClick={() => openDesignInteractionDialog(interaction)} className="h-8 w-8 text-white/40 hover:text-white"><Pencil className="w-3.5 h-3.5" /></Button>
+                                      </div>
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </div>
+                        );
+                      })()}
+                      {designInteractions.length === 0 && designPhases.length === 0 && (
+                        <div className="text-center py-12">
+                          <p className="text-white/30 font-light">{isVi ? "Chưa có nhật ký thiết kế" : "No design logs yet"}</p>
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
               )}

@@ -87,6 +87,8 @@ export const clients = pgTable("clients", {
   constructionTimeline: integer("construction_timeline"),
   // Design Timeline target (number of days)
   designTimeline: integer("design_timeline"),
+  designPhaseTargets: jsonb("design_phase_targets").default({}),
+  constructionPhaseTargets: jsonb("construction_phase_targets").default({}),
   // Warranty & Additional Info
   warrantyStatus: varchar("warranty_status", { length: 30 }).default("none"), // none, active, expired
   warrantyExpiry: timestamp("warranty_expiry"), // Ngày hết hạn bảo hành
