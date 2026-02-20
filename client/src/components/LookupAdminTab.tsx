@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -111,6 +111,25 @@ export default function LookupAdminTab() {
   const [designInteractionAttachments, setDesignInteractionAttachments] = useState<string[]>([]);
   const [editingPhaseTarget, setEditingPhaseTarget] = useState<string | null>(null);
   const [phaseTargetValue, setPhaseTargetValue] = useState("");
+  const [lightboxImages, setLightboxImages] = useState<string[]>([]);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+
+  const openLightbox = (images: string[], index: number) => {
+    setLightboxImages(images);
+    setLightboxIndex(index);
+  };
+  const closeLightbox = () => setLightboxImages([]);
+
+  useEffect(() => {
+    if (lightboxImages.length === 0) return;
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") closeLightbox();
+      if (e.key === "ArrowLeft") setLightboxIndex((prev) => (prev - 1 + lightboxImages.length) % lightboxImages.length);
+      if (e.key === "ArrowRight") setLightboxIndex((prev) => (prev + 1) % lightboxImages.length);
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [lightboxImages]);
 
   const { data: clients = [] } = useQuery<Client[]>({
     queryKey: ['/api/clients'],
@@ -1106,9 +1125,9 @@ export default function LookupAdminTab() {
                                       <TableCell className="text-white/60 w-[15%]">{interaction.assignedTo || "—"}</TableCell>
                                       <TableCell className="w-[25%]">
                                         {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
-                                          <div className="flex gap-1">
+                                          <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>
                                             {(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (
-                                              <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10" />
+                                              <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />
                                             ))}
                                           </div>
                                         ) : (
@@ -1152,7 +1171,7 @@ export default function LookupAdminTab() {
                                     <TableCell className="text-white/60 w-[15%]">{interaction.assignedTo || "—"}</TableCell>
                                     <TableCell className="w-[25%]">
                                       {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
-                                        <div className="flex gap-1">{(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (<img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10" />))}</div>
+                                        <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>{(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (<img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />))}</div>
                                       ) : (<span className="text-white/30">—</span>)}
                                     </TableCell>
                                     <TableCell className="w-[15%]">
@@ -1350,9 +1369,9 @@ export default function LookupAdminTab() {
                                       <TableCell className="text-white/60 w-[15%]">{interaction.assignedTo || "—"}</TableCell>
                                       <TableCell className="w-[25%]">
                                         {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
-                                          <div className="flex gap-1">
+                                          <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>
                                             {(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (
-                                              <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10" />
+                                              <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />
                                             ))}
                                           </div>
                                         ) : (
@@ -1396,7 +1415,7 @@ export default function LookupAdminTab() {
                                     <TableCell className="text-white/60 w-[15%]">{interaction.assignedTo || "—"}</TableCell>
                                     <TableCell className="w-[25%]">
                                       {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
-                                        <div className="flex gap-1">{(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (<img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10" />))}</div>
+                                        <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>{(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (<img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />))}</div>
                                       ) : (<span className="text-white/30">—</span>)}
                                     </TableCell>
                                     <TableCell className="w-[15%]">
@@ -1546,9 +1565,9 @@ export default function LookupAdminTab() {
                             <TableCell className="text-white/60">{log.assignedTo || "—"}</TableCell>
                             <TableCell>
                               {Array.isArray(log.attachments) && log.attachments.length > 0 ? (
-                                <div className="flex gap-1">
+                                <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(log.attachments as string[], 0)}>
                                   {(log.attachments as string[]).slice(0, 5).map((url, idx) => (
-                                    <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10" />
+                                    <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />
                                   ))}
                                 </div>
                               ) : (
@@ -1845,9 +1864,9 @@ export default function LookupAdminTab() {
                   <span className="text-xs text-white/40 block mb-2">{isVi ? "Hình ảnh đính kèm" : "Attachments"} ({(viewingInteraction.attachments as string[]).length}/5)</span>
                   <div className="grid grid-cols-3 gap-2">
                     {(viewingInteraction.attachments as string[]).map((url, idx) => (
-                      <a key={idx} href={url} target="_blank" rel="noopener noreferrer">
-                        <img src={url} alt="" className="w-full h-32 object-cover border border-white/10 hover:border-white/40 transition-colors cursor-pointer" />
-                      </a>
+                      <div key={idx} onClick={() => openLightbox(viewingInteraction.attachments as string[], idx)} className="cursor-pointer">
+                        <img src={url} alt="" className="w-full h-32 object-cover border border-white/10 hover:border-white/40 transition-colors" />
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -2016,9 +2035,9 @@ export default function LookupAdminTab() {
                   <span className="text-xs text-white/40 block mb-2">{isVi ? "Hình ảnh đính kèm" : "Attachments"} ({(viewingDesignInteraction.attachments as string[]).length}/5)</span>
                   <div className="grid grid-cols-3 gap-2">
                     {(viewingDesignInteraction.attachments as string[]).map((url, idx) => (
-                      <a key={idx} href={url} target="_blank" rel="noopener noreferrer">
-                        <img src={url} alt="" className="w-full h-32 object-cover border border-white/10 hover:border-white/40 transition-colors cursor-pointer" />
-                      </a>
+                      <div key={idx} onClick={() => openLightbox(viewingDesignInteraction.attachments as string[], idx)} className="cursor-pointer">
+                        <img src={url} alt="" className="w-full h-32 object-cover border border-white/10 hover:border-white/40 transition-colors" />
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -2027,6 +2046,44 @@ export default function LookupAdminTab() {
           )}
         </DialogContent>
       </Dialog>
+      {lightboxImages.length > 0 && (
+        <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center" onClick={closeLightbox}>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); closeLightbox(); }}
+            className="absolute top-4 right-4 text-white/60 hover:text-white z-10 p-2"
+          >
+            <X className="w-6 h-6" />
+          </button>
+          {lightboxImages.length > 1 && (
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex - 1 + lightboxImages.length) % lightboxImages.length); }}
+              className="absolute left-4 text-white/60 hover:text-white z-10 p-2"
+            >
+              <ChevronLeft className="w-8 h-8" />
+            </button>
+          )}
+          <img
+            src={lightboxImages[lightboxIndex]}
+            alt=""
+            className="max-w-[90vw] max-h-[90vh] object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+          {lightboxImages.length > 1 && (
+            <button
+              type="button"
+              onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex + 1) % lightboxImages.length); }}
+              className="absolute right-4 text-white/60 hover:text-white z-10 p-2"
+            >
+              <ChevronRight className="w-8 h-8" />
+            </button>
+          )}
+          <div className="absolute bottom-4 text-white/50 text-sm">
+            {lightboxIndex + 1} / {lightboxImages.length}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
