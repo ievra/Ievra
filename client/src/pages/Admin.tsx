@@ -113,7 +113,7 @@ export default function Admin() {
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-white/3 to-white/1 backdrop-blur-xl rounded-none"></div>
               <div className="relative bg-black/30 backdrop-blur-md border border-white/10 rounded-none p-6">
-                <div className="grid grid-cols-5 gap-2">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-2">
                   {tabs.map((tab) => {
                     const IconComponent = tab.icon;
                     const isActive = activeTab === tab.id;
