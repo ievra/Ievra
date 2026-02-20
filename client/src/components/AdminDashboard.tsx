@@ -8244,7 +8244,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               {/* Featured Projects */}
               <div className="p-4">
                 <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Mục Dự Án Nổi Bật' : 'Featured Projects Section'}</h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-4">
                     <div>
                       <label className="text-sm font-light mb-2 block">Title (EN)</label>
@@ -8289,7 +8289,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               {/* Featured News */}
               <div className="p-4">
                 <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Mục Tin Tức Nổi Bật' : 'Featured News Section'}</h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-4">
                     <div>
                       <label className="text-sm font-light mb-2 block">Title (EN)</label>
@@ -8334,7 +8334,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               {/* CTA/Questions */}
               <div className="p-4">
                 <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Mục CTA/Câu Hỏi' : 'CTA/Questions Section'}</h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-4">
                     <div>
                       <label className="text-sm font-light mb-2 block">Title (EN)</label>
@@ -8379,7 +8379,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               {/* Journey Steps */}
               <div className="p-4">
                 <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Mục Các Bước Hành Trình' : 'Journey Steps Section'}</h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-4">
                     <div>
                       <label className="text-sm font-light mb-2 block">Journey Title (EN)</label>
@@ -8424,7 +8424,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               {/* Advantages */}
               <div className="p-4">
                 <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Mục Ưu Điểm' : 'Advantages Section'}</h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-4">
                     <div>
                       <label className="text-sm font-light mb-2 block">Advantages Title (EN)</label>
@@ -8467,7 +8467,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               {/* Partners */}
               <div className="p-4">
                 <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Mục Đối Tác' : 'Partners Section'}</h3>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label className="text-sm font-light mb-2 block">Partners Title (EN)</label>
                     <Input 
