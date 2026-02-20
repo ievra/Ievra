@@ -4785,9 +4785,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
             />
           </div>
-          <div className="grid grid-cols-3 gap-3 flex-shrink-0">
+          <div className="grid grid-cols-3 sm:flex gap-3 flex-shrink-0">
             <Select value={projectCategoryFilter} onValueChange={(v) => { setProjectCategoryFilter(v); setProjectsPage(1); }}>
-              <SelectTrigger className="w-full bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectTrigger className="w-full sm:w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
                 <SelectValue placeholder={language === 'vi' ? 'Tất cả danh mục' : 'All categories'} />
               </SelectTrigger>
               <SelectContent>
@@ -4798,7 +4798,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               </SelectContent>
             </Select>
             <Select value={projectYearFilter} onValueChange={(v) => { setProjectYearFilter(v); setProjectsPage(1); }}>
-              <SelectTrigger className="w-full bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectTrigger className="w-full sm:w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
                 <SelectValue placeholder={language === 'vi' ? 'Tất cả các năm' : 'All years'} />
               </SelectTrigger>
               <SelectContent>
@@ -4809,7 +4809,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               </SelectContent>
             </Select>
             <Select value={projectStatusFilter} onValueChange={(v) => { setProjectStatusFilter(v); setProjectsPage(1); }}>
-              <SelectTrigger className="w-full bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectTrigger className="w-full sm:w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
                 <SelectValue placeholder={language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'} />
               </SelectTrigger>
               <SelectContent>
@@ -6361,9 +6361,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
             />
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 flex-shrink-0">
+          <div className="grid grid-cols-2 sm:flex gap-3 flex-shrink-0">
             <Select value={clientTierFilter} onValueChange={(v) => { setClientTierFilter(v); setCurrentPage(1); }}>
-              <SelectTrigger className="w-full bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectTrigger className="w-full sm:w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
                 <SelectValue placeholder={language === 'vi' ? 'Tất cả hạng' : 'All tiers'} />
               </SelectTrigger>
               <SelectContent>
@@ -6376,7 +6376,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               </SelectContent>
             </Select>
             <Select value={clientWarrantyFilter} onValueChange={(v) => { setClientWarrantyFilter(v); setCurrentPage(1); }}>
-              <SelectTrigger className="w-full bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectTrigger className="w-full sm:w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
                 <SelectValue placeholder={language === 'vi' ? 'Tất cả bảo hành' : 'All warranty'} />
               </SelectTrigger>
               <SelectContent>
@@ -6386,7 +6386,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               </SelectContent>
             </Select>
             <Select value={clientStageFilter} onValueChange={(v) => { setClientStageFilter(v); setCurrentPage(1); }}>
-              <SelectTrigger className="w-full bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectTrigger className="w-full sm:w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
                 <SelectValue placeholder={language === 'vi' ? 'Tất cả giai đoạn' : 'All stages'} />
               </SelectTrigger>
               <SelectContent>
@@ -6399,7 +6399,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               </SelectContent>
             </Select>
             <Select value={clientStatusFilter} onValueChange={(v) => { setClientStatusFilter(v); setCurrentPage(1); }}>
-              <SelectTrigger className="w-full bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectTrigger className="w-full sm:w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
                 <SelectValue placeholder={language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'} />
               </SelectTrigger>
               <SelectContent>
@@ -7761,8 +7761,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             />
           </div>
           <Select value={inquiryStatusFilter} onValueChange={(val) => { setInquiryStatusFilter(val); setInquiriesPage(1); }}>
-            <SelectTrigger className="w-full sm:w-40 flex-shrink-0">
-              <SelectValue />
+            <SelectTrigger className="w-full sm:w-[160px] flex-shrink-0 bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectValue placeholder={language === 'vi' ? 'Tất Cả' : 'All'} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{language === 'vi' ? 'Tất Cả' : 'All'}</SelectItem>
@@ -10072,9 +10072,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
             />
           </div>
-          <div className="grid grid-cols-2 gap-3 flex-shrink-0">
+          <div className="grid grid-cols-2 sm:flex gap-3 flex-shrink-0">
           <Select value={articleCategoryFilter} onValueChange={(v) => { setArticleCategoryFilter(v); setArticlesPage(1); }}>
-            <SelectTrigger className="w-full bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+            <SelectTrigger className="w-full sm:w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
               <SelectValue placeholder={language === 'vi' ? 'Tất cả danh mục' : 'All categories'} />
             </SelectTrigger>
             <SelectContent>
@@ -10085,7 +10085,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             </SelectContent>
           </Select>
           <Select value={articleStatusFilter} onValueChange={(v) => { setArticleStatusFilter(v); setArticlesPage(1); }}>
-            <SelectTrigger className="w-full bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+            <SelectTrigger className="w-full sm:w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
               <SelectValue placeholder={language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'} />
             </SelectTrigger>
             <SelectContent>
