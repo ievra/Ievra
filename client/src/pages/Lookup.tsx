@@ -648,6 +648,9 @@ export default function Lookup() {
               {viewingInteraction.description && (
                 <div><span className="text-white/40 text-sm">{isVi ? "Mô tả" : "Description"}</span><p className="text-white text-sm mt-1">{viewingInteraction.description}</p></div>
               )}
+              {viewingInteraction.nextAction && (
+                <div><span className="text-white/40 text-sm">{isVi ? "Đề xuất" : "Suggestion"}</span><p className="text-white text-sm mt-1">{viewingInteraction.nextAction}</p></div>
+              )}
               {viewingInteraction.outcome && (
                 <div><span className="text-white/40 text-sm">{isVi ? "Kết quả" : "Outcome"}</span><p className="text-white text-sm mt-1">{viewingInteraction.outcome}</p></div>
               )}
