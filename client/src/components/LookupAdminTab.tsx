@@ -417,10 +417,24 @@ export default function LookupAdminTab() {
     },
   });
 
+  const getDesignPhaseTargetsSum = (excludePhase?: string) => {
+    const targets = (selectedClient?.designPhaseTargets as Record<string, number>) || {};
+    return Object.entries(targets).reduce((sum, [key, val]) => key === excludePhase ? sum : sum + (val || 0), 0);
+  };
+
+  const getConstructionPhaseTargetsSum = (excludePhase?: string) => {
+    const targets = (selectedClient?.constructionPhaseTargets as Record<string, number>) || {};
+    return Object.entries(targets).reduce((sum, [key, val]) => key === excludePhase ? sum : sum + (val || 0), 0);
+  };
+
   const updateDesignPhaseTargetMutation = useMutation({
     mutationFn: async ({ phaseValue, target }: { phaseValue: string; target: number }) => {
       const currentTargets = (selectedClient?.designPhaseTargets as Record<string, number>) || {};
-      const newTargets = { ...currentTargets, [phaseValue]: target };
+      const totalTarget = selectedClient?.designTimeline || 0;
+      const otherSum = Object.entries(currentTargets).reduce((sum, [key, val]) => key === phaseValue ? sum : sum + (val || 0), 0);
+      const maxAllowed = Math.max(0, totalTarget - otherSum);
+      const clampedTarget = Math.min(target, maxAllowed);
+      const newTargets = { ...currentTargets, [phaseValue]: clampedTarget };
       await apiRequest("PUT", `/api/clients/${selectedClient!.id}`, {
         designPhaseTargets: newTargets,
       });
@@ -435,7 +449,11 @@ export default function LookupAdminTab() {
   const updateConstructionPhaseTargetMutation = useMutation({
     mutationFn: async ({ phaseValue, target }: { phaseValue: string; target: number }) => {
       const currentTargets = (selectedClient?.constructionPhaseTargets as Record<string, number>) || {};
-      const newTargets = { ...currentTargets, [phaseValue]: target };
+      const totalTarget = selectedClient?.constructionTimeline || 0;
+      const otherSum = Object.entries(currentTargets).reduce((sum, [key, val]) => key === phaseValue ? sum : sum + (val || 0), 0);
+      const maxAllowed = Math.max(0, totalTarget - otherSum);
+      const clampedTarget = Math.min(target, maxAllowed);
+      const newTargets = { ...currentTargets, [phaseValue]: clampedTarget };
       await apiRequest("PUT", `/api/clients/${selectedClient!.id}`, {
         constructionPhaseTargets: newTargets,
       });
@@ -975,7 +993,9 @@ export default function LookupAdminTab() {
                             <div className="flex items-center justify-between py-3 px-2">
                               <span className="text-sm font-medium text-white/70">{isVi ? phase.labelVi : phase.labelEn}</span>
                               <div className="flex items-center gap-4">
-                                {editingPhaseTarget === `construction_${phase.value}` ? (
+                                {(() => {
+                                  const constMaxForPhase = Math.max(0, (selectedClient.constructionTimeline || 0) - getConstructionPhaseTargetsSum(phase.value));
+                                  return editingPhaseTarget === `construction_${phase.value}` ? (
                                   <div className="flex items-center gap-1.5">
                                     <button
                                       type="button"
@@ -987,9 +1007,9 @@ export default function LookupAdminTab() {
                                     <input
                                       type="number"
                                       min={0}
-                                      max={99}
+                                      max={constMaxForPhase}
                                       value={phaseTargetValue}
-                                      onChange={(e) => setPhaseTargetValue(e.target.value)}
+                                      onChange={(e) => { const v = parseInt(e.target.value || "0"); setPhaseTargetValue(String(Math.min(v, constMaxForPhase))); }}
                                       className="w-10 h-6 bg-transparent border-b border-white/20 text-white text-center text-xs focus:outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                       autoFocus
                                       onKeyDown={(e) => {
@@ -1003,11 +1023,12 @@ export default function LookupAdminTab() {
                                     />
                                     <button
                                       type="button"
-                                      onClick={() => setPhaseTargetValue(String(Math.min(99, parseInt(phaseTargetValue || "0") + 1)))}
+                                      onClick={() => setPhaseTargetValue(String(Math.min(constMaxForPhase, parseInt(phaseTargetValue || "0") + 1)))}
                                       className="text-white/30 hover:text-white transition-colors p-0.5"
                                     >
                                       <ChevronRight className="w-3.5 h-3.5" />
                                     </button>
+                                    <span className="text-[10px] text-white/30 ml-0.5">/{constMaxForPhase}</span>
                                     <button type="button" onClick={() => { if (phaseTargetValue) { updateConstructionPhaseTargetMutation.mutate({ phaseValue: phase.value, target: parseInt(phaseTargetValue) }); } setEditingPhaseTarget(null); }} className="text-white/40 hover:text-white transition-colors ml-1"><Check className="w-3.5 h-3.5" /></button>
                                     <button type="button" onClick={() => setEditingPhaseTarget(null)} className="text-white/30 hover:text-white/60 transition-colors"><X className="w-3 h-3" /></button>
                                   </div>
@@ -1029,7 +1050,8 @@ export default function LookupAdminTab() {
                                   >
                                     <Plus className="w-3 h-3" /> {isVi ? "Mục tiêu" : "Target"}
                                   </span>
-                                )}
+                                );
+                                })()}
                               </div>
                             </div>
                             {phaseInteractions.length > 0 && (
@@ -1215,7 +1237,9 @@ export default function LookupAdminTab() {
                             <div className="flex items-center justify-between py-3 px-2">
                               <span className="text-sm font-medium text-white/70">{isVi ? phase.labelVi : phase.labelEn}</span>
                               <div className="flex items-center gap-4">
-                                {editingPhaseTarget === `design_${phase.value}` ? (
+                                {(() => {
+                                  const designMaxForPhase = Math.max(0, (selectedClient.designTimeline || 0) - getDesignPhaseTargetsSum(phase.value));
+                                  return editingPhaseTarget === `design_${phase.value}` ? (
                                   <div className="flex items-center gap-1.5">
                                     <button
                                       type="button"
@@ -1227,9 +1251,9 @@ export default function LookupAdminTab() {
                                     <input
                                       type="number"
                                       min={0}
-                                      max={99}
+                                      max={designMaxForPhase}
                                       value={phaseTargetValue}
-                                      onChange={(e) => setPhaseTargetValue(e.target.value)}
+                                      onChange={(e) => { const v = parseInt(e.target.value || "0"); setPhaseTargetValue(String(Math.min(v, designMaxForPhase))); }}
                                       className="w-10 h-6 bg-transparent border-b border-white/20 text-white text-center text-xs focus:outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                       autoFocus
                                       onKeyDown={(e) => {
@@ -1243,11 +1267,12 @@ export default function LookupAdminTab() {
                                     />
                                     <button
                                       type="button"
-                                      onClick={() => setPhaseTargetValue(String(Math.min(99, parseInt(phaseTargetValue || "0") + 1)))}
+                                      onClick={() => setPhaseTargetValue(String(Math.min(designMaxForPhase, parseInt(phaseTargetValue || "0") + 1)))}
                                       className="text-white/30 hover:text-white transition-colors p-0.5"
                                     >
                                       <ChevronRight className="w-3.5 h-3.5" />
                                     </button>
+                                    <span className="text-[10px] text-white/30 ml-0.5">/{designMaxForPhase}</span>
                                     <button type="button" onClick={() => { if (phaseTargetValue) { updateDesignPhaseTargetMutation.mutate({ phaseValue: phase.value, target: parseInt(phaseTargetValue) }); } setEditingPhaseTarget(null); }} className="text-white/40 hover:text-white transition-colors ml-1"><Check className="w-3.5 h-3.5" /></button>
                                     <button type="button" onClick={() => setEditingPhaseTarget(null)} className="text-white/30 hover:text-white/60 transition-colors"><X className="w-3 h-3" /></button>
                                   </div>
@@ -1269,7 +1294,8 @@ export default function LookupAdminTab() {
                                   >
                                     <Plus className="w-3 h-3" /> {isVi ? "Mục tiêu" : "Target"}
                                   </span>
-                                )}
+                                );
+                                })()}
                               </div>
                             </div>
                             {phaseInteractions.length > 0 && (
