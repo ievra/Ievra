@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -2114,8 +2115,8 @@ export default function LookupAdminTab() {
           )}
         </DialogContent>
       </Dialog>
-      {lightboxImages.length > 0 && (
-        <div className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center overflow-hidden" onClick={closeLightbox} onWheel={(e) => e.preventDefault()} onTouchMove={(e) => e.preventDefault()}>
+      {lightboxImages.length > 0 && createPortal(
+        <div className="fixed inset-0 z-[9999] bg-black/90 flex items-center justify-center overflow-hidden" onClick={closeLightbox} onWheel={(e) => e.preventDefault()} onTouchMove={(e) => e.preventDefault()}>
           <button
             type="button"
             onClick={(e) => { e.stopPropagation(); closeLightbox(); }}
@@ -2150,7 +2151,8 @@ export default function LookupAdminTab() {
           <div className="absolute bottom-4 text-white/50 text-sm">
             {lightboxIndex + 1} / {lightboxImages.length}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
