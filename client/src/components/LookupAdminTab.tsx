@@ -968,16 +968,23 @@ export default function LookupAdminTab() {
                             {phaseIdx > 0 && <div className="border-t border-white/20 my-0" />}
                             <div className="flex items-center justify-between py-3 px-2">
                               <span className="text-sm font-medium text-white/70">{isVi ? phase.labelVi : phase.labelEn}</span>
-                              <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-4">
                                 {editingPhaseTarget === `construction_${phase.value}` ? (
-                                  <div className="flex items-center gap-1">
+                                  <div className="flex items-center gap-1.5">
+                                    <button
+                                      type="button"
+                                      onClick={() => setPhaseTargetValue(String(Math.max(0, parseInt(phaseTargetValue || "0") - 1)))}
+                                      className="text-white/30 hover:text-white transition-colors p-0.5"
+                                    >
+                                      <ChevronLeft className="w-3.5 h-3.5" />
+                                    </button>
                                     <input
                                       type="number"
                                       min={0}
                                       max={99}
                                       value={phaseTargetValue}
                                       onChange={(e) => setPhaseTargetValue(e.target.value)}
-                                      className="w-10 h-6 bg-transparent border-b border-white/20 text-white text-center text-xs focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                      className="w-10 h-6 bg-transparent border-b border-white/20 text-white text-center text-xs focus:outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                       autoFocus
                                       onKeyDown={(e) => {
                                         if (e.key === "Enter" && phaseTargetValue) {
@@ -988,15 +995,33 @@ export default function LookupAdminTab() {
                                         }
                                       }}
                                     />
-                                    <button type="button" onClick={() => { if (phaseTargetValue) { updateConstructionPhaseTargetMutation.mutate({ phaseValue: phase.value, target: parseInt(phaseTargetValue) }); } setEditingPhaseTarget(null); }} className="text-white/40 hover:text-white"><Check className="w-3 h-3" /></button>
-                                    <button type="button" onClick={() => setEditingPhaseTarget(null)} className="text-white/30 hover:text-white/60"><X className="w-3 h-3" /></button>
+                                    <button
+                                      type="button"
+                                      onClick={() => setPhaseTargetValue(String(Math.min(99, parseInt(phaseTargetValue || "0") + 1)))}
+                                      className="text-white/30 hover:text-white transition-colors p-0.5"
+                                    >
+                                      <ChevronRight className="w-3.5 h-3.5" />
+                                    </button>
+                                    <button type="button" onClick={() => { if (phaseTargetValue) { updateConstructionPhaseTargetMutation.mutate({ phaseValue: phase.value, target: parseInt(phaseTargetValue) }); } setEditingPhaseTarget(null); }} className="text-white/40 hover:text-white transition-colors ml-1"><Check className="w-3.5 h-3.5" /></button>
+                                    <button type="button" onClick={() => setEditingPhaseTarget(null)} className="text-white/30 hover:text-white/60 transition-colors"><X className="w-3 h-3" /></button>
+                                  </div>
+                                ) : phaseTarget > 0 ? (
+                                  <div className="flex items-center gap-4">
+                                    <div className="cursor-pointer group" onClick={() => { setPhaseTargetValue(String(phaseTarget)); setEditingPhaseTarget(`construction_${phase.value}`); }}>
+                                      <span className="text-[10px] text-white/40">{isVi ? "Mục tiêu" : "Target"}</span>
+                                      <p className="text-xs text-white font-light group-hover:text-white/70">{phaseTarget} <Pencil className="w-2.5 h-2.5 inline opacity-0 group-hover:opacity-50" /></p>
+                                    </div>
+                                    <div>
+                                      <span className="text-[10px] text-white/40">{isVi ? "Đã ghi" : "Logged"}</span>
+                                      <p className="text-xs text-white font-light">{phaseInteractions.length} / {phaseTarget}</p>
+                                    </div>
                                   </div>
                                 ) : (
                                   <span
-                                    className="text-xs text-white/40 cursor-pointer hover:text-white/60"
-                                    onClick={() => { setPhaseTargetValue(String(phaseTarget || "")); setEditingPhaseTarget(`construction_${phase.value}`); }}
+                                    className="text-xs text-white/30 cursor-pointer hover:text-white/50 flex items-center gap-1"
+                                    onClick={() => { setPhaseTargetValue(""); setEditingPhaseTarget(`construction_${phase.value}`); }}
                                   >
-                                    {phaseInteractions.length}{phaseTarget > 0 ? ` / ${phaseTarget}` : ""} <Pencil className="w-2.5 h-2.5 inline opacity-0 group-hover:opacity-50" />
+                                    <Plus className="w-3 h-3" /> {isVi ? "Mục tiêu" : "Target"}
                                   </span>
                                 )}
                               </div>
@@ -1183,16 +1208,23 @@ export default function LookupAdminTab() {
                             {phaseIdx > 0 && <div className="border-t border-white/20 my-0" />}
                             <div className="flex items-center justify-between py-3 px-2">
                               <span className="text-sm font-medium text-white/70">{isVi ? phase.labelVi : phase.labelEn}</span>
-                              <div className="flex items-center gap-2">
+                              <div className="flex items-center gap-4">
                                 {editingPhaseTarget === `design_${phase.value}` ? (
-                                  <div className="flex items-center gap-1">
+                                  <div className="flex items-center gap-1.5">
+                                    <button
+                                      type="button"
+                                      onClick={() => setPhaseTargetValue(String(Math.max(0, parseInt(phaseTargetValue || "0") - 1)))}
+                                      className="text-white/30 hover:text-white transition-colors p-0.5"
+                                    >
+                                      <ChevronLeft className="w-3.5 h-3.5" />
+                                    </button>
                                     <input
                                       type="number"
                                       min={0}
                                       max={99}
                                       value={phaseTargetValue}
                                       onChange={(e) => setPhaseTargetValue(e.target.value)}
-                                      className="w-10 h-6 bg-transparent border-b border-white/20 text-white text-center text-xs focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                                      className="w-10 h-6 bg-transparent border-b border-white/20 text-white text-center text-xs focus:outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                       autoFocus
                                       onKeyDown={(e) => {
                                         if (e.key === "Enter" && phaseTargetValue) {
@@ -1203,15 +1235,33 @@ export default function LookupAdminTab() {
                                         }
                                       }}
                                     />
-                                    <button type="button" onClick={() => { if (phaseTargetValue) { updateDesignPhaseTargetMutation.mutate({ phaseValue: phase.value, target: parseInt(phaseTargetValue) }); } setEditingPhaseTarget(null); }} className="text-white/40 hover:text-white"><Check className="w-3 h-3" /></button>
-                                    <button type="button" onClick={() => setEditingPhaseTarget(null)} className="text-white/30 hover:text-white/60"><X className="w-3 h-3" /></button>
+                                    <button
+                                      type="button"
+                                      onClick={() => setPhaseTargetValue(String(Math.min(99, parseInt(phaseTargetValue || "0") + 1)))}
+                                      className="text-white/30 hover:text-white transition-colors p-0.5"
+                                    >
+                                      <ChevronRight className="w-3.5 h-3.5" />
+                                    </button>
+                                    <button type="button" onClick={() => { if (phaseTargetValue) { updateDesignPhaseTargetMutation.mutate({ phaseValue: phase.value, target: parseInt(phaseTargetValue) }); } setEditingPhaseTarget(null); }} className="text-white/40 hover:text-white transition-colors ml-1"><Check className="w-3.5 h-3.5" /></button>
+                                    <button type="button" onClick={() => setEditingPhaseTarget(null)} className="text-white/30 hover:text-white/60 transition-colors"><X className="w-3 h-3" /></button>
+                                  </div>
+                                ) : phaseTarget > 0 ? (
+                                  <div className="flex items-center gap-4">
+                                    <div className="cursor-pointer group" onClick={() => { setPhaseTargetValue(String(phaseTarget)); setEditingPhaseTarget(`design_${phase.value}`); }}>
+                                      <span className="text-[10px] text-white/40">{isVi ? "Mục tiêu" : "Target"}</span>
+                                      <p className="text-xs text-white font-light group-hover:text-white/70">{phaseTarget} <Pencil className="w-2.5 h-2.5 inline opacity-0 group-hover:opacity-50" /></p>
+                                    </div>
+                                    <div>
+                                      <span className="text-[10px] text-white/40">{isVi ? "Đã ghi" : "Logged"}</span>
+                                      <p className="text-xs text-white font-light">{phaseInteractions.length} / {phaseTarget}</p>
+                                    </div>
                                   </div>
                                 ) : (
                                   <span
-                                    className="text-xs text-white/40 cursor-pointer hover:text-white/60"
-                                    onClick={() => { setPhaseTargetValue(String(phaseTarget || "")); setEditingPhaseTarget(`design_${phase.value}`); }}
+                                    className="text-xs text-white/30 cursor-pointer hover:text-white/50 flex items-center gap-1"
+                                    onClick={() => { setPhaseTargetValue(""); setEditingPhaseTarget(`design_${phase.value}`); }}
                                   >
-                                    {phaseInteractions.length}{phaseTarget > 0 ? ` / ${phaseTarget}` : ""} <Pencil className="w-2.5 h-2.5 inline opacity-0 group-hover:opacity-50" />
+                                    <Plus className="w-3 h-3" /> {isVi ? "Mục tiêu" : "Target"}
                                   </span>
                                 )}
                               </div>
