@@ -99,6 +99,7 @@ export default function LookupAdminTab() {
   const [viewingInteraction, setViewingInteraction] = useState<Interaction | null>(null);
   const [editingDeal, setEditingDeal] = useState<Deal | null>(null);
   const [editingWarrantyLog, setEditingWarrantyLog] = useState<WarrantyLog | null>(null);
+  const [viewingWarrantyLog, setViewingWarrantyLog] = useState<WarrantyLog | null>(null);
   const [warrantyExpiry, setWarrantyExpiry] = useState("");
   const [warrantyStatus, setWarrantyStatus] = useState("none");
   const [interactionAttachments, setInteractionAttachments] = useState<string[]>([]);
@@ -1583,6 +1584,9 @@ export default function LookupAdminTab() {
                             </TableCell>
                             <TableCell>
                               <div className="flex gap-1">
+                                <Button variant="ghost" size="icon" onClick={() => setViewingWarrantyLog(log)} className="h-8 w-8 text-white/40 hover:text-white">
+                                  <Eye className="w-3.5 h-3.5" />
+                                </Button>
                                 <Button variant="ghost" size="icon" onClick={() => openWarrantyLogDialog(log)} className="h-8 w-8 text-white/40 hover:text-white">
                                   <Pencil className="w-3.5 h-3.5" />
                                 </Button>
@@ -1826,6 +1830,55 @@ export default function LookupAdminTab() {
               </div>
             </form>
           </Form>
+        </DialogContent>
+      </Dialog>
+      <Dialog open={!!viewingWarrantyLog} onOpenChange={(open) => { if (!open) setViewingWarrantyLog(null); }}>
+        <DialogContent className="bg-black border border-white/20 rounded-none max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-white font-light">{isVi ? "Chi tiết nhật ký bảo hành" : "Warranty Log Details"}</DialogTitle>
+          </DialogHeader>
+          {viewingWarrantyLog && (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <span className="text-xs text-white/40">{isVi ? "Ngày" : "Date"}</span>
+                  <p className="text-white font-light">{formatDate(viewingWarrantyLog.date)}</p>
+                </div>
+                <div>
+                  <span className="text-xs text-white/40">{isVi ? "Phụ trách" : "Assigned To"}</span>
+                  <p className="text-white font-light">{viewingWarrantyLog.assignedTo || "—"}</p>
+                </div>
+              </div>
+              <div>
+                <span className="text-xs text-white/40">{isVi ? "Tiêu đề" : "Title"}</span>
+                <p className="text-white font-light">{viewingWarrantyLog.title}</p>
+              </div>
+              {viewingWarrantyLog.description && (
+                <div>
+                  <span className="text-xs text-white/40">{isVi ? "Mô tả" : "Description"}</span>
+                  <p className="text-white/70 font-light text-sm">{viewingWarrantyLog.description}</p>
+                </div>
+              )}
+              <div>
+                <span className="text-xs text-white/40">{isVi ? "Trạng thái" : "Status"}</span>
+                <p className="text-white font-light">
+                  {viewingWarrantyLog.status === "completed" ? (isVi ? "Hoàn tất" : "Completed") : viewingWarrantyLog.status === "in_progress" ? (isVi ? "Đang xử lý" : "In Progress") : (isVi ? "Chờ xử lý" : "Pending")}
+                </p>
+              </div>
+              {Array.isArray(viewingWarrantyLog.attachments) && viewingWarrantyLog.attachments.length > 0 && (
+                <div>
+                  <span className="text-xs text-white/40 block mb-2">{isVi ? "Hình ảnh đính kèm" : "Attachments"} ({(viewingWarrantyLog.attachments as string[]).length}/5)</span>
+                  <div className="grid grid-cols-3 gap-2">
+                    {(viewingWarrantyLog.attachments as string[]).map((url, idx) => (
+                      <div key={idx} onClick={() => openLightbox(viewingWarrantyLog.attachments as string[], idx)} className="cursor-pointer">
+                        <img src={url} alt="" className="w-full h-32 object-cover border border-white/10 hover:border-white/40 transition-colors" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </DialogContent>
       </Dialog>
       <Dialog open={!!viewingInteraction} onOpenChange={(open) => { if (!open) setViewingInteraction(null); }}>
