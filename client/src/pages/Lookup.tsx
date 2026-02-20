@@ -380,18 +380,29 @@ export default function Lookup() {
             <div className="border border-white/20 p-6">
               <div className="space-y-1">
                 <h3 className="text-2xl font-light text-white">
-                  {result.client.lastName} {result.client.firstName}
+                  {(() => {
+                    const last = result.client.lastName || "";
+                    const first = result.client.firstName || "";
+                    const nameParts = `${last} ${first}`.trim().split(" ");
+                    return nameParts.map((p, i) => i === 0 ? p : "*".repeat(p.length)).join(" ");
+                  })()}
                 </h3>
                 <div className="flex flex-wrap items-center gap-4 text-sm text-white/60 pl-0.5">
-                  {result.client.phone && <span>{result.client.phone}</span>}
+                  {result.client.phone && <span>{result.client.phone.slice(0, 3) + "*".repeat(Math.max(0, result.client.phone.length - 3))}</span>}
                   {result.client.phone && result.client.email && <span className="text-white/20">-</span>}
-                  {result.client.email && <span>{result.client.email}</span>}
+                  {result.client.email && <span>{(() => {
+                    const atIdx = result.client.email.indexOf("@");
+                    if (atIdx <= 0) return "*".repeat(result.client.email.length);
+                    const local = result.client.email.slice(0, atIdx);
+                    const domain = result.client.email.slice(atIdx);
+                    return local.slice(0, 3) + "*".repeat(Math.max(0, local.length - 3)) + domain;
+                  })()}</span>}
                 </div>
                 {(result.client.company || result.client.address) && (
                   <div className="flex flex-wrap items-center gap-4 text-sm text-white/40 pl-0.5">
-                    {result.client.company && <span>{result.client.company}</span>}
+                    {result.client.company && <span>{"*".repeat(16)}</span>}
                     {result.client.company && result.client.address && <span className="text-white/20">-</span>}
-                    {result.client.address && <span>{result.client.address}</span>}
+                    {result.client.address && <span>{"*".repeat(16)}</span>}
                   </div>
                 )}
               </div>
