@@ -220,6 +220,7 @@ const AVAILABLE_PERMISSIONS = [
   { id: 'homepage', label: 'Homepage', labelVi: 'Trang Chủ' },
   { id: 'about', label: 'About', labelVi: 'Giới Thiệu' },
   { id: 'content', label: 'SEO', labelVi: 'SEO' },
+  { id: 'lookup', label: 'Lookup', labelVi: 'Tra Cứu' },
 ];
 
 const faqSchema = z.object({
@@ -3745,7 +3746,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <CardContent className="p-6 min-h-[90px]">
               <div>
                 <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Tổng Dự Án' : 'Total Projects'}</p>
-                <p className="text-2xl font-light" data-testid="stat-total-projects">
+                <p className="text-2xl font-semibold" data-testid="stat-total-projects">
                   {statsLoading ? "..." : stats?.totalProjects || 0}
                 </p>
               </div>
@@ -3756,7 +3757,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <CardContent className="p-6 min-h-[90px]">
               <div>
                 <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Tổng Đối Tác' : 'Total Partners'}</p>
-                <p className="text-2xl font-light" data-testid="stat-total-partners">
+                <p className="text-2xl font-semibold" data-testid="stat-total-partners">
                   {businessPartnersLoading ? "..." : businessPartners.length}
                 </p>
               </div>
@@ -3767,7 +3768,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <CardContent className="p-6 min-h-[90px]">
               <div>
                 <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Tổng Khách Hàng' : 'Total Clients'}</p>
-                <p className="text-2xl font-light" data-testid="stat-active-clients">
+                <p className="text-2xl font-semibold" data-testid="stat-active-clients">
                   {clientsLoading ? "..." : clients.length}
                 </p>
               </div>
@@ -3778,7 +3779,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <CardContent className="p-6 min-h-[90px]">
               <div>
                 <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Yêu Cầu Mới' : 'New Inquiries'}</p>
-                <p className="text-2xl font-light" data-testid="stat-new-inquiries">
+                <p className="text-2xl font-semibold" data-testid="stat-new-inquiries">
                   {inquiriesLoading ? "..." : inquiries.filter(i => i.status === 'new').length}
                 </p>
               </div>
@@ -3789,7 +3790,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <CardContent className="p-6 min-h-[90px]">
               <div>
                 <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Tổng Doanh Thu' : 'Total Revenue'}</p>
-                <p className="text-2xl font-light" data-testid="stat-revenue">
+                <p className="text-2xl font-semibold" data-testid="stat-revenue">
                   {statsLoading ? "..." : stats?.revenue || "0 ₫"}
                 </p>
               </div>
@@ -10988,7 +10989,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   }
 
   if (activeTab === 'lookup') {
-    if (!hasPermission(user, 'crm')) {
+    if (!hasPermission(user, 'lookup')) {
       return <PermissionDenied feature="Tra Cứu / Lookup" />;
     }
     return <LookupAdminTab />;
