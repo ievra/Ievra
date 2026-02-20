@@ -934,7 +934,7 @@ export default function LookupAdminTab() {
                       ) : selectedClient.constructionTimeline ? (
                         <>
                           <div className="cursor-pointer group" onClick={() => { setTimelineValue(String(selectedClient.constructionTimeline || "")); setEditingTimeline(true); }}>
-                            <span className="text-xs text-white/40">{isVi ? "Mục tiêu" : "Target"}</span>
+                            <span className="text-xs text-white/40">{isVi ? "Mục tiêu tổng" : "Total Target"}</span>
                             <p className="text-sm text-white font-light group-hover:text-white/70">{selectedClient.constructionTimeline} {isVi ? "ngày" : "days"} <Pencil className="w-3 h-3 inline opacity-0 group-hover:opacity-50" /></p>
                           </div>
                           <div>
@@ -1174,7 +1174,7 @@ export default function LookupAdminTab() {
                       ) : selectedClient.designTimeline ? (
                         <>
                           <div className="cursor-pointer group" onClick={() => { setDesignTimelineValue(String(selectedClient.designTimeline || "")); setEditingDesignTimeline(true); }}>
-                            <span className="text-xs text-white/40">{isVi ? "Mục tiêu" : "Target"}</span>
+                            <span className="text-xs text-white/40">{isVi ? "Mục tiêu tổng" : "Total Target"}</span>
                             <p className="text-sm text-white font-light group-hover:text-white/70">{selectedClient.designTimeline} {isVi ? "ngày" : "days"} <Pencil className="w-3 h-3 inline opacity-0 group-hover:opacity-50" /></p>
                           </div>
                           <div>
