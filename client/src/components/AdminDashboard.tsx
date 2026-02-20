@@ -4852,7 +4852,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     <TableHead className="w-[110px] whitespace-nowrap text-left">{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
                     <TableHead className="w-[110px] whitespace-nowrap text-left">{language === 'vi' ? 'Phong Cách' : 'Style'}</TableHead>
                     <TableHead className="w-[90px] whitespace-nowrap text-left">{language === 'vi' ? 'Diện Tích' : 'Area'}</TableHead>
-                    <TableHead className="text-left">{language === 'vi' ? 'Dự Án' : 'Project'}</TableHead>
+                    <TableHead className="min-w-[120px] whitespace-nowrap text-left">{language === 'vi' ? 'Dự Án' : 'Project'}</TableHead>
                     <TableHead className="w-[80px] whitespace-nowrap text-left">{language === 'vi' ? 'Ngôn Ngữ' : 'Lang'}</TableHead>
                     <TableHead className="w-[120px] whitespace-nowrap text-left">{language === 'vi' ? 'Ngày Đăng' : 'Published'}</TableHead>
                     <TableHead className="w-[120px] whitespace-nowrap text-left">{language === 'vi' ? 'Trạng Thái' : 'Status'}</TableHead>
