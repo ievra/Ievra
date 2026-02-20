@@ -4,7 +4,7 @@ import { Search, ArrowRight, Clock, ChevronLeft, ChevronRight, X, Eye, EyeOff } 
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableRow, TableCell } from "@/components/ui/table";
+
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
@@ -318,95 +318,85 @@ export default function Lookup() {
 
   const renderInteractionTable = (interactions: LookupInteraction[], phases: LookupPhase[]) => {
     return (
-      <div className="space-y-0">
-        <div className="grid grid-cols-[5%_15%_30%_15%_20%_15%] px-4 py-2 border-b border-white/10">
-          <span className="text-sm text-white/30">{isVi ? "STT" : "No"}</span>
-          <span className="text-sm text-white/30">{isVi ? "Ngày" : "Date"}</span>
-          <span className="text-sm text-white/30">{isVi ? "Tiêu đề" : "Title"}</span>
-          <span className="text-sm text-white/30">{isVi ? "Phụ trách" : "Assigned"}</span>
-          <span className="text-sm text-white/30">{isVi ? "Hình ảnh" : "Images"}</span>
-          <span className="text-sm text-white/30"></span>
-        </div>
-        {phases.map((phase, phaseIdx) => {
-          const phaseInteractions = interactions.filter(i => i.phase === phase.value).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-          return (
-            <div key={phase.id}>
-              {phaseIdx > 0 && <div className="border-t border-white/20 my-0" />}
-              <div className="py-3 px-2">
-                <span className="text-sm font-medium text-white/70">{isVi ? phase.labelVi : phase.labelEn}</span>
-              </div>
-              {phaseInteractions.length > 0 && (
-                <Table>
-                  <TableBody>
-                    {phaseInteractions.map((interaction, index) => (
-                      <TableRow key={interaction.id} className="border-white/10">
-                        <TableCell className="text-white/40 text-sm w-[5%]">{index + 1}</TableCell>
-                        <TableCell className="w-[15%]">
-                          <p className="text-white/70">{formatDate(interaction.date)}</p>
-                        </TableCell>
-                        <TableCell className="text-white w-[30%]">{interaction.title}</TableCell>
-                        <TableCell className="text-white/60 w-[15%]">{interaction.assignedTo || "—"}</TableCell>
-                        <TableCell className="w-[20%]">
-                          {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
-                            <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>
-                              {(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (
-                                <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />
-                              ))}
-                            </div>
-                          ) : (
-                            <span className="text-white/30">—</span>
-                          )}
-                        </TableCell>
-                        <TableCell className="w-[15%]">
-                          <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
-                            <Eye className="w-3.5 h-3.5" />
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              )}
-            </div>
-          );
-        })}
-        {(() => {
-          const orphaned = interactions.filter(i => !i.phase || !phases.some(p => p.value === i.phase));
-          if (orphaned.length === 0) return null;
-          return (
-            <div>
-              <div className="border-t border-white/20 my-0" />
-              <div className="py-3 px-2">
-                <span className="text-sm font-medium text-white/40">{isVi ? "Khác" : "Other"}</span>
-              </div>
-              <Table>
-                <TableBody>
-                  {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
-                    <TableRow key={interaction.id} className="border-white/10">
-                      <TableCell className="text-white/40 text-sm w-[5%]">{index + 1}</TableCell>
-                      <TableCell className="w-[15%]"><p className="text-white/70">{formatDate(interaction.date)}</p></TableCell>
-                      <TableCell className="text-white w-[30%]">{interaction.title}</TableCell>
-                      <TableCell className="text-white/60 w-[15%]">{interaction.assignedTo || "—"}</TableCell>
-                      <TableCell className="w-[20%]">
-                        {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
-                          <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>{(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (<img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />))}</div>
-                        ) : (<span className="text-white/30">—</span>)}
-                      </TableCell>
-                      <TableCell className="w-[15%]">
-                        <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white"><Eye className="w-3.5 h-3.5" /></Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          );
-        })()}
-        {interactions.length === 0 && phases.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-white/30 font-light">{isVi ? "Chưa có nhật ký" : "No logs yet"}</p>
+      <div className="space-y-0 overflow-x-auto">
+        <div className="min-w-[700px]">
+          <div className="grid grid-cols-[40px_120px_1fr_100px_160px_50px] gap-2 px-4 py-2 border-b border-white/10">
+            <span className="text-sm text-white/30">{isVi ? "STT" : "No"}</span>
+            <span className="text-sm text-white/30">{isVi ? "Ngày" : "Date"}</span>
+            <span className="text-sm text-white/30">{isVi ? "Tiêu đề" : "Title"}</span>
+            <span className="text-sm text-white/30">{isVi ? "Phụ trách" : "Assigned"}</span>
+            <span className="text-sm text-white/30">{isVi ? "Hình ảnh" : "Images"}</span>
+            <span className="text-sm text-white/30"></span>
           </div>
-        )}
+          {phases.map((phase, phaseIdx) => {
+            const phaseInteractions = interactions.filter(i => i.phase === phase.value).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+            return (
+              <div key={phase.id}>
+                {phaseIdx > 0 && <div className="border-t border-white/20 my-0" />}
+                <div className="py-3 px-2">
+                  <span className="text-sm font-medium text-white/70">{isVi ? phase.labelVi : phase.labelEn}</span>
+                </div>
+                {phaseInteractions.length > 0 && phaseInteractions.map((interaction, index) => (
+                  <div key={interaction.id} className="grid grid-cols-[40px_120px_1fr_100px_160px_50px] gap-2 px-4 py-2 border-b border-white/10 items-center">
+                    <span className="text-white/40 text-sm">{index + 1}</span>
+                    <span className="text-white/70 text-sm">{formatDate(interaction.date)}</span>
+                    <span className="text-white text-sm">{interaction.title}</span>
+                    <span className="text-white/60 text-sm">{interaction.assignedTo || "—"}</span>
+                    <span>
+                      {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
+                        <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>
+                          {(interaction.attachments as string[]).slice(0, 3).map((url, idx) => (
+                            <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-white/30">—</span>
+                      )}
+                    </span>
+                    <span>
+                      <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
+                        <Eye className="w-3.5 h-3.5" />
+                      </Button>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            );
+          })}
+          {(() => {
+            const orphaned = interactions.filter(i => !i.phase || !phases.some(p => p.value === i.phase));
+            if (orphaned.length === 0) return null;
+            return (
+              <div>
+                <div className="border-t border-white/20 my-0" />
+                <div className="py-3 px-2">
+                  <span className="text-sm font-medium text-white/40">{isVi ? "Khác" : "Other"}</span>
+                </div>
+                {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
+                  <div key={interaction.id} className="grid grid-cols-[40px_120px_1fr_100px_160px_50px] gap-2 px-4 py-2 border-b border-white/10 items-center">
+                    <span className="text-white/40 text-sm">{index + 1}</span>
+                    <span className="text-white/70 text-sm">{formatDate(interaction.date)}</span>
+                    <span className="text-white text-sm">{interaction.title}</span>
+                    <span className="text-white/60 text-sm">{interaction.assignedTo || "—"}</span>
+                    <span>
+                      {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
+                        <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>{(interaction.attachments as string[]).slice(0, 3).map((url, idx) => (<img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />))}</div>
+                      ) : (<span className="text-white/30">—</span>)}
+                    </span>
+                    <span>
+                      <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white"><Eye className="w-3.5 h-3.5" /></Button>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
+          {interactions.length === 0 && phases.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-white/30 font-light">{isVi ? "Chưa có nhật ký" : "No logs yet"}</p>
+            </div>
+          )}
+        </div>
       </div>
     );
   };
@@ -560,43 +550,48 @@ export default function Lookup() {
                 {activeTab === "design" && renderInteractionTable(designInteractions, designPhases)}
                 {activeTab === "construction" && renderInteractionTable(constructionInteractions, constructionPhases)}
                 {activeTab === "warranty" && (
-                  <div className="space-y-0">
+                  <div className="space-y-0 overflow-x-auto">
                     {(result.warrantyLogs || []).length === 0 ? (
                       <div className="text-center py-12">
                         <p className="text-white/30 font-light">{isVi ? "Chưa có nhật ký bảo hành" : "No warranty logs yet"}</p>
                       </div>
                     ) : (
-                      <Table>
-                        <TableBody>
-                          {result.warrantyLogs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((log, index) => (
-                            <TableRow key={log.id} className="border-white/10">
-                              <TableCell className="text-white/40 text-sm w-[5%]">{index + 1}</TableCell>
-                              <TableCell className="w-[15%]">
-                                <p className="text-white/70">{formatDate(log.date)}</p>
-                              </TableCell>
-                              <TableCell className="text-white w-[25%]">{log.title}</TableCell>
-                              <TableCell className="text-white/50 w-[20%]">{log.description ? (log.description.length > 50 ? log.description.substring(0, 50) + "..." : log.description) : "—"}</TableCell>
-                              <TableCell className="text-white/60 w-[15%]">{log.assignedTo || "—"}</TableCell>
-                              <TableCell className="w-[10%]">
-                                {Array.isArray(log.attachments) && log.attachments.length > 0 ? (
-                                  <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(log.attachments as string[], 0)}>
-                                    {(log.attachments as string[]).slice(0, 3).map((url, idx) => (
-                                      <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />
-                                    ))}
-                                  </div>
-                                ) : (
-                                  <span className="text-white/30">—</span>
-                                )}
-                              </TableCell>
-                              <TableCell className="w-[10%]">
-                                <Button variant="ghost" size="icon" onClick={() => setViewingLog(log)} className="h-8 w-8 text-white/40 hover:text-white">
-                                  <Eye className="w-3.5 h-3.5" />
-                                </Button>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                      <div className="min-w-[700px]">
+                        <div className="grid grid-cols-[40px_100px_1fr_1fr_100px_120px_50px] gap-2 px-4 py-2 border-b border-white/10">
+                          <span className="text-sm text-white/30">{isVi ? "STT" : "No"}</span>
+                          <span className="text-sm text-white/30">{isVi ? "Ngày" : "Date"}</span>
+                          <span className="text-sm text-white/30">{isVi ? "Tiêu đề" : "Title"}</span>
+                          <span className="text-sm text-white/30">{isVi ? "Mô tả" : "Description"}</span>
+                          <span className="text-sm text-white/30">{isVi ? "Phụ trách" : "Assigned"}</span>
+                          <span className="text-sm text-white/30">{isVi ? "Hình ảnh" : "Images"}</span>
+                          <span className="text-sm text-white/30"></span>
+                        </div>
+                        {result.warrantyLogs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((log, index) => (
+                          <div key={log.id} className="grid grid-cols-[40px_100px_1fr_1fr_100px_120px_50px] gap-2 px-4 py-2 border-b border-white/10 items-center">
+                            <span className="text-white/40 text-sm">{index + 1}</span>
+                            <span className="text-white/70 text-sm">{formatDate(log.date)}</span>
+                            <span className="text-white text-sm">{log.title}</span>
+                            <span className="text-white/50 text-sm">{log.description ? (log.description.length > 50 ? log.description.substring(0, 50) + "..." : log.description) : "—"}</span>
+                            <span className="text-white/60 text-sm">{log.assignedTo || "—"}</span>
+                            <span>
+                              {Array.isArray(log.attachments) && log.attachments.length > 0 ? (
+                                <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(log.attachments as string[], 0)}>
+                                  {(log.attachments as string[]).slice(0, 3).map((url, idx) => (
+                                    <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />
+                                  ))}
+                                </div>
+                              ) : (
+                                <span className="text-white/30">—</span>
+                              )}
+                            </span>
+                            <span>
+                              <Button variant="ghost" size="icon" onClick={() => setViewingLog(log)} className="h-8 w-8 text-white/40 hover:text-white">
+                                <Eye className="w-3.5 h-3.5" />
+                              </Button>
+                            </span>
+                          </div>
+                        ))}
+                      </div>
                     )}
                   </div>
                 )}
