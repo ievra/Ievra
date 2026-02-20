@@ -5018,9 +5018,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     }
     return (
       <div className="space-y-6 p-6">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <h2 className="text-2xl font-sans font-light">{t('crm.clientManagement')}</h2>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-shrink-0">
             <Dialog open={isClientDialogOpen} onOpenChange={(open) => {
             setIsClientDialogOpen(open);
             if (!open) {
@@ -6261,7 +6261,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           </Dialog>
 
         {/* Summary Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-6 gap-4 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 mb-6">
           <Card className="bg-black border-white/10 rounded-none">
             <CardContent className="p-6 min-h-[90px]">
               <div>
@@ -6347,8 +6347,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           </Card>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="relative flex-1">
+        <div className="flex flex-col gap-3">
+          <div className="relative">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
             <Input
               value={clientSearchQuery}
@@ -6357,55 +6357,57 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
             />
           </div>
-          <Select value={clientTierFilter} onValueChange={(v) => { setClientTierFilter(v); setCurrentPage(1); }}>
-            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
-              <SelectValue placeholder={language === 'vi' ? 'Tất cả hạng' : 'All tiers'} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{language === 'vi' ? 'Tất cả hạng' : 'All tiers'}</SelectItem>
-              {crmTiers.filter((t: any) => t.active).sort((a: any, b: any) => a.order - b.order).map((tier: any) => (
-                <SelectItem key={tier.id} value={tier.value}>
-                  {language === 'vi' ? tier.labelVi : tier.labelEn}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={clientWarrantyFilter} onValueChange={(v) => { setClientWarrantyFilter(v); setCurrentPage(1); }}>
-            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
-              <SelectValue placeholder={language === 'vi' ? 'Tất cả bảo hành' : 'All warranty'} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{language === 'vi' ? 'Tất cả bảo hành' : 'All warranty'}</SelectItem>
-              <SelectItem value="active">{language === 'vi' ? 'Còn bảo hành' : 'Active'}</SelectItem>
-              <SelectItem value="expired">{language === 'vi' ? 'Hết bảo hành' : 'Expired'}</SelectItem>
-            </SelectContent>
-          </Select>
-          <Select value={clientStageFilter} onValueChange={(v) => { setClientStageFilter(v); setCurrentPage(1); }}>
-            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
-              <SelectValue placeholder={language === 'vi' ? 'Tất cả giai đoạn' : 'All stages'} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{language === 'vi' ? 'Tất cả giai đoạn' : 'All stages'}</SelectItem>
-              {crmStages.filter(s => s.active).sort((a, b) => a.order - b.order).map(stage => (
-                <SelectItem key={stage.id} value={stage.value}>
-                  {language === 'vi' ? stage.labelVi : stage.labelEn}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={clientStatusFilter} onValueChange={(v) => { setClientStatusFilter(v); setCurrentPage(1); }}>
-            <SelectTrigger className="w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
-              <SelectValue placeholder={language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'} />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">{language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'}</SelectItem>
-              {crmStatuses.filter(s => s.active).sort((a, b) => a.order - b.order).map(status => (
-                <SelectItem key={status.id} value={status.value}>
-                  {language === 'vi' ? status.labelVi : status.labelEn}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <Select value={clientTierFilter} onValueChange={(v) => { setClientTierFilter(v); setCurrentPage(1); }}>
+              <SelectTrigger className="w-full bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+                <SelectValue placeholder={language === 'vi' ? 'Tất cả hạng' : 'All tiers'} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{language === 'vi' ? 'Tất cả hạng' : 'All tiers'}</SelectItem>
+                {crmTiers.filter((t: any) => t.active).sort((a: any, b: any) => a.order - b.order).map((tier: any) => (
+                  <SelectItem key={tier.id} value={tier.value}>
+                    {language === 'vi' ? tier.labelVi : tier.labelEn}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={clientWarrantyFilter} onValueChange={(v) => { setClientWarrantyFilter(v); setCurrentPage(1); }}>
+              <SelectTrigger className="w-full bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+                <SelectValue placeholder={language === 'vi' ? 'Tất cả bảo hành' : 'All warranty'} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{language === 'vi' ? 'Tất cả bảo hành' : 'All warranty'}</SelectItem>
+                <SelectItem value="active">{language === 'vi' ? 'Còn bảo hành' : 'Active'}</SelectItem>
+                <SelectItem value="expired">{language === 'vi' ? 'Hết bảo hành' : 'Expired'}</SelectItem>
+              </SelectContent>
+            </Select>
+            <Select value={clientStageFilter} onValueChange={(v) => { setClientStageFilter(v); setCurrentPage(1); }}>
+              <SelectTrigger className="w-full bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+                <SelectValue placeholder={language === 'vi' ? 'Tất cả giai đoạn' : 'All stages'} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{language === 'vi' ? 'Tất cả giai đoạn' : 'All stages'}</SelectItem>
+                {crmStages.filter(s => s.active).sort((a, b) => a.order - b.order).map(stage => (
+                  <SelectItem key={stage.id} value={stage.value}>
+                    {language === 'vi' ? stage.labelVi : stage.labelEn}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Select value={clientStatusFilter} onValueChange={(v) => { setClientStatusFilter(v); setCurrentPage(1); }}>
+              <SelectTrigger className="w-full bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+                <SelectValue placeholder={language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">{language === 'vi' ? 'Tất cả trạng thái' : 'All statuses'}</SelectItem>
+                {crmStatuses.filter(s => s.active).sort((a, b) => a.order - b.order).map(status => (
+                  <SelectItem key={status.id} value={status.value}>
+                    {language === 'vi' ? status.labelVi : status.labelEn}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
         <Card>
@@ -6432,31 +6434,31 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             ) : (
               <>
                 <div className="overflow-x-auto">
-                  <Table className="table-fixed w-full">
+                  <Table className="w-full min-w-[900px]">
                     <TableHeader>
                       <TableRow>
-                        <TableHead className="w-[4%] whitespace-nowrap text-center">{language === 'vi' ? 'STT' : 'NO'}</TableHead>
-                        <TableHead className="w-[5%] whitespace-nowrap text-center">{language === 'vi' ? 'Hạng' : 'Rank'}</TableHead>
-                        <TableHead className="w-[14%] whitespace-nowrap">
+                        <TableHead className="w-[40px] whitespace-nowrap text-center">{language === 'vi' ? 'STT' : 'NO'}</TableHead>
+                        <TableHead className="w-[60px] whitespace-nowrap text-center">{language === 'vi' ? 'Hạng' : 'Rank'}</TableHead>
+                        <TableHead className="w-[130px] whitespace-nowrap">
                           <div>{t('admin.clients')}</div>
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Khởi tạo' : 'Intake'}</div>
                         </TableHead>
-                        <TableHead className="w-[13%] whitespace-nowrap">
+                        <TableHead className="w-[120px] whitespace-nowrap">
                           <div>{t('crm.phone')}</div>
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">{t('crm.email')}</div>
                         </TableHead>
-                        <TableHead className="w-[13%] whitespace-nowrap">
+                        <TableHead className="w-[120px] whitespace-nowrap">
                           <div>{t('crm.address')}</div>
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">{t('crm.company')}</div>
                         </TableHead>
-                        <TableHead className="w-[12%] whitespace-nowrap">
+                        <TableHead className="w-[110px] whitespace-nowrap">
                           <div>{language === 'vi' ? 'Thanh Toán' : 'Paid'}</div>
                           <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Hoàn Trả' : 'Refund'}</div>
                         </TableHead>
-                        <TableHead className="w-[11%] text-center whitespace-nowrap">{t('crm.warrantyStatus')}</TableHead>
-                        <TableHead className="w-[12%] text-center whitespace-nowrap">{t('crm.pipelineStage')}</TableHead>
-                        <TableHead className="w-[13%] text-center whitespace-nowrap">{t('crm.status')}</TableHead>
-                        <TableHead className="w-[7%] text-right"></TableHead>
+                        <TableHead className="w-[100px] text-center whitespace-nowrap">{t('crm.warrantyStatus')}</TableHead>
+                        <TableHead className="w-[100px] text-center whitespace-nowrap">{t('crm.pipelineStage')}</TableHead>
+                        <TableHead className="w-[100px] text-center whitespace-nowrap">{t('crm.status')}</TableHead>
+                        <TableHead className="w-[60px] text-right"></TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
