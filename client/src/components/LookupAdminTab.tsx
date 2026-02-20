@@ -1118,13 +1118,13 @@ export default function LookupAdminTab() {
                   ) : (
                     <div className="space-y-0">
                       <div className="grid grid-cols-[4%_12%_20%_12%_15%_22%_15%] px-4 py-2 border-b border-white/10">
-                        <span className="text-xs text-white/30">{isVi ? "STT" : "No"}</span>
-                        <span className="text-xs text-white/30">{isVi ? "Ngày" : "Date"}</span>
-                        <span className="text-xs text-white/30">{isVi ? "Tiêu đề" : "Title"}</span>
-                        <span className="text-xs text-white/30">{isVi ? "Phụ trách" : "Assigned"}</span>
-                        <span className="text-xs text-white/30">{isVi ? "Đề xuất" : "Suggestion"}</span>
-                        <span className="text-xs text-white/30">{isVi ? "Hình ảnh" : "Images"}</span>
-                        <span className="text-xs text-white/30"></span>
+                        <span className="text-sm text-white/30">{isVi ? "STT" : "No"}</span>
+                        <span className="text-sm text-white/30">{isVi ? "Ngày" : "Date"}</span>
+                        <span className="text-sm text-white/30">{isVi ? "Tiêu đề" : "Title"}</span>
+                        <span className="text-sm text-white/30">{isVi ? "Phụ trách" : "Assigned"}</span>
+                        <span className="text-sm text-white/30">{isVi ? "Đề xuất" : "Suggestion"}</span>
+                        <span className="text-sm text-white/30">{isVi ? "Hình ảnh" : "Images"}</span>
+                        <span className="text-sm text-white/30"></span>
                       </div>
                       {constructionPhases.map((phase, phaseIdx) => {
                         const phaseInteractions = constructionInteractions.filter(i => (i as any).phase === phase.value).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -1373,13 +1373,13 @@ export default function LookupAdminTab() {
                   ) : (
                     <div className="space-y-0">
                       <div className="grid grid-cols-[4%_12%_20%_12%_15%_22%_15%] px-4 py-2 border-b border-white/10">
-                        <span className="text-xs text-white/30">{isVi ? "STT" : "No"}</span>
-                        <span className="text-xs text-white/30">{isVi ? "Ngày" : "Date"}</span>
-                        <span className="text-xs text-white/30">{isVi ? "Tiêu đề" : "Title"}</span>
-                        <span className="text-xs text-white/30">{isVi ? "Phụ trách" : "Assigned"}</span>
-                        <span className="text-xs text-white/30">{isVi ? "Đề xuất" : "Suggestion"}</span>
-                        <span className="text-xs text-white/30">{isVi ? "Hình ảnh" : "Images"}</span>
-                        <span className="text-xs text-white/30"></span>
+                        <span className="text-sm text-white/30">{isVi ? "STT" : "No"}</span>
+                        <span className="text-sm text-white/30">{isVi ? "Ngày" : "Date"}</span>
+                        <span className="text-sm text-white/30">{isVi ? "Tiêu đề" : "Title"}</span>
+                        <span className="text-sm text-white/30">{isVi ? "Phụ trách" : "Assigned"}</span>
+                        <span className="text-sm text-white/30">{isVi ? "Đề xuất" : "Suggestion"}</span>
+                        <span className="text-sm text-white/30">{isVi ? "Hình ảnh" : "Images"}</span>
+                        <span className="text-sm text-white/30"></span>
                       </div>
                       {designPhases.map((phase, phaseIdx) => {
                         const phaseInteractions = designInteractions.filter(i => (i as any).phase === phase.value).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
