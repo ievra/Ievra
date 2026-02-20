@@ -1193,13 +1193,14 @@ export default function LookupAdminTab() {
                                 <TableBody>
                                   {phaseInteractions.map((interaction, index) => (
                                     <TableRow key={interaction.id} className="border-white/10">
-                                      <TableCell className="text-white/40 text-sm w-[5%]">{index + 1}</TableCell>
-                                      <TableCell className="w-[15%]">
+                                      <TableCell className="text-white/40 text-sm w-[4%]">{index + 1}</TableCell>
+                                      <TableCell className="w-[12%]">
                                         <p className="text-white/70">{formatDate(interaction.date)}</p>
                                       </TableCell>
-                                      <TableCell className="text-white w-[25%]">{interaction.title}</TableCell>
-                                      <TableCell className="text-white/60 w-[15%]">{interaction.assignedTo || "—"}</TableCell>
-                                      <TableCell className="w-[25%]">
+                                      <TableCell className="text-white w-[20%]">{interaction.title}</TableCell>
+                                      <TableCell className="text-white/60 w-[12%]">{interaction.assignedTo || "—"}</TableCell>
+                                      <TableCell className="text-white/50 w-[15%] truncate">{interaction.nextAction || "—"}</TableCell>
+                                      <TableCell className="w-[22%]">
                                         {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
                                           <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>
                                             {(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (
@@ -1241,11 +1242,12 @@ export default function LookupAdminTab() {
                               <TableBody>
                                 {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
                                   <TableRow key={interaction.id} className="border-white/10">
-                                    <TableCell className="text-white/40 text-sm w-[5%]">{index + 1}</TableCell>
-                                    <TableCell className="w-[15%]"><p className="text-white/70">{formatDate(interaction.date)}</p></TableCell>
-                                    <TableCell className="text-white w-[25%]">{interaction.title}</TableCell>
-                                    <TableCell className="text-white/60 w-[15%]">{interaction.assignedTo || "—"}</TableCell>
-                                    <TableCell className="w-[25%]">
+                                    <TableCell className="text-white/40 text-sm w-[4%]">{index + 1}</TableCell>
+                                    <TableCell className="w-[12%]"><p className="text-white/70">{formatDate(interaction.date)}</p></TableCell>
+                                    <TableCell className="text-white w-[20%]">{interaction.title}</TableCell>
+                                    <TableCell className="text-white/60 w-[12%]">{interaction.assignedTo || "—"}</TableCell>
+                                    <TableCell className="text-white/50 w-[15%] truncate">{interaction.nextAction || "—"}</TableCell>
+                                    <TableCell className="w-[22%]">
                                       {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
                                         <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>{(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (<img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />))}</div>
                                       ) : (<span className="text-white/30">—</span>)}
@@ -1437,13 +1439,14 @@ export default function LookupAdminTab() {
                                 <TableBody>
                                   {phaseInteractions.map((interaction, index) => (
                                     <TableRow key={interaction.id} className="border-white/10">
-                                      <TableCell className="text-white/40 text-sm w-[5%]">{index + 1}</TableCell>
-                                      <TableCell className="w-[15%]">
+                                      <TableCell className="text-white/40 text-sm w-[4%]">{index + 1}</TableCell>
+                                      <TableCell className="w-[12%]">
                                         <p className="text-white/70">{formatDate(interaction.date)}</p>
                                       </TableCell>
-                                      <TableCell className="text-white w-[25%]">{interaction.title}</TableCell>
-                                      <TableCell className="text-white/60 w-[15%]">{interaction.assignedTo || "—"}</TableCell>
-                                      <TableCell className="w-[25%]">
+                                      <TableCell className="text-white w-[20%]">{interaction.title}</TableCell>
+                                      <TableCell className="text-white/60 w-[12%]">{interaction.assignedTo || "—"}</TableCell>
+                                      <TableCell className="text-white/50 w-[15%] truncate">{interaction.nextAction || "—"}</TableCell>
+                                      <TableCell className="w-[22%]">
                                         {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
                                           <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>
                                             {(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (
@@ -1485,11 +1488,12 @@ export default function LookupAdminTab() {
                               <TableBody>
                                 {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
                                   <TableRow key={interaction.id} className="border-white/10">
-                                    <TableCell className="text-white/40 text-sm w-[5%]">{index + 1}</TableCell>
-                                    <TableCell className="w-[15%]"><p className="text-white/70">{formatDate(interaction.date)}</p></TableCell>
-                                    <TableCell className="text-white w-[25%]">{interaction.title}</TableCell>
-                                    <TableCell className="text-white/60 w-[15%]">{interaction.assignedTo || "—"}</TableCell>
-                                    <TableCell className="w-[25%]">
+                                    <TableCell className="text-white/40 text-sm w-[4%]">{index + 1}</TableCell>
+                                    <TableCell className="w-[12%]"><p className="text-white/70">{formatDate(interaction.date)}</p></TableCell>
+                                    <TableCell className="text-white w-[20%]">{interaction.title}</TableCell>
+                                    <TableCell className="text-white/60 w-[12%]">{interaction.assignedTo || "—"}</TableCell>
+                                    <TableCell className="text-white/50 w-[15%] truncate">{interaction.nextAction || "—"}</TableCell>
+                                    <TableCell className="w-[22%]">
                                       {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
                                         <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>{(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (<img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />))}</div>
                                       ) : (<span className="text-white/30">—</span>)}
