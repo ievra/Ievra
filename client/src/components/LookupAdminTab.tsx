@@ -971,6 +971,30 @@ export default function LookupAdminTab() {
                             })}
                           </div>
                         )}
+                        {(item.type === "design_payment" || item.type === "construction_payment") && (() => {
+                          const paymentTx = item.type === "design_payment"
+                            ? transactions.filter((t: any) => !t.category || t.category === "design")
+                            : transactions.filter((t: any) => t.category === "construction");
+                          if (paymentTx.length === 0) return null;
+                          return (
+                            <div className="w-full mt-4 space-y-2">
+                              {paymentTx.map((tx: any, txIdx: number) => {
+                                const pct = tx.status === "completed" ? 100 : 0;
+                                return (
+                                  <div key={tx.id || txIdx} className="space-y-0.5">
+                                    <div className="flex justify-between items-center">
+                                      <span className="text-[11px] text-white/50 truncate max-w-[70%]">{tx.title || tx.description || `${isVi ? "Giao dịch" : "Transaction"} ${txIdx + 1}`}</span>
+                                      <span className="text-[11px] text-white/40">{pct}%</span>
+                                    </div>
+                                    <div className="w-full h-2 bg-white/10 overflow-hidden">
+                                      <div className="h-full bg-white/50 transition-all duration-700 ease-out" style={{ width: `${pct}%` }} />
+                                    </div>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          );
+                        })()}
                       </div>
                     );
                   });
