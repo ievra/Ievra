@@ -78,7 +78,6 @@ export default function Lookup() {
   const { language } = useLanguage();
   const isVi = language === "vi";
   const [phone, setPhone] = useState("");
-  const [identityCard, setIdentityCard] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<LookupResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -141,13 +140,13 @@ export default function Lookup() {
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!phone.trim() || phone.trim().length < 6 || !identityCard.trim() || identityCard.trim().length < 6) return;
+    if (!phone.trim() || phone.trim().length < 6) return;
     setLoading(true);
     setError(null);
     setResult(null);
     setSearched(true);
     try {
-      const res = await fetch(`/api/lookup?phone=${encodeURIComponent(phone.trim())}&identityCard=${encodeURIComponent(identityCard.trim())}`);
+      const res = await fetch(`/api/lookup?phone=${encodeURIComponent(phone.trim())}`);
       const data = await res.json();
       if (!res.ok) {
         setError(data.message || (isVi ? "Không tìm thấy" : "Not found"));
@@ -338,42 +337,31 @@ export default function Lookup() {
           </h1>
           <p className="text-white/60 font-light text-lg mb-10 text-center">
             {isVi
-              ? "Nhập số điện thoại và số CCCD/CMND để tra cứu tiến độ dự án, nhật ký hoạt động và thông tin bảo hành."
-              : "Enter your phone number and identity card to check project progress, activity log and warranty information."}
+              ? "Nhập số điện thoại để tra cứu tiến độ dự án, nhật ký hoạt động và thông tin bảo hành."
+              : "Enter your phone number to check project progress, activity log and warranty information."}
           </p>
 
           <form onSubmit={handleSearch}>
-            <div className="space-y-6">
-              <div className="flex items-end gap-8 pb-0">
-                <Input
-                  ref={inputRef}
-                  type="tel"
-                  placeholder={typedPlaceholder}
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="bg-transparent text-white placeholder-white/60 px-0 py-0 text-lg font-light rounded-none focus-visible:ring-0 flex-1"
-                />
-              </div>
-              <div className="flex items-end gap-8 pb-0">
-                <Input
-                  type="text"
-                  placeholder={isVi ? "Nhập số CCCD/CMND..." : "Enter identity card number..."}
-                  value={identityCard}
-                  onChange={(e) => setIdentityCard(e.target.value)}
-                  className="bg-transparent text-white placeholder-white/60 px-0 py-0 text-lg font-light rounded-none focus-visible:ring-0 flex-1"
-                />
-                <button
-                  type="submit"
-                  disabled={loading || phone.trim().length < 6 || identityCard.trim().length < 6}
-                  className="text-white/40 hover:text-white transition-colors disabled:opacity-30 pb-0.5"
-                >
-                  {loading ? (
-                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  ) : (
-                    <ArrowRight className="w-5 h-5" />
-                  )}
-                </button>
-              </div>
+            <div className="flex items-end gap-8 pb-4">
+              <Input
+                ref={inputRef}
+                type="tel"
+                placeholder={typedPlaceholder}
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="bg-transparent text-white placeholder-white/60 px-0 py-0 text-lg font-light rounded-none focus-visible:ring-0 flex-1"
+              />
+              <button
+                type="submit"
+                disabled={loading || phone.trim().length < 6}
+                className="text-white/40 hover:text-white transition-colors disabled:opacity-30 pb-0.5"
+              >
+                {loading ? (
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <ArrowRight className="w-5 h-5" />
+                )}
+              </button>
             </div>
           </form>
         </div>
