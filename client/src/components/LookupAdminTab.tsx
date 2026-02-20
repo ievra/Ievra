@@ -40,6 +40,7 @@ const dealFormSchema = z.object({
 const warrantyLogFormSchema = z.object({
   title: z.string().min(1, "Tiêu đề bắt buộc"),
   description: z.string().optional(),
+  assignedTo: z.string().optional(),
   date: z.string().min(1, "Ngày bắt buộc"),
   status: z.enum(["pending", "in_progress", "completed"]).default("pending"),
 });
@@ -541,6 +542,7 @@ export default function LookupAdminTab() {
       warrantyLogForm.reset({
         title: log.title,
         description: log.description || "",
+        assignedTo: log.assignedTo || "",
         date: log.date ? new Date(log.date).toISOString().split("T")[0] : "",
         status: (log.status as any) || "pending",
       });
@@ -549,6 +551,7 @@ export default function LookupAdminTab() {
       warrantyLogForm.reset({
         title: "",
         description: "",
+        assignedTo: "",
         date: new Date().toISOString().split("T")[0],
         status: "pending",
       });
@@ -1491,9 +1494,10 @@ export default function LookupAdminTab() {
                     <Table>
                       <TableHeader>
                         <TableRow className="border-white/10">
-                          <TableHead className="text-white/60 w-[25%]">{isVi ? "Ngày" : "Date"}</TableHead>
-                          <TableHead className="text-white/60 w-[30%]">{isVi ? "Tiêu đề" : "Title"}</TableHead>
-                          <TableHead className="text-white/60 w-[20%]">{isVi ? "Mô tả" : "Description"}</TableHead>
+                          <TableHead className="text-white/60 w-[20%]">{isVi ? "Ngày" : "Date"}</TableHead>
+                          <TableHead className="text-white/60 w-[25%]">{isVi ? "Tiêu đề" : "Title"}</TableHead>
+                          <TableHead className="text-white/60 w-[15%]">{isVi ? "Phụ trách" : "Assigned To"}</TableHead>
+                          <TableHead className="text-white/60 w-[15%]">{isVi ? "Mô tả" : "Description"}</TableHead>
                           <TableHead className="text-white/60 w-[15%] text-right">{isVi ? "Trạng thái" : "Status"}</TableHead>
                           <TableHead className="text-white/60 w-[10%]">{isVi ? "Thao tác" : "Actions"}</TableHead>
                         </TableRow>
@@ -1503,6 +1507,7 @@ export default function LookupAdminTab() {
                           <TableRow key={log.id} className="border-white/10">
                             <TableCell className="text-white/70">{formatDate(log.date)}</TableCell>
                             <TableCell className="text-white">{log.title}</TableCell>
+                            <TableCell className="text-white/60">{log.assignedTo || "—"}</TableCell>
                             <TableCell className="text-white/60 truncate max-w-[200px]">{log.description || "—"}</TableCell>
                             <TableCell className="text-right">
                               <Badge variant="outline" className={`rounded-none ${log.status === "completed" ? "border-white/20 text-white/60" : log.status === "in_progress" ? "border-white/20 text-white/60" : "border-white/20 text-white/60"}`}>
@@ -1698,6 +1703,15 @@ export default function LookupAdminTab() {
                   <FormLabel className="text-white/60">{isVi ? "Mô tả" : "Description"}</FormLabel>
                   <FormControl>
                     <Textarea {...field} className="bg-transparent border-white/20 text-white rounded-none min-h-[80px]" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )} />
+              <FormField control={warrantyLogForm.control} name="assignedTo" render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-white/60">{isVi ? "Phụ trách" : "Assigned To"}</FormLabel>
+                  <FormControl>
+                    <Input {...field} className="bg-transparent border-white/20 text-white rounded-none h-10" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
