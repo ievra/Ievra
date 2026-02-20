@@ -1033,8 +1033,8 @@ export default function LookupAdminTab() {
             <div className="p-4">
               {activeSubTab === "construction_progress" && (
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex flex-wrap items-center gap-4">
                       {editingTimeline ? (
                         <div className="flex items-center gap-1.5">
                           <button
@@ -1109,7 +1109,7 @@ export default function LookupAdminTab() {
                     <Button
                       onClick={() => openInteractionDialog()}
                       disabled={!!selectedClient.constructionTimeline && constructionInteractions.length >= selectedClient.constructionTimeline}
-                      className="h-10 px-4 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed"
+                      className="h-10 px-4 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed flex-shrink-0"
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       {isVi ? "Thêm nhật ký" : "Add Log"}
@@ -1118,8 +1118,8 @@ export default function LookupAdminTab() {
                   {interactionsLoading ? (
                     <div className="text-center py-8 text-white/40">{isVi ? "Đang tải..." : "Loading..."}</div>
                   ) : (
-                    <div className="space-y-0">
-                      <div className="grid grid-cols-[4%_12%_20%_12%_15%_22%_15%] px-4 py-2 border-b border-white/10">
+                    <div className="space-y-0 overflow-x-auto">
+                      <div className="min-w-[700px] grid grid-cols-[40px_80px_1fr_80px_100px_150px_80px] px-4 py-2 border-b border-white/10">
                         <span className="text-sm text-white/30">{isVi ? "STT" : "No"}</span>
                         <span className="text-sm text-white/30">{isVi ? "Ngày" : "Date"}</span>
                         <span className="text-sm text-white/30">{isVi ? "Tiêu đề" : "Title"}</span>
@@ -1200,18 +1200,18 @@ export default function LookupAdminTab() {
                               </div>
                             </div>
                             {phaseInteractions.length > 0 && (
-                              <Table>
+                              <Table className="min-w-[700px]">
                                 <TableBody>
                                   {phaseInteractions.map((interaction, index) => (
                                     <TableRow key={interaction.id} className="border-white/10">
-                                      <TableCell className="text-white/40 text-sm w-[4%]">{index + 1}</TableCell>
-                                      <TableCell className="w-[12%]">
-                                        <p className="text-white/70">{formatDate(interaction.date)}</p>
+                                      <TableCell className="text-white/40 text-sm w-[40px]">{index + 1}</TableCell>
+                                      <TableCell className="w-[80px]">
+                                        <p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p>
                                       </TableCell>
-                                      <TableCell className="text-white w-[20%]">{interaction.title}</TableCell>
-                                      <TableCell className="text-white/60 w-[12%]">{interaction.assignedTo || "—"}</TableCell>
-                                      <TableCell className="text-white/50 w-[15%] truncate">{interaction.nextAction || "—"}</TableCell>
-                                      <TableCell className="w-[22%]">
+                                      <TableCell className="text-white">{interaction.title}</TableCell>
+                                      <TableCell className="text-white/60 w-[80px]">{interaction.assignedTo || "—"}</TableCell>
+                                      <TableCell className="text-white/50 w-[100px] truncate">{interaction.nextAction || "—"}</TableCell>
+                                      <TableCell className="w-[150px]">
                                         {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
                                           <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>
                                             {(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (
@@ -1222,7 +1222,7 @@ export default function LookupAdminTab() {
                                           <span className="text-white/30">—</span>
                                         )}
                                       </TableCell>
-                                      <TableCell className="w-[15%]">
+                                      <TableCell className="w-[80px]">
                                         <div className="flex gap-1">
                                           <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
                                             <Eye className="w-3.5 h-3.5" />
@@ -1249,21 +1249,21 @@ export default function LookupAdminTab() {
                             <div className="py-3 px-2">
                               <span className="text-sm font-medium text-white/40">{isVi ? "Khác" : "Other"}</span>
                             </div>
-                            <Table>
+                            <Table className="min-w-[700px]">
                               <TableBody>
                                 {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
                                   <TableRow key={interaction.id} className="border-white/10">
-                                    <TableCell className="text-white/40 text-sm w-[4%]">{index + 1}</TableCell>
-                                    <TableCell className="w-[12%]"><p className="text-white/70">{formatDate(interaction.date)}</p></TableCell>
-                                    <TableCell className="text-white w-[20%]">{interaction.title}</TableCell>
-                                    <TableCell className="text-white/60 w-[12%]">{interaction.assignedTo || "—"}</TableCell>
-                                    <TableCell className="text-white/50 w-[15%] truncate">{interaction.nextAction || "—"}</TableCell>
-                                    <TableCell className="w-[22%]">
+                                    <TableCell className="text-white/40 text-sm w-[40px]">{index + 1}</TableCell>
+                                    <TableCell className="w-[80px]"><p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p></TableCell>
+                                    <TableCell className="text-white">{interaction.title}</TableCell>
+                                    <TableCell className="text-white/60 w-[80px]">{interaction.assignedTo || "—"}</TableCell>
+                                    <TableCell className="text-white/50 w-[100px] truncate">{interaction.nextAction || "—"}</TableCell>
+                                    <TableCell className="w-[150px]">
                                       {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
                                         <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>{(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (<img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />))}</div>
                                       ) : (<span className="text-white/30">—</span>)}
                                     </TableCell>
-                                    <TableCell className="w-[15%]">
+                                    <TableCell className="w-[80px]">
                                       <div className="flex gap-1">
                                         <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white"><Eye className="w-3.5 h-3.5" /></Button>
                                         <Button variant="ghost" size="icon" onClick={() => openInteractionDialog(interaction)} className="h-8 w-8 text-white/40 hover:text-white"><Pencil className="w-3.5 h-3.5" /></Button>
@@ -1288,8 +1288,8 @@ export default function LookupAdminTab() {
 
               {activeSubTab === "design_progress" && (
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-4">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex flex-wrap items-center gap-4">
                       {editingDesignTimeline ? (
                         <div className="flex items-center gap-1.5">
                           <button
@@ -1364,7 +1364,7 @@ export default function LookupAdminTab() {
                     <Button
                       onClick={() => openDesignInteractionDialog()}
                       disabled={!!selectedClient.designTimeline && designInteractions.length >= selectedClient.designTimeline}
-                      className="h-10 px-4 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed"
+                      className="h-10 px-4 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed flex-shrink-0"
                     >
                       <Plus className="w-4 h-4 mr-2" />
                       {isVi ? "Thêm nhật ký" : "Add Log"}
@@ -1373,8 +1373,8 @@ export default function LookupAdminTab() {
                   {interactionsLoading ? (
                     <div className="text-center py-8 text-white/40">{isVi ? "Đang tải..." : "Loading..."}</div>
                   ) : (
-                    <div className="space-y-0">
-                      <div className="grid grid-cols-[4%_12%_20%_12%_15%_22%_15%] px-4 py-2 border-b border-white/10">
+                    <div className="space-y-0 overflow-x-auto">
+                      <div className="min-w-[700px] grid grid-cols-[40px_80px_1fr_80px_100px_150px_80px] px-4 py-2 border-b border-white/10">
                         <span className="text-sm text-white/30">{isVi ? "STT" : "No"}</span>
                         <span className="text-sm text-white/30">{isVi ? "Ngày" : "Date"}</span>
                         <span className="text-sm text-white/30">{isVi ? "Tiêu đề" : "Title"}</span>
@@ -1455,18 +1455,18 @@ export default function LookupAdminTab() {
                               </div>
                             </div>
                             {phaseInteractions.length > 0 && (
-                              <Table>
+                              <Table className="min-w-[700px]">
                                 <TableBody>
                                   {phaseInteractions.map((interaction, index) => (
                                     <TableRow key={interaction.id} className="border-white/10">
-                                      <TableCell className="text-white/40 text-sm w-[4%]">{index + 1}</TableCell>
-                                      <TableCell className="w-[12%]">
-                                        <p className="text-white/70">{formatDate(interaction.date)}</p>
+                                      <TableCell className="text-white/40 text-sm w-[40px]">{index + 1}</TableCell>
+                                      <TableCell className="w-[80px]">
+                                        <p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p>
                                       </TableCell>
-                                      <TableCell className="text-white w-[20%]">{interaction.title}</TableCell>
-                                      <TableCell className="text-white/60 w-[12%]">{interaction.assignedTo || "—"}</TableCell>
-                                      <TableCell className="text-white/50 w-[15%] truncate">{interaction.nextAction || "—"}</TableCell>
-                                      <TableCell className="w-[22%]">
+                                      <TableCell className="text-white">{interaction.title}</TableCell>
+                                      <TableCell className="text-white/60 w-[80px]">{interaction.assignedTo || "—"}</TableCell>
+                                      <TableCell className="text-white/50 w-[100px] truncate">{interaction.nextAction || "—"}</TableCell>
+                                      <TableCell className="w-[150px]">
                                         {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
                                           <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>
                                             {(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (
@@ -1477,7 +1477,7 @@ export default function LookupAdminTab() {
                                           <span className="text-white/30">—</span>
                                         )}
                                       </TableCell>
-                                      <TableCell className="w-[15%]">
+                                      <TableCell className="w-[80px]">
                                         <div className="flex gap-1">
                                           <Button variant="ghost" size="icon" onClick={() => setViewingDesignInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
                                             <Eye className="w-3.5 h-3.5" />
@@ -1504,21 +1504,21 @@ export default function LookupAdminTab() {
                             <div className="py-3 px-2">
                               <span className="text-sm font-medium text-white/40">{isVi ? "Khác" : "Other"}</span>
                             </div>
-                            <Table>
+                            <Table className="min-w-[700px]">
                               <TableBody>
                                 {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
                                   <TableRow key={interaction.id} className="border-white/10">
-                                    <TableCell className="text-white/40 text-sm w-[4%]">{index + 1}</TableCell>
-                                    <TableCell className="w-[12%]"><p className="text-white/70">{formatDate(interaction.date)}</p></TableCell>
-                                    <TableCell className="text-white w-[20%]">{interaction.title}</TableCell>
-                                    <TableCell className="text-white/60 w-[12%]">{interaction.assignedTo || "—"}</TableCell>
-                                    <TableCell className="text-white/50 w-[15%] truncate">{interaction.nextAction || "—"}</TableCell>
-                                    <TableCell className="w-[22%]">
+                                    <TableCell className="text-white/40 text-sm w-[40px]">{index + 1}</TableCell>
+                                    <TableCell className="w-[80px]"><p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p></TableCell>
+                                    <TableCell className="text-white">{interaction.title}</TableCell>
+                                    <TableCell className="text-white/60 w-[80px]">{interaction.assignedTo || "—"}</TableCell>
+                                    <TableCell className="text-white/50 w-[100px] truncate">{interaction.nextAction || "—"}</TableCell>
+                                    <TableCell className="w-[150px]">
                                       {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
                                         <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>{(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (<img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />))}</div>
                                       ) : (<span className="text-white/30">—</span>)}
                                     </TableCell>
-                                    <TableCell className="w-[15%]">
+                                    <TableCell className="w-[80px]">
                                       <div className="flex gap-1">
                                         <Button variant="ghost" size="icon" onClick={() => setViewingDesignInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white"><Eye className="w-3.5 h-3.5" /></Button>
                                         <Button variant="ghost" size="icon" onClick={() => openDesignInteractionDialog(interaction)} className="h-8 w-8 text-white/40 hover:text-white"><Pencil className="w-3.5 h-3.5" /></Button>
@@ -1563,18 +1563,19 @@ export default function LookupAdminTab() {
                         {sections.map((section) => (
                           <div key={section.label}>
                             <h4 className="text-sm font-light text-white/50 mb-3 tracking-wider">{section.label}</h4>
-                            <Table>
+                            <div className="overflow-x-auto">
+                            <Table className="min-w-[600px]">
                               <TableHeader>
                                 <TableRow className="border-white/10">
-                                  <TableHead className="text-white/60 w-[25%]">
+                                  <TableHead className="text-white/60 w-[140px]">
                                     <div>
                                       <span>{isVi ? "Ngày" : "Date"}</span>
                                       <p className="text-xs font-normal text-white/30">{isVi ? "Tiêu đề" : "Title"}</p>
                                     </div>
                                   </TableHead>
-                                  <TableHead className="text-white/60 w-[20%]">{isVi ? "Số tiền" : "Amount"}</TableHead>
-                                  <TableHead className="text-white/60 w-[30%]">{isVi ? "Ghi chú" : "Notes"}</TableHead>
-                                  <TableHead className="text-white/60 w-[25%] text-right">
+                                  <TableHead className="text-white/60 w-[120px]">{isVi ? "Số tiền" : "Amount"}</TableHead>
+                                  <TableHead className="text-white/60">{isVi ? "Ghi chú" : "Notes"}</TableHead>
+                                  <TableHead className="text-white/60 w-[140px] text-right">
                                     <div>
                                       <span>{isVi ? "Loại" : "Type"}</span>
                                       <p className="text-xs font-normal text-white/30">{isVi ? "Trạng thái" : "Status"}</p>
@@ -1609,6 +1610,7 @@ export default function LookupAdminTab() {
                                 ))}
                               </TableBody>
                             </Table>
+                            </div>
                           </div>
                         ))}
                       </div>
@@ -1619,8 +1621,8 @@ export default function LookupAdminTab() {
 
               {activeSubTab === "warranty" && (
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex flex-wrap items-center gap-6">
                       <div>
                         <span className="text-xs text-white/40">{isVi ? "Trạng thái" : "Status"}</span>
                         <p className={`text-sm font-light ${selectedClient.warrantyStatus === "active" ? "text-white/60" : selectedClient.warrantyStatus === "expired" ? "text-red-400" : "text-white/40"}`}>
@@ -1634,7 +1636,7 @@ export default function LookupAdminTab() {
                         </p>
                       </div>
                     </div>
-                    <Button onClick={() => openWarrantyLogDialog()} className="h-10 px-4 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10">
+                    <Button onClick={() => openWarrantyLogDialog()} className="h-10 px-4 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10 flex-shrink-0">
                       <Plus className="w-4 h-4 mr-2" />
                       {isVi ? "Thêm nhật ký" : "Add Log"}
                     </Button>
@@ -1646,16 +1648,17 @@ export default function LookupAdminTab() {
                       <p className="text-white/30 font-light">{isVi ? "Chưa có nhật ký bảo hành" : "No warranty logs yet"}</p>
                     </div>
                   ) : (
-                    <Table>
+                    <div className="overflow-x-auto">
+                    <Table className="min-w-[700px]">
                       <TableHeader>
                         <TableRow className="border-white/10">
-                          <TableHead className="text-white/60 w-[12%]">{isVi ? "Ngày" : "Date"}</TableHead>
-                          <TableHead className="text-white/60 w-[15%]">{isVi ? "Tiêu đề" : "Title"}</TableHead>
-                          <TableHead className="text-white/60 w-[18%]">{isVi ? "Mô tả" : "Description"}</TableHead>
-                          <TableHead className="text-white/60 w-[10%]">{isVi ? "Phụ trách" : "Assigned To"}</TableHead>
-                          <TableHead className="text-white/60 w-[15%]">{isVi ? "Đính kèm" : "Attachments"}</TableHead>
-                          <TableHead className="text-white/60 w-[10%] text-right">{isVi ? "Trạng thái" : "Status"}</TableHead>
-                          <TableHead className="text-white/60 w-[8%]">{isVi ? "Thao tác" : "Actions"}</TableHead>
+                          <TableHead className="text-white/60 w-[80px]">{isVi ? "Ngày" : "Date"}</TableHead>
+                          <TableHead className="text-white/60 w-[100px]">{isVi ? "Tiêu đề" : "Title"}</TableHead>
+                          <TableHead className="text-white/60">{isVi ? "Mô tả" : "Description"}</TableHead>
+                          <TableHead className="text-white/60 w-[80px]">{isVi ? "Phụ trách" : "Assigned To"}</TableHead>
+                          <TableHead className="text-white/60 w-[120px]">{isVi ? "Đính kèm" : "Attachments"}</TableHead>
+                          <TableHead className="text-white/60 w-[90px] text-right">{isVi ? "Trạng thái" : "Status"}</TableHead>
+                          <TableHead className="text-white/60 w-[80px]">{isVi ? "Thao tác" : "Actions"}</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
@@ -1712,6 +1715,7 @@ export default function LookupAdminTab() {
                         ))}
                       </TableBody>
                     </Table>
+                    </div>
                   )}
                 </div>
               )}
