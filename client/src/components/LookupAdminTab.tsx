@@ -1530,11 +1530,11 @@ export default function LookupAdminTab() {
                     <Table>
                       <TableHeader>
                         <TableRow className="border-white/10">
-                          <TableHead className="text-white/60 w-[20%]">{isVi ? "Ngày" : "Date"}</TableHead>
-                          <TableHead className="text-white/60 w-[25%]">{isVi ? "Tiêu đề" : "Title"}</TableHead>
-                          <TableHead className="text-white/60 w-[15%]">{isVi ? "Phụ trách" : "Assigned To"}</TableHead>
-                          <TableHead className="text-white/60 w-[15%]">{isVi ? "Mô tả" : "Description"}</TableHead>
-                          <TableHead className="text-white/60 w-[15%] text-right">{isVi ? "Trạng thái" : "Status"}</TableHead>
+                          <TableHead className="text-white/60 w-[15%]">{isVi ? "Ngày" : "Date"}</TableHead>
+                          <TableHead className="text-white/60 w-[20%]">{isVi ? "Tiêu đề" : "Title"}</TableHead>
+                          <TableHead className="text-white/60 w-[12%]">{isVi ? "Phụ trách" : "Assigned To"}</TableHead>
+                          <TableHead className="text-white/60 w-[18%]">{isVi ? "Đính kèm" : "Attachments"}</TableHead>
+                          <TableHead className="text-white/60 w-[12%] text-right">{isVi ? "Trạng thái" : "Status"}</TableHead>
                           <TableHead className="text-white/60 w-[10%]">{isVi ? "Thao tác" : "Actions"}</TableHead>
                         </TableRow>
                       </TableHeader>
@@ -1544,7 +1544,17 @@ export default function LookupAdminTab() {
                             <TableCell className="text-white/70">{formatDate(log.date)}</TableCell>
                             <TableCell className="text-white">{log.title}</TableCell>
                             <TableCell className="text-white/60">{log.assignedTo || "—"}</TableCell>
-                            <TableCell className="text-white/60 truncate max-w-[200px]">{log.description || "—"}</TableCell>
+                            <TableCell>
+                              {Array.isArray(log.attachments) && log.attachments.length > 0 ? (
+                                <div className="flex gap-1">
+                                  {(log.attachments as string[]).slice(0, 5).map((url, idx) => (
+                                    <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10" />
+                                  ))}
+                                </div>
+                              ) : (
+                                <span className="text-white/30">—</span>
+                              )}
+                            </TableCell>
                             <TableCell className="text-right">
                               <Badge variant="outline" className={`rounded-none ${log.status === "completed" ? "border-white/20 text-white/60" : log.status === "in_progress" ? "border-white/20 text-white/60" : "border-white/20 text-white/60"}`}>
                                 {log.status === "completed" ? (isVi ? "Hoàn tất" : "Completed") : log.status === "in_progress" ? (isVi ? "Đang xử lý" : "In Progress") : (isVi ? "Chờ xử lý" : "Pending")}
