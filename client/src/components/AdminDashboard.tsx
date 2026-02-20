@@ -7750,7 +7750,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       <div className="space-y-6 p-6">
         <h2 className="text-2xl font-sans font-light min-h-[36px]">{language === 'vi' ? 'Quản Lý Yêu Cầu' : 'Inquiry Management'}</h2>
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
             <Input
@@ -7761,7 +7761,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             />
           </div>
           <Select value={inquiryStatusFilter} onValueChange={(val) => { setInquiryStatusFilter(val); setInquiriesPage(1); }}>
-            <SelectTrigger className="w-full sm:w-40">
+            <SelectTrigger className="w-full sm:w-40 flex-shrink-0">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -7795,7 +7795,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 <p className="text-muted-foreground">{language === 'vi' ? 'Yêu cầu mới sẽ hiển thị ở đây khi được gửi.' : 'New inquiries will appear here when submitted.'}</p>
               </div>
             ) : (
-              <Table className="table-fixed">
+              <div className="overflow-x-auto">
+              <Table className="min-w-[750px]">
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-[50px] whitespace-nowrap text-center">{language === 'vi' ? 'STT' : 'NO'}</TableHead>
@@ -7934,6 +7935,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                   })()}
                 </TableBody>
               </Table>
+              </div>
             )}
             {(() => {
               const filtered = inquiries.filter(inquiry => {
