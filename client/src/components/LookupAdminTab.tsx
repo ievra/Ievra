@@ -112,15 +112,15 @@ export default function LookupAdminTab() {
     queryKey: ['/api/clients'],
   });
 
-  const { data: constructionPhases = [] } = useQuery<ConstructionPhase[]>({
-    queryKey: ['/api/construction-phases', 'active'],
-    queryFn: () => fetch('/api/construction-phases?active=true').then(r => r.json()),
+  const { data: allConstructionPhases = [] } = useQuery<ConstructionPhase[]>({
+    queryKey: ['/api/construction-phases'],
   });
+  const constructionPhases = allConstructionPhases.filter(p => p.active);
 
-  const { data: designPhases = [] } = useQuery<DesignPhase[]>({
-    queryKey: ['/api/design-phases', 'active'],
-    queryFn: () => fetch('/api/design-phases?active=true').then(r => r.json()),
+  const { data: allDesignPhases = [] } = useQuery<DesignPhase[]>({
+    queryKey: ['/api/design-phases'],
   });
+  const designPhases = allDesignPhases.filter(p => p.active);
 
   const { data: interactions = [], isLoading: interactionsLoading } = useQuery<Interaction[]>({
     queryKey: ['/api/interactions', selectedClient?.id],
