@@ -15,7 +15,7 @@ const TAB_PERMISSIONS: Record<string, string> = {
   projects: 'projects',
   clients: 'crm',
   businessPartners: 'crm',
-  lookup: 'crm',
+  lookup: 'lookup',
   inquiries: 'inquiries',
   articles: 'articles',
   homepage: 'homepage',
