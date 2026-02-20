@@ -964,7 +964,7 @@ export default function LookupAdminTab() {
                         if (paymentTx.length === 0) return null;
                         return (
                           <div className="w-full mt-4 space-y-2">
-                            {paymentTx.map((tx: any, txIdx: number) => {
+                            {[...paymentTx].reverse().map((tx: any, txIdx: number) => {
                               const pct = tx.status === "completed" ? 100 : 0;
                               return (
                                 <div key={tx.id || txIdx} className="space-y-0.5">
