@@ -280,6 +280,14 @@ export default function Lookup() {
   const renderInteractionTable = (interactions: LookupInteraction[], phases: LookupPhase[]) => {
     return (
       <div className="space-y-0">
+        <div className="grid grid-cols-[5%_15%_30%_15%_20%_15%] px-4 py-2 border-b border-white/10">
+          <span className="text-sm text-white/30">{isVi ? "STT" : "No"}</span>
+          <span className="text-sm text-white/30">{isVi ? "Ngày" : "Date"}</span>
+          <span className="text-sm text-white/30">{isVi ? "Tiêu đề" : "Title"}</span>
+          <span className="text-sm text-white/30">{isVi ? "Phụ trách" : "Assigned"}</span>
+          <span className="text-sm text-white/30">{isVi ? "Hình ảnh" : "Images"}</span>
+          <span className="text-sm text-white/30"></span>
+        </div>
         {phases.map((phase, phaseIdx) => {
           const phaseInteractions = interactions.filter(i => i.phase === phase.value).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
           return (
