@@ -8698,7 +8698,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         name="name"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{language === 'vi' ? 'Tên Đối Tác *' : 'Partner Name *'}</FormLabel>
+                            <FormLabel>{language === 'vi' ? 'Tên Đối Tác' : 'Partner Name'}</FormLabel>
                             <FormControl>
                               <Input {...field} placeholder="Enter partner name" data-testid="input-partner-name" />
                             </FormControl>
@@ -9890,7 +9890,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         name="category"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{language === 'vi' ? 'Danh Mục *' : 'Category *'}</FormLabel>
+                            <FormLabel>{language === 'vi' ? 'Danh Mục' : 'Category'}</FormLabel>
                             <Select onValueChange={field.onChange} value={field.value}>
                               <FormControl>
                                 <SelectTrigger data-testid="select-article-category">
@@ -9917,7 +9917,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         name="status"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{language === 'vi' ? 'Trạng Thái *' : 'Status *'}</FormLabel>
+                            <FormLabel>{language === 'vi' ? 'Trạng Thái' : 'Status'}</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                               <FormControl>
                                 <SelectTrigger data-testid="select-article-status">
@@ -10696,7 +10696,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         name="username"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>{language === 'vi' ? 'Tên Đăng Nhập *' : 'Username *'}</FormLabel>
+                            <FormLabel>{language === 'vi' ? 'Tên Đăng Nhập' : 'Username'}</FormLabel>
                             <FormControl>
                               <Input {...field} placeholder={language === 'vi' ? 'Nhập tên đăng nhập' : 'Enter username'} data-testid="input-user-username" disabled={!!editingUser} />
                             </FormControl>
@@ -10711,7 +10711,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           name="password"
                           render={({ field }) => (
                             <FormItem>
-                              <FormLabel>{language === 'vi' ? 'Mật Khẩu *' : 'Password *'}</FormLabel>
+                              <FormLabel>{language === 'vi' ? 'Mật Khẩu' : 'Password'}</FormLabel>
                               <FormControl>
                                 <Input {...field} type="password" placeholder={language === 'vi' ? 'Nhập mật khẩu' : 'Enter password'} data-testid="input-user-password" />
                               </FormControl>
@@ -10744,7 +10744,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="role"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Vai Trò *' : 'Role *'}</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Vai Trò' : 'Role'}</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger data-testid="select-user-role">
