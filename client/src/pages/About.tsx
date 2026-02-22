@@ -65,7 +65,7 @@ export default function About() {
   };
 
   return (
-    <main className="ml-16">
+    <main className="ml-16 min-h-[120vh]">
       {/* Hero Section */}
       <section className="relative h-screen min-h-[600px] bg-black overflow-hidden lg:-ml-16">
         <div className="relative h-screen">

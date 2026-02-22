@@ -581,7 +581,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-black">
+    <div className="min-h-[120vh] bg-black">
       {/* Hero Slider Section - IIDA Style */}
       <HeroSlider projects={featuredProjects || []} />
       {/* Featured Projects Section */}

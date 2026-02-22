@@ -189,7 +189,7 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-screen pb-20 bg-black text-white">
+    <div className="min-h-[120vh] pb-20 bg-black text-white">
       {/* Request Section */}
       <section className="pt-60 pb-16">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
