@@ -192,7 +192,7 @@ export default function Contact() {
     <div className="min-h-screen pb-20 bg-black text-white">
       {/* Request Section */}
       <section className="pt-60 pb-16">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-6">
             <h1 className="text-3xl md:text-5xl font-light mb-4" data-testid="heading-questions">
               {t('contact.title')}
@@ -202,7 +202,7 @@ export default function Contact() {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
+          <form onSubmit={handleSubmit}>
             <div className="space-y-4">
               {/* First row - Name and Email */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
