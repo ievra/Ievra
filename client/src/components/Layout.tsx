@@ -39,14 +39,21 @@ export default function Layout({ children }: LayoutProps) {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    setNoTransition(true);
-    setIsScrolled(true);
-    hasScrolledRef.current = false;
-    requestAnimationFrame(() => {
+    const isHomepage = location === '/';
+    if (isHomepage) {
+      setIsScrolled(false);
+      setNoTransition(false);
+      hasScrolledRef.current = true;
+    } else {
+      setNoTransition(true);
+      setIsScrolled(true);
+      hasScrolledRef.current = false;
       requestAnimationFrame(() => {
-        setNoTransition(false);
+        requestAnimationFrame(() => {
+          setNoTransition(false);
+        });
       });
-    });
+    }
   }, [location]);
 
   useEffect(() => {
