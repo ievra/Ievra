@@ -177,14 +177,15 @@ export default function Blog() {
     return allArticles.filter(article => {
       // Search filter - search in title, excerpt, and content
       const searchLower = searchTerm.toLowerCase();
+      const articleYear = new Date(article.publishedAt || article.createdAt).getFullYear().toString();
       const matchesSearch = !searchTerm || 
         article.title.toLowerCase().includes(searchLower) ||
         article.excerpt?.toLowerCase().includes(searchLower) ||
         article.content?.toLowerCase().includes(searchLower) ||
-        getCategoryLabel(article.category).toLowerCase().includes(searchLower);
+        getCategoryLabel(article.category).toLowerCase().includes(searchLower) ||
+        articleYear.includes(searchLower);
 
       // Year filter
-      const articleYear = new Date(article.publishedAt || article.createdAt).getFullYear().toString();
       const matchesYear = selectedYear === 'all' || articleYear === selectedYear;
 
       return matchesSearch && matchesYear;
