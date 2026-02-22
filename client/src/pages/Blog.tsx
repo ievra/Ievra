@@ -371,7 +371,7 @@ export default function Blog() {
 
         {/* Search Box with Year Filter */}
         <div className="max-w-2xl mx-auto mb-12">
-          <div className="flex items-end gap-8 pb-4 border-b border-white/20">
+          <div className="flex items-end gap-8 pb-4">
             <Input
               type="text"
               placeholder={searchPlaceholder}
