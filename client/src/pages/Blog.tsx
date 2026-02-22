@@ -12,7 +12,6 @@ import { FormattedText } from "@/lib/textUtils";
 
 export default function Blog() {
   const { language, t } = useLanguage();
-  const [activeCategory, setActiveCategory] = useState('all');
 
   const { data: dbCategories = [] } = useQuery<Category[]>({
     queryKey: ['/api/categories'],
@@ -184,21 +183,18 @@ export default function Blog() {
         article.content?.toLowerCase().includes(searchLower) ||
         getCategoryLabel(article.category).toLowerCase().includes(searchLower);
 
-      // Category filter
-      const matchesCategory = activeCategory === 'all' || article.category === activeCategory;
-
       // Year filter
       const articleYear = new Date(article.publishedAt || article.createdAt).getFullYear().toString();
       const matchesYear = selectedYear === 'all' || articleYear === selectedYear;
 
-      return matchesSearch && matchesCategory && matchesYear;
+      return matchesSearch && matchesYear;
     });
-  }, [allArticles, searchTerm, activeCategory, selectedYear]);
+  }, [allArticles, searchTerm, selectedYear]);
 
   // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [activeCategory, searchTerm, selectedYear]);
+  }, [searchTerm, selectedYear]);
 
   // Calculate pagination
   const totalPages = Math.ceil(filteredArticles.length / articlesPerPage);
@@ -411,24 +407,6 @@ export default function Blog() {
           </div>
         </div>
 
-        {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-4 sm:gap-8 mb-12">
-          {categories.map((category) => (
-            <button
-              key={category.value}
-              onClick={() => setActiveCategory(category.value)}
-              className={`text-sm font-light tracking-widest uppercase transition-all duration-300 pb-1 border-b-2 ${
-                activeCategory === category.value 
-                  ? 'text-white border-white' 
-                  : 'text-white/60 hover:text-white border-transparent hover:border-white/30'
-              }`}
-              data-testid={`filter-${category.value}`}
-            >
-              {(language === 'vi' ? category.labelVi : category.label).toUpperCase()}
-            </button>
-          ))}
-        </div>
-
         {/* Articles Grid */}
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -450,10 +428,7 @@ export default function Blog() {
               {language === 'vi' ? 'Không tìm thấy bài viết' : 'No articles found'}
             </h3>
             <p className="text-muted-foreground">
-              {activeCategory === 'all' 
-                ? (language === 'vi' ? 'Hiện tại chưa có bài viết nào.' : 'No articles are available at the moment.')
-                : (language === 'vi' ? `Không có bài viết nào trong danh mục ${getCategoryLabel(activeCategory)}.` : `No articles found in ${getCategoryLabel(activeCategory)} category.`)
-              }
+              {language === 'vi' ? 'Hiện tại chưa có bài viết nào.' : 'No articles are available at the moment.'}
             </p>
           </div>
         ) : (
