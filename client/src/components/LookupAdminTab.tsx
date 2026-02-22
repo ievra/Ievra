@@ -1705,7 +1705,7 @@ export default function LookupAdminTab() {
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
                                       <AlertDialogCancel className="rounded-none">{isVi ? "Hủy" : "Cancel"}</AlertDialogCancel>
-                                      <AlertDialogAction onClick={() => deleteWarrantyLogMutation.mutate(log.id)} className="!bg-red-600 hover:!bg-red-700 text-white border-0 rounded-none">{isVi ? "Xóa" : "Delete"}</AlertDialogAction>
+                                      <AlertDialogAction onClick={() => deleteWarrantyLogMutation.mutate(log.id)} className="rounded-none">{isVi ? "Xóa" : "Delete"}</AlertDialogAction>
                                     </AlertDialogFooter>
                                   </AlertDialogContent>
                                 </AlertDialog>
@@ -1827,7 +1827,7 @@ export default function LookupAdminTab() {
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel className="rounded-none">{isVi ? "Hủy" : "Cancel"}</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => { deleteInteractionMutation.mutate(editingInteraction.id); setIsInteractionDialogOpen(false); }} className="!bg-red-600 hover:!bg-red-700 text-white border-0 rounded-none">{isVi ? "Xóa" : "Delete"}</AlertDialogAction>
+                        <AlertDialogAction onClick={() => { deleteInteractionMutation.mutate(editingInteraction.id); setIsInteractionDialogOpen(false); }} className="rounded-none">{isVi ? "Xóa" : "Delete"}</AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
@@ -2137,7 +2137,7 @@ export default function LookupAdminTab() {
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel className="rounded-none">{isVi ? "Hủy" : "Cancel"}</AlertDialogCancel>
-                        <AlertDialogAction onClick={() => { deleteDesignInteractionMutation.mutate(editingDesignInteraction.id); setIsDesignInteractionDialogOpen(false); }} className="!bg-red-600 hover:!bg-red-700 text-white border-0 rounded-none">{isVi ? "Xóa" : "Delete"}</AlertDialogAction>
+                        <AlertDialogAction onClick={() => { deleteDesignInteractionMutation.mutate(editingDesignInteraction.id); setIsDesignInteractionDialogOpen(false); }} className="rounded-none">{isVi ? "Xóa" : "Delete"}</AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
