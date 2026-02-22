@@ -4701,7 +4701,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 {language === 'vi' ? 'Hủy' : 'Cancel'}
               </AlertDialogCancel>
               <AlertDialogAction
-                className="bg-red-600 hover:bg-red-700 text-white rounded-none"
+                className="!bg-red-600 hover:!bg-red-700 text-white border-0 rounded-none"
                 onClick={() => {
                   if (deleteCategoryData) {
                     deleteCategoryMutation.mutate(deleteCategoryData.id);
@@ -5449,7 +5449,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                       </AlertDialogCancel>
                                       <AlertDialogAction
                                         onClick={() => deleteTransactionMutation.mutate(transaction.id)}
-                                        className="bg-white hover:bg-white/90 text-black rounded-none h-10 px-4"
+                                        className="!bg-red-600 hover:!bg-red-700 text-white border-0 rounded-none h-10 px-4"
                                         disabled={deleteTransactionMutation.isPending}
                                       >
                                         {deleteTransactionMutation.isPending ? (language === 'vi' ? "Đang xóa..." : "Deleting...") : (language === 'vi' ? "Xóa" : "Delete")}
@@ -5581,7 +5581,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                       </AlertDialogCancel>
                                       <AlertDialogAction
                                         onClick={() => deleteTransactionMutation.mutate(transaction.id)}
-                                        className="bg-white hover:bg-white/90 text-black rounded-none h-10 px-4"
+                                        className="!bg-red-600 hover:!bg-red-700 text-white border-0 rounded-none h-10 px-4"
                                         disabled={deleteTransactionMutation.isPending}
                                       >
                                         {deleteTransactionMutation.isPending ? (language === 'vi' ? "Đang xóa..." : "Deleting...") : (language === 'vi' ? "Xóa" : "Delete")}
@@ -5713,7 +5713,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                       </AlertDialogCancel>
                                       <AlertDialogAction
                                         onClick={() => deleteTransactionMutation.mutate(transaction.id)}
-                                        className="bg-white hover:bg-white/90 text-black rounded-none h-10 px-4"
+                                        className="!bg-red-600 hover:!bg-red-700 text-white border-0 rounded-none h-10 px-4"
                                         disabled={deleteTransactionMutation.isPending}
                                       >
                                         {deleteTransactionMutation.isPending ? (language === 'vi' ? "Đang xóa..." : "Deleting...") : (language === 'vi' ? "Xóa" : "Delete")}
@@ -5772,7 +5772,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
-                                <AlertDialogCancel className="bg-white hover:bg-white/90 text-black rounded-none h-10 px-4">
+                                <AlertDialogCancel className="!bg-red-600 hover:!bg-red-700 text-white border-0 rounded-none h-10 px-4">
                                   {language === 'vi' ? 'Đã hiểu' : 'Understood'}
                                 </AlertDialogCancel>
                               </AlertDialogFooter>
@@ -5794,7 +5794,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 </AlertDialogCancel>
                                 <AlertDialogAction
                                   onClick={() => deleteClientMutation.mutate(editingClient.id)}
-                                  className="bg-white hover:bg-white/90 text-black rounded-none h-10 px-4"
+                                  className="!bg-red-600 hover:!bg-red-700 text-white border-0 rounded-none h-10 px-4"
                                   disabled={deleteClientMutation.isPending}
                                 >
                                   {deleteClientMutation.isPending ? (language === 'vi' ? "Đang xóa..." : "Deleting...") : (language === 'vi' ? "Xóa" : "Delete")}
@@ -7006,7 +7006,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                       </AlertDialogCancel>
                                       <AlertDialogAction
                                         onClick={() => deleteBpTransactionMutation.mutate(transaction.id)}
-                                        className="bg-white hover:bg-white/90 text-black rounded-none h-10 px-4"
+                                        className="!bg-red-600 hover:!bg-red-700 text-white border-0 rounded-none h-10 px-4"
                                         disabled={deleteBpTransactionMutation.isPending}
                                       >
                                         {deleteBpTransactionMutation.isPending ? (language === 'vi' ? "Đang xóa..." : "Deleting...") : (language === 'vi' ? "Xóa" : "Delete")}
@@ -7063,7 +7063,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
-                                <AlertDialogCancel className="bg-white hover:bg-white/90 text-black rounded-none h-10 px-4">
+                                <AlertDialogCancel className="!bg-red-600 hover:!bg-red-700 text-white border-0 rounded-none h-10 px-4">
                                   {language === 'vi' ? 'Đã hiểu' : 'Understood'}
                                 </AlertDialogCancel>
                               </AlertDialogFooter>
@@ -7085,7 +7085,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 </AlertDialogCancel>
                                 <AlertDialogAction
                                   onClick={() => deleteBusinessPartnerMutation.mutate(editingBusinessPartner.id)}
-                                  className="bg-white hover:bg-white/90 text-black rounded-none h-10 px-4"
+                                  className="!bg-red-600 hover:!bg-red-700 text-white border-0 rounded-none h-10 px-4"
                                   disabled={deleteBusinessPartnerMutation.isPending}
                                 >
                                   {deleteBusinessPartnerMutation.isPending ? (language === 'vi' ? "Đang xóa..." : "Deleting...") : (language === 'vi' ? "Xóa" : "Delete")}
@@ -7920,7 +7920,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 </AlertDialogCancel>
                                 <AlertDialogAction
                                   onClick={() => deleteInquiryMutation.mutate(inquiry.id)}
-                                  className="bg-white hover:bg-white/90 text-black rounded-none"
+                                  className="!bg-red-600 hover:!bg-red-700 text-white border-0 rounded-none"
                                   disabled={deleteInquiryMutation.isPending}
                                 >
                                   {deleteInquiryMutation.isPending ? (language === 'vi' ? 'Đang xóa...' : 'Deleting...') : (language === 'vi' ? 'Xóa' : 'Delete')}
@@ -8840,6 +8840,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 <AlertDialogCancel>{language === 'vi' ? 'Hủy' : 'Cancel'}</AlertDialogCancel>
                                 <AlertDialogAction
                                   onClick={() => deletePartnerMutation.mutate(partner.id)}
+                                  className="!bg-red-600 hover:!bg-red-700 text-white border-0 rounded-none"
                                 >
                                   {language === 'vi' ? 'Xóa' : 'Delete'}
                                 </AlertDialogAction>
@@ -9555,7 +9556,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                 {language === 'vi' ? 'Hủy' : 'Cancel'}
               </AlertDialogCancel>
               <AlertDialogAction
-                className="bg-red-600 hover:bg-red-700 text-white rounded-none"
+                className="!bg-red-600 hover:!bg-red-700 text-white border-0 rounded-none"
                 onClick={() => {
                   if (deleteCategoryData) {
                     deleteCategoryMutation.mutate(deleteCategoryData.id);
@@ -10236,6 +10237,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                   <AlertDialogFooter>
                                     <AlertDialogCancel>{language === 'vi' ? 'Hủy' : 'Cancel'}</AlertDialogCancel>
                                     <AlertDialogAction
+                                      className="!bg-red-600 hover:!bg-red-700 text-white border-0 rounded-none"
                                       onClick={async () => {
                                         try {
                                           for (const article of articleGroup) {
@@ -10532,6 +10534,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 <AlertDialogCancel>{language === 'vi' ? 'Hủy' : 'Cancel'}</AlertDialogCancel>
                                 <AlertDialogAction
                                   onClick={() => deletePartnerMutation.mutate(partner.id)}
+                                  className="!bg-red-600 hover:!bg-red-700 text-white border-0 rounded-none"
                                 >
                                   {language === 'vi' ? 'Xóa' : 'Delete'}
                                 </AlertDialogAction>
@@ -10980,6 +10983,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 <AlertDialogFooter>
                                   <AlertDialogCancel>{language === 'vi' ? 'Hủy' : 'Cancel'}</AlertDialogCancel>
                                   <AlertDialogAction
+                                    className="!bg-red-600 hover:!bg-red-700 text-white border-0 rounded-none"
                                     onClick={() => deleteUserMutation.mutate(tableUser.id)}
                                   >
                                     {language === 'vi' ? 'Xóa' : 'Delete'}
