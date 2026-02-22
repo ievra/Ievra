@@ -24,6 +24,7 @@ export default function Layout({ children }: LayoutProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isInHero, setIsInHero] = useState(true);
   const [isIdle, setIsIdle] = useState(false);
+  const [noTransition, setNoTransition] = useState(false);
   const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { language, setLanguage, t } = useLanguage();
   const navigation = getNavigation(t);
@@ -36,11 +37,17 @@ export default function Layout({ children }: LayoutProps) {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    setNoTransition(true);
     setIsScrolled(true);
-    const timer = setTimeout(() => {
-      setIsScrolled(false);
-    }, 1500);
-    return () => clearTimeout(timer);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        setNoTransition(false);
+        const timer = setTimeout(() => {
+          setIsScrolled(false);
+        }, 300);
+        return () => clearTimeout(timer);
+      });
+    });
   }, [location]);
 
   useEffect(() => {
@@ -102,7 +109,9 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-screen relative">
-      <header className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-700 ease-in-out ${
+      <header className={`fixed top-0 left-0 right-0 z-50 ${
+        noTransition ? '' : 'transition-transform duration-700 ease-in-out'
+      } ${
         isScrolled || isIdle ? '-translate-y-full' : 'translate-y-0'
       }`}>
         <div className={`flex items-center justify-between py-2 px-6 md:py-3 md:px-10 lg:px-16 transition-colors duration-300 ${isInHero ? '' : 'bg-black/20'}`}>
