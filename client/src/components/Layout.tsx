@@ -35,17 +35,16 @@ export default function Layout({ children }: LayoutProps) {
 
   const logoSrc = settings?.logoData || settings?.logoUrl || '/api/assets/logo.white.png';
 
+  const hasScrolledRef = useRef(false);
+
   useEffect(() => {
     window.scrollTo(0, 0);
     setNoTransition(true);
     setIsScrolled(true);
+    hasScrolledRef.current = false;
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         setNoTransition(false);
-        const timer = setTimeout(() => {
-          setIsScrolled(false);
-        }, 300);
-        return () => clearTimeout(timer);
       });
     });
   }, [location]);
@@ -67,10 +66,17 @@ export default function Layout({ children }: LayoutProps) {
     let lastScrollY = window.scrollY;
     const updateScrollDirection = () => {
       const scrollY = window.scrollY;
+      if (!hasScrolledRef.current && scrollY > 10) {
+        hasScrolledRef.current = true;
+      }
+      if (!hasScrolledRef.current) {
+        lastScrollY = scrollY > 0 ? scrollY : 0;
+        return;
+      }
       const direction = scrollY > lastScrollY ? "down" : "up";
       if (direction === "down" && scrollY > 100) {
         setIsScrolled(true);
-      } else if (direction === "up" || scrollY < 50) {
+      } else if (direction === "up") {
         setIsScrolled(false);
       }
       setIsInHero(scrollY < window.innerHeight * 0.8);
@@ -79,21 +85,12 @@ export default function Layout({ children }: LayoutProps) {
       resetIdleTimer();
     };
 
-    const handleActivity = () => {
-      setIsScrolled(false);
-      resetIdleTimer();
-    };
-
     window.addEventListener("scroll", updateScrollDirection);
-    window.addEventListener("mousemove", handleActivity);
-    window.addEventListener("touchstart", handleActivity);
 
     resetIdleTimer();
 
     return () => {
       window.removeEventListener("scroll", updateScrollDirection);
-      window.removeEventListener("mousemove", handleActivity);
-      window.removeEventListener("touchstart", handleActivity);
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
     };
   }, []);
