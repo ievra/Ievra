@@ -4685,8 +4685,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               <AlertDialogTitle className="text-xl font-light">{language === 'vi' ? 'Xác Nhận Xóa Danh Mục' : 'Confirm Category Deletion'}</AlertDialogTitle>
               <AlertDialogDescription className="text-white/70">
                 {language === 'vi' 
-                  ? <>Bạn có chắc chắn muốn xóa danh mục <span className="font-medium text-white">"{deleteCategoryData?.name}"</span>?<br /><br /><span className="!text-red-400">Hành động này không thể hoàn tác.</span></>
-                  : <>Are you sure you want to delete the category <span className="font-medium text-white">"{deleteCategoryData?.name}"</span>?<br /><br /><span className="!text-red-400">This action cannot be undone.</span> Please confirm to proceed.</>
+                  ? <>Bạn có chắc chắn muốn xóa danh mục <span className="font-medium text-white">"{deleteCategoryData?.name}"</span>?</>
+                  : <>Are you sure you want to delete the category <span className="font-medium text-white">"{deleteCategoryData?.name}"</span>?</>
                 }
               </AlertDialogDescription>
             </AlertDialogHeader>
