@@ -36,6 +36,11 @@ export default function Layout({ children }: LayoutProps) {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    setIsScrolled(true);
+    const timer = setTimeout(() => {
+      setIsScrolled(false);
+    }, 1500);
+    return () => clearTimeout(timer);
   }, [location]);
 
   useEffect(() => {
