@@ -10,7 +10,6 @@ import type { Project, Category } from "@shared/schema";
 
 export default function Portfolio() {
   const { language } = useLanguage();
-  const [activeCategory, setActiveCategory] = useState('all');
 
   const { data: dbCategories = [] } = useQuery<Category[]>({
     queryKey: ['/api/categories'],
@@ -97,12 +96,9 @@ export default function Portfolio() {
   }, [language]);
 
   const { data: allProjects = [], isLoading } = useQuery<Project[]>({
-    queryKey: ['/api/projects', activeCategory, language],
+    queryKey: ['/api/projects', language],
     queryFn: async () => {
       const params = new URLSearchParams();
-      if (activeCategory !== 'all') {
-        params.append('category', activeCategory);
-      }
       params.append('language', language);
       const url = `/api/projects?${params.toString()}`;
       const response = await fetch(url);
@@ -113,10 +109,10 @@ export default function Portfolio() {
     },
   });
 
-  // Reset to page 1 when category, search, or year changes
+  // Reset to page 1 when search or year changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [activeCategory, searchTerm, selectedYear]);
+  }, [searchTerm, selectedYear]);
 
   // Get unique years from projects
   const availableYears = Array.from(
@@ -354,24 +350,6 @@ export default function Portfolio() {
           </div>
         </div>
 
-        {/* Category Filter */}
-        <div className="flex flex-wrap justify-center gap-4 sm:gap-8 mb-12">
-          {categories.map((category) => (
-            <button
-              key={category.value}
-              onClick={() => setActiveCategory(category.value)}
-              className={`text-sm font-light tracking-widest uppercase transition-all duration-300 pb-1 border-b-2 ${
-                activeCategory === category.value 
-                  ? 'text-white border-white' 
-                  : 'text-white/60 hover:text-white border-transparent hover:border-white/30'
-              }`}
-              data-testid={`filter-${category.value}`}
-            >
-              {(language === 'vi' ? category.labelVi : category.label).toUpperCase()}
-            </button>
-          ))}
-        </div>
-
         {/* Projects Grid */}
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -392,12 +370,7 @@ export default function Portfolio() {
               {language === 'vi' ? 'Không tìm thấy dự án' : 'No projects found'}
             </h3>
             <p className="text-muted-foreground">
-              {activeCategory === 'all' 
-                ? (language === 'vi' ? 'Hiện tại chưa có dự án nào.' : 'No projects are available at the moment.')
-                : (language === 'vi' 
-                    ? `Không có dự án ${categories.find(c => c.value === activeCategory)?.labelVi?.toLowerCase() || activeCategory} nào.` 
-                    : `No ${categories.find(c => c.value === activeCategory)?.label?.toLowerCase() || activeCategory} projects are available.`)
-              }
+              {language === 'vi' ? 'Hiện tại chưa có dự án nào.' : 'No projects are available at the moment.'}
             </p>
           </div>
         ) : (
