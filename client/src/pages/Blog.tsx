@@ -182,7 +182,8 @@ export default function Blog() {
         article.title.toLowerCase().includes(searchLower) ||
         article.excerpt?.toLowerCase().includes(searchLower) ||
         article.content?.toLowerCase().includes(searchLower) ||
-        getCategoryLabel(article.category).toLowerCase().includes(searchLower) ||
+        (categories.find(c => c.value === article.category)?.label || article.category).toLowerCase().includes(searchLower) ||
+        (categories.find(c => c.value === article.category)?.labelVi || '').toLowerCase().includes(searchLower) ||
         articleYear.includes(searchLower);
 
       // Year filter
