@@ -460,9 +460,10 @@ export default function Blog() {
                       <h3 className="text-xl font-sans font-light mb-2 line-clamp-2" data-testid={`text-title-${article.id}`}>
                         {article.title}
                       </h3>
-                      <p className="text-muted-foreground mb-3 text-sm" data-testid={`text-category-${article.id}`}>
-                        {getCategoryLabel(article.category)} • {formatDate(String(article.publishedAt || article.createdAt))}
-                      </p>
+                      <div className="mb-3 text-sm" data-testid={`text-category-${article.id}`}>
+                        <p className="text-muted-foreground">{getCategoryLabel(article.category)}</p>
+                        <p className="text-muted-foreground">{formatDate(String(article.publishedAt || article.createdAt))}</p>
+                      </div>
                       <p className="text-foreground/80 text-sm line-clamp-3 flex-1" data-testid={`text-excerpt-${article.id}`}>
                         {article.excerpt ? <FormattedText text={article.excerpt} /> : 'Discover insights and trends in interior design...'}
                       </p>
