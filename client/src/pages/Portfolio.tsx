@@ -138,27 +138,25 @@ export default function Portfolio() {
     if (!searchTerm) return true;
     const searchLower = searchTerm.toLowerCase();
     
-    // Category keywords mapping
-    const categoryKeywords: { [key: string]: string[] } = {
-      'residential': ['residential', 'nhà ở', 'nha o', 'house', 'home', 'villa', 'apartment'],
-      'commercial': ['commercial', 'thương mại', 'thuong mai', 'office', 'retail', 'shop', 'store'],
-      'architecture': ['architecture', 'kiến trúc', 'kien truc', 'building', 'design']
-    };
-    
-    // Check if search term matches any category keywords
-    const matchesCategory = Object.entries(categoryKeywords).some(([category, keywords]) => {
-      if (project.category === category) {
-        return keywords.some(keyword => keyword.includes(searchLower) || searchLower.includes(keyword));
-      }
-      return false;
+    const matchesCategory = categories.some(cat => {
+      if (cat.value === 'all') return false;
+      if (project.category !== cat.value) return false;
+      return (
+        cat.label.toLowerCase().includes(searchLower) ||
+        cat.labelVi.toLowerCase().includes(searchLower) ||
+        cat.value.toLowerCase().includes(searchLower)
+      );
     });
+
+    const matchesYear = project.completionYear?.includes(searchLower);
     
     return (
       project.title.toLowerCase().includes(searchLower) ||
       project.location?.toLowerCase().includes(searchLower) ||
       project.description?.toLowerCase().includes(searchLower) ||
       project.category?.toLowerCase().includes(searchLower) ||
-      matchesCategory
+      matchesCategory ||
+      matchesYear
     );
   });
 
