@@ -103,7 +103,7 @@ const AlertDialogAction = React.forwardRef<
   <AlertDialogPrimitive.Action
     ref={ref}
     className={cn(
-      "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-none text-sm font-light ring-offset-background transition-all duration-300 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 bg-[#0d0d0d] hover:bg-[#1a1a1a] text-white border-0",
+      "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-none text-sm font-light ring-offset-background transition-all duration-300 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 h-10 px-4 py-2 bg-[#0d0d0d] hover:bg-[#1a1a1a] text-white border border-white/20",
       className
     )}
     {...props}
