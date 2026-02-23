@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRoute, Link, useLocation } from "wouter";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Calendar, MapPin, User, Eye, Share2, Check } from "lucide-react";
+import { ArrowLeft, Calendar, MapPin, User, Eye, Share2, Check, X, ChevronLeft, ChevronRight } from "lucide-react";
 import OptimizedImage from "@/components/OptimizedImage";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
@@ -131,6 +132,8 @@ export default function ProjectDetail() {
   
   const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
   const { language } = useLanguage();
   const { toast } = useToast();
 
@@ -318,6 +321,17 @@ export default function ProjectDetail() {
   const mainImages = coverImages.length > 0 ? coverImages : 
                     contentImages.length > 0 ? contentImages :
                     [project.heroImage, ...galleryImages].filter(Boolean);
+
+  const firstImage = contentImages[0] || coverImages[0] || project.heroImage || galleryImages[0];
+  const secondImage = contentImages[1] || coverImages[1] || galleryImages[1];
+  const detailImage = galleryImages[0] || coverImages[0];
+  const allClickableImages = [firstImage, secondImage, detailImage, ...galleryImages.slice(1)].filter(Boolean) as string[];
+
+  const openLightbox = (imageSrc: string) => {
+    const idx = allClickableImages.indexOf(imageSrc);
+    setLightboxIndex(idx >= 0 ? idx : 0);
+    setLightboxOpen(true);
+  };
   
   return (
     <div className="min-h-[120vh] pt-24 pb-20">
@@ -345,38 +359,34 @@ export default function ProjectDetail() {
 
         {/* Two Large Images Side by Side - Using contentImages (16:9 or 1:1) */}
         {(() => {
-          const firstImage = contentImages[0] || coverImages[0] || project.heroImage || galleryImages[0];
-          const secondImage = contentImages[1] || coverImages[1] || galleryImages[1];
           const hasSecondImage = Boolean(secondImage);
           
           return (
             <div className={`grid gap-6 mb-16 ${hasSecondImage ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
-              {/* First Content Image */}
               {firstImage && (
-                <div className="aspect-video">
+                <div className="aspect-video cursor-pointer" onClick={() => openLightbox(firstImage)}>
                   <OptimizedImage
                     src={firstImage}
                     alt={project.title}
                     width={600}
                     height={337}
                     wrapperClassName="w-full h-full"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover hover:opacity-90 transition-opacity"
                     priority={true}
                     data-testid="img-main"
                   />
                 </div>
               )}
 
-              {/* Second Content Image */}
               {hasSecondImage && (
-                <div className="aspect-video">
+                <div className="aspect-video cursor-pointer" onClick={() => openLightbox(secondImage!)}>
                   <OptimizedImage
-                    src={secondImage}
+                    src={secondImage!}
                     alt={`${project.title} - Secondary view`}
                     width={600}
                     height={337}
                     wrapperClassName="w-full h-full"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover hover:opacity-90 transition-opacity"
                     data-testid="img-secondary"
                   />
                 </div>
@@ -402,15 +412,15 @@ export default function ProjectDetail() {
           {/* Right Content with Image */}
           <div className="space-y-6">
             {/* Detail image - from gallery images or cover images */}
-            {(galleryImages[0] || coverImages[0]) && (
-              <div className="w-full aspect-video">
+            {detailImage && (
+              <div className="w-full aspect-video cursor-pointer" onClick={() => openLightbox(detailImage)}>
                 <OptimizedImage
-                  src={galleryImages[0] || coverImages[0]}
+                  src={detailImage}
                   alt={`${project.title} - Detail`}
                   width={600}
                   height={337}
                   wrapperClassName="w-full h-full"
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover hover:opacity-90 transition-opacity"
                   data-testid="img-detail"
                 />
               </div>
@@ -480,7 +490,7 @@ export default function ProjectDetail() {
             {/* Additional Gallery Images (16:9 or 1:1 aspect ratio) */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {galleryImages.slice(1).map((image: string, index: number) => (
-                <div key={index} className="aspect-video">
+                <div key={index} className="aspect-video cursor-pointer" onClick={() => openLightbox(image)}>
                   <OptimizedImage
                     src={image}
                     alt={`${project.title} - Gallery ${index + 2}`}
@@ -564,6 +574,52 @@ export default function ProjectDetail() {
           </div>
         )}
       </div>
+
+      {lightboxOpen && allClickableImages.length > 0 && createPortal(
+        <div 
+          className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center"
+          onClick={() => setLightboxOpen(false)}
+        >
+          <button
+            className="absolute top-4 right-4 text-white/70 hover:text-white z-10 p-2"
+            onClick={(e) => { e.stopPropagation(); setLightboxOpen(false); }}
+          >
+            <X className="w-8 h-8" />
+          </button>
+
+          {allClickableImages.length > 1 && (
+            <>
+              <button
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white z-10 p-2"
+                onClick={(e) => { e.stopPropagation(); setLightboxIndex((prev) => (prev - 1 + allClickableImages.length) % allClickableImages.length); }}
+              >
+                <ChevronLeft className="w-10 h-10" />
+              </button>
+              <button
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white z-10 p-2"
+                onClick={(e) => { e.stopPropagation(); setLightboxIndex((prev) => (prev + 1) % allClickableImages.length); }}
+              >
+                <ChevronRight className="w-10 h-10" />
+              </button>
+            </>
+          )}
+
+          <div className="max-w-[90vw] max-h-[90vh] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
+            <img
+              src={allClickableImages[lightboxIndex]}
+              alt={`${project.title} - ${lightboxIndex + 1}`}
+              className="max-w-full max-h-[90vh] object-contain"
+            />
+          </div>
+
+          {allClickableImages.length > 1 && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/60 text-sm">
+              {lightboxIndex + 1} / {allClickableImages.length}
+            </div>
+          )}
+        </div>,
+        document.body
+      )}
     </div>
   );
 }
