@@ -112,7 +112,7 @@ export default function OptimizedImage({
       {/* Placeholder/Skeleton */}
       {!isLoaded && !hasError && (
         <div className="absolute inset-0 bg-black animate-pulse flex items-center justify-center">
-          <div className="w-8 h-8 border-2 border-gray-300 border-t-primary rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin" />
         </div>
       )}
 
