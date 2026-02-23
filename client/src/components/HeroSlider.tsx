@@ -126,7 +126,6 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
                   {/* Hero Footer */}
                   <div className="flex justify-between items-end pb-8">
                     <div className="flex items-center gap-6 text-white text-sm font-light">
-                      <span>{language === 'vi' ? 'Bài viết' : 'Article'}</span>
                       <span>{language === 'vi' ? 'bởi' : 'by'} {project.designer || 'MODERNO INTERIORS Design'}</span>
                       <span>{project.completionYear || new Date().getFullYear()}</span>
                       <span className="capitalize">
