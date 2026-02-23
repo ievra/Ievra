@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
@@ -34,6 +34,8 @@ export default function Home() {
   const { language, t } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [activeProjectIndex, setActiveProjectIndex] = useState(0);
+  const projectsScrollRef = useRef<HTMLDivElement>(null);
   const [expandedStepNumber, setExpandedStepNumber] = useState<number | null>(null);
   const [contactFormExpanded, setContactFormExpanded] = useState(false);
   const [autoCloseTimer, setAutoCloseTimer] = useState<NodeJS.Timeout | null>(
@@ -625,10 +627,10 @@ export default function Home() {
           {isLoading ? (
             <div className="overflow-x-auto">
               <div className="flex gap-4 pb-4" style={{ width: "max-content" }}>
-                {[1, 2, 3, 4, 5].map((i) => (
+                {[1, 2, 3].map((i) => (
                   <div
                     key={i}
-                    className="group relative overflow-hidden cursor-pointer h-[28rem] w-72 flex-shrink-0 rounded-none"
+                    className={`group relative overflow-hidden cursor-pointer h-[32rem] flex-shrink-0 rounded-none ${i === 1 ? 'w-[55vw]' : 'w-80'}`}
                   >
                     <div className="animate-pulse bg-white/10 h-full w-full" />
                   </div>
@@ -637,83 +639,134 @@ export default function Home() {
             </div>
           ) : (
             <>
-              {/* Scrollable Projects Grid - 5 columns visible, scroll to see up to 10 */}
-              <ScrollableContainer>
+              <div className="relative">
+                {activeProjectIndex > 0 && (
+                  <button
+                    onClick={() => {
+                      const container = projectsScrollRef.current;
+                      if (container) {
+                        const newIndex = Math.max(0, activeProjectIndex - 1);
+                        const cards = container.querySelectorAll('[data-project-card]');
+                        if (cards[newIndex]) {
+                          (cards[newIndex] as HTMLElement).scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+                        }
+                      }
+                    }}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 z-10 opacity-40 hover:opacity-100 transition-opacity duration-300"
+                  >
+                    <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
+                  </button>
+                )}
+                {featuredProjects && activeProjectIndex < Math.min(10, featuredProjects.length) - 1 && (
+                  <button
+                    onClick={() => {
+                      const container = projectsScrollRef.current;
+                      if (container) {
+                        const newIndex = Math.min((featuredProjects?.length || 1) - 1, activeProjectIndex + 1);
+                        const cards = container.querySelectorAll('[data-project-card]');
+                        if (cards[newIndex]) {
+                          (cards[newIndex] as HTMLElement).scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+                        }
+                      }
+                    }}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 z-10 opacity-40 hover:opacity-100 transition-opacity duration-300"
+                  >
+                    <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
+                  </button>
+                )}
                 <div
-                  className="flex gap-4 pb-4"
-                  style={{ width: "max-content" }}
+                  ref={projectsScrollRef}
+                  className="overflow-x-auto scrollbar-hide"
+                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                  onScroll={() => {
+                    const container = projectsScrollRef.current;
+                    if (!container) return;
+                    const cards = container.querySelectorAll('[data-project-card]');
+                    const containerLeft = container.getBoundingClientRect().left;
+                    let closestIndex = 0;
+                    let closestDist = Infinity;
+                    cards.forEach((card, i) => {
+                      const dist = Math.abs(card.getBoundingClientRect().left - containerLeft);
+                      if (dist < closestDist) {
+                        closestDist = dist;
+                        closestIndex = i;
+                      }
+                    });
+                    setActiveProjectIndex(closestIndex);
+                  }}
                 >
-                  {featuredProjects?.slice(0, 10).map((project, index) => (
-                    <div
-                      key={project.id}
-                      className="group relative overflow-hidden cursor-pointer h-[28rem] w-72 flex-shrink-0 rounded-none border border-white/10 hover:bg-white/[0.04] transition-all duration-300 project-card"
-                      onClick={() => navigate(project.slug ? `/portfolio/${project.slug}` : `/project/${project.id}`)}
-                    >
-                      {Array.isArray(project.images) && project.images[0] ? (
-                        <img
-                          src={project.images[0]}
-                          alt={project.title}
-                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                          data-testid={`img-project-${project.id}`}
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-transparent" data-testid={`img-project-${project.id}`} />
-                      )}
-                      <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-300" />
-
-                      {/* Content Overlay */}
-                      <div className="absolute inset-0 p-6 pb-12 flex flex-col justify-between">
-                        {/* Top - Title and Area */}
-                        <div>
-                          <h3
-                            className="text-white text-xl font-light mb-2"
-                            data-testid={`text-title-${project.id}`}
-                          >
-                            {project.title}
-                          </h3>
-                          <p
-                            className="text-white/80 text-sm uppercase tracking-wide mb-1"
-                            data-testid={`text-category-${project.id}`}
-                          >
-                            {getCategoryLabel(project.category)}
-                          </p>
-                          {project.area && (
-                            <p className="text-white/60 text-xs" data-testid={`text-area-${project.id}`}>
-                              {project.area}
-                            </p>
+                  <div className="flex gap-4 pb-4" style={{ width: "max-content" }}>
+                    {featuredProjects?.slice(0, 10).map((project, index) => {
+                      const isActive = index === activeProjectIndex;
+                      return (
+                        <div
+                          key={project.id}
+                          data-project-card
+                          className={`group relative overflow-hidden cursor-pointer h-[32rem] flex-shrink-0 rounded-none border border-white/10 hover:bg-white/[0.04] project-card`}
+                          style={{
+                            width: isActive ? 'min(55vw, 44rem)' : '20rem',
+                            transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                          }}
+                          onClick={() => navigate(project.slug ? `/portfolio/${project.slug}` : `/project/${project.id}`)}
+                        >
+                          {Array.isArray(project.images) && project.images[0] ? (
+                            <img
+                              src={project.images[0]}
+                              alt={project.title}
+                              className="w-full h-full object-cover"
+                              data-testid={`img-project-${project.id}`}
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-transparent" data-testid={`img-project-${project.id}`} />
                           )}
-                        </div>
+                          <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-300" />
 
-                        {/* Bottom - Year and Duration */}
-                        {(project.duration || project.completionYear) && (
-                          <div className="grid grid-cols-2 gap-4 text-white">
-                            {project.completionYear && (
-                              <div>
-                                <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
-                                  {language === "vi" ? "Năm" : "Year"}
+                          <div className="absolute inset-0 p-6 pb-8 flex flex-col justify-between">
+                            <div>
+                              <p
+                                className="text-white/80 text-sm uppercase tracking-wide mb-1"
+                                data-testid={`text-category-${project.id}`}
+                              >
+                                {getCategoryLabel(project.category)}
+                              </p>
+                              {project.area && (
+                                <p className="text-white/60 text-xs" data-testid={`text-area-${project.id}`}>
+                                  {project.area}
                                 </p>
-                                <p className="text-sm font-light" data-testid={`text-year-${project.id}`}>
-                                  {project.completionYear}
-                                </p>
-                              </div>
-                            )}
-                            {project.duration && (
-                              <div>
-                                <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
-                                  {language === "vi" ? "Thời gian" : "Duration"}
-                                </p>
-                                <p className="text-sm font-light" data-testid={`text-duration-${project.id}`}>
-                                  {project.duration}
-                                </p>
+                              )}
+                            </div>
+
+                            {(project.duration || project.completionYear) && (
+                              <div className="grid grid-cols-2 gap-4 text-white">
+                                {project.completionYear && (
+                                  <div>
+                                    <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
+                                      {language === "vi" ? "Năm" : "Year"}
+                                    </p>
+                                    <p className="text-sm font-light" data-testid={`text-year-${project.id}`}>
+                                      {project.completionYear}
+                                    </p>
+                                  </div>
+                                )}
+                                {project.duration && (
+                                  <div>
+                                    <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
+                                      {language === "vi" ? "Thời gian" : "Duration"}
+                                    </p>
+                                    <p className="text-sm font-light" data-testid={`text-duration-${project.id}`}>
+                                      {project.duration}
+                                    </p>
+                                  </div>
+                                )}
                               </div>
                             )}
                           </div>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
-              </ScrollableContainer>
+              </div>
             </>
           )}
         </div>
