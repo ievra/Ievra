@@ -50,6 +50,29 @@ export default function Home() {
     {},
   );
   const [stepDescriptionTexts, setStepDescriptionTexts] = useState<Record<string, string>>({});
+  const qualityParallaxRef = useRef<HTMLDivElement>(null);
+  const quality2ParallaxRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleParallaxScroll = () => {
+      [qualityParallaxRef, quality2ParallaxRef].forEach((ref) => {
+        const el = ref.current;
+        if (!el) return;
+        const section = el.parentElement;
+        if (!section) return;
+        const rect = section.getBoundingClientRect();
+        const viewH = window.innerHeight;
+        const sectionH = rect.height;
+        const progress = (viewH - rect.top) / (viewH + sectionH);
+        const clamped = Math.max(0, Math.min(1, progress));
+        const translateY = (clamped - 0.5) * -120;
+        el.style.transform = `translateY(${translateY}px)`;
+      });
+    };
+    window.addEventListener('scroll', handleParallaxScroll, { passive: true });
+    handleParallaxScroll();
+    return () => window.removeEventListener('scroll', handleParallaxScroll);
+  }, []);
 
   // Scroll animation with specific directions and stagger delays
   useEffect(() => {
@@ -786,22 +809,9 @@ export default function Home() {
       {/* Quality Hero Section */}
       <section className="relative h-[70vh] min-h-[600px] overflow-hidden scroll-animate">
         <div
-          className="absolute w-full"
-          style={{ top: '-30%', height: '160%', willChange: 'transform' }}
-          ref={(el) => {
-            if (!el || (el as any).__parallaxBound) return;
-            (el as any).__parallaxBound = true;
-            const section = el.parentElement!;
-            const update = () => {
-              const rect = section.getBoundingClientRect();
-              const viewH = window.innerHeight;
-              const progress = 1 - (rect.top + rect.height) / (viewH + rect.height);
-              const clamped = Math.max(0, Math.min(1, progress));
-              el.style.transform = `translateY(${clamped * 20}%)`;
-            };
-            window.addEventListener('scroll', update, { passive: true });
-            update();
-          }}
+          ref={qualityParallaxRef}
+          className="absolute inset-x-0"
+          style={{ top: '-60px', bottom: '-60px' }}
         >
           <img
             src={homepageContent?.qualityBackgroundImage || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"}
@@ -955,13 +965,15 @@ export default function Home() {
       {/* Quality Materials Hero Section */}
       <section className="relative h-[70vh] bg-black overflow-hidden">
         <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: homepageContent?.quality2BackgroundImage 
-              ? `url(${homepageContent.quality2BackgroundImage})`
-              : 'url("/api/assets/stock_images/contemporary_bedroom_e9bd2ed1.jpg")',
-          }}
+          ref={quality2ParallaxRef}
+          className="absolute inset-x-0"
+          style={{ top: '-60px', bottom: '-60px' }}
         >
+          <img
+            src={homepageContent?.quality2BackgroundImage || "/api/assets/stock_images/contemporary_bedroom_e9bd2ed1.jpg"}
+            alt="Quality Materials"
+            className="w-full h-full object-cover"
+          />
           <div className="absolute inset-0 bg-black/40" />
         </div>
 
