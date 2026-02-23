@@ -155,6 +155,8 @@ export default function Layout({ children }: LayoutProps) {
           showIntroRef.current = false;
           introAnimatingRef.current = false;
           document.body.style.overflow = '';
+          setIsScrolled(false);
+          setIsIdle(false);
           setLogoSwapped(true);
         }
       };
@@ -219,7 +221,7 @@ export default function Layout({ children }: LayoutProps) {
       <header className={`fixed top-0 left-0 right-0 z-50 ${
         noTransition ? '' : `transition-transform ${!logoSwapped && location === '/' ? 'duration-[2000ms] ease-[cubic-bezier(0.33,1,0.68,1)]' : 'duration-700 ease-in-out'}`
       } ${
-        location === '/' && !headerRevealed ? '-translate-y-full' : 'translate-y-0'
+        location === '/' && !headerRevealed ? '-translate-y-full' : ((isScrolled || isIdle) && logoSwapped ? '-translate-y-full' : 'translate-y-0')
       }`}>
         <div className={`flex items-center justify-between py-2 px-6 md:py-3 md:px-10 lg:px-16 transition-colors duration-300 ${isInHero ? '' : 'bg-black/20'}`}>
           <nav className="hidden lg:flex items-center gap-8">
