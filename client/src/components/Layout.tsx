@@ -138,6 +138,8 @@ export default function Layout({ children }: LayoutProps) {
       if (introAnimatingRef.current) return;
       introAnimatingRef.current = true;
 
+      setHeaderRevealed(true);
+
       const startTime = performance.now();
       const duration = 1500;
 
@@ -153,12 +155,7 @@ export default function Layout({ children }: LayoutProps) {
           showIntroRef.current = false;
           introAnimatingRef.current = false;
           document.body.style.overflow = '';
-          setTimeout(() => {
-            setHeaderRevealed(true);
-            setTimeout(() => {
-              setLogoSwapped(true);
-            }, 800);
-          }, 300);
+          setLogoSwapped(true);
         }
       };
 
@@ -220,9 +217,9 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div className="min-h-screen relative">
       <header className={`fixed top-0 left-0 right-0 z-50 ${
-        noTransition ? '' : 'transition-transform duration-700 ease-in-out'
+        noTransition ? '' : `transition-transform ${!logoSwapped && location === '/' ? 'duration-[1500ms] ease-[cubic-bezier(0.33,1,0.68,1)]' : 'duration-700 ease-in-out'}`
       } ${
-        (isScrolled || isIdle) && headerRevealed ? '-translate-y-full' : (location === '/' && !headerRevealed ? '-translate-y-full' : 'translate-y-0')
+        (isScrolled || isIdle) && logoSwapped ? '-translate-y-full' : (location === '/' && !headerRevealed ? '-translate-y-full' : 'translate-y-0')
       }`}>
         <div className={`flex items-center justify-between py-2 px-6 md:py-3 md:px-10 lg:px-16 transition-colors duration-300 ${isInHero ? '' : 'bg-black/20'}`}>
           <nav className="hidden lg:flex items-center gap-8">
