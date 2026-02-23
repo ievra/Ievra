@@ -28,6 +28,7 @@ export default function Layout({ children }: LayoutProps) {
   const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [introProgress, setIntroProgress] = useState(location === '/' ? 0 : 1);
   const [headerRevealed, setHeaderRevealed] = useState(location !== '/');
+  const [logoSwapped, setLogoSwapped] = useState(location !== '/');
   const showIntroRef = useRef(location === '/');
   const isHomepageRef = useRef(location === '/');
   const introAnimatingRef = useRef(false);
@@ -50,6 +51,7 @@ export default function Layout({ children }: LayoutProps) {
       showIntroRef.current = true;
       setIntroProgress(0);
       setHeaderRevealed(false);
+      setLogoSwapped(false);
       setIsScrolled(false);
       setNoTransition(false);
       hasScrolledRef.current = true;
@@ -57,6 +59,7 @@ export default function Layout({ children }: LayoutProps) {
       showIntroRef.current = false;
       setIntroProgress(1);
       setHeaderRevealed(true);
+      setLogoSwapped(true);
       setNoTransition(true);
       setIsScrolled(true);
       hasScrolledRef.current = false;
@@ -152,6 +155,9 @@ export default function Layout({ children }: LayoutProps) {
           document.body.style.overflow = '';
           setTimeout(() => {
             setHeaderRevealed(true);
+            setTimeout(() => {
+              setLogoSwapped(true);
+            }, 800);
           }, 300);
         }
       };
@@ -200,7 +206,7 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   const introActive = location === '/' && introProgress < 1;
-  const showIntroLogo = location === '/' && !headerRevealed;
+  const showIntroLogo = location === '/' && !logoSwapped;
   let introLogoTop = 40;
   let introLogoScale = 1;
   if (showIntroLogo) {
@@ -247,7 +253,7 @@ export default function Layout({ children }: LayoutProps) {
               src={logoSrc}
               alt="IEVRA Design & Build"
               className="h-10 md:h-16 w-auto hover:opacity-80 transition-opacity"
-              style={location === '/' && introProgress < 1 ? { opacity: 0 } : undefined}
+              style={location === '/' && !logoSwapped ? { opacity: 0 } : undefined}
             />
           </Link>
 
