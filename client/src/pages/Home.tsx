@@ -704,7 +704,7 @@ export default function Home() {
                           data-project-card
                           className={`group relative overflow-hidden cursor-pointer h-[32rem] flex-shrink-0 rounded-none border border-white/10 hover:bg-white/[0.04] project-card`}
                           style={{
-                            width: isActive ? 'min(55vw, 44rem)' : '20rem',
+                            width: isActive ? 'min(50vw, 40rem)' : '16rem',
                             transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
                           }}
                           onClick={() => navigate(project.slug ? `/portfolio/${project.slug}` : `/project/${project.id}`)}
