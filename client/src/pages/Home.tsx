@@ -642,7 +642,11 @@ export default function Home() {
               <div className="relative overflow-hidden">
                 {activeProjectIndex > 0 && (
                   <button
-                    onClick={() => setActiveProjectIndex(Math.max(0, activeProjectIndex - 1))}
+                    onClick={() => {
+                      const totalCards = Math.min(10, featuredProjects?.length || 0);
+                      const isLast = activeProjectIndex === totalCards - 1;
+                      setActiveProjectIndex(Math.max(0, isLast ? activeProjectIndex - 2 : activeProjectIndex - 1));
+                    }}
                     className="absolute left-4 top-1/2 -translate-y-1/2 z-10 opacity-40 hover:opacity-100 transition-opacity duration-300"
                   >
                     <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
