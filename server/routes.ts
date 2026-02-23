@@ -2227,7 +2227,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Business Partners routes
-  app.get("/api/business-partners", requireAuth, async (req, res) => {
+  app.get("/api/business-partners", async (req, res) => {
     try {
       const { status } = req.query;
       const partners = await storage.getBusinessPartners(status as string);
@@ -2237,7 +2237,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/business-partners/:id", requireAuth, async (req, res) => {
+  app.get("/api/business-partners/:id", async (req, res) => {
     try {
       const bp = await storage.getBusinessPartner(req.params.id);
       if (!bp) {
@@ -2289,7 +2289,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Business Partner Transactions routes
-  app.get("/api/bp-transactions", requireAuth, async (req, res) => {
+  app.get("/api/bp-transactions", async (req, res) => {
     try {
       const { businessPartnerId } = req.query;
       const transactions = await storage.getBpTransactions(businessPartnerId as string);
@@ -2299,7 +2299,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/bp-transactions/:id", requireAuth, async (req, res) => {
+  app.get("/api/bp-transactions/:id", async (req, res) => {
     try {
       const transaction = await storage.getBpTransaction(req.params.id);
       if (!transaction) {
