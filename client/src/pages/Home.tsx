@@ -130,24 +130,30 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const handleParallax = () => {
-      [qualityRef.current, quality2Ref.current].forEach((section) => {
+    let rafId: number;
+    let lastTop1 = 0;
+    let lastTop2 = 0;
+    const tick = () => {
+      const sections = [qualityRef.current, quality2Ref.current];
+      const lastTops = [lastTop1, lastTop2];
+      sections.forEach((section, i) => {
         if (!section) return;
-        const img = section.querySelector('[data-parallax-bg]') as HTMLElement;
-        if (!img) return;
+        const bg = section.querySelector('[data-parallax-bg]') as HTMLElement;
+        if (!bg) return;
         const rect = section.getBoundingClientRect();
+        if (Math.abs(rect.top - lastTops[i]) < 0.5) return;
+        if (i === 0) lastTop1 = rect.top; else lastTop2 = rect.top;
         const viewH = window.innerHeight;
         const sectionH = rect.height;
-        const visible = rect.top < viewH && rect.bottom > 0;
-        if (!visible) return;
+        if (rect.top > viewH || rect.bottom < 0) return;
         const progress = (viewH - rect.top) / (viewH + sectionH);
-        const offset = (progress - 0.5) * sectionH * 0.4;
-        img.style.transform = `translateY(${offset}px)`;
+        const offset = (progress - 0.5) * sectionH * 0.5;
+        bg.style.transform = `translateY(${offset}px)`;
       });
+      rafId = requestAnimationFrame(tick);
     };
-    window.addEventListener('scroll', handleParallax, { passive: true });
-    handleParallax();
-    return () => window.removeEventListener('scroll', handleParallax);
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
   }, []);
 
   // Quick contact form state (matching Contact page)
@@ -808,13 +814,15 @@ export default function Home() {
       </section>
       {/* Quality Hero Section */}
       <section ref={qualityRef} className="relative h-[70vh] min-h-[600px] overflow-hidden scroll-animate">
-        <div className="absolute inset-0" style={{ top: '-20%', bottom: '-20%', height: '140%' }}>
+        <div
+          data-parallax-bg
+          className="absolute left-0 right-0"
+          style={{ top: '-30%', height: '160%', willChange: 'transform' }}
+        >
           <img
-            data-parallax-bg
             src={homepageContent?.qualityBackgroundImage || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"}
             alt="Quality Interior Design"
             className="w-full h-full object-cover"
-            style={{ willChange: 'transform' }}
           />
         </div>
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/60" />
@@ -962,13 +970,15 @@ export default function Home() {
       </section>
       {/* Quality Materials Hero Section */}
       <section ref={quality2Ref} className="relative h-[70vh] bg-black overflow-hidden">
-        <div className="absolute inset-0" style={{ top: '-20%', bottom: '-20%', height: '140%' }}>
+        <div
+          data-parallax-bg
+          className="absolute left-0 right-0"
+          style={{ top: '-30%', height: '160%', willChange: 'transform' }}
+        >
           <img
-            data-parallax-bg
             src={homepageContent?.quality2BackgroundImage || "/api/assets/stock_images/contemporary_bedroom_e9bd2ed1.jpg"}
             alt="Quality Materials"
             className="w-full h-full object-cover"
-            style={{ willChange: 'transform' }}
           />
           <div className="absolute inset-0 bg-black/40" />
         </div>
