@@ -788,14 +788,15 @@ export default function Home() {
       {/* Quality Hero Section */}
       <section className="relative h-[70vh] min-h-[600px] scroll-animate" style={{ clipPath: 'inset(0)' }}>
         <div
-          className="fixed inset-0 -z-0"
+          className="fixed inset-0"
           style={{
             backgroundImage: `url(${homepageContent?.qualityBackgroundImage || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/60" />
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/60" />
+        </div>
         <div className="relative h-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 w-full items-center">
             <div className="text-white space-y-6 scroll-animate">
