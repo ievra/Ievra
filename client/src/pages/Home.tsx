@@ -127,36 +127,7 @@ export default function Home() {
     };
   }, []);
 
-  useEffect(() => {
-    let rafId: number;
-    let lastTop: number[] = [];
-    const tick = () => {
-      const sections = document.querySelectorAll('[data-parallax-section]');
-      let changed = false;
-      sections.forEach((section, i) => {
-        const rect = section.getBoundingClientRect();
-        if (lastTop[i] !== rect.top) {
-          changed = true;
-          lastTop[i] = rect.top;
-        }
-      });
-      if (changed) {
-        sections.forEach((section) => {
-          const bg = section.querySelector('[data-parallax-bg]') as HTMLElement;
-          if (!bg) return;
-          const rect = section.getBoundingClientRect();
-          const viewH = window.innerHeight;
-          const progress = (viewH - rect.top) / (viewH + rect.height);
-          const clamped = Math.max(0, Math.min(1, progress));
-          const offset = (clamped - 0.5) * 200;
-          bg.style.transform = `translateY(${offset}px)`;
-        });
-      }
-      rafId = requestAnimationFrame(tick);
-    };
-    rafId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafId);
-  }, []);
+  
 
   // Quick contact form state (matching Contact page)
   const [formData, setFormData] = useState({
@@ -815,18 +786,15 @@ export default function Home() {
         </div>
       </section>
       {/* Quality Hero Section */}
-      <section className="relative h-[70vh] min-h-[600px] overflow-hidden scroll-animate" data-parallax-section>
+      <section className="relative h-[70vh] min-h-[600px] scroll-animate" style={{ clip: 'rect(auto, auto, auto, auto)' }}>
         <div
-          className="absolute inset-x-0 -top-[100px] -bottom-[100px]"
-          data-parallax-bg
-          style={{ willChange: 'transform' }}
-        >
-          <img
-            src={homepageContent?.qualityBackgroundImage || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"}
-            alt="Quality Interior Design"
-            className="w-full h-full object-cover"
-          />
-        </div>
+          className="fixed inset-0"
+          style={{
+            backgroundImage: `url(${homepageContent?.qualityBackgroundImage || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/60" />
         <div className="relative h-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 w-full items-center">
@@ -971,17 +939,15 @@ export default function Home() {
         </div>
       </section>
       {/* Quality Materials Hero Section */}
-      <section className="relative h-[70vh] bg-black overflow-hidden" data-parallax-section>
+      <section className="relative h-[70vh] bg-black" style={{ clip: 'rect(auto, auto, auto, auto)' }}>
         <div
-          className="absolute inset-x-0 -top-[100px] -bottom-[100px]"
-          data-parallax-bg
-          style={{ willChange: 'transform' }}
+          className="fixed inset-0"
+          style={{
+            backgroundImage: `url(${homepageContent?.quality2BackgroundImage || "/api/assets/stock_images/contemporary_bedroom_e9bd2ed1.jpg"})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
         >
-          <img
-            src={homepageContent?.quality2BackgroundImage || "/api/assets/stock_images/contemporary_bedroom_e9bd2ed1.jpg"}
-            alt="Quality Materials"
-            className="w-full h-full object-cover"
-          />
           <div className="absolute inset-0 bg-black/40" />
         </div>
 
