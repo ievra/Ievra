@@ -659,49 +659,46 @@ export default function Home() {
                 <div className="flex gap-4 pb-4" style={{
                   transform: (() => {
                     const totalCards = Math.min(10, featuredProjects?.length || 0);
-                    const fontSize = 16;
-                    const smallCardPx = 18 * fontSize;
-                    const gapPx = 16;
-                    const unitPx = smallCardPx + gapPx;
+                    const isLast = activeProjectIndex >= totalCards - 1;
+                    if (isLast && totalCards >= 2) {
+                      const unitPx = 18 * 16 + 16;
+                      return `translateX(-${(totalCards - 2) * unitPx}px)`;
+                    }
+                    const unitPx = 18 * 16 + 16;
                     const containerPx = projectsScrollRef.current?.offsetWidth || 1200;
-                    const activeWidthPx = Math.min(window.innerWidth * 0.55, 44 * fontSize);
+                    const activeWidthPx = Math.min(window.innerWidth * 0.55, 44 * 16);
                     const totalContentPx = activeWidthPx + (totalCards - 1) * unitPx;
                     const maxOffsetPx = Math.max(0, totalContentPx - containerPx);
                     const desiredOffsetPx = activeProjectIndex * unitPx;
-                    const offsetPx = Math.min(desiredOffsetPx, maxOffsetPx);
-                    return `translateX(-${offsetPx}px)`;
+                    return `translateX(-${Math.min(desiredOffsetPx, maxOffsetPx)}px)`;
                   })(),
                   transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
                 }}>
                   {featuredProjects?.slice(0, 10).map((project, index) => {
                     const totalCards = Math.min(10, featuredProjects?.length || 0);
                     const isActive = index === activeProjectIndex;
-                    const containerPx = projectsScrollRef.current?.offsetWidth || 1200;
-                    const fontSize = 16;
-                    const smallCardPx = 18 * fontSize;
-                    const gapPx = 16;
-                    const unitPx = smallCardPx + gapPx;
-                    const activeWidthPx = Math.min(window.innerWidth * 0.55, 44 * fontSize);
-                    const totalContentPx = activeWidthPx + (totalCards - 1) * unitPx;
-                    const maxOffsetPx = Math.max(0, totalContentPx - containerPx);
-                    const desiredOffsetPx = activeProjectIndex * unitPx;
-                    const atEnd = desiredOffsetPx >= maxOffsetPx && activeProjectIndex > 0;
-                    const remainingCards = totalCards - activeProjectIndex;
-                    const remainingSpacePx = containerPx - activeWidthPx - (remainingCards - 1) * gapPx;
-                    const needsExpand = atEnd && remainingCards >= 2 && remainingSpacePx > (remainingCards - 1) * smallCardPx;
-                    const expandedInactivePx = needsExpand ? remainingSpacePx / (remainingCards - 1) : smallCardPx;
-                    const isLastTwo = index === totalCards - 1 && activeProjectIndex === totalCards - 1;
-                    const isSecondToLastAtEnd = index === totalCards - 2 && activeProjectIndex === totalCards - 1;
-                    const showBothLarge = isLastTwo || isSecondToLastAtEnd;
+                    const isLast = activeProjectIndex >= totalCards - 1;
+                    const showBothLarge = isLast && totalCards >= 2 && (index === totalCards - 1 || index === totalCards - 2);
                     let cardWidth: string;
                     if (showBothLarge) {
-                      cardWidth = `calc(50% - 0.5rem)`;
+                      cardWidth = 'calc(50% - 0.5rem)';
                     } else if (isActive) {
                       cardWidth = 'min(55vw, 44rem)';
-                    } else if (atEnd && index > activeProjectIndex) {
-                      cardWidth = `${expandedInactivePx}px`;
                     } else {
-                      cardWidth = '18rem';
+                      const unitPx = 18 * 16 + 16;
+                      const containerPx = projectsScrollRef.current?.offsetWidth || 1200;
+                      const activeWidthPx = Math.min(window.innerWidth * 0.55, 44 * 16);
+                      const totalContentPx = activeWidthPx + (totalCards - 1) * unitPx;
+                      const maxOffsetPx = Math.max(0, totalContentPx - containerPx);
+                      const desiredOffsetPx = activeProjectIndex * unitPx;
+                      const atEnd = desiredOffsetPx >= maxOffsetPx && activeProjectIndex > 0;
+                      if (atEnd && index > activeProjectIndex) {
+                        const remaining = totalCards - activeProjectIndex - 1;
+                        const spaceForInactive = containerPx - activeWidthPx - remaining * 16;
+                        cardWidth = `${spaceForInactive / remaining}px`;
+                      } else {
+                        cardWidth = '18rem';
+                      }
                     }
                     return (
                       <div
