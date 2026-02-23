@@ -54,24 +54,30 @@ export default function Home() {
   const quality2ParallaxRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleParallaxScroll = () => {
-      [qualityParallaxRef, quality2ParallaxRef].forEach((ref) => {
+    let rafId: number;
+    let lastTop1 = 0;
+    let lastTop2 = 0;
+    const updateParallax = () => {
+      const refs = [qualityParallaxRef, quality2ParallaxRef];
+      const lastTops = [lastTop1, lastTop2];
+      refs.forEach((ref, i) => {
         const el = ref.current;
         if (!el) return;
         const section = el.parentElement;
         if (!section) return;
         const rect = section.getBoundingClientRect();
+        if (rect.top === lastTops[i]) return;
+        if (i === 0) lastTop1 = rect.top; else lastTop2 = rect.top;
         const viewH = window.innerHeight;
-        const sectionH = rect.height;
-        const progress = (viewH - rect.top) / (viewH + sectionH);
+        const progress = (viewH - rect.top) / (viewH + rect.height);
         const clamped = Math.max(0, Math.min(1, progress));
-        const translateY = (clamped - 0.5) * -120;
-        el.style.transform = `translateY(${translateY}px)`;
+        const offset = (clamped - 0.5) * -200;
+        el.style.transform = `translate3d(0, ${offset}px, 0)`;
       });
+      rafId = requestAnimationFrame(updateParallax);
     };
-    window.addEventListener('scroll', handleParallaxScroll, { passive: true });
-    handleParallaxScroll();
-    return () => window.removeEventListener('scroll', handleParallaxScroll);
+    rafId = requestAnimationFrame(updateParallax);
+    return () => cancelAnimationFrame(rafId);
   }, []);
 
   // Scroll animation with specific directions and stagger delays
@@ -811,7 +817,7 @@ export default function Home() {
         <div
           ref={qualityParallaxRef}
           className="absolute inset-x-0"
-          style={{ top: '-60px', bottom: '-60px' }}
+          style={{ top: '-100px', bottom: '-100px', willChange: 'transform' }}
         >
           <img
             src={homepageContent?.qualityBackgroundImage || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"}
@@ -967,7 +973,7 @@ export default function Home() {
         <div
           ref={quality2ParallaxRef}
           className="absolute inset-x-0"
-          style={{ top: '-60px', bottom: '-60px' }}
+          style={{ top: '-100px', bottom: '-100px', willChange: 'transform' }}
         >
           <img
             src={homepageContent?.quality2BackgroundImage || "/api/assets/stock_images/contemporary_bedroom_e9bd2ed1.jpg"}
