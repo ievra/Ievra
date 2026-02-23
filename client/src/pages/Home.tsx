@@ -592,14 +592,6 @@ export default function Home() {
       <section id="featured-projects" className="py-16 bg-card">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-16">
-            <div className="mb-8">
-              <h2 className="text-sm font-light tracking-widest text-muted-foreground uppercase scroll-animate">
-                {language === "vi" 
-                  ? (homepageContent?.featuredBadgeVi || homepageContent?.featuredBadge || t("featured.projectsTitle"))
-                  : (homepageContent?.featuredBadge || t("featured.projectsTitle"))
-                }
-              </h2>
-            </div>
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
               <div className="max-w-4xl">
                 <p className="text-2xl md:text-3xl font-light text-foreground leading-relaxed scroll-animate">
