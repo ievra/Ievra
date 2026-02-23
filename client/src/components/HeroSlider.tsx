@@ -23,7 +23,10 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
 
   useEffect(() => {
     const handleScroll = () => {
-      setHeroContentVisible(window.scrollY > 300);
+      if (window.scrollY > 300) {
+        setHeroContentVisible(true);
+        window.removeEventListener('scroll', handleScroll);
+      }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
