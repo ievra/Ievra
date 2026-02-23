@@ -729,6 +729,11 @@ export default function Home() {
                               >
                                 {getCategoryLabel(project.category)}
                               </p>
+                              {project.style && (
+                                <p className="text-white/60 text-xs mb-1" data-testid={`text-style-${project.id}`}>
+                                  {project.style}
+                                </p>
+                              )}
                               {project.area && (
                                 <p className="text-white/60 text-xs" data-testid={`text-area-${project.id}`}>
                                   {project.area}
