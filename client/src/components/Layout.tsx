@@ -143,10 +143,15 @@ export default function Layout({ children }: LayoutProps) {
       const startTime = performance.now();
       const duration = 2000;
 
+      const isMobile = window.innerWidth < 768;
       const animate = (currentTime: number) => {
         const elapsed = currentTime - startTime;
         const rawProgress = Math.min(1, elapsed / duration);
-        const eased = 1 - Math.pow(1 - rawProgress, 3);
+        const eased = isMobile
+          ? rawProgress < 0.5
+            ? 4 * rawProgress * rawProgress * rawProgress
+            : 1 - Math.pow(-2 * rawProgress + 2, 3) / 2
+          : 1 - Math.pow(1 - rawProgress, 3);
         setIntroProgress(eased);
 
         if (rawProgress < 1) {
@@ -206,14 +211,16 @@ export default function Layout({ children }: LayoutProps) {
 
   const introActive = location === '/' && introProgress < 1;
   const showIntroLogo = location === '/' && !logoSwapped;
+  const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 768;
   let introLogoTop = 40;
   let introLogoScale = 1;
   if (showIntroLogo) {
     const p = introProgress;
     const startY = typeof window !== 'undefined' ? window.innerHeight / 2 : 400;
-    const endY = 40;
+    const endY = isMobileDevice ? 28 : 40;
     introLogoTop = startY + (endY - startY) * p;
-    introLogoScale = 2.5 - 1.5 * p;
+    const startScale = isMobileDevice ? 2.0 : 2.5;
+    introLogoScale = startScale - (startScale - 1) * p;
   }
 
   return (
@@ -323,8 +330,10 @@ export default function Layout({ children }: LayoutProps) {
           className="fixed pointer-events-none z-[55] h-10 md:h-16 w-auto"
           style={{
             left: '50%',
-            top: `${introLogoTop}px`,
-            transform: `translate(-50%, -50%) scale(${introLogoScale})`,
+            top: 0,
+            transform: `translate(-50%, -50%) translateY(${introLogoTop}px) scale(${introLogoScale})`,
+            willChange: 'transform',
+            backfaceVisibility: 'hidden',
           }}
         />
       )}
