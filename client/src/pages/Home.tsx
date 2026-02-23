@@ -50,35 +50,6 @@ export default function Home() {
     {},
   );
   const [stepDescriptionTexts, setStepDescriptionTexts] = useState<Record<string, string>>({});
-  const qualityParallaxRef = useRef<HTMLDivElement>(null);
-  const quality2ParallaxRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    let rafId: number;
-    let lastTop1 = 0;
-    let lastTop2 = 0;
-    const updateParallax = () => {
-      const refs = [qualityParallaxRef, quality2ParallaxRef];
-      const lastTops = [lastTop1, lastTop2];
-      refs.forEach((ref, i) => {
-        const el = ref.current;
-        if (!el) return;
-        const section = el.parentElement;
-        if (!section) return;
-        const rect = section.getBoundingClientRect();
-        if (rect.top === lastTops[i]) return;
-        if (i === 0) lastTop1 = rect.top; else lastTop2 = rect.top;
-        const viewH = window.innerHeight;
-        const progress = (viewH - rect.top) / (viewH + rect.height);
-        const clamped = Math.max(0, Math.min(1, progress));
-        const offset = (clamped - 0.5) * -200;
-        el.style.transform = `translate3d(0, ${offset}px, 0)`;
-      });
-      rafId = requestAnimationFrame(updateParallax);
-    };
-    rafId = requestAnimationFrame(updateParallax);
-    return () => cancelAnimationFrame(rafId);
-  }, []);
 
   // Scroll animation with specific directions and stagger delays
   useEffect(() => {
@@ -815,16 +786,15 @@ export default function Home() {
       {/* Quality Hero Section */}
       <section className="relative h-[70vh] min-h-[600px] overflow-hidden scroll-animate">
         <div
-          ref={qualityParallaxRef}
-          className="absolute inset-x-0"
-          style={{ top: '-100px', bottom: '-100px', willChange: 'transform' }}
-        >
-          <img
-            src={homepageContent?.qualityBackgroundImage || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"}
-            alt="Quality Interior Design"
-            className="w-full h-full object-cover"
-          />
-        </div>
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url(${homepageContent?.qualityBackgroundImage || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundAttachment: 'fixed',
+            backgroundRepeat: 'no-repeat',
+          }}
+        />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/60" />
         <div className="relative h-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 w-full items-center">
@@ -971,15 +941,17 @@ export default function Home() {
       {/* Quality Materials Hero Section */}
       <section className="relative h-[70vh] bg-black overflow-hidden">
         <div
-          ref={quality2ParallaxRef}
-          className="absolute inset-x-0"
-          style={{ top: '-100px', bottom: '-100px', willChange: 'transform' }}
+          className="absolute inset-0"
+          style={{
+            backgroundImage: homepageContent?.quality2BackgroundImage 
+              ? `url(${homepageContent.quality2BackgroundImage})`
+              : 'url("/api/assets/stock_images/contemporary_bedroom_e9bd2ed1.jpg")',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundAttachment: 'fixed',
+            backgroundRepeat: 'no-repeat',
+          }}
         >
-          <img
-            src={homepageContent?.quality2BackgroundImage || "/api/assets/stock_images/contemporary_bedroom_e9bd2ed1.jpg"}
-            alt="Quality Materials"
-            className="w-full h-full object-cover"
-          />
           <div className="absolute inset-0 bg-black/40" />
         </div>
 
