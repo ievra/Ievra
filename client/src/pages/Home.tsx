@@ -784,11 +784,30 @@ export default function Home() {
         </div>
       </section>
       {/* Quality Hero Section */}
-      <section className="relative h-[70vh] min-h-[600px] overflow-hidden scroll-animate">
+      <section
+        className="relative h-[70vh] min-h-[600px] overflow-hidden scroll-animate"
+        onMouseMove={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+          const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+          const img = e.currentTarget.querySelector('[data-parallax-img]') as HTMLElement;
+          if (img) {
+            img.style.transform = `scale(1.12) translate(${-x * 15}px, ${-y * 15}px)`;
+          }
+        }}
+        onMouseLeave={(e) => {
+          const img = e.currentTarget.querySelector('[data-parallax-img]') as HTMLElement;
+          if (img) {
+            img.style.transform = 'scale(1.12) translate(0px, 0px)';
+          }
+        }}
+      >
         <img
+          data-parallax-img
           src={homepageContent?.qualityBackgroundImage || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"}
           alt="Quality Interior Design"
           className="absolute inset-0 w-full h-full object-cover"
+          style={{ transform: 'scale(1.12)', transition: 'transform 0.4s ease-out', willChange: 'transform' }}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/60" />
         <div className="relative h-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
