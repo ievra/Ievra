@@ -45,9 +45,6 @@ export default function ProjectCard({ project, index = 0 }: ProjectCardProps) {
         
         <div className="absolute inset-0 p-6 flex flex-col justify-between">
           <div>
-            <h3 className="text-white text-sm font-light mb-2" data-testid={`text-title-${project.id}`}>
-              {project.title}
-            </h3>
             <p className="text-white/80 text-sm uppercase tracking-wide mb-1" data-testid={`text-category-${project.id}`}>
               {getCategoryLabel(project.category)}
             </p>
