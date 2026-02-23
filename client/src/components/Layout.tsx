@@ -220,11 +220,9 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div className="min-h-screen relative">
       <header className={`fixed top-0 left-0 right-0 z-50 ${
-        noTransition ? '' : 'transition-all duration-700 ease-in-out'
+        noTransition ? '' : 'transition-transform duration-700 ease-in-out'
       } ${
-        isScrolled || isIdle ? '-translate-y-full' : 'translate-y-0'
-      } ${
-        location === '/' && !headerRevealed ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        (isScrolled || isIdle) && headerRevealed ? '-translate-y-full' : (location === '/' && !headerRevealed ? '-translate-y-full' : 'translate-y-0')
       }`}>
         <div className={`flex items-center justify-between py-2 px-6 md:py-3 md:px-10 lg:px-16 transition-colors duration-300 ${isInHero ? '' : 'bg-black/20'}`}>
           <nav className="hidden lg:flex items-center gap-8">
