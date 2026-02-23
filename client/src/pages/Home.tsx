@@ -36,6 +36,8 @@ export default function Home() {
   const queryClient = useQueryClient();
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   const projectsScrollRef = useRef<HTMLDivElement>(null);
+  const qualityRef = useRef<HTMLElement>(null);
+  const quality2Ref = useRef<HTMLElement>(null);
   const [expandedStepNumber, setExpandedStepNumber] = useState<number | null>(null);
   const [contactFormExpanded, setContactFormExpanded] = useState(false);
   const [autoCloseTimer, setAutoCloseTimer] = useState<NodeJS.Timeout | null>(
@@ -125,6 +127,27 @@ export default function Home() {
       clearTimeout(timer);
       window.removeEventListener("scroll", handleScroll);
     };
+  }, []);
+
+  useEffect(() => {
+    const handleParallax = () => {
+      [qualityRef.current, quality2Ref.current].forEach((section) => {
+        if (!section) return;
+        const img = section.querySelector('[data-parallax-bg]') as HTMLElement;
+        if (!img) return;
+        const rect = section.getBoundingClientRect();
+        const viewH = window.innerHeight;
+        const sectionH = rect.height;
+        const visible = rect.top < viewH && rect.bottom > 0;
+        if (!visible) return;
+        const progress = (viewH - rect.top) / (viewH + sectionH);
+        const offset = (progress - 0.5) * sectionH * 0.4;
+        img.style.transform = `translateY(${offset}px)`;
+      });
+    };
+    window.addEventListener('scroll', handleParallax, { passive: true });
+    handleParallax();
+    return () => window.removeEventListener('scroll', handleParallax);
   }, []);
 
   // Quick contact form state (matching Contact page)
@@ -784,17 +807,16 @@ export default function Home() {
         </div>
       </section>
       {/* Quality Hero Section */}
-      <section className="relative h-[70vh] min-h-[600px] overflow-hidden scroll-animate">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url(${homepageContent?.qualityBackgroundImage || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundAttachment: 'fixed',
-            backgroundRepeat: 'no-repeat',
-          }}
-        />
+      <section ref={qualityRef} className="relative h-[70vh] min-h-[600px] overflow-hidden scroll-animate">
+        <div className="absolute inset-0" style={{ top: '-20%', bottom: '-20%', height: '140%' }}>
+          <img
+            data-parallax-bg
+            src={homepageContent?.qualityBackgroundImage || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"}
+            alt="Quality Interior Design"
+            className="w-full h-full object-cover"
+            style={{ willChange: 'transform' }}
+          />
+        </div>
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/60" />
         <div className="relative h-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 w-full items-center">
@@ -939,19 +961,15 @@ export default function Home() {
         </div>
       </section>
       {/* Quality Materials Hero Section */}
-      <section className="relative h-[70vh] bg-black overflow-hidden">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: homepageContent?.quality2BackgroundImage 
-              ? `url(${homepageContent.quality2BackgroundImage})`
-              : 'url("/api/assets/stock_images/contemporary_bedroom_e9bd2ed1.jpg")',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundAttachment: 'fixed',
-            backgroundRepeat: 'no-repeat',
-          }}
-        >
+      <section ref={quality2Ref} className="relative h-[70vh] bg-black overflow-hidden">
+        <div className="absolute inset-0" style={{ top: '-20%', bottom: '-20%', height: '140%' }}>
+          <img
+            data-parallax-bg
+            src={homepageContent?.quality2BackgroundImage || "/api/assets/stock_images/contemporary_bedroom_e9bd2ed1.jpg"}
+            alt="Quality Materials"
+            className="w-full h-full object-cover"
+            style={{ willChange: 'transform' }}
+          />
           <div className="absolute inset-0 bg-black/40" />
         </div>
 
