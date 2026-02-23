@@ -786,9 +786,9 @@ export default function Home() {
         </div>
       </section>
       {/* Quality Hero Section */}
-      <section className="relative h-[70vh] min-h-[600px] overflow-hidden scroll-animate">
+      <section className="relative h-[70vh] min-h-[600px] scroll-animate" style={{ clipPath: 'inset(0)' }}>
         <div
-          className="absolute inset-0"
+          className="fixed inset-0 -z-0"
           style={{
             backgroundImage: `url(${homepageContent?.qualityBackgroundImage || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"})`,
             backgroundSize: 'cover',
@@ -939,9 +939,9 @@ export default function Home() {
         </div>
       </section>
       {/* Quality Materials Hero Section */}
-      <section className="relative h-[70vh] bg-black overflow-hidden">
+      <section className="relative h-[70vh] bg-black" style={{ clipPath: 'inset(0)' }}>
         <div
-          className="absolute inset-0"
+          className="fixed inset-0 -z-0"
           style={{
             backgroundImage: `url(${homepageContent?.quality2BackgroundImage || "/api/assets/stock_images/contemporary_bedroom_e9bd2ed1.jpg"})`,
             backgroundSize: 'cover',
