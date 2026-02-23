@@ -812,14 +812,6 @@ export default function Home() {
       <section id="featured-news" className="py-16 bg-background">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-16">
-            <div className="mb-8">
-              <h2 className="text-sm font-light tracking-widest text-muted-foreground uppercase scroll-animate">
-                {language === "vi"
-                  ? (homepageContent?.featuredNewsTitleVi || homepageContent?.featuredNewsTitle || t("featured.newsTitle"))
-                  : (homepageContent?.featuredNewsTitle || t("featured.newsTitle"))
-                }
-              </h2>
-            </div>
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
               <div className="max-w-4xl">
                 <p className="text-2xl md:text-3xl font-light text-foreground leading-relaxed scroll-animate">
@@ -973,12 +965,6 @@ export default function Home() {
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Title */}
           <div className="mb-16">
-            <h2 className="text-sm font-light tracking-widest text-white/60 mb-8 scroll-animate">
-              {language === "vi"
-                ? (homepageContent?.journeyTitleVi || homepageContent?.journeyTitle || "HÀNH TRÌNH KIẾN TẠO KHÔNG GIAN SỐNG CỦA BẠN")
-                : (homepageContent?.journeyTitle || "THE JOURNEY TO YOUR DREAM SPACE")
-              }
-            </h2>
             <div className="max-w-4xl">
               <p className="text-2xl md:text-3xl font-light text-white leading-relaxed scroll-animate">
                 {language === "vi"
@@ -1063,12 +1049,6 @@ export default function Home() {
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="mb-16">
-            <h2 className="text-sm font-light tracking-widest text-muted-foreground uppercase mb-4 scroll-animate">
-              {language === "vi"
-                ? (homepageContent?.advantagesTitleVi || homepageContent?.advantagesTitle || "LỢI THẾ CẠNH TRANH")
-                : (homepageContent?.advantagesTitle || "ADVANTAGES")
-              }
-            </h2>
             <h3 className="text-3xl md:text-4xl font-light text-white scroll-animate">
               {language === "vi"
                 ? (homepageContent?.advantagesSubtitleVi || homepageContent?.advantagesSubtitle || "Tại sao chọn IEVRA Design & Build")
@@ -1130,14 +1110,6 @@ export default function Home() {
       {/* Partners Section */}
       <section className="py-16 bg-black overflow-hidden">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-          <div className="mb-8">
-            <h2 className="text-sm font-light tracking-widest text-muted-foreground uppercase scroll-animate">
-              {language === "vi"
-                ? (homepageContent?.partnersTitleVi || homepageContent?.partnersTitle || "ĐỐI TÁC CỦA CHÚNG TÔI")
-                : (homepageContent?.partnersTitle || "OUR PARTNERS")
-              }
-            </h2>
-          </div>
           <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
             <div className="max-w-4xl">
               <p
@@ -1230,14 +1202,6 @@ export default function Home() {
           onMouseLeave={handleContactMouseLeave}
         >
           <div className="mb-16">
-            <div className="mb-8">
-              <h2 className="text-sm font-light tracking-widest text-muted-foreground uppercase scroll-animate">
-                {language === "vi"
-                  ? (homepageContent?.faqSectionTitleVi || homepageContent?.faqSectionTitle || "CÓ THẮC MẮC GÌ KHÔNG?")
-                  : (homepageContent?.faqSectionTitle || "HAVE ANY QUESTIONS?")
-                }
-              </h2>
-            </div>
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
               <div className="max-w-4xl">
                 <p
@@ -1423,12 +1387,6 @@ export default function Home() {
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Title */}
           <div className="mb-16">
-            <h2 className="text-sm font-light tracking-widest text-white/60 mb-8 scroll-animate">
-              {language === "vi"
-                ? (homepageContent?.faqSectionTitleVi || homepageContent?.faqSectionTitle || "CÂU HỎI THƯỜNG GẶP")
-                : (homepageContent?.faqSectionTitle || "FREQUENTLY ASKED QUESTIONS")
-              }
-            </h2>
             <div className="max-w-4xl">
               <p className="text-2xl md:text-3xl font-light text-white leading-relaxed scroll-animate">
                 {language === "vi"
