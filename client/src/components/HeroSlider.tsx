@@ -115,10 +115,6 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
                       data-testid={`slide-link-${project.id}`}
                     >
                       <div className="max-w-4xl">
-                        <h2 className="js-slider-slide-title break-words text-[48px] font-light leading-tight tracking-wide" style={{ position: 'relative', zIndex: 20 }}>
-                          {project.title}
-                        </h2>
-                        
                         <span className="js-slider-slide-type sr-only">Project</span>
                         <span className="js-slider-slide-author sr-only">{project.designer || 'MODERNO INTERIORS Design'}</span>
                         <time className="js-slider-slide-date sr-only">{project.completionYear || new Date().getFullYear()}</time>
