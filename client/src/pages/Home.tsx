@@ -36,8 +36,6 @@ export default function Home() {
   const queryClient = useQueryClient();
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   const projectsScrollRef = useRef<HTMLDivElement>(null);
-  const qualityRef = useRef<HTMLElement>(null);
-  const quality2Ref = useRef<HTMLElement>(null);
   const [expandedStepNumber, setExpandedStepNumber] = useState<number | null>(null);
   const [contactFormExpanded, setContactFormExpanded] = useState(false);
   const [autoCloseTimer, setAutoCloseTimer] = useState<NodeJS.Timeout | null>(
@@ -127,33 +125,6 @@ export default function Home() {
       clearTimeout(timer);
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
-
-  useEffect(() => {
-    let rafId: number;
-    let lastTop1 = 0;
-    let lastTop2 = 0;
-    const tick = () => {
-      const sections = [qualityRef.current, quality2Ref.current];
-      const lastTops = [lastTop1, lastTop2];
-      sections.forEach((section, i) => {
-        if (!section) return;
-        const bg = section.querySelector('[data-parallax-bg]') as HTMLElement;
-        if (!bg) return;
-        const rect = section.getBoundingClientRect();
-        if (Math.abs(rect.top - lastTops[i]) < 0.5) return;
-        if (i === 0) lastTop1 = rect.top; else lastTop2 = rect.top;
-        const viewH = window.innerHeight;
-        const sectionH = rect.height;
-        if (rect.top > viewH || rect.bottom < 0) return;
-        const progress = (viewH - rect.top) / (viewH + sectionH);
-        const offset = (progress - 0.5) * sectionH * 0.5;
-        bg.style.transform = `translateY(${offset}px)`;
-      });
-      rafId = requestAnimationFrame(tick);
-    };
-    rafId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafId);
   }, []);
 
   // Quick contact form state (matching Contact page)
@@ -813,11 +784,24 @@ export default function Home() {
         </div>
       </section>
       {/* Quality Hero Section */}
-      <section ref={qualityRef} className="relative h-[70vh] min-h-[600px] overflow-hidden scroll-animate">
+      <section className="relative h-[70vh] min-h-[600px] overflow-hidden scroll-animate">
         <div
-          data-parallax-bg
-          className="absolute left-0 right-0"
+          className="absolute w-full"
           style={{ top: '-30%', height: '160%', willChange: 'transform' }}
+          ref={(el) => {
+            if (!el || (el as any).__parallaxBound) return;
+            (el as any).__parallaxBound = true;
+            const section = el.parentElement!;
+            const update = () => {
+              const rect = section.getBoundingClientRect();
+              const viewH = window.innerHeight;
+              const progress = 1 - (rect.top + rect.height) / (viewH + rect.height);
+              const clamped = Math.max(0, Math.min(1, progress));
+              el.style.transform = `translateY(${clamped * 20}%)`;
+            };
+            window.addEventListener('scroll', update, { passive: true });
+            update();
+          }}
         >
           <img
             src={homepageContent?.qualityBackgroundImage || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"}
@@ -969,17 +953,15 @@ export default function Home() {
         </div>
       </section>
       {/* Quality Materials Hero Section */}
-      <section ref={quality2Ref} className="relative h-[70vh] bg-black overflow-hidden">
+      <section className="relative h-[70vh] bg-black overflow-hidden">
         <div
-          data-parallax-bg
-          className="absolute left-0 right-0"
-          style={{ top: '-30%', height: '160%', willChange: 'transform' }}
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: homepageContent?.quality2BackgroundImage 
+              ? `url(${homepageContent.quality2BackgroundImage})`
+              : 'url("/api/assets/stock_images/contemporary_bedroom_e9bd2ed1.jpg")',
+          }}
         >
-          <img
-            src={homepageContent?.quality2BackgroundImage || "/api/assets/stock_images/contemporary_bedroom_e9bd2ed1.jpg"}
-            alt="Quality Materials"
-            className="w-full h-full object-cover"
-          />
           <div className="absolute inset-0 bg-black/40" />
         </div>
 
