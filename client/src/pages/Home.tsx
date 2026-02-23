@@ -127,6 +127,26 @@ export default function Home() {
     };
   }, []);
 
+  useEffect(() => {
+    const updateParallax = () => {
+      const sections = document.querySelectorAll('[data-parallax-section]');
+      sections.forEach((section) => {
+        const bg = section.querySelector('[data-parallax-bg]') as HTMLElement;
+        if (!bg) return;
+        const rect = section.getBoundingClientRect();
+        const viewH = window.innerHeight;
+        const sectionH = rect.height;
+        const progress = (viewH - rect.top) / (viewH + sectionH);
+        const clamped = Math.max(0, Math.min(1, progress));
+        const offset = (clamped - 0.5) * 200;
+        bg.style.transform = `translateY(${offset}px)`;
+      });
+    };
+    window.addEventListener('scroll', updateParallax, { passive: true });
+    updateParallax();
+    return () => window.removeEventListener('scroll', updateParallax);
+  }, []);
+
   // Quick contact form state (matching Contact page)
   const [formData, setFormData] = useState({
     name: "",
@@ -784,17 +804,18 @@ export default function Home() {
         </div>
       </section>
       {/* Quality Hero Section */}
-      <section className="relative h-[70vh] min-h-[600px] overflow-hidden scroll-animate">
+      <section className="relative h-[70vh] min-h-[600px] overflow-hidden scroll-animate" data-parallax-section>
         <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url(${homepageContent?.qualityBackgroundImage || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundAttachment: 'fixed',
-            backgroundRepeat: 'no-repeat',
-          }}
-        />
+          className="absolute inset-x-0 -top-[100px] -bottom-[100px]"
+          data-parallax-bg
+          style={{ willChange: 'transform' }}
+        >
+          <img
+            src={homepageContent?.qualityBackgroundImage || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"}
+            alt="Quality Interior Design"
+            className="w-full h-full object-cover"
+          />
+        </div>
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/60" />
         <div className="relative h-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 w-full items-center">
@@ -939,19 +960,17 @@ export default function Home() {
         </div>
       </section>
       {/* Quality Materials Hero Section */}
-      <section className="relative h-[70vh] bg-black overflow-hidden">
+      <section className="relative h-[70vh] bg-black overflow-hidden" data-parallax-section>
         <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: homepageContent?.quality2BackgroundImage 
-              ? `url(${homepageContent.quality2BackgroundImage})`
-              : 'url("/api/assets/stock_images/contemporary_bedroom_e9bd2ed1.jpg")',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundAttachment: 'fixed',
-            backgroundRepeat: 'no-repeat',
-          }}
+          className="absolute inset-x-0 -top-[100px] -bottom-[100px]"
+          data-parallax-bg
+          style={{ willChange: 'transform' }}
         >
+          <img
+            src={homepageContent?.quality2BackgroundImage || "/api/assets/stock_images/contemporary_bedroom_e9bd2ed1.jpg"}
+            alt="Quality Materials"
+            className="w-full h-full object-cover"
+          />
           <div className="absolute inset-0 bg-black/40" />
         </div>
 
