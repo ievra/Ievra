@@ -639,14 +639,10 @@ export default function Home() {
             </div>
           ) : (
             <>
-              <div className="relative overflow-hidden">
+              <div ref={projectsScrollRef} className="relative overflow-hidden">
                 {activeProjectIndex > 0 && (
                   <button
-                    onClick={() => {
-                      const totalCards = Math.min(10, featuredProjects?.length || 0);
-                      const isLast = activeProjectIndex === totalCards - 1;
-                      setActiveProjectIndex(Math.max(0, isLast ? activeProjectIndex - 2 : activeProjectIndex - 1));
-                    }}
+                    onClick={() => setActiveProjectIndex(activeProjectIndex - 1)}
                     className="absolute left-4 top-1/2 -translate-y-1/2 z-10 opacity-40 hover:opacity-100 transition-opacity duration-300"
                   >
                     <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
@@ -663,35 +659,61 @@ export default function Home() {
                 <div className="flex gap-4 pb-4" style={{
                   transform: (() => {
                     const totalCards = Math.min(10, featuredProjects?.length || 0);
-                    const isLast = activeProjectIndex === totalCards - 1;
-                    const offset = isLast
-                      ? (totalCards - 2) * 19
-                      : activeProjectIndex * 19;
-                    return `translateX(-${offset}rem)`;
+                    const fontSize = 16;
+                    const smallCardPx = 18 * fontSize;
+                    const gapPx = 16;
+                    const unitPx = smallCardPx + gapPx;
+                    const containerPx = projectsScrollRef.current?.offsetWidth || 1200;
+                    const activeWidthPx = Math.min(window.innerWidth * 0.55, 44 * fontSize);
+                    const totalContentPx = activeWidthPx + (totalCards - 1) * unitPx;
+                    const maxOffsetPx = Math.max(0, totalContentPx - containerPx);
+                    const desiredOffsetPx = activeProjectIndex * unitPx;
+                    const offsetPx = Math.min(desiredOffsetPx, maxOffsetPx);
+                    return `translateX(-${offsetPx}px)`;
                   })(),
                   transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
                 }}>
                   {featuredProjects?.slice(0, 10).map((project, index) => {
                     const totalCards = Math.min(10, featuredProjects?.length || 0);
-                    const isLastIndex = activeProjectIndex === totalCards - 1;
                     const isActive = index === activeProjectIndex;
-                    const isSecondToLast = index === totalCards - 2;
-                    const showExpanded = isActive || (isLastIndex && isSecondToLast);
+                    const containerPx = projectsScrollRef.current?.offsetWidth || 1200;
+                    const fontSize = 16;
+                    const smallCardPx = 18 * fontSize;
+                    const gapPx = 16;
+                    const unitPx = smallCardPx + gapPx;
+                    const activeWidthPx = Math.min(window.innerWidth * 0.55, 44 * fontSize);
+                    const totalContentPx = activeWidthPx + (totalCards - 1) * unitPx;
+                    const maxOffsetPx = Math.max(0, totalContentPx - containerPx);
+                    const desiredOffsetPx = activeProjectIndex * unitPx;
+                    const atEnd = desiredOffsetPx >= maxOffsetPx && activeProjectIndex > 0;
+                    const remainingCards = totalCards - activeProjectIndex;
+                    const remainingSpacePx = containerPx - activeWidthPx - (remainingCards - 1) * gapPx;
+                    const needsExpand = atEnd && remainingCards >= 2 && remainingSpacePx > (remainingCards - 1) * smallCardPx;
+                    const expandedInactivePx = needsExpand ? remainingSpacePx / (remainingCards - 1) : smallCardPx;
+                    const isLastTwo = index === totalCards - 1 && activeProjectIndex === totalCards - 1;
+                    const isSecondToLastAtEnd = index === totalCards - 2 && activeProjectIndex === totalCards - 1;
+                    const showBothLarge = isLastTwo || isSecondToLastAtEnd;
+                    let cardWidth: string;
+                    if (showBothLarge) {
+                      cardWidth = `calc(50% - 0.5rem)`;
+                    } else if (isActive) {
+                      cardWidth = 'min(55vw, 44rem)';
+                    } else if (atEnd && index > activeProjectIndex) {
+                      cardWidth = `${expandedInactivePx}px`;
+                    } else {
+                      cardWidth = '18rem';
+                    }
                     return (
                       <div
                         key={project.id}
                         data-project-card
                         className={`group relative overflow-hidden cursor-pointer h-[28rem] flex-shrink-0 rounded-none border border-white/10 hover:bg-white/[0.04] project-card`}
                         style={{
-                          width: isLastIndex && showExpanded
-                            ? 'calc(50% - 0.5rem)'
-                            : isActive
-                              ? 'min(55vw, 44rem)'
-                              : '18rem',
+                          width: cardWidth,
                           transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
                         }}
                         onClick={() => {
-                          if (showExpanded) {
+                          if (isActive || showBothLarge) {
                             navigate(project.slug ? `/portfolio/${project.slug}` : `/project/${project.id}`);
                           } else {
                             setActiveProjectIndex(index);
