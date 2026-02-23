@@ -32,6 +32,7 @@ export default function Layout({ children }: LayoutProps) {
   const showIntroRef = useRef(location === '/');
   const isHomepageRef = useRef(location === '/');
   const introAnimatingRef = useRef(false);
+  const introLogoRef = useRef<HTMLImageElement>(null);
   const { language, setLanguage, t } = useLanguage();
   const navigation = getNavigation(t);
 
@@ -147,6 +148,10 @@ export default function Layout({ children }: LayoutProps) {
       const duration = 2000;
 
       const isMobile = window.innerWidth < 768;
+      const startY = window.innerHeight / 2;
+      const endY = isMobile ? 28 : 40;
+      const startScale = isMobile ? 2.0 : 2.5;
+
       const animate = (currentTime: number) => {
         const elapsed = currentTime - startTime;
         const rawProgress = Math.min(1, elapsed / duration);
@@ -155,7 +160,14 @@ export default function Layout({ children }: LayoutProps) {
             ? 4 * rawProgress * rawProgress * rawProgress
             : 1 - Math.pow(-2 * rawProgress + 2, 3) / 2
           : 1 - Math.pow(1 - rawProgress, 3);
-        setIntroProgress(eased);
+
+        if (isMobile && introLogoRef.current) {
+          const top = startY + (endY - startY) * eased;
+          const scale = startScale - (startScale - 1) * eased;
+          introLogoRef.current.style.transform = `translate(-50%, -50%) translateY(${top}px) scale(${scale})`;
+        } else {
+          setIntroProgress(eased);
+        }
 
         if (rawProgress < 1) {
           requestAnimationFrame(animate);
@@ -168,6 +180,7 @@ export default function Layout({ children }: LayoutProps) {
           document.body.style.top = '';
           setIsScrolled(false);
           setIsIdle(false);
+          setIntroProgress(1);
           setLogoSwapped(true);
         }
       };
@@ -339,6 +352,7 @@ export default function Layout({ children }: LayoutProps) {
 
       {showIntroLogo && (
         <img
+          ref={introLogoRef}
           src={logoSrc}
           alt=""
           className="fixed pointer-events-none z-[55] h-10 md:h-16 w-auto"
