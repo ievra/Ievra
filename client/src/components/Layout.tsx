@@ -130,6 +130,9 @@ export default function Layout({ children }: LayoutProps) {
 
     if (showIntroRef.current) {
       document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.top = '0';
     }
 
     let touchStartY = 0;
@@ -160,6 +163,9 @@ export default function Layout({ children }: LayoutProps) {
           showIntroRef.current = false;
           introAnimatingRef.current = false;
           document.body.style.overflow = '';
+          document.body.style.position = '';
+          document.body.style.width = '';
+          document.body.style.top = '';
           setIsScrolled(false);
           setIsIdle(false);
           setLogoSwapped(true);
@@ -172,6 +178,7 @@ export default function Layout({ children }: LayoutProps) {
     const handleWheel = (e: WheelEvent) => {
       if (!showIntroRef.current) return;
       e.preventDefault();
+      if (introAnimatingRef.current) return;
       if (e.deltaY > 0) triggerIntroAnimation();
     };
 
@@ -181,6 +188,10 @@ export default function Layout({ children }: LayoutProps) {
 
     const handleTouchMove = (e: TouchEvent) => {
       if (!showIntroRef.current) return;
+      if (introAnimatingRef.current) {
+        e.preventDefault();
+        return;
+      }
       const delta = touchStartY - e.touches[0].clientY;
       if (delta > 30) {
         e.preventDefault();
@@ -197,6 +208,9 @@ export default function Layout({ children }: LayoutProps) {
       window.removeEventListener('touchstart', handleTouchStart);
       window.removeEventListener('touchmove', handleTouchMove);
       document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+      document.body.style.top = '';
     };
   }, [location]);
 
