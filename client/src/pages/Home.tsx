@@ -661,18 +661,26 @@ export default function Home() {
                   transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
                 }}>
                   {featuredProjects?.slice(0, 10).map((project, index) => {
+                    const totalCards = Math.min(10, featuredProjects?.length || 0);
+                    const isLastIndex = activeProjectIndex === totalCards - 1;
                     const isActive = index === activeProjectIndex;
+                    const isSecondToLast = index === totalCards - 2;
+                    const showExpanded = isActive || (isLastIndex && isSecondToLast);
                     return (
                       <div
                         key={project.id}
                         data-project-card
                         className={`group relative overflow-hidden cursor-pointer h-[28rem] flex-shrink-0 rounded-none border border-white/10 hover:bg-white/[0.04] project-card`}
                         style={{
-                          width: isActive ? 'min(55vw, 44rem)' : '18rem',
+                          width: isLastIndex && showExpanded
+                            ? 'min(45vw, 40rem)'
+                            : isActive
+                              ? 'min(55vw, 44rem)'
+                              : '18rem',
                           transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
                         }}
                         onClick={() => {
-                          if (isActive) {
+                          if (showExpanded) {
                             navigate(project.slug ? `/portfolio/${project.slug}` : `/project/${project.id}`);
                           } else {
                             setActiveProjectIndex(index);
