@@ -786,29 +786,15 @@ export default function Home() {
       {/* Quality Hero Section */}
       <section className="relative h-[70vh] min-h-[600px] overflow-hidden scroll-animate">
         <div
-          className="absolute w-full"
-          style={{ top: '-30%', height: '160%', willChange: 'transform' }}
-          ref={(el) => {
-            if (!el || (el as any).__parallaxBound) return;
-            (el as any).__parallaxBound = true;
-            const section = el.parentElement!;
-            const update = () => {
-              const rect = section.getBoundingClientRect();
-              const viewH = window.innerHeight;
-              const progress = 1 - (rect.top + rect.height) / (viewH + rect.height);
-              const clamped = Math.max(0, Math.min(1, progress));
-              el.style.transform = `translateY(${clamped * 20}%)`;
-            };
-            window.addEventListener('scroll', update, { passive: true });
-            update();
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `url(${homepageContent?.qualityBackgroundImage || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundAttachment: 'fixed',
+            backgroundRepeat: 'no-repeat',
           }}
-        >
-          <img
-            src={homepageContent?.qualityBackgroundImage || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"}
-            alt="Quality Interior Design"
-            className="w-full h-full object-cover"
-          />
-        </div>
+        />
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/60" />
         <div className="relative h-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 w-full items-center">
@@ -955,11 +941,15 @@ export default function Home() {
       {/* Quality Materials Hero Section */}
       <section className="relative h-[70vh] bg-black overflow-hidden">
         <div
-          className="absolute inset-0 bg-cover bg-center"
+          className="absolute inset-0"
           style={{
             backgroundImage: homepageContent?.quality2BackgroundImage 
               ? `url(${homepageContent.quality2BackgroundImage})`
               : 'url("/api/assets/stock_images/contemporary_bedroom_e9bd2ed1.jpg")',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundAttachment: 'fixed',
+            backgroundRepeat: 'no-repeat',
           }}
         >
           <div className="absolute inset-0 bg-black/40" />
