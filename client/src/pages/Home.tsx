@@ -322,6 +322,35 @@ export default function Home() {
     return () => clearInterval(interval);
   }, [expandedFaqIndex]);
 
+  useEffect(() => {
+    const el = projectsScrollRef.current;
+    if (!el) return;
+    let accumulatedDeltaX = 0;
+    let wheelTimeout: ReturnType<typeof setTimeout> | null = null;
+    const handleWheel = (e: WheelEvent) => {
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY) && Math.abs(e.deltaX) > 5) {
+        e.preventDefault();
+        accumulatedDeltaX += e.deltaX;
+        if (wheelTimeout) clearTimeout(wheelTimeout);
+        wheelTimeout = setTimeout(() => { accumulatedDeltaX = 0; }, 200);
+        if (Math.abs(accumulatedDeltaX) > 80) {
+          const maxIndex = Math.min(10, featuredProjects?.length || 1) - 1;
+          if (accumulatedDeltaX > 0) {
+            setActiveProjectIndex(prev => Math.min(prev + 1, maxIndex));
+          } else {
+            setActiveProjectIndex(prev => Math.max(prev - 1, 0));
+          }
+          accumulatedDeltaX = 0;
+        }
+      }
+    };
+    el.addEventListener('wheel', handleWheel, { passive: false });
+    return () => {
+      el.removeEventListener('wheel', handleWheel);
+      if (wheelTimeout) clearTimeout(wheelTimeout);
+    };
+  }, [featuredProjects?.length]);
+
   const { data: featuredArticles, isLoading: articlesLoading } = useQuery<
     Article[]
   >({
@@ -633,7 +662,40 @@ export default function Home() {
             </div>
           ) : (
             <>
-              <div ref={projectsScrollRef} className="relative overflow-hidden">
+              <div ref={projectsScrollRef} className="relative overflow-hidden"
+                onPointerDown={(e) => {
+                  if (e.pointerType === 'mouse' && e.button !== 0) return;
+                  const el = projectsScrollRef.current;
+                  if (!el) return;
+                  (el as any)._swipeStartX = e.clientX;
+                  (el as any)._swipeSwiped = false;
+                  if (e.pointerType !== 'mouse') el.setPointerCapture(e.pointerId);
+                }}
+                onPointerMove={(e) => {
+                  const el = projectsScrollRef.current;
+                  if (!el || (el as any)._swipeStartX == null) return;
+                  const diff = (el as any)._swipeStartX - e.clientX;
+                  if (Math.abs(diff) > 50 && !(el as any)._swipeSwiped) {
+                    (el as any)._swipeSwiped = true;
+                    const maxIndex = Math.min(10, featuredProjects?.length || 1) - 1;
+                    if (diff > 0 && activeProjectIndex < maxIndex) {
+                      setActiveProjectIndex(activeProjectIndex + 1);
+                    } else if (diff < 0 && activeProjectIndex > 0) {
+                      setActiveProjectIndex(activeProjectIndex - 1);
+                    }
+                    (el as any)._swipeStartX = null;
+                  }
+                }}
+                onPointerUp={() => {
+                  const el = projectsScrollRef.current;
+                  if (el) (el as any)._swipeStartX = null;
+                }}
+                onPointerCancel={() => {
+                  const el = projectsScrollRef.current;
+                  if (el) (el as any)._swipeStartX = null;
+                }}
+                style={{ touchAction: 'pan-y' }}
+              >
                 {activeProjectIndex > 0 && (
                   <button
                     onClick={() => setActiveProjectIndex(activeProjectIndex - 1)}
