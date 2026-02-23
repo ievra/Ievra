@@ -1387,8 +1387,8 @@ export default function Home() {
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Title */}
           <div className="mb-16">
-            <div className="max-w-4xl">
-              <p className="text-2xl md:text-3xl font-light text-white leading-relaxed scroll-animate">
+            <div className="max-w-4xl ml-auto">
+              <p className="text-2xl md:text-3xl font-light text-white leading-relaxed scroll-animate-right text-right">
                 {language === "vi"
                   ? "TÌM HIỂU THÊM VỀ QUY TRÌNH THIẾT KẾ VÀ DỊCH VỤ CỦA CHÚNG TÔI."
                   : "LEARN MORE ABOUT OUR DESIGN PROCESS AND SERVICES."}
