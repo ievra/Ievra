@@ -145,7 +145,8 @@ export default function Layout({ children }: LayoutProps) {
       setHeaderRevealed(true);
 
       const startTime = performance.now();
-      const duration = 2000;
+      const isMobileCheck = window.innerWidth < 768;
+      const duration = isMobileCheck ? 1200 : 2000;
 
       const isMobile = window.innerWidth < 768;
       const startY = window.innerHeight / 2;
@@ -253,7 +254,7 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div className="min-h-screen relative">
       <header className={`fixed top-0 left-0 right-0 z-50 ${
-        noTransition ? '' : `transition-transform ${!logoSwapped && location === '/' ? 'duration-[2000ms] ease-[cubic-bezier(0.33,1,0.68,1)]' : 'duration-700 ease-in-out'}`
+        noTransition ? '' : `transition-transform ${!logoSwapped && location === '/' ? (isMobileDevice ? 'duration-[1200ms]' : 'duration-[2000ms]') + ' ease-[cubic-bezier(0.33,1,0.68,1)]' : 'duration-700 ease-in-out'}`
       } ${
         location === '/' && !headerRevealed ? '-translate-y-full' : ((isScrolled || isIdle) && logoSwapped ? '-translate-y-full' : 'translate-y-0')
       }`}>
