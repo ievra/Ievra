@@ -1202,10 +1202,10 @@ export default function Home() {
           onMouseLeave={handleContactMouseLeave}
         >
           <div className="mb-16">
-            <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+            <div className="flex justify-end">
               <div className="max-w-4xl">
                 <p
-                  className="text-2xl md:text-3xl font-light text-foreground leading-relaxed scroll-animate"
+                  className="text-2xl md:text-3xl font-light text-foreground leading-relaxed scroll-animate-right text-right"
                   data-testid="text-consultation"
                 >
                   {language === "vi"
