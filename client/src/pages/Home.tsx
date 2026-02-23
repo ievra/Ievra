@@ -707,7 +707,20 @@ export default function Home() {
                             width: isActive ? 'min(55vw, 44rem)' : '18rem',
                             transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
                           }}
-                          onClick={() => navigate(project.slug ? `/portfolio/${project.slug}` : `/project/${project.id}`)}
+                          onClick={() => {
+                            if (isActive) {
+                              navigate(project.slug ? `/portfolio/${project.slug}` : `/project/${project.id}`);
+                            } else {
+                              setActiveProjectIndex(index);
+                              const container = projectsScrollRef.current;
+                              if (container) {
+                                const cards = container.querySelectorAll('[data-project-card]');
+                                if (cards[index]) {
+                                  (cards[index] as HTMLElement).scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
+                                }
+                              }
+                            }
+                          }}
                         >
                           {Array.isArray(project.images) && project.images[0] ? (
                             <img
