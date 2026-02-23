@@ -1220,7 +1220,7 @@ export default function Home() {
           {/* Expand/Collapse Button */}
           <button
             onClick={() => setContactFormExpanded(!contactFormExpanded)}
-            className="flex items-center gap-4 group transition-all duration-300 view-more-btn scroll-animate"
+            className="flex items-center gap-4 group transition-all duration-300 scroll-animate"
             data-testid="button-toggle-form"
           >
             <span className="text-xl font-light tracking-widest uppercase">
