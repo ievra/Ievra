@@ -48,6 +48,11 @@ export default function ProjectCard({ project, index = 0 }: ProjectCardProps) {
             <p className="text-white/80 text-sm uppercase tracking-wide mb-1" data-testid={`text-category-${project.id}`}>
               {getCategoryLabel(project.category)}
             </p>
+            {project.style && (
+              <p className="text-white/60 text-xs mb-1" data-testid={`text-style-${project.id}`}>
+                {project.style}
+              </p>
+            )}
             {project.area && (
               <p className="text-white/60 text-xs" data-testid={`text-area-${project.id}`}>
                 {project.area}
