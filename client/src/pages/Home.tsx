@@ -1110,10 +1110,10 @@ export default function Home() {
       {/* Partners Section */}
       <section className="py-16 bg-black overflow-hidden">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 mb-16">
-          <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+          <div className="flex justify-end">
             <div className="max-w-4xl">
               <p
-                className="text-2xl md:text-3xl font-light text-foreground leading-relaxed scroll-animate"
+                className="text-2xl md:text-3xl font-light text-foreground leading-relaxed scroll-animate-right text-right"
                 data-testid="text-partners-description"
               >
                 {language === "vi"
