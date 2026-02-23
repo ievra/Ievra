@@ -666,7 +666,7 @@ export default function Home() {
                       <div
                         key={project.id}
                         data-project-card
-                        className={`group relative overflow-hidden cursor-pointer h-[36rem] flex-shrink-0 rounded-none border border-white/10 hover:bg-white/[0.04] project-card`}
+                        className={`group relative overflow-hidden cursor-pointer h-[28rem] flex-shrink-0 rounded-none border border-white/10 hover:bg-white/[0.04] project-card`}
                         style={{
                           width: isActive ? 'min(55vw, 44rem)' : '18rem',
                           transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
