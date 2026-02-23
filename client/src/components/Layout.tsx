@@ -29,6 +29,7 @@ export default function Layout({ children }: LayoutProps) {
   const [introProgress, setIntroProgress] = useState(location === '/' ? 0 : 1);
   const showIntroRef = useRef(location === '/');
   const isHomepageRef = useRef(location === '/');
+  const introAnimatingRef = useRef(false);
   const { language, setLanguage, t } = useLanguage();
   const navigation = getNavigation(t);
 
@@ -65,8 +66,16 @@ export default function Layout({ children }: LayoutProps) {
   }, [location]);
 
   useEffect(() => {
-    document.body.style.overflow = mobileMenuOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else if (!showIntroRef.current) {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      if (!showIntroRef.current) {
+        document.body.style.overflow = '';
+      }
+    };
   }, [mobileMenuOpen]);
 
   useEffect(() => {
@@ -88,16 +97,8 @@ export default function Layout({ children }: LayoutProps) {
         lastScrollY = scrollY > 0 ? scrollY : 0;
         return;
       }
-      if (isHomepageRef.current && showIntroRef.current) {
-        const p = Math.min(1, scrollY / 400);
-        setIntroProgress(p);
-        if (p >= 1) {
-          showIntroRef.current = false;
-        }
-      }
-      const introActive = isHomepageRef.current && showIntroRef.current;
       const direction = scrollY > lastScrollY ? "down" : "up";
-      if (direction === "down" && scrollY > 100 && !introActive) {
+      if (direction === "down" && scrollY > 100) {
         setIsScrolled(true);
       } else if (direction === "up") {
         setIsScrolled(false);
@@ -118,6 +119,71 @@ export default function Layout({ children }: LayoutProps) {
     };
   }, []);
 
+  useEffect(() => {
+    if (location !== '/') return;
+
+    if (showIntroRef.current) {
+      document.body.style.overflow = 'hidden';
+    }
+
+    let touchStartY = 0;
+
+    const triggerIntroAnimation = () => {
+      if (introAnimatingRef.current) return;
+      introAnimatingRef.current = true;
+
+      const startTime = performance.now();
+      const duration = 1500;
+
+      const animate = (currentTime: number) => {
+        const elapsed = currentTime - startTime;
+        const rawProgress = Math.min(1, elapsed / duration);
+        const eased = 1 - Math.pow(1 - rawProgress, 3);
+        setIntroProgress(eased);
+
+        if (rawProgress < 1) {
+          requestAnimationFrame(animate);
+        } else {
+          showIntroRef.current = false;
+          introAnimatingRef.current = false;
+          document.body.style.overflow = '';
+        }
+      };
+
+      requestAnimationFrame(animate);
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      if (!showIntroRef.current) return;
+      e.preventDefault();
+      if (e.deltaY > 0) triggerIntroAnimation();
+    };
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!showIntroRef.current) return;
+      const delta = touchStartY - e.touches[0].clientY;
+      if (delta > 30) {
+        e.preventDefault();
+        triggerIntroAnimation();
+      }
+    };
+
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('touchstart', handleTouchStart, { passive: true });
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+
+    return () => {
+      window.removeEventListener('wheel', handleWheel);
+      window.removeEventListener('touchstart', handleTouchStart);
+      window.removeEventListener('touchmove', handleTouchMove);
+      document.body.style.overflow = '';
+    };
+  }, [location]);
+
   const handleLanguageChange = (lang: Language) => {
     setLanguage(lang);
   };
@@ -131,11 +197,11 @@ export default function Layout({ children }: LayoutProps) {
   let introLogoTop = 0;
   let introLogoScale = 1;
   if (introActive) {
-    const ease = 1 - Math.pow(1 - introProgress, 3);
+    const p = introProgress;
     const startY = typeof window !== 'undefined' ? window.innerHeight / 2 : 400;
     const endY = 40;
-    introLogoTop = startY + (endY - startY) * ease;
-    introLogoScale = 2.5 - 1.5 * ease;
+    introLogoTop = startY + (endY - startY) * p;
+    introLogoScale = 2.5 - 1.5 * p;
   }
 
   return (
@@ -172,7 +238,7 @@ export default function Layout({ children }: LayoutProps) {
               src={logoSrc}
               alt="IEVRA Design & Build"
               className="h-10 md:h-16 w-auto hover:opacity-80 transition-opacity"
-              style={location === '/' && introProgress < 1 ? { opacity: introProgress } : undefined}
+              style={location === '/' && introProgress < 1 ? { opacity: 0 } : undefined}
             />
           </Link>
 
