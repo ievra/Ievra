@@ -965,8 +965,8 @@ export default function Home() {
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           {/* Section Title */}
           <div className="mb-16">
-            <div className="max-w-4xl">
-              <p className="text-2xl md:text-3xl font-light text-white leading-relaxed scroll-animate">
+            <div className="max-w-4xl ml-auto">
+              <p className="text-2xl md:text-3xl font-light text-white leading-relaxed scroll-animate-right text-right">
                 {language === "vi"
                   ? (homepageContent?.journeyDescriptionVi || homepageContent?.journeyDescription || "TỪ Ý TƯỞNG ĐẾN HIỆN THỰC, CHÚNG TÔI ĐỒNG HÀNH CÙNG BẠN QUA MỘT QUY TRÌNH 5 BƯỚC TINH GỌN, HIỆU QUẢ VÀ ĐẦY CẢM HỨNG.")
                   : (homepageContent?.journeyDescription || "FROM CONCEPT TO REALITY, WE GUIDE YOU THROUGH A STREAMLINED, EFFICIENT, AND INSPIRING 5-STEP PROCESS.")
