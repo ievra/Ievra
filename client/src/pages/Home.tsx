@@ -639,19 +639,10 @@ export default function Home() {
             </div>
           ) : (
             <>
-              <div className="relative">
+              <div className="relative overflow-hidden">
                 {activeProjectIndex > 0 && (
                   <button
-                    onClick={() => {
-                      const container = projectsScrollRef.current;
-                      if (container) {
-                        const newIndex = Math.max(0, activeProjectIndex - 1);
-                        const cards = container.querySelectorAll('[data-project-card]');
-                        if (cards[newIndex]) {
-                          (cards[newIndex] as HTMLElement).scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
-                        }
-                      }
-                    }}
+                    onClick={() => setActiveProjectIndex(Math.max(0, activeProjectIndex - 1))}
                     className="absolute left-4 top-1/2 -translate-y-1/2 z-10 opacity-40 hover:opacity-100 transition-opacity duration-300"
                   >
                     <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
@@ -659,130 +650,95 @@ export default function Home() {
                 )}
                 {featuredProjects && activeProjectIndex < Math.min(10, featuredProjects.length) - 1 && (
                   <button
-                    onClick={() => {
-                      const container = projectsScrollRef.current;
-                      if (container) {
-                        const newIndex = Math.min((featuredProjects?.length || 1) - 1, activeProjectIndex + 1);
-                        const cards = container.querySelectorAll('[data-project-card]');
-                        if (cards[newIndex]) {
-                          (cards[newIndex] as HTMLElement).scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
-                        }
-                      }
-                    }}
+                    onClick={() => setActiveProjectIndex(Math.min((featuredProjects?.length || 1) - 1, activeProjectIndex + 1))}
                     className="absolute right-4 top-1/2 -translate-y-1/2 z-10 opacity-40 hover:opacity-100 transition-opacity duration-300"
                   >
                     <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
                   </button>
                 )}
-                <div
-                  ref={projectsScrollRef}
-                  className="overflow-x-auto scrollbar-hide"
-                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-                  onScroll={() => {
-                    const container = projectsScrollRef.current;
-                    if (!container) return;
-                    const cards = container.querySelectorAll('[data-project-card]');
-                    const containerLeft = container.getBoundingClientRect().left;
-                    let closestIndex = 0;
-                    let closestDist = Infinity;
-                    cards.forEach((card, i) => {
-                      const dist = Math.abs(card.getBoundingClientRect().left - containerLeft);
-                      if (dist < closestDist) {
-                        closestDist = dist;
-                        closestIndex = i;
-                      }
-                    });
-                    setActiveProjectIndex(closestIndex);
-                  }}
-                >
-                  <div className="flex gap-4 pb-4" style={{ width: "max-content" }}>
-                    {featuredProjects?.slice(0, 10).map((project, index) => {
-                      const isActive = index === activeProjectIndex;
-                      return (
-                        <div
-                          key={project.id}
-                          data-project-card
-                          className={`group relative overflow-hidden cursor-pointer h-[36rem] flex-shrink-0 rounded-none border border-white/10 hover:bg-white/[0.04] project-card`}
-                          style={{
-                            width: isActive ? 'min(55vw, 44rem)' : '18rem',
-                            transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                          }}
-                          onClick={() => {
-                            if (isActive) {
-                              navigate(project.slug ? `/portfolio/${project.slug}` : `/project/${project.id}`);
-                            } else {
-                              setActiveProjectIndex(index);
-                              const container = projectsScrollRef.current;
-                              if (container) {
-                                const cards = container.querySelectorAll('[data-project-card]');
-                                if (cards[index]) {
-                                  (cards[index] as HTMLElement).scrollIntoView({ behavior: 'smooth', inline: 'start', block: 'nearest' });
-                                }
-                              }
-                            }
-                          }}
-                        >
-                          {Array.isArray(project.images) && project.images[0] ? (
-                            <img
-                              src={project.images[0]}
-                              alt={project.title}
-                              className="w-full h-full object-cover"
-                              data-testid={`img-project-${project.id}`}
-                            />
-                          ) : (
-                            <div className="w-full h-full bg-transparent" data-testid={`img-project-${project.id}`} />
-                          )}
-                          <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-300" />
+                <div className="flex gap-4 pb-4" style={{
+                  transform: `translateX(-${activeProjectIndex * (18 + 1)}rem)`,
+                  transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                }}>
+                  {featuredProjects?.slice(0, 10).map((project, index) => {
+                    const isActive = index === activeProjectIndex;
+                    return (
+                      <div
+                        key={project.id}
+                        data-project-card
+                        className={`group relative overflow-hidden cursor-pointer h-[36rem] flex-shrink-0 rounded-none border border-white/10 hover:bg-white/[0.04] project-card`}
+                        style={{
+                          width: isActive ? 'min(55vw, 44rem)' : '18rem',
+                          transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                        }}
+                        onClick={() => {
+                          if (isActive) {
+                            navigate(project.slug ? `/portfolio/${project.slug}` : `/project/${project.id}`);
+                          } else {
+                            setActiveProjectIndex(index);
+                          }
+                        }}
+                      >
+                        {Array.isArray(project.images) && project.images[0] ? (
+                          <img
+                            src={project.images[0]}
+                            alt={project.title}
+                            className="w-full h-full object-cover"
+                            data-testid={`img-project-${project.id}`}
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-transparent" data-testid={`img-project-${project.id}`} />
+                        )}
+                        <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-300" />
 
-                          <div className="absolute inset-0 p-6 pb-8 flex flex-col justify-between">
-                            <div>
-                              <p
-                                className="text-white/80 text-sm uppercase tracking-wide mb-1"
-                                data-testid={`text-category-${project.id}`}
-                              >
-                                {getCategoryLabel(project.category)}
+                        <div className="absolute inset-0 p-6 pb-8 flex flex-col justify-between">
+                          <div>
+                            <p
+                              className="text-white/80 text-sm uppercase tracking-wide mb-1"
+                              data-testid={`text-category-${project.id}`}
+                            >
+                              {getCategoryLabel(project.category)}
+                            </p>
+                            {project.style && (
+                              <p className="text-white/60 text-xs mb-1" data-testid={`text-style-${project.id}`}>
+                                {project.style}
                               </p>
-                              {project.style && (
-                                <p className="text-white/60 text-xs mb-1" data-testid={`text-style-${project.id}`}>
-                                  {project.style}
-                                </p>
-                              )}
-                              {project.area && (
-                                <p className="text-white/60 text-xs" data-testid={`text-area-${project.id}`}>
-                                  {project.area}
-                                </p>
-                              )}
-                            </div>
-
-                            {(project.duration || project.completionYear) && (
-                              <div className="grid grid-cols-2 gap-4 text-white">
-                                {project.completionYear && (
-                                  <div>
-                                    <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
-                                      {language === "vi" ? "Năm" : "Year"}
-                                    </p>
-                                    <p className="text-sm font-light" data-testid={`text-year-${project.id}`}>
-                                      {project.completionYear}
-                                    </p>
-                                  </div>
-                                )}
-                                {project.duration && (
-                                  <div>
-                                    <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
-                                      {language === "vi" ? "Thời gian" : "Duration"}
-                                    </p>
-                                    <p className="text-sm font-light" data-testid={`text-duration-${project.id}`}>
-                                      {project.duration}
-                                    </p>
-                                  </div>
-                                )}
-                              </div>
+                            )}
+                            {project.area && (
+                              <p className="text-white/60 text-xs" data-testid={`text-area-${project.id}`}>
+                                {project.area}
+                              </p>
                             )}
                           </div>
+
+                          {(project.duration || project.completionYear) && (
+                            <div className="grid grid-cols-2 gap-4 text-white">
+                              {project.completionYear && (
+                                <div>
+                                  <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
+                                    {language === "vi" ? "Năm" : "Year"}
+                                  </p>
+                                  <p className="text-sm font-light" data-testid={`text-year-${project.id}`}>
+                                    {project.completionYear}
+                                  </p>
+                                </div>
+                              )}
+                              {project.duration && (
+                                <div>
+                                  <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
+                                    {language === "vi" ? "Thời gian" : "Duration"}
+                                  </p>
+                                  <p className="text-sm font-light" data-testid={`text-duration-${project.id}`}>
+                                    {project.duration}
+                                  </p>
+                                </div>
+                              )}
+                            </div>
+                          )}
                         </div>
-                      );
-                    })}
-                  </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </>
