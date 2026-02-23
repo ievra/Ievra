@@ -128,23 +128,34 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    const updateParallax = () => {
+    let rafId: number;
+    let lastTop: number[] = [];
+    const tick = () => {
       const sections = document.querySelectorAll('[data-parallax-section]');
-      sections.forEach((section) => {
-        const bg = section.querySelector('[data-parallax-bg]') as HTMLElement;
-        if (!bg) return;
+      let changed = false;
+      sections.forEach((section, i) => {
         const rect = section.getBoundingClientRect();
-        const viewH = window.innerHeight;
-        const sectionH = rect.height;
-        const progress = (viewH - rect.top) / (viewH + sectionH);
-        const clamped = Math.max(0, Math.min(1, progress));
-        const offset = (clamped - 0.5) * 200;
-        bg.style.transform = `translateY(${offset}px)`;
+        if (lastTop[i] !== rect.top) {
+          changed = true;
+          lastTop[i] = rect.top;
+        }
       });
+      if (changed) {
+        sections.forEach((section) => {
+          const bg = section.querySelector('[data-parallax-bg]') as HTMLElement;
+          if (!bg) return;
+          const rect = section.getBoundingClientRect();
+          const viewH = window.innerHeight;
+          const progress = (viewH - rect.top) / (viewH + rect.height);
+          const clamped = Math.max(0, Math.min(1, progress));
+          const offset = (clamped - 0.5) * 200;
+          bg.style.transform = `translateY(${offset}px)`;
+        });
+      }
+      rafId = requestAnimationFrame(tick);
     };
-    window.addEventListener('scroll', updateParallax, { passive: true });
-    updateParallax();
-    return () => window.removeEventListener('scroll', updateParallax);
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
   }, []);
 
   // Quick contact form state (matching Contact page)
