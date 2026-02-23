@@ -338,17 +338,10 @@ export default function ProjectDetail() {
       {/* Main Content Layout */}
       <div className="max-w-7xl mx-auto px-6">
         {/* Back Button */}
-        <Button 
-          variant="ghost" 
-          asChild 
-          className="mb-8"
-          data-testid="button-back-to-portfolio"
-        >
-          <Link href="/portfolio">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            {language === 'vi' ? 'Quay lại Danh mục' : 'Back to Portfolio'}
-          </Link>
-        </Button>
+        <Link href="/portfolio" className="inline-flex items-center mb-8 text-zinc-400 hover:text-white transition-colors" data-testid="button-back-to-portfolio">
+          <ArrowLeft className="mr-2 h-4 w-4" />
+          {language === 'vi' ? 'Quay lại Danh mục' : 'Back to Portfolio'}
+        </Link>
 
         {/* Project Title Header */}
         <div className="mb-12">
