@@ -26,6 +26,9 @@ export default function Layout({ children }: LayoutProps) {
   const [isIdle, setIsIdle] = useState(false);
   const [noTransition, setNoTransition] = useState(false);
   const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [introProgress, setIntroProgress] = useState(location === '/' ? 0 : 1);
+  const showIntroRef = useRef(location === '/');
+  const isHomepageRef = useRef(location === '/');
   const { language, setLanguage, t } = useLanguage();
   const navigation = getNavigation(t);
 
@@ -40,11 +43,16 @@ export default function Layout({ children }: LayoutProps) {
   useEffect(() => {
     window.scrollTo(0, 0);
     const isHomepage = location === '/';
+    isHomepageRef.current = isHomepage;
     if (isHomepage) {
+      showIntroRef.current = true;
+      setIntroProgress(0);
       setIsScrolled(false);
       setNoTransition(false);
       hasScrolledRef.current = true;
     } else {
+      showIntroRef.current = false;
+      setIntroProgress(1);
       setNoTransition(true);
       setIsScrolled(true);
       hasScrolledRef.current = false;
@@ -80,8 +88,16 @@ export default function Layout({ children }: LayoutProps) {
         lastScrollY = scrollY > 0 ? scrollY : 0;
         return;
       }
+      if (isHomepageRef.current && showIntroRef.current) {
+        const p = Math.min(1, scrollY / 400);
+        setIntroProgress(p);
+        if (p >= 1) {
+          showIntroRef.current = false;
+        }
+      }
+      const introActive = isHomepageRef.current && showIntroRef.current;
       const direction = scrollY > lastScrollY ? "down" : "up";
-      if (direction === "down" && scrollY > 100) {
+      if (direction === "down" && scrollY > 100 && !introActive) {
         setIsScrolled(true);
       } else if (direction === "up") {
         setIsScrolled(false);
@@ -110,6 +126,17 @@ export default function Layout({ children }: LayoutProps) {
     if (href === '/') return location === '/';
     return location.startsWith(href);
   };
+
+  const introActive = location === '/' && introProgress < 1;
+  let introLogoTop = 0;
+  let introLogoScale = 1;
+  if (introActive) {
+    const ease = 1 - Math.pow(1 - introProgress, 3);
+    const startY = typeof window !== 'undefined' ? window.innerHeight / 2 : 400;
+    const endY = 40;
+    introLogoTop = startY + (endY - startY) * ease;
+    introLogoScale = 2.5 - 1.5 * ease;
+  }
 
   return (
     <div className="min-h-screen relative">
@@ -145,6 +172,7 @@ export default function Layout({ children }: LayoutProps) {
               src={logoSrc}
               alt="IEVRA Design & Build"
               className="h-10 md:h-16 w-auto hover:opacity-80 transition-opacity"
+              style={location === '/' && introProgress < 1 ? { opacity: introProgress } : undefined}
             />
           </Link>
 
@@ -209,6 +237,19 @@ export default function Layout({ children }: LayoutProps) {
           </button>
         </div>
       </header>
+
+      {introActive && (
+        <img
+          src={logoSrc}
+          alt=""
+          className="fixed pointer-events-none z-[55] h-10 md:h-16 w-auto"
+          style={{
+            left: '50%',
+            top: `${introLogoTop}px`,
+            transform: `translate(-50%, -50%) scale(${introLogoScale})`,
+          }}
+        />
+      )}
 
       {mobileMenuOpen && (
         <div className="fixed inset-0 z-[60] bg-black flex flex-col">
