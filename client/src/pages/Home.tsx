@@ -657,7 +657,14 @@ export default function Home() {
                   </button>
                 )}
                 <div className="flex gap-4 pb-4" style={{
-                  transform: `translateX(-${activeProjectIndex * (18 + 1)}rem)`,
+                  transform: (() => {
+                    const totalCards = Math.min(10, featuredProjects?.length || 0);
+                    const isLast = activeProjectIndex === totalCards - 1;
+                    const offset = isLast
+                      ? (totalCards - 2) * 19
+                      : activeProjectIndex * 19;
+                    return `translateX(-${offset}rem)`;
+                  })(),
                   transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
                 }}>
                   {featuredProjects?.slice(0, 10).map((project, index) => {
@@ -673,7 +680,7 @@ export default function Home() {
                         className={`group relative overflow-hidden cursor-pointer h-[28rem] flex-shrink-0 rounded-none border border-white/10 hover:bg-white/[0.04] project-card`}
                         style={{
                           width: isLastIndex && showExpanded
-                            ? 'min(45vw, 40rem)'
+                            ? 'calc(50% - 0.5rem)'
                             : isActive
                               ? 'min(55vw, 44rem)'
                               : '18rem',
