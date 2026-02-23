@@ -786,7 +786,7 @@ export default function Home() {
         </div>
       </section>
       {/* Quality Hero Section */}
-      <section className="relative h-[70vh] min-h-[600px] scroll-animate" style={{ clipPath: 'inset(0)' }}>
+      <section className="relative h-[70vh] min-h-[600px]" style={{ clipPath: 'inset(0)' }}>
         <div
           className="fixed inset-0"
           style={{
