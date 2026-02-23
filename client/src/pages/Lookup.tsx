@@ -415,14 +415,14 @@ export default function Lookup() {
           </p>
 
           <form onSubmit={handleSearch}>
-            <div className="flex items-end gap-8 pb-4">
+            <div className="flex items-end gap-3 pb-4 border-b border-white/30">
               <Input
                 ref={inputRef}
                 type="tel"
                 placeholder={typedPlaceholder}
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="bg-transparent text-white placeholder-white/60 px-0 py-0 text-lg font-light rounded-none focus-visible:ring-0 flex-1"
+                className="bg-transparent text-white placeholder-white/60 px-0 py-0 text-lg font-light rounded-none focus-visible:ring-0 flex-1 border-0"
               />
               <button
                 type="submit"
