@@ -27,6 +27,7 @@ export default function Layout({ children }: LayoutProps) {
   const [noTransition, setNoTransition] = useState(false);
   const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [introProgress, setIntroProgress] = useState(location === '/' ? 0 : 1);
+  const [headerRevealed, setHeaderRevealed] = useState(location !== '/');
   const showIntroRef = useRef(location === '/');
   const isHomepageRef = useRef(location === '/');
   const introAnimatingRef = useRef(false);
@@ -48,12 +49,14 @@ export default function Layout({ children }: LayoutProps) {
     if (isHomepage) {
       showIntroRef.current = true;
       setIntroProgress(0);
+      setHeaderRevealed(false);
       setIsScrolled(false);
       setNoTransition(false);
       hasScrolledRef.current = true;
     } else {
       showIntroRef.current = false;
       setIntroProgress(1);
+      setHeaderRevealed(true);
       setNoTransition(true);
       setIsScrolled(true);
       hasScrolledRef.current = false;
@@ -147,6 +150,9 @@ export default function Layout({ children }: LayoutProps) {
           showIntroRef.current = false;
           introAnimatingRef.current = false;
           document.body.style.overflow = '';
+          setTimeout(() => {
+            setHeaderRevealed(true);
+          }, 300);
         }
       };
 
@@ -194,9 +200,10 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   const introActive = location === '/' && introProgress < 1;
-  let introLogoTop = 0;
+  const showIntroLogo = location === '/' && !headerRevealed;
+  let introLogoTop = 40;
   let introLogoScale = 1;
-  if (introActive) {
+  if (showIntroLogo) {
     const p = introProgress;
     const startY = typeof window !== 'undefined' ? window.innerHeight / 2 : 400;
     const endY = 40;
@@ -211,7 +218,7 @@ export default function Layout({ children }: LayoutProps) {
       } ${
         isScrolled || isIdle ? '-translate-y-full' : 'translate-y-0'
       } ${
-        introActive ? 'opacity-0 pointer-events-none' : 'opacity-100'
+        location === '/' && !headerRevealed ? 'opacity-0 pointer-events-none' : 'opacity-100'
       }`}>
         <div className={`flex items-center justify-between py-2 px-6 md:py-3 md:px-10 lg:px-16 transition-colors duration-300 ${isInHero ? '' : 'bg-black/20'}`}>
           <nav className="hidden lg:flex items-center gap-8">
@@ -306,7 +313,7 @@ export default function Layout({ children }: LayoutProps) {
         </div>
       </header>
 
-      {introActive && (
+      {showIntroLogo && (
         <img
           src={logoSrc}
           alt=""
