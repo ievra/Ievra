@@ -4459,12 +4459,13 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     name="galleryImages"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Thư Viện Ảnh (Tối đa 10 ảnh, tỷ lệ 16:9 hoặc 1:1)</FormLabel>
+                        <FormLabel>Thư Viện Ảnh (Tối đa 6 ảnh, tỷ lệ 16:9 hoặc 1:1)</FormLabel>
                         <FormControl>
                           <ImageUpload
                             value={field.value}
                             onChange={field.onChange}
                             multiple
+                            maxImages={6}
                             disabled={!hasPermission(user, 'projects')}
                           />
                         </FormControl>
