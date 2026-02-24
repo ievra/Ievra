@@ -428,7 +428,7 @@ export default function ProjectDetail() {
         </div>
 
         {/* Additional Gallery Section - Detailed Content */}
-        {galleryImages.length > 1 && (
+        {galleryImages.length > 0 && (
           <div id="additional-gallery" className="mt-24 space-y-16" data-testid="section-additional" tabIndex={-1}>
             {/* Content image with text content side by side */}
             {(project.designPhilosophy || project.materialSelection) && contentImages.length > 0 && (
@@ -472,17 +472,17 @@ export default function ProjectDetail() {
 
             {/* All Gallery Images */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {galleryImages.slice(1).map((image: string, index: number) => (
+              {galleryImages.map((image: string, index: number) => (
                 <div key={index} className="aspect-video cursor-pointer" onClick={() => openLightbox(image)}>
                   <OptimizedImage
                     src={image}
-                    alt={`${project.title} - Gallery ${index + 2}`}
+                    alt={`${project.title} - Gallery ${index + 1}`}
                     width={400}
                     height={225}
                     wrapperClassName="w-full h-full"
                     className="w-full h-full object-cover hover:opacity-90 transition-opacity"
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    data-testid={`img-gallery-${index + 2}`}
+                    data-testid={`img-gallery-${index + 1}`}
                   />
                 </div>
               ))}
