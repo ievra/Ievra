@@ -300,7 +300,7 @@ export default function Layout({ children }: LayoutProps) {
         location === '/' && !headerRevealed ? '-translate-y-full' : ((isScrolled || isIdle) && logoSwapped ? '-translate-y-full' : 'translate-y-0')
       }`}>
         <div className={`flex items-center justify-between py-2 px-6 md:py-3 md:px-10 lg:px-16 transition-colors duration-300 ${isInHero ? '' : 'bg-black/20'}`}>
-          <nav className={`hidden lg:flex items-center gap-8 transition-opacity duration-500 ${location === '/' && !logoSwapped ? 'opacity-0' : 'opacity-100'}`}>
+          <nav className="hidden lg:flex items-center gap-8 transition-opacity duration-500" style={{ opacity: location === '/' && !logoSwapped ? Math.max(0, (introProgress - 0.3) / 0.7) : 1 }}>
             {navigation.map((item) => (
               <Link
                 key={item.key}
@@ -331,7 +331,7 @@ export default function Layout({ children }: LayoutProps) {
             />
           </Link>
 
-          <div className={`hidden lg:flex items-center gap-4 transition-opacity duration-500 ${location === '/' && !logoSwapped ? 'opacity-0' : 'opacity-100'}`}>
+          <div className="hidden lg:flex items-center gap-4 transition-opacity duration-500" style={{ opacity: location === '/' && !logoSwapped ? Math.max(0, (introProgress - 0.3) / 0.7) : 1 }}>
             <div className="relative">
               <button
                 onClick={() => setLangDropdownOpen(!langDropdownOpen)}
@@ -383,7 +383,8 @@ export default function Layout({ children }: LayoutProps) {
           </div>
 
           <button
-            className={`lg:hidden text-white p-2 z-50 transition-opacity duration-500 ${location === '/' && !logoSwapped ? 'opacity-0' : 'opacity-100'}`}
+            className="lg:hidden text-white p-2 z-50 transition-opacity duration-500"
+            style={{ opacity: location === '/' && !logoSwapped ? Math.max(0, (introProgress - 0.3) / 0.7) : 1 }}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
             data-testid="button-main-menu"
