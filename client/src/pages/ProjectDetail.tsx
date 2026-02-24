@@ -529,7 +529,7 @@ export default function ProjectDetail() {
       )}
 
       {/* Other Projects */}
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="w-full px-4">
         {/* OTHER PROJECTS Section - Horizontal Scroll */}
         {allProjects && allProjects.length > 0 && (
           <div className="mt-16">
@@ -537,7 +537,7 @@ export default function ProjectDetail() {
               {language === 'vi' ? 'DỰ ÁN KHÁC' : 'OTHER PROJECTS'}
             </h2>
             <div className="overflow-x-auto scrollbar-hide">
-              <div className="flex gap-6 pb-4" style={{ width: 'max-content' }}>
+              <div className="flex gap-4 pb-4" style={{ width: 'max-content' }}>
                 {allProjects.map((otherProject) => (
                   <Link key={otherProject.id} href={otherProject.slug ? `/portfolio/${otherProject.slug}` : `/project/${otherProject.id}`}>
                     <div className="group cursor-pointer w-72 aspect-square flex-shrink-0">
