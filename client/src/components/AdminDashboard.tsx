@@ -4346,36 +4346,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     </div>
                   </div>
 
-                  {/* Nhà Thiết Kế */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={projectForm.control}
-                      name="designerEn"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Nhà Thiết Kế (Tiếng Anh)' : 'Interior Designer (English)'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} data-testid="input-project-designer-en" placeholder={language === 'vi' ? 'Nhập tên nhà thiết kế...' : 'Enter designer name...'} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={projectForm.control}
-                      name="designerVi"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Nhà Thiết Kế (Tiếng Việt)' : 'Interior Designer (Vietnamese)'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} data-testid="input-project-designer-vi" placeholder="Nhập tên nhà thiết kế tiếng Việt..." />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
                   {/* Năm Hoàn Thành */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
