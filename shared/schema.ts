@@ -32,6 +32,9 @@ export const projects = pgTable("projects", {
   designPhilosophy: text("design_philosophy"), // Design Philosophy section content
   materialSelectionTitle: text("material_selection_title"), // Customizable title for Material Selection section
   materialSelection: text("material_selection"), // Material Selection section content
+  descriptionTitle: text("description_title"),
+  section2Image: text("section_2_image"),
+  section3Image: text("section_3_image"),
   category: varchar("category", { length: 50 }).notNull(), // residential, commercial, architecture
   language: varchar("language", { length: 5 }).default("en"), // en, vi
   location: text("location"),

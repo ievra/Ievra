@@ -395,9 +395,9 @@ export default function ProjectDetail() {
           )}
         </div>
         <div className="flex flex-col justify-center px-8 md:px-12 lg:px-16 py-12 md:py-16">
-          {project.designPhilosophyTitle && (
+          {(project.descriptionTitle || project.designPhilosophyTitle) && (
             <h2 className="text-xs md:text-sm font-light tracking-[0.3em] text-zinc-400 uppercase mb-6">
-              {project.designPhilosophyTitle}
+              {project.descriptionTitle || project.designPhilosophyTitle}
             </h2>
           )}
           {project.description && (
@@ -429,10 +429,10 @@ export default function ProjectDetail() {
             )}
           </div>
           <div className="order-1 md:order-2">
-            {galleryImages[0] && (
-              <div className="aspect-square cursor-pointer" onClick={() => openLightbox(galleryImages[0])}>
+            {(project.section2Image || galleryImages[0]) && (
+              <div className="aspect-square cursor-pointer" onClick={() => openLightbox(project.section2Image || galleryImages[0])}>
                 <OptimizedImage
-                  src={galleryImages[0]}
+                  src={project.section2Image || galleryImages[0]}
                   alt={`${project.title} - Gallery 1`}
                   width={700}
                   height={700}
@@ -450,10 +450,10 @@ export default function ProjectDetail() {
       {(project.materialSelection || (project.detailedDescription && project.designPhilosophy)) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
           <div>
-            {galleryImages[1] && (
-              <div className="aspect-square cursor-pointer" onClick={() => openLightbox(galleryImages[1])}>
+            {(project.section3Image || galleryImages[1]) && (
+              <div className="aspect-square cursor-pointer" onClick={() => openLightbox(project.section3Image || galleryImages[1])}>
                 <OptimizedImage
-                  src={galleryImages[1]}
+                  src={project.section3Image || galleryImages[1]}
                   alt={`${project.title} - Gallery 2`}
                   width={700}
                   height={700}

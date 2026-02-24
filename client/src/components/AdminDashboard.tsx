@@ -70,6 +70,10 @@ const bilingualProjectSchema = z.object({
   materialSelectionTitleVi: z.string().optional(),
   materialSelectionEn: z.string().optional(),
   materialSelectionVi: z.string().optional(),
+  descriptionTitleEn: z.string().optional(),
+  descriptionTitleVi: z.string().optional(),
+  section2Image: z.string().optional(),
+  section3Image: z.string().optional(),
   slug: z.string().optional(),
   category: z.string().min(1, "Category is required"),
   status: z.enum(["draft", "published", "archived"]).default("draft"),
@@ -920,6 +924,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       materialSelectionTitleVi: "",
       materialSelectionEn: "",
       materialSelectionVi: "",
+      descriptionTitleEn: "",
+      descriptionTitleVi: "",
+      section2Image: "",
+      section3Image: "",
       slug: "",
       category: "",
       status: "draft",
@@ -2445,6 +2453,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       materialSelectionTitleVi: viVersion?.materialSelectionTitle || "",
       materialSelectionEn: enVersion?.materialSelection || "",
       materialSelectionVi: viVersion?.materialSelection || "",
+      descriptionTitleEn: enVersion?.descriptionTitle || "",
+      descriptionTitleVi: viVersion?.descriptionTitle || "",
+      section2Image: (enVersion?.section2Image || viVersion?.section2Image || "") as string,
+      section3Image: (enVersion?.section3Image || viVersion?.section3Image || "") as string,
       metaTitleEn: enVersion?.metaTitle || "",
       metaTitleVi: viVersion?.metaTitle || "",
       metaDescriptionEn: enVersion?.metaDescription || "",
@@ -2547,6 +2559,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           designPhilosophy: data.designPhilosophyEn,
           materialSelectionTitle: data.materialSelectionTitleEn,
           materialSelection: data.materialSelectionEn,
+          descriptionTitle: data.descriptionTitleEn,
+          section2Image: data.section2Image,
+          section3Image: data.section3Image,
           category: data.category,
           status: data.status,
           location: data.locationEn,
@@ -2592,6 +2607,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           designPhilosophy: data.designPhilosophyVi,
           materialSelectionTitle: data.materialSelectionTitleVi,
           materialSelection: data.materialSelectionVi,
+          descriptionTitle: data.descriptionTitleVi,
+          section2Image: data.section2Image,
+          section3Image: data.section3Image,
           category: data.category,
           status: data.status,
           location: data.locationVi,
@@ -3901,6 +3919,36 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     />
                   </div>
 
+                  {/* Bilingual Description Title */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={projectForm.control}
+                      name="descriptionTitleEn"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Tiêu Đề Mô Tả (Tiếng Anh)' : 'Description Title (English)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} placeholder="Full-Service Interior Design" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={projectForm.control}
+                      name="descriptionTitleVi"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Tiêu Đề Mô Tả (Tiếng Việt)' : 'Description Title (Vietnamese)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} placeholder="Dịch Vụ Thiết Kế Nội Thất" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
                   {/* Bilingual Description */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
@@ -4344,6 +4392,46 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             value={field.value}
                             onChange={field.onChange}
                             multiple
+                            disabled={!hasPermission(user, 'projects')}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={projectForm.control}
+                    name="section2Image"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Ảnh Mục 2 - Triết Lý Thiết Kế (1 ảnh, tỷ lệ 1:1)</FormLabel>
+                        <FormControl>
+                          <ImageUpload
+                            value={field.value ? [field.value] : []}
+                            onChange={(urls: string[]) => field.onChange(urls[0] || "")}
+                            multiple={false}
+                            maxImages={1}
+                            disabled={!hasPermission(user, 'projects')}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={projectForm.control}
+                    name="section3Image"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Ảnh Mục 3 - Lựa Chọn Vật Liệu (1 ảnh, tỷ lệ 1:1)</FormLabel>
+                        <FormControl>
+                          <ImageUpload
+                            value={field.value ? [field.value] : []}
+                            onChange={(urls: string[]) => field.onChange(urls[0] || "")}
+                            multiple={false}
+                            maxImages={1}
                             disabled={!hasPermission(user, 'projects')}
                           />
                         </FormControl>
