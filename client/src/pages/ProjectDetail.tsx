@@ -528,30 +528,66 @@ export default function ProjectDetail() {
         </div>
       )}
 
-      {/* OTHER PROJECTS Section */}
-      {allProjects && allProjects.length > 0 && (
-        <div className="bg-[#f5f0eb] py-16 mt-16">
-          <div className="max-w-7xl mx-auto px-6">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-[#3d2b1f] uppercase mb-4">
-              {language === 'vi' ? 'CÁC DỰ ÁN KHÁC' : 'OTHER PROJECTS'}
-            </h2>
-            <div className="border-t border-[#3d2b1f]/30 mb-8"></div>
+      {/* Share & Other Projects */}
+      <div className="max-w-7xl mx-auto px-6">
+        {/* Share Section */}
+        <div className="flex items-center justify-between mt-16 mb-8 border-t border-gray-800 pt-6">
+          <div className="text-sm text-muted-foreground">
+            <p className="mb-1">
+              {language === 'vi' ? 'Thiết kế bởi' : 'Designed by'} <span className="text-white">{project.designer || 'IEVRA Team'}</span>
+            </p>
+            <p>{project.completionYear}</p>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleShare}
+            className="border border-white/20 rounded-none px-4 py-2 hover:bg-white/10 hover:text-white transition-all"
+            data-testid="button-share"
+            disabled={copied}
+          >
+            {copied ? (
+              <>
+                <Check className="h-5 w-5 mr-2" />
+                {language === 'vi' ? 'Đã sao chép!' : 'Copied!'}
+              </>
+            ) : (
+              <>
+                <Share2 className="h-5 w-5 mr-2" />
+                {language === 'vi' ? 'Chia sẻ' : 'Share'}
+              </>
+            )}
+          </Button>
+        </div>
+
+        {/* OTHER PROJECTS Section - Horizontal Scroll */}
+        {allProjects && allProjects.length > 0 && (
+          <div className="mt-4">
+            <div className="text-sm text-zinc-500 uppercase tracking-wider mb-8">
+              {language === 'vi' ? 'DỰ ÁN KHÁC' : 'OTHER PROJECTS'}
+            </div>
             <div className="overflow-x-auto scrollbar-hide">
-              <div className="flex gap-4 pb-4" style={{ width: 'max-content' }}>
+              <div className="flex gap-6 pb-4" style={{ width: 'max-content' }}>
                 {allProjects.map((otherProject) => (
                   <Link key={otherProject.id} href={otherProject.slug ? `/portfolio/${otherProject.slug}` : `/project/${otherProject.id}`}>
-                    <div className="group cursor-pointer w-52 md:w-56 flex-shrink-0">
-                      <div className="aspect-square overflow-hidden">
-                        <OptimizedImage
-                          src={(Array.isArray(otherProject.coverImages) ? otherProject.coverImages[0] : '') || (Array.isArray(otherProject.contentImages) ? otherProject.contentImages[0] : '') || otherProject.heroImage || (Array.isArray(otherProject.galleryImages) ? otherProject.galleryImages[0] : '') || (Array.isArray(otherProject.images) ? otherProject.images[0] : '') || '/placeholder-project.jpg'} 
-                          alt={otherProject.title}
-                          width={224}
-                          height={224}
-                          wrapperClassName="w-full h-full"
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          sizes="224px"
-                          data-testid={`img-other-project-${otherProject.id}`}
-                        />
+                    <div className="group cursor-pointer w-72 aspect-square flex-shrink-0">
+                      <OptimizedImage
+                        src={(Array.isArray(otherProject.coverImages) ? otherProject.coverImages[0] : '') || (Array.isArray(otherProject.contentImages) ? otherProject.contentImages[0] : '') || otherProject.heroImage || (Array.isArray(otherProject.galleryImages) ? otherProject.galleryImages[0] : '') || (Array.isArray(otherProject.images) ? otherProject.images[0] : '') || '/placeholder-project.jpg'} 
+                        alt={otherProject.title}
+                        width={288}
+                        height={288}
+                        wrapperClassName="w-full h-full"
+                        className="w-full h-full object-cover group-hover:opacity-80 transition-opacity"
+                        sizes="288px"
+                        data-testid={`img-other-project-${otherProject.id}`}
+                      />
+                      <div className="mt-4 space-y-2">
+                        <h3 className="text-white font-light tracking-wider text-sm uppercase">
+                          {otherProject.title}
+                        </h3>
+                        <p className="text-zinc-400 text-xs">
+                          {otherProject.category}
+                        </p>
                       </div>
                     </div>
                   </Link>
@@ -559,8 +595,8 @@ export default function ProjectDetail() {
               </div>
             </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {lightboxOpen && allClickableImages.length > 0 && createPortal(
         <div 
