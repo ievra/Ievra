@@ -4346,36 +4346,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     </div>
                   </div>
 
-                  {/* Năm Hoàn Thành */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={projectForm.control}
-                      name="completionYearEn"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Năm Hoàn Thành (Tiếng Anh)' : 'Completion Year (English)'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} data-testid="input-project-year-en" placeholder={language === 'vi' ? 'Nhập năm hoàn thành...' : 'Enter completion year...'} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={projectForm.control}
-                      name="completionYearVi"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Năm Hoàn Thành (Tiếng Việt)' : 'Completion Year (Vietnamese)'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} data-testid="input-project-year-vi" placeholder="Nhập năm hoàn thành tiếng Việt..." />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
                   {/* Banner Section */}
                   <div className="space-y-4 border-t pt-4">
                     <div className="space-y-2">
