@@ -75,7 +75,7 @@ export default function ProjectCard({ project, index = 0 }: ProjectCardProps) {
               {project.location && (
                 <div>
                   <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
-                    {language === 'vi' ? 'Vị trí' : 'Location'}
+                    {language === 'vi' ? 'Khu vực' : 'Location'}
                   </p>
                   <p className="font-light text-sm" data-testid={`text-location-${project.id}`}>
                     {project.location}
