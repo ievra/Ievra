@@ -34,6 +34,7 @@ export default function Layout({ children }: LayoutProps) {
   const isHomepageRef = useRef(location === '/');
   const introAnimatingRef = useRef(false);
   const introLogoRef = useRef<HTMLImageElement>(null);
+  const headerLogoRef = useRef<HTMLImageElement>(null);
   const { language, setLanguage, t } = useLanguage();
   const navigation = getNavigation(t);
 
@@ -173,7 +174,15 @@ export default function Layout({ children }: LayoutProps) {
 
       const isMobile = window.innerWidth < 768;
       const startY = window.innerHeight / 2;
-      const endY = isMobile ? 32 : 52;
+      let endY = isMobile ? 32 : 52;
+      if (headerLogoRef.current) {
+        const headerLogoRect = headerLogoRef.current.getBoundingClientRect();
+        const headerEl = headerLogoRef.current.closest('header');
+        if (headerEl) {
+          const headerHeight = headerEl.getBoundingClientRect().height;
+          endY = headerLogoRect.top + headerLogoRect.height / 2 + headerHeight;
+        }
+      }
       const startScale = isMobile ? 2.2 : 2.8;
 
       const animate = (currentTime: number) => {
@@ -270,7 +279,15 @@ export default function Layout({ children }: LayoutProps) {
   if (showIntroLogo) {
     const p = introProgress;
     const startY = typeof window !== 'undefined' ? window.innerHeight / 2 : 400;
-    const endY = isMobileDevice ? 32 : 52;
+    let endY = isMobileDevice ? 32 : 52;
+    if (headerLogoRef.current) {
+      const headerLogoRect = headerLogoRef.current.getBoundingClientRect();
+      const headerEl = headerLogoRef.current.closest('header');
+      if (headerEl) {
+        const headerHeight = headerEl.getBoundingClientRect().height;
+        endY = headerLogoRect.top + headerLogoRect.height / 2 + headerHeight;
+      }
+    }
     introLogoTop = startY + (endY - startY) * p;
     const startScale = isMobileDevice ? 2.2 : 2.8;
     introLogoScale = startScale - (startScale - 1) * p;
@@ -307,6 +324,7 @@ export default function Layout({ children }: LayoutProps) {
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
             <img
+              ref={headerLogoRef}
               src={logoSrc}
               alt="IEVRA Design & Build"
               className="h-12 md:h-20 w-auto hover:opacity-80 transition-opacity duration-400"
