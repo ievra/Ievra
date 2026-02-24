@@ -324,7 +324,7 @@ export default function ProjectDetail() {
   const firstImage = contentImages[0] || coverImages[0] || project.heroImage || galleryImages[0];
   const secondImage = contentImages[1] || coverImages[1] || galleryImages[1];
   const detailImage = contentImages[0] || galleryImages[0] || coverImages[0];
-  const allClickableImages = [...new Set([firstImage, secondImage, detailImage, ...contentImages, ...galleryImages].filter(Boolean))] as string[];
+  const allClickableImages = Array.from(new Set([firstImage, secondImage, detailImage, ...contentImages, ...galleryImages].filter(Boolean))) as string[];
 
   const openLightbox = (imageSrc: string) => {
     const idx = allClickableImages.indexOf(imageSrc);
@@ -333,142 +333,181 @@ export default function ProjectDetail() {
   };
   
   return (
-    <div className="min-h-[120vh] pt-24 pb-20">
-      {/* Main Content Layout */}
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Back Button */}
-        <Link href="/portfolio" className="inline-flex items-center mb-8 text-zinc-400 hover:text-white transition-colors" data-testid="button-back-to-portfolio">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          {language === 'vi' ? 'Quay lại Danh mục' : 'Back to Portfolio'}
-        </Link>
+    <div className="min-h-screen pb-20">
+      {/* Hero Section - Full width image with title overlay */}
+      <div className="relative w-full h-[70vh] md:h-[85vh] mb-0">
+        {firstImage && (
+          <div className="w-full h-full cursor-pointer" onClick={() => openLightbox(firstImage)}>
+            <OptimizedImage
+              src={firstImage}
+              alt={project.title}
+              width={1400}
+              height={800}
+              wrapperClassName="w-full h-full"
+              className="w-full h-full object-cover"
+              priority={true}
+              data-testid="img-main"
+            />
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12">
+          <div className="max-w-7xl mx-auto">
+            <Link href="/portfolio" className="inline-flex items-center mb-6 text-zinc-300 hover:text-white transition-colors text-sm" data-testid="button-back-to-portfolio">
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              {language === 'vi' ? 'Quay lại Danh mục' : 'Back to Portfolio'}
+            </Link>
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-light tracking-wider text-white uppercase" data-testid="text-project-title">
+              {project.title}
+            </h1>
+          </div>
+        </div>
+      </div>
 
-        {/* Project Title Header */}
-        <div className="mb-12">
-          <h1 className="text-4xl font-light tracking-wider mb-3 text-white uppercase" data-testid="text-project-title">
-            {project.title}
-          </h1>
-          {project.description && (
-            <div className="text-zinc-300 leading-relaxed text-base max-w-3xl mt-4" data-testid="text-description">
-              <div className="break-words whitespace-pre-wrap">
-                {parseFormattedText(project.description)}
-              </div>
+      {/* Section 1: Two images left + Description right */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+        <div className="grid grid-cols-2 gap-0">
+          {secondImage && (
+            <div className="aspect-[3/4] cursor-pointer" onClick={() => openLightbox(secondImage)}>
+              <OptimizedImage
+                src={secondImage}
+                alt={`${project.title} - View 2`}
+                width={400}
+                height={533}
+                wrapperClassName="w-full h-full"
+                className="w-full h-full object-cover hover:opacity-90 transition-opacity"
+                data-testid="img-secondary"
+              />
             </div>
           )}
-        </div>
-
-        {/* Two Large Images Side by Side - Using contentImages (16:9 or 1:1) */}
-        {(() => {
-          const hasSecondImage = Boolean(secondImage);
-          
-          return (
-            <div className={`grid gap-6 mb-16 ${hasSecondImage ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
-              {firstImage && (
-                <div className="aspect-video cursor-pointer" onClick={() => openLightbox(firstImage)}>
-                  <OptimizedImage
-                    src={firstImage}
-                    alt={project.title}
-                    width={600}
-                    height={337}
-                    wrapperClassName="w-full h-full"
-                    className="w-full h-full object-cover hover:opacity-90 transition-opacity"
-                    priority={true}
-                    data-testid="img-main"
-                  />
-                </div>
-              )}
-
-              {hasSecondImage && (
-                <div className="aspect-video cursor-pointer" onClick={() => openLightbox(secondImage!)}>
-                  <OptimizedImage
-                    src={secondImage!}
-                    alt={`${project.title} - Secondary view`}
-                    width={600}
-                    height={337}
-                    wrapperClassName="w-full h-full"
-                    className="w-full h-full object-cover hover:opacity-90 transition-opacity"
-                    data-testid="img-secondary"
-                  />
-                </div>
-              )}
-            </div>
-          );
-        })()}
-
-        {/* Content Image */}
-        {contentImages.length > 0 && (
-          <div className="mb-12">
-            <div className="max-w-2xl aspect-video cursor-pointer" onClick={() => openLightbox(contentImages[0])}>
+          {contentImages[0] && (
+            <div className="aspect-[3/4] cursor-pointer" onClick={() => openLightbox(contentImages[0])}>
               <OptimizedImage
                 src={contentImages[0]}
                 alt={`${project.title} - Content`}
-                width={600}
-                height={338}
+                width={400}
+                height={533}
                 wrapperClassName="w-full h-full"
                 className="w-full h-full object-cover hover:opacity-90 transition-opacity"
-                sizes="(max-width: 768px) 100vw, 50vw"
                 data-testid="img-content-featured"
               />
             </div>
-          </div>
-        )}
-
-        {/* Detailed Description + Design Philosophy + Material Selection */}
-        {(project.detailedDescription || project.designPhilosophy || project.materialSelection) && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-            <div className="space-y-6">
-              {project.designPhilosophy && (
-                <div className="space-y-3">
-                  <h3 className="text-lg font-light tracking-wider text-white uppercase">
-                    {project.designPhilosophyTitle || (language === 'vi' ? 'Triết lý thiết kế' : 'Design Philosophy')}
-                  </h3>
-                  <div className="text-zinc-300 leading-relaxed">
-                    {parseFormattedText(project.designPhilosophy)}
-                  </div>
-                </div>
-              )}
-              {project.materialSelection && (
-                <div className="space-y-3">
-                  <h3 className="text-lg font-light tracking-wider text-white uppercase">
-                    {project.materialSelectionTitle || (language === 'vi' ? 'Lựa chọn vật liệu' : 'Material Selection')}
-                  </h3>
-                  <div className="text-zinc-300 leading-relaxed">
-                    {parseFormattedText(project.materialSelection)}
-                  </div>
-                </div>
-              )}
+          )}
+        </div>
+        <div className="flex flex-col justify-center px-8 md:px-12 lg:px-16 py-12 md:py-16">
+          {project.designPhilosophyTitle && (
+            <h2 className="text-xs md:text-sm font-light tracking-[0.3em] text-zinc-400 uppercase mb-6">
+              {project.designPhilosophyTitle}
+            </h2>
+          )}
+          {project.description && (
+            <div className="text-zinc-300 leading-relaxed text-sm md:text-base break-words whitespace-pre-wrap" data-testid="text-description">
+              {parseFormattedText(project.description)}
             </div>
-            {project.detailedDescription && (
-              <div className="text-zinc-300 leading-relaxed text-base break-words whitespace-pre-wrap" data-testid="text-detailed-description">
+          )}
+        </div>
+      </div>
+
+      {/* Section 2: Text left + Image right (alternating) */}
+      {(project.detailedDescription || project.designPhilosophy) && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+          <div className="flex flex-col justify-center px-8 md:px-12 lg:px-16 py-12 md:py-16 order-2 md:order-1">
+            {project.designPhilosophy && (
+              <div className="space-y-4">
+                <h2 className="text-xs md:text-sm font-light tracking-[0.3em] text-zinc-400 uppercase">
+                  {project.designPhilosophyTitle || (language === 'vi' ? 'Triết lý thiết kế' : 'Design Philosophy')}
+                </h2>
+                <div className="text-zinc-300 leading-relaxed text-sm md:text-base break-words whitespace-pre-wrap">
+                  {parseFormattedText(project.designPhilosophy)}
+                </div>
+              </div>
+            )}
+            {!project.designPhilosophy && project.detailedDescription && (
+              <div className="text-zinc-300 leading-relaxed text-sm md:text-base break-words whitespace-pre-wrap" data-testid="text-detailed-description">
                 {parseFormattedText(project.detailedDescription)}
               </div>
             )}
           </div>
-        )}
-
-        {/* Gallery Images */}
-        {galleryImages.length > 0 && (
-          <div id="additional-gallery" className="mt-12 space-y-12" data-testid="section-additional" tabIndex={-1}>
-
-            {/* All Gallery Images */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {galleryImages.map((image: string, index: number) => (
-                <div key={index} className="aspect-video cursor-pointer" onClick={() => openLightbox(image)}>
-                  <OptimizedImage
-                    src={image}
-                    alt={`${project.title} - Gallery ${index + 1}`}
-                    width={400}
-                    height={225}
-                    wrapperClassName="w-full h-full"
-                    className="w-full h-full object-cover hover:opacity-90 transition-opacity"
-                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    data-testid={`img-gallery-${index + 1}`}
-                  />
-                </div>
-              ))}
-            </div>
+          <div className="order-1 md:order-2">
+            {galleryImages[0] && (
+              <div className="aspect-[4/3] cursor-pointer" onClick={() => openLightbox(galleryImages[0])}>
+                <OptimizedImage
+                  src={galleryImages[0]}
+                  alt={`${project.title} - Gallery 1`}
+                  width={700}
+                  height={525}
+                  wrapperClassName="w-full h-full"
+                  className="w-full h-full object-cover hover:opacity-90 transition-opacity"
+                  data-testid="img-gallery-1"
+                />
+              </div>
+            )}
           </div>
-        )}
+        </div>
+      )}
 
+      {/* Section 3: Image left + Text right (alternating) */}
+      {(project.materialSelection || (project.detailedDescription && project.designPhilosophy)) && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
+          <div>
+            {galleryImages[1] && (
+              <div className="aspect-[4/3] cursor-pointer" onClick={() => openLightbox(galleryImages[1])}>
+                <OptimizedImage
+                  src={galleryImages[1]}
+                  alt={`${project.title} - Gallery 2`}
+                  width={700}
+                  height={525}
+                  wrapperClassName="w-full h-full"
+                  className="w-full h-full object-cover hover:opacity-90 transition-opacity"
+                  data-testid="img-gallery-2"
+                />
+              </div>
+            )}
+          </div>
+          <div className="flex flex-col justify-center px-8 md:px-12 lg:px-16 py-12 md:py-16">
+            {project.materialSelection && (
+              <div className="space-y-4">
+                <h2 className="text-xs md:text-sm font-light tracking-[0.3em] text-zinc-400 uppercase">
+                  {project.materialSelectionTitle || (language === 'vi' ? 'Lựa chọn vật liệu' : 'Material Selection')}
+                </h2>
+                <div className="text-zinc-300 leading-relaxed text-sm md:text-base break-words whitespace-pre-wrap">
+                  {parseFormattedText(project.materialSelection)}
+                </div>
+              </div>
+            )}
+            {project.detailedDescription && project.designPhilosophy && (
+              <div className="mt-6 text-zinc-300 leading-relaxed text-sm md:text-base break-words whitespace-pre-wrap" data-testid="text-detailed-description">
+                {parseFormattedText(project.detailedDescription)}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Gallery Grid */}
+      {galleryImages.length > 2 && (
+        <div className="max-w-7xl mx-auto px-6 mt-16" id="additional-gallery" data-testid="section-additional" tabIndex={-1}>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {galleryImages.slice(2).map((image: string, index: number) => (
+              <div key={index} className="aspect-[4/3] cursor-pointer" onClick={() => openLightbox(image)}>
+                <OptimizedImage
+                  src={image}
+                  alt={`${project.title} - Gallery ${index + 3}`}
+                  width={400}
+                  height={300}
+                  wrapperClassName="w-full h-full"
+                  className="w-full h-full object-cover hover:opacity-90 transition-opacity"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  data-testid={`img-gallery-${index + 3}`}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Share & Other Projects */}
+      <div className="max-w-7xl mx-auto px-6">
         {/* Share Section */}
         <div className="flex items-center justify-between mt-16 mb-8 border-t border-gray-800 pt-6">
           <div className="text-sm text-muted-foreground">
