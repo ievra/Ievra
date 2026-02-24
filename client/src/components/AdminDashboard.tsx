@@ -3938,16 +3938,16 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     />
                   </div>
 
-                  {/* Vị Trí */}
+                  {/* Khu Vực */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={projectForm.control}
                       name="locationEn"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Vị Trí (Tiếng Anh)' : 'Location (English)'}</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Khu Vực (Tiếng Anh)' : 'Location (English)'}</FormLabel>
                           <FormControl>
-                            <Input {...field} data-testid="input-project-location-en" placeholder={language === 'vi' ? 'Nhập vị trí tiếng Anh...' : 'Enter location...'} />
+                            <Input {...field} data-testid="input-project-location-en" placeholder={language === 'vi' ? 'Nhập khu vực tiếng Anh...' : 'Enter location...'} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -3958,9 +3958,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       name="locationVi"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Vị Trí (Tiếng Việt)' : 'Location (Vietnamese)'}</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Khu Vực (Tiếng Việt)' : 'Location (Vietnamese)'}</FormLabel>
                           <FormControl>
-                            <Input {...field} data-testid="input-project-location-vi" placeholder="Nhập vị trí tiếng Việt..." />
+                            <Input {...field} data-testid="input-project-location-vi" placeholder="Nhập khu vực tiếng Việt..." />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
