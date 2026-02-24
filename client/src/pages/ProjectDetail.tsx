@@ -430,12 +430,12 @@ export default function ProjectDetail() {
           </div>
           <div className="order-1 md:order-2">
             {galleryImages[0] && (
-              <div className="aspect-[4/3] cursor-pointer" onClick={() => openLightbox(galleryImages[0])}>
+              <div className="aspect-square cursor-pointer" onClick={() => openLightbox(galleryImages[0])}>
                 <OptimizedImage
                   src={galleryImages[0]}
                   alt={`${project.title} - Gallery 1`}
                   width={700}
-                  height={525}
+                  height={700}
                   wrapperClassName="w-full h-full"
                   className="w-full h-full object-cover hover:opacity-90 transition-opacity"
                   data-testid="img-gallery-1"
@@ -451,12 +451,12 @@ export default function ProjectDetail() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
           <div>
             {galleryImages[1] && (
-              <div className="aspect-[4/3] cursor-pointer" onClick={() => openLightbox(galleryImages[1])}>
+              <div className="aspect-square cursor-pointer" onClick={() => openLightbox(galleryImages[1])}>
                 <OptimizedImage
                   src={galleryImages[1]}
                   alt={`${project.title} - Gallery 2`}
                   width={700}
-                  height={525}
+                  height={700}
                   wrapperClassName="w-full h-full"
                   className="w-full h-full object-cover hover:opacity-90 transition-opacity"
                   data-testid="img-gallery-2"
