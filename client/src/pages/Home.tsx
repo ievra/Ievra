@@ -1198,7 +1198,7 @@ export default function Home() {
                     .map((partner) => (
                       <div
                         key={`row1-${setIndex}-${partner.id}`}
-                        className="flex-shrink-0 w-48 h-24 mx-4 flex items-center justify-center"
+                        className="flex-shrink-0 w-64 h-32 mx-6 flex items-center justify-center"
                         data-testid={`partner-logo-row1-${partner.id}`}
                       >
                         <img
@@ -1222,7 +1222,7 @@ export default function Home() {
                     .map((partner) => (
                       <div
                         key={`row2-${setIndex}-${partner.id}`}
-                        className="flex-shrink-0 w-48 h-24 mx-4 flex items-center justify-center"
+                        className="flex-shrink-0 w-64 h-32 mx-6 flex items-center justify-center"
                         data-testid={`partner-logo-row2-${partner.id}`}
                       >
                         <img
