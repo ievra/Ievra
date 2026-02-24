@@ -35,6 +35,8 @@ export const projects = pgTable("projects", {
   descriptionTitle: text("description_title"),
   section2Image: text("section_2_image"),
   section3Image: text("section_3_image"),
+  bannerTitle: text("banner_title"),
+  bannerImage: text("banner_image"),
   category: varchar("category", { length: 50 }).notNull(), // residential, commercial, architecture
   language: varchar("language", { length: 5 }).default("en"), // en, vi
   location: text("location"),
