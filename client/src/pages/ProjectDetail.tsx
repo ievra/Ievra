@@ -402,10 +402,10 @@ export default function ProjectDetail() {
           </div>
         </div>
 
-        {/* Content Image + Design Text Side by Side */}
+        {/* Content Image */}
         {contentImages.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 items-start">
-            <div className="aspect-video cursor-pointer" onClick={() => openLightbox(contentImages[0])}>
+          <div className="mb-12">
+            <div className="max-w-2xl aspect-video cursor-pointer" onClick={() => openLightbox(contentImages[0])}>
               <OptimizedImage
                 src={contentImages[0]}
                 alt={`${project.title} - Content`}
@@ -417,38 +417,11 @@ export default function ProjectDetail() {
                 data-testid="img-content-featured"
               />
             </div>
-            <div className="space-y-6">
-              {project.detailedDescription && (
-                <div className="text-zinc-300 leading-relaxed text-base break-words whitespace-pre-wrap" data-testid="text-detailed-description">
-                  {parseFormattedText(project.detailedDescription)}
-                </div>
-              )}
-              {project.designPhilosophy && (
-                <div className="space-y-3">
-                  <h3 className="text-lg font-light tracking-wider text-white uppercase">
-                    {project.designPhilosophyTitle || (language === 'vi' ? 'Triết lý thiết kế' : 'Design Philosophy')}
-                  </h3>
-                  <div className="text-zinc-300 leading-relaxed">
-                    {parseFormattedText(project.designPhilosophy)}
-                  </div>
-                </div>
-              )}
-              {project.materialSelection && (
-                <div className="space-y-3">
-                  <h3 className="text-lg font-light tracking-wider text-white uppercase">
-                    {project.materialSelectionTitle || (language === 'vi' ? 'Lựa chọn vật liệu' : 'Material Selection')}
-                  </h3>
-                  <div className="text-zinc-300 leading-relaxed">
-                    {parseFormattedText(project.materialSelection)}
-                  </div>
-                </div>
-              )}
-            </div>
           </div>
         )}
 
-        {/* If no content images, show text sections normally */}
-        {contentImages.length === 0 && (project.detailedDescription || project.designPhilosophy || project.materialSelection) && (
+        {/* Detailed Description + Design Philosophy + Material Selection */}
+        {(project.detailedDescription || project.designPhilosophy || project.materialSelection) && (
           <div className="space-y-6 mb-12 max-w-3xl">
             {project.detailedDescription && (
               <div className="text-zinc-300 leading-relaxed text-base break-words whitespace-pre-wrap" data-testid="text-detailed-description">
