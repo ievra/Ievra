@@ -335,7 +335,7 @@ export default function ProjectDetail() {
   return (
     <div className="min-h-screen pb-20">
       {/* Hero Section - Full width image with title overlay */}
-      <div className="relative w-full h-[70vh] md:h-[85vh] mb-0">
+      <div className="relative w-full aspect-video mb-0">
         {firstImage && (
           <div className="w-full h-full cursor-pointer" onClick={() => openLightbox(firstImage)}>
             <OptimizedImage
