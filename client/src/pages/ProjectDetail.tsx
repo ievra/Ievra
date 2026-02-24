@@ -357,7 +357,7 @@ export default function ProjectDetail() {
               <ArrowLeft className="mr-2 h-4 w-4" />
               {language === 'vi' ? 'Quay lại Danh mục' : 'Back to Portfolio'}
             </Link>
-            <h1 className="text-3xl md:text-5xl lg:text-6xl font-light tracking-wider text-white uppercase" data-testid="text-project-title">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-light tracking-wider text-white uppercase leading-relaxed" data-testid="text-project-title">
               {project.title}
             </h1>
           </div>
