@@ -35,6 +35,7 @@ export default function Layout({ children }: LayoutProps) {
   const introAnimatingRef = useRef(false);
   const introLogoRef = useRef<HTMLImageElement>(null);
   const headerLogoRef = useRef<HTMLImageElement>(null);
+  const headerRef = useRef<HTMLElement>(null);
   const { language, setLanguage, t } = useLanguage();
   const navigation = getNavigation(t);
 
@@ -166,24 +167,30 @@ export default function Layout({ children }: LayoutProps) {
       if (introAnimatingRef.current) return;
       introAnimatingRef.current = true;
 
-      setHeaderRevealed(true);
-
       const startTime = performance.now();
-      const isMobileCheck = window.innerWidth < 768;
-      const duration = isMobileCheck ? 1400 : 2200;
-
       const isMobile = window.innerWidth < 768;
-      const startY = window.innerHeight / 2;
-      let endY = isMobile ? 32 : 52;
-      if (headerLogoRef.current) {
-        const headerLogoRect = headerLogoRef.current.getBoundingClientRect();
-        const headerEl = headerLogoRef.current.closest('header');
-        if (headerEl) {
-          const headerHeight = headerEl.getBoundingClientRect().height;
-          endY = headerLogoRect.top + headerLogoRect.height / 2 + headerHeight;
+      const duration = isMobile ? 1400 : 2200;
+
+      const logoStartY = window.innerHeight / 2;
+      const startScale = isMobile ? 2.2 : 2.8;
+
+      const headerHeight = headerRef.current ? headerRef.current.scrollHeight : (isMobile ? 56 : 92);
+      let logoCenterInHeader = isMobile ? 32 : 52;
+      if (headerLogoRef.current && headerRef.current) {
+        const style = window.getComputedStyle(headerRef.current.children[0] as Element);
+        const paddingTop = parseFloat(style.paddingTop) || 0;
+        const logoH = headerLogoRef.current.offsetHeight || (isMobile ? 48 : 80);
+        const calculatedCenter = paddingTop + logoH / 2;
+        if (calculatedCenter > 0) {
+          logoCenterInHeader = calculatedCenter;
         }
       }
-      const startScale = isMobile ? 2.2 : 2.8;
+
+      setHeaderRevealed(true);
+      if (headerRef.current) {
+        headerRef.current.style.transition = 'none';
+        headerRef.current.style.transform = `translateY(-${headerHeight}px)`;
+      }
 
       const animate = (currentTime: number) => {
         const elapsed = currentTime - startTime;
@@ -192,13 +199,19 @@ export default function Layout({ children }: LayoutProps) {
           ? 4 * rawProgress * rawProgress * rawProgress
           : 1 - Math.pow(-2 * rawProgress + 2, 3) / 2;
 
-        if (isMobile && introLogoRef.current) {
-          const top = startY + (endY - startY) * eased;
-          const scale = startScale - (startScale - 1) * eased;
-          introLogoRef.current.style.transform = `translate(-50%, -50%) translateY(${top}px) scale(${scale})`;
-        } else {
-          setIntroProgress(eased);
+        const headerY = -headerHeight * (1 - eased);
+        if (headerRef.current) {
+          headerRef.current.style.transform = `translateY(${headerY}px)`;
         }
+
+        const logoEndY = headerY + logoCenterInHeader;
+        const logoTop = logoStartY + (logoEndY - logoStartY) * eased;
+        const scale = startScale - (startScale - 1) * eased;
+
+        if (introLogoRef.current) {
+          introLogoRef.current.style.transform = `translate(-50%, -50%) translateY(${logoTop}px) scale(${scale})`;
+        }
+        setIntroProgress(eased);
 
         if (rawProgress < 1) {
           requestAnimationFrame(animate);
@@ -212,11 +225,15 @@ export default function Layout({ children }: LayoutProps) {
           setIsScrolled(false);
           setIsIdle(false);
           setIntroProgress(1);
+          if (headerRef.current) {
+            headerRef.current.style.transition = '';
+            headerRef.current.style.transform = '';
+          }
           setLogoFading(true);
           setTimeout(() => {
             setLogoSwapped(true);
             setLogoFading(false);
-          }, 400);
+          }, 300);
         }
       };
 
@@ -274,28 +291,12 @@ export default function Layout({ children }: LayoutProps) {
   const introActive = location === '/' && introProgress < 1;
   const showIntroLogo = location === '/' && !logoSwapped;
   const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 768;
-  let introLogoTop = 52;
-  let introLogoScale = 1;
-  if (showIntroLogo) {
-    const p = introProgress;
-    const startY = typeof window !== 'undefined' ? window.innerHeight / 2 : 400;
-    let endY = isMobileDevice ? 32 : 52;
-    if (headerLogoRef.current) {
-      const headerLogoRect = headerLogoRef.current.getBoundingClientRect();
-      const headerEl = headerLogoRef.current.closest('header');
-      if (headerEl) {
-        const headerHeight = headerEl.getBoundingClientRect().height;
-        endY = headerLogoRect.top + headerLogoRect.height / 2 + headerHeight;
-      }
-    }
-    introLogoTop = startY + (endY - startY) * p;
-    const startScale = isMobileDevice ? 2.2 : 2.8;
-    introLogoScale = startScale - (startScale - 1) * p;
-  }
+  const introLogoStartY = typeof window !== 'undefined' ? window.innerHeight / 2 : 400;
+  const introLogoStartScale = isMobileDevice ? 2.2 : 2.8;
 
   return (
     <div className="min-h-screen relative">
-      <header className={`fixed top-0 left-0 right-0 z-50 ${
+      <header ref={headerRef} className={`fixed top-0 left-0 right-0 z-50 ${
         noTransition ? '' : `transition-transform ${logoSwapped ? 'duration-700 ease-in-out' : ''}`
       } ${
         location === '/' && !headerRevealed ? '-translate-y-full' : ((isScrolled || isIdle) && logoSwapped ? '-translate-y-full' : 'translate-y-0')
@@ -403,11 +404,11 @@ export default function Layout({ children }: LayoutProps) {
           style={{
             left: '50%',
             top: 0,
-            transform: `translate(-50%, -50%) translateY(${introLogoTop}px) scale(${introLogoScale})`,
+            transform: `translate(-50%, -50%) translateY(${introLogoStartY}px) scale(${introLogoStartScale})`,
             willChange: 'transform',
             backfaceVisibility: 'hidden',
             opacity: logoFading ? 0 : 1,
-            transition: logoFading ? 'opacity 400ms ease-out' : undefined,
+            transition: logoFading ? 'opacity 300ms ease-out' : undefined,
           }}
         />
       )}
