@@ -29,6 +29,7 @@ export default function Layout({ children }: LayoutProps) {
   const [introProgress, setIntroProgress] = useState(location === '/' ? 0 : 1);
   const [headerRevealed, setHeaderRevealed] = useState(location !== '/');
   const [logoSwapped, setLogoSwapped] = useState(location !== '/');
+  const [logoFading, setLogoFading] = useState(false);
   const showIntroRef = useRef(location === '/');
   const isHomepageRef = useRef(location === '/');
   const introAnimatingRef = useRef(false);
@@ -202,7 +203,11 @@ export default function Layout({ children }: LayoutProps) {
           setIsScrolled(false);
           setIsIdle(false);
           setIntroProgress(1);
-          setLogoSwapped(true);
+          setLogoFading(true);
+          setTimeout(() => {
+            setLogoSwapped(true);
+            setLogoFading(false);
+          }, 400);
         }
       };
 
@@ -274,12 +279,12 @@ export default function Layout({ children }: LayoutProps) {
   return (
     <div className="min-h-screen relative">
       <header className={`fixed top-0 left-0 right-0 z-50 ${
-        noTransition ? '' : `transition-transform ${!logoSwapped && location === '/' ? (isMobileDevice ? 'duration-[1400ms]' : 'duration-[2200ms]') + ' ease-[cubic-bezier(0.33,1,0.68,1)]' : 'duration-700 ease-in-out'}`
+        noTransition ? '' : `transition-transform ${logoSwapped ? 'duration-700 ease-in-out' : ''}`
       } ${
         location === '/' && !headerRevealed ? '-translate-y-full' : ((isScrolled || isIdle) && logoSwapped ? '-translate-y-full' : 'translate-y-0')
       }`}>
         <div className={`flex items-center justify-between py-2 px-6 md:py-3 md:px-10 lg:px-16 transition-colors duration-300 ${isInHero ? '' : 'bg-black/20'}`}>
-          <nav className="hidden lg:flex items-center gap-8">
+          <nav className={`hidden lg:flex items-center gap-8 transition-opacity duration-500 ${location === '/' && !logoSwapped ? 'opacity-0' : 'opacity-100'}`}>
             {navigation.map((item) => (
               <Link
                 key={item.key}
@@ -304,12 +309,12 @@ export default function Layout({ children }: LayoutProps) {
             <img
               src={logoSrc}
               alt="IEVRA Design & Build"
-              className="h-12 md:h-20 w-auto hover:opacity-80 transition-opacity"
-              style={location === '/' && !logoSwapped ? { opacity: 0 } : undefined}
+              className="h-12 md:h-20 w-auto hover:opacity-80 transition-opacity duration-400"
+              style={{ opacity: location === '/' && !logoSwapped && !logoFading ? 0 : logoFading ? 1 : undefined, transitionDuration: logoFading ? '400ms' : undefined }}
             />
           </Link>
 
-          <div className="hidden lg:flex items-center gap-4">
+          <div className={`hidden lg:flex items-center gap-4 transition-opacity duration-500 ${location === '/' && !logoSwapped ? 'opacity-0' : 'opacity-100'}`}>
             <div className="relative">
               <button
                 onClick={() => setLangDropdownOpen(!langDropdownOpen)}
@@ -361,7 +366,7 @@ export default function Layout({ children }: LayoutProps) {
           </div>
 
           <button
-            className="lg:hidden text-white p-2 z-50"
+            className={`lg:hidden text-white p-2 z-50 transition-opacity duration-500 ${location === '/' && !logoSwapped ? 'opacity-0' : 'opacity-100'}`}
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
             data-testid="button-main-menu"
@@ -383,6 +388,8 @@ export default function Layout({ children }: LayoutProps) {
             transform: `translate(-50%, -50%) translateY(${introLogoTop}px) scale(${introLogoScale})`,
             willChange: 'transform',
             backfaceVisibility: 'hidden',
+            opacity: logoFading ? 0 : 1,
+            transition: logoFading ? 'opacity 400ms ease-out' : undefined,
           }}
         />
       )}
