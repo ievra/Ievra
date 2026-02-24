@@ -430,49 +430,80 @@ export default function ProjectDetail() {
         {/* Additional Gallery Section - Detailed Content */}
         {galleryImages.length > 1 && (
           <div id="additional-gallery" className="mt-24 space-y-16" data-testid="section-additional" tabIndex={-1}>
-            {/* Additional detailed text content - only show if there's content */}
-            {(project.designPhilosophy || project.materialSelection) && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-                {project.designPhilosophy && (
-                  <div className="space-y-4">
-                    <h3 className="text-xl font-light tracking-wider text-white uppercase">
-                      {project.designPhilosophyTitle || (language === 'vi' ? 'Triết lý thiết kế' : 'Design Philosophy')}
-                    </h3>
-                    <div className="text-zinc-300 leading-relaxed">
-                      {parseFormattedText(project.designPhilosophy)}
-                    </div>
-                  </div>
-                )}
-                {project.materialSelection && (
-                  <div className="space-y-4">
-                    <h3 className="text-xl font-light tracking-wider text-white uppercase">
-                      {project.materialSelectionTitle || (language === 'vi' ? 'Lựa chọn vật liệu' : 'Material Selection')}
-                    </h3>
-                    <div className="text-zinc-300 leading-relaxed">
-                      {parseFormattedText(project.materialSelection)}
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-
-            {/* Additional Gallery Images (16:9 or 1:1 aspect ratio) */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {galleryImages.slice(1).map((image: string, index: number) => (
-                <div key={index} className="aspect-video cursor-pointer" onClick={() => openLightbox(image)}>
+            {/* First gallery image with text content side by side */}
+            {(project.designPhilosophy || project.materialSelection) ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                <div className="aspect-video cursor-pointer" onClick={() => openLightbox(galleryImages[1])}>
                   <OptimizedImage
-                    src={image}
-                    alt={`${project.title} - Gallery ${index + 2}`}
+                    src={galleryImages[1]}
+                    alt={`${project.title} - Gallery 2`}
+                    width={600}
+                    height={338}
+                    wrapperClassName="w-full h-full"
+                    className="w-full h-full object-cover hover:opacity-90 transition-opacity"
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    data-testid="img-gallery-2"
+                  />
+                </div>
+                <div className="space-y-8 flex flex-col justify-center">
+                  {project.designPhilosophy && (
+                    <div className="space-y-4">
+                      <h3 className="text-xl font-light tracking-wider text-white uppercase">
+                        {project.designPhilosophyTitle || (language === 'vi' ? 'Triết lý thiết kế' : 'Design Philosophy')}
+                      </h3>
+                      <div className="text-zinc-300 leading-relaxed">
+                        {parseFormattedText(project.designPhilosophy)}
+                      </div>
+                    </div>
+                  )}
+                  {project.materialSelection && (
+                    <div className="space-y-4">
+                      <h3 className="text-xl font-light tracking-wider text-white uppercase">
+                        {project.materialSelectionTitle || (language === 'vi' ? 'Lựa chọn vật liệu' : 'Material Selection')}
+                      </h3>
+                      <div className="text-zinc-300 leading-relaxed">
+                        {parseFormattedText(project.materialSelection)}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="aspect-video cursor-pointer" onClick={() => openLightbox(galleryImages[1])}>
+                  <OptimizedImage
+                    src={galleryImages[1]}
+                    alt={`${project.title} - Gallery 2`}
                     width={400}
                     height={225}
                     wrapperClassName="w-full h-full"
                     className="w-full h-full object-cover hover:opacity-90 transition-opacity"
                     sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    data-testid={`img-gallery-${index + 2}`}
+                    data-testid="img-gallery-2"
                   />
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
+
+            {/* Remaining Gallery Images */}
+            {galleryImages.length > 2 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {galleryImages.slice(2).map((image: string, index: number) => (
+                  <div key={index} className="aspect-video cursor-pointer" onClick={() => openLightbox(image)}>
+                    <OptimizedImage
+                      src={image}
+                      alt={`${project.title} - Gallery ${index + 3}`}
+                      width={400}
+                      height={225}
+                      wrapperClassName="w-full h-full"
+                      className="w-full h-full object-cover hover:opacity-90 transition-opacity"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      data-testid={`img-gallery-${index + 3}`}
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
