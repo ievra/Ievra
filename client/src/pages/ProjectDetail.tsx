@@ -352,7 +352,7 @@ export default function ProjectDetail() {
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12">
-          <div className="max-w-7xl mx-auto">
+          <div>
             <Link href="/portfolio" className="inline-flex items-center mb-6 text-zinc-300 hover:text-white transition-colors text-sm" data-testid="button-back-to-portfolio">
               <ArrowLeft className="mr-2 h-4 w-4" />
               {language === 'vi' ? 'Quay lại Danh mục' : 'Back to Portfolio'}
