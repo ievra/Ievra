@@ -475,7 +475,7 @@ export default function ProjectDetail() {
       {project.bannerImage && (
         <div className="w-full mt-16">
           {project.bannerTitle && (
-            <div className="max-w-7xl mx-auto px-6 mb-6">
+            <div className="px-6 md:px-12 mb-6">
               <h2 className="text-2xl md:text-3xl font-light tracking-wider text-white uppercase">
                 {project.bannerTitle}
               </h2>
