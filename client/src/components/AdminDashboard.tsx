@@ -4550,28 +4550,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           </FormItem>
                         )}
                       />
-                      <FormField
-                        control={projectForm.control}
-                        name="status"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Trạng Thái *</FormLabel>
-                            <Select onValueChange={field.onChange} value={field.value}>
-                              <FormControl>
-                                <SelectTrigger data-testid="select-project-status">
-                                  <SelectValue placeholder="Chọn trạng thái" />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="draft">Bản Nháp</SelectItem>
-                                <SelectItem value="published">Đã Đăng</SelectItem>
-                                <SelectItem value="archived">Lưu Trữ</SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
                     </div>
                   </div>
 
