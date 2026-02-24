@@ -3938,38 +3938,38 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     />
                   </div>
 
-                  {/* Bilingual Description Title */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={projectForm.control}
-                      name="descriptionTitleEn"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Tiêu Đề Mô Tả (Tiếng Anh)' : 'Description Title (English)'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} placeholder="Full-Service Interior Design" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={projectForm.control}
-                      name="descriptionTitleVi"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Tiêu Đề Mô Tả (Tiếng Việt)' : 'Description Title (Vietnamese)'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} placeholder="Dịch Vụ Thiết Kế Nội Thất" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  {/* Bilingual Description */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Mục 1: Mô Tả Dự Án */}
+                  <div className="space-y-4 border-t pt-4">
+                    <h4 className="text-sm font-light">{language === 'vi' ? 'Mục 1 — Mô Tả Dự Án' : 'Section 1 — Project Description'}</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={projectForm.control}
+                        name="descriptionTitleEn"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{language === 'vi' ? 'Tiêu Đề Mục (Tiếng Anh)' : 'Section Title (English)'}</FormLabel>
+                            <FormControl>
+                              <Input {...field} placeholder="Full-Service Interior Design" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={projectForm.control}
+                        name="descriptionTitleVi"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{language === 'vi' ? 'Tiêu Đề Mục (Tiếng Việt)' : 'Section Title (Vietnamese)'}</FormLabel>
+                            <FormControl>
+                              <Input {...field} placeholder="Dịch Vụ Thiết Kế Nội Thất" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                       control={projectForm.control}
                       name="descriptionEn"
@@ -3998,36 +3998,36 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     />
                   </div>
 
-                  {/* Bilingual Detailed Description */}
-                  <div className="space-y-2">
-                    <div className="text-xs text-muted-foreground">Format: *text* = bold, **text** = heading, ***text*** = heading + bold</div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <FormField
-                        control={projectForm.control}
-                        name="detailedDescriptionEn"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{language === 'vi' ? 'Mô Tả Chi Tiết (Tiếng Anh)' : 'Detailed Description (English)'} <span className="text-muted-foreground text-xs font-normal">- Max 1500</span></FormLabel>
-                            <FormControl>
-                              <Textarea {...field} rows={5} maxLength={1500} data-testid="textarea-project-detailed-description-en" placeholder={language === 'vi' ? 'Nhập nội dung chi tiết tiếng Anh...' : 'Enter detailed English content...'} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                      <FormField
-                        control={projectForm.control}
-                        name="detailedDescriptionVi"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{language === 'vi' ? 'Mô Tả Chi Tiết (Tiếng Việt)' : 'Detailed Description (Vietnamese)'} <span className="text-muted-foreground text-xs font-normal">- Tối đa 1500</span></FormLabel>
-                            <FormControl>
-                              <Textarea {...field} rows={5} maxLength={1500} data-testid="textarea-project-detailed-description-vi" placeholder="Nhập nội dung chi tiết tiếng Việt..." />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                    <div className="space-y-2">
+                      <div className="text-xs text-muted-foreground">Format: *text* = bold, **text** = heading, ***text*** = heading + bold</div>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <FormField
+                          control={projectForm.control}
+                          name="detailedDescriptionEn"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>{language === 'vi' ? 'Mô Tả Chi Tiết (Tiếng Anh)' : 'Detailed Description (English)'} <span className="text-muted-foreground text-xs font-normal">- Max 1500</span></FormLabel>
+                              <FormControl>
+                                <Textarea {...field} rows={5} maxLength={1500} data-testid="textarea-project-detailed-description-en" placeholder={language === 'vi' ? 'Nhập nội dung chi tiết tiếng Anh...' : 'Enter detailed English content...'} />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={projectForm.control}
+                          name="detailedDescriptionVi"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>{language === 'vi' ? 'Mô Tả Chi Tiết (Tiếng Việt)' : 'Detailed Description (Vietnamese)'} <span className="text-muted-foreground text-xs font-normal">- Tối đa 1500</span></FormLabel>
+                              <FormControl>
+                                <Textarea {...field} rows={5} maxLength={1500} data-testid="textarea-project-detailed-description-vi" placeholder="Nhập nội dung chi tiết tiếng Việt..." />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
                     </div>
                   </div>
 
@@ -4211,10 +4211,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     />
                   </div>
 
-                  {/* Bilingual Design Philosophy */}
+                  {/* Mục 2: Triết Lý Thiết Kế */}
                   <div className="space-y-4 border-t pt-4">
                     <div className="space-y-2">
-                      <h4 className="text-sm font-light">{language === 'vi' ? 'Triết Lý Thiết Kế' : 'Design Philosophy Section'}</h4>
+                      <h4 className="text-sm font-light">{language === 'vi' ? 'Mục 2 — Triết Lý Thiết Kế' : 'Section 2 — Design Philosophy'}</h4>
                       <p className="text-xs text-muted-foreground">Format: **text** = heading, *text* = bold, ***text*** = heading + bold</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -4275,10 +4275,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     </div>
                   </div>
 
-                  {/* Bilingual Material Selection */}
+                  {/* Mục 3: Lựa Chọn Vật Liệu */}
                   <div className="space-y-4 border-t pt-4">
                     <div className="space-y-2">
-                      <h4 className="text-sm font-light">{language === 'vi' ? 'Lựa Chọn Vật Liệu' : 'Material Selection Section'}</h4>
+                      <h4 className="text-sm font-light">{language === 'vi' ? 'Mục 3 — Lựa Chọn Vật Liệu' : 'Section 3 — Material Selection'}</h4>
                       <p className="text-xs text-muted-foreground">Format: **text** = heading, *text* = bold, ***text*** = heading + bold</p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
