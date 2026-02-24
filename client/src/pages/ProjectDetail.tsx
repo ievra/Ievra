@@ -321,10 +321,9 @@ export default function ProjectDetail() {
                     contentImages.length > 0 ? contentImages :
                     [project.heroImage, ...galleryImages].filter(Boolean);
 
-  const firstImage = contentImages[0] || coverImages[0] || project.heroImage || galleryImages[0];
-  const secondImage = contentImages[1] || coverImages[1] || galleryImages[1];
-  const detailImage = contentImages[0] || galleryImages[0] || coverImages[0];
-  const allClickableImages = Array.from(new Set([firstImage, secondImage, detailImage, ...contentImages, ...galleryImages, project.bannerImage].filter(Boolean))) as string[];
+  const heroImage = coverImages[0] || project.heroImage || contentImages[0] || galleryImages[0];
+  const section1Image = contentImages[0] || coverImages[0] || galleryImages[0];
+  const allClickableImages = Array.from(new Set([heroImage, section1Image, ...contentImages, ...coverImages, ...galleryImages, project.section2Image, project.section3Image, project.bannerImage].filter(Boolean))) as string[];
 
   const openLightbox = (imageSrc: string) => {
     const idx = allClickableImages.indexOf(imageSrc);
@@ -336,10 +335,10 @@ export default function ProjectDetail() {
     <div className="min-h-screen pb-20">
       {/* Hero Section - Full width image with title overlay */}
       <div className="relative w-full aspect-video mb-0">
-        {firstImage && (
-          <div className="w-full h-full cursor-pointer" onClick={() => openLightbox(firstImage)}>
+        {heroImage && (
+          <div className="w-full h-full cursor-pointer" onClick={() => openLightbox(heroImage)}>
             <OptimizedImage
-              src={firstImage}
+              src={heroImage}
               alt={project.title}
               width={1400}
               height={800}
@@ -367,10 +366,10 @@ export default function ProjectDetail() {
       {/* Section 1: Single image left + Description right */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
         <div>
-          {firstImage && (
-            <div className="aspect-square cursor-pointer" onClick={() => openLightbox(firstImage)}>
+          {section1Image && (
+            <div className="aspect-square cursor-pointer" onClick={() => openLightbox(section1Image)}>
               <OptimizedImage
-                src={firstImage}
+                src={section1Image}
                 alt={`${project.title} - Featured`}
                 width={700}
                 height={700}
