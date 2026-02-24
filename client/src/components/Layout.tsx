@@ -116,12 +116,34 @@ export default function Layout({ children }: LayoutProps) {
       resetIdleTimer();
     };
 
+    const handleWheel = () => {
+      const isPageScrollable = document.documentElement.scrollHeight > window.innerHeight + 10;
+      if (!isPageScrollable) {
+        setIsScrolled(false);
+        setIsIdle(false);
+        resetIdleTimer();
+      }
+    };
+
+    const handleTouchMove = () => {
+      const isPageScrollable = document.documentElement.scrollHeight > window.innerHeight + 10;
+      if (!isPageScrollable) {
+        setIsScrolled(false);
+        setIsIdle(false);
+        resetIdleTimer();
+      }
+    };
+
     window.addEventListener("scroll", updateScrollDirection);
+    window.addEventListener("wheel", handleWheel);
+    window.addEventListener("touchmove", handleTouchMove);
 
     resetIdleTimer();
 
     return () => {
       window.removeEventListener("scroll", updateScrollDirection);
+      window.removeEventListener("wheel", handleWheel);
+      window.removeEventListener("touchmove", handleTouchMove);
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
     };
   }, []);
