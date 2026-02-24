@@ -383,7 +383,7 @@ export default function ProjectDetail() {
         </div>
         <div className="aspect-square flex flex-col justify-center px-8 md:px-12 lg:px-16 py-12 md:py-16 overflow-hidden">
           {(project.descriptionTitle || project.designPhilosophyTitle) && (
-            <h2 className="text-xs md:text-sm font-light tracking-[0.3em] text-zinc-400 uppercase mb-6">
+            <h2 className="text-sm md:text-base font-light tracking-[0.15em] text-white uppercase mb-6">
               {project.descriptionTitle || project.designPhilosophyTitle}
             </h2>
           )}
@@ -401,7 +401,7 @@ export default function ProjectDetail() {
           <div className="aspect-square flex flex-col justify-center px-8 md:px-12 lg:px-16 py-12 md:py-16 overflow-hidden order-2 md:order-1">
             {project.designPhilosophy && (
               <div className="space-y-4">
-                <h2 className="text-xs md:text-sm font-light tracking-[0.3em] text-zinc-400 uppercase">
+                <h2 className="text-sm md:text-base font-light tracking-[0.15em] text-white uppercase">
                   {project.designPhilosophyTitle || (language === 'vi' ? 'Triết lý thiết kế' : 'Design Philosophy')}
                 </h2>
                 <div className="text-zinc-300 leading-relaxed text-sm md:text-base break-words whitespace-pre-wrap">
@@ -454,7 +454,7 @@ export default function ProjectDetail() {
           <div className="aspect-square flex flex-col justify-center px-8 md:px-12 lg:px-16 py-12 md:py-16 overflow-hidden">
             {project.materialSelection && (
               <div className="space-y-4">
-                <h2 className="text-xs md:text-sm font-light tracking-[0.3em] text-zinc-400 uppercase">
+                <h2 className="text-sm md:text-base font-light tracking-[0.15em] text-white uppercase">
                   {project.materialSelectionTitle || (language === 'vi' ? 'Lựa chọn vật liệu' : 'Material Selection')}
                 </h2>
                 <div className="text-zinc-300 leading-relaxed text-sm md:text-base break-words whitespace-pre-wrap">
