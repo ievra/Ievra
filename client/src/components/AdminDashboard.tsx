@@ -3885,9 +3885,15 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <h2 className="text-2xl font-sans font-light min-h-[36px]">{language === 'vi' ? 'Quản Lý Dự Án' : 'Projects Management'}</h2>
           <div className="flex gap-2 flex-shrink-0">
-            <Dialog open={isProjectDialogOpen} onOpenChange={setIsProjectDialogOpen}>
+            <Dialog open={isProjectDialogOpen} onOpenChange={(open) => {
+              setIsProjectDialogOpen(open);
+              if (!open) {
+                setEditingProject(null);
+                projectForm.reset();
+              }
+            }}>
               <DialogTrigger asChild>
-                <Button data-testid="button-add-project" className="h-10 px-4 min-w-[140px] justify-center">
+                <Button data-testid="button-add-project" className="h-10 px-4 min-w-[140px] justify-center" onClick={() => { setEditingProject(null); projectForm.reset(); }}>
                   <Plus className="mr-2 h-4 w-4" />
                   {language === 'vi' ? 'Thêm Dự Án' : 'Add Project'}
                 </Button>
@@ -9711,7 +9717,16 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <h2 className="text-2xl font-sans font-light min-h-[36px]">{language === 'vi' ? 'Quản Lý Bài Viết' : 'Articles Management'}</h2>
           <div className="flex gap-2 flex-shrink-0">
-            <Dialog open={isArticleDialogOpen} onOpenChange={setIsArticleDialogOpen}>
+            <Dialog open={isArticleDialogOpen} onOpenChange={(open) => {
+              setIsArticleDialogOpen(open);
+              if (!open) {
+                setEditingArticle(null);
+                setArticleImagePreview('');
+                setArticleImageFile(null);
+                setArticleContentImages([]);
+                articleForm.reset();
+              }
+            }}>
               <DialogTrigger asChild>
                 <Button 
                   onClick={() => {
