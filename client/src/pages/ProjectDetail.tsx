@@ -130,7 +130,6 @@ export default function ProjectDetail() {
   const projectId = idParams?.id;
   const isSlugRoute = !!projectSlug;
   
-  const [expanded, setExpanded] = useState(false);
   const [copied, setCopied] = useState(false);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
@@ -428,31 +427,8 @@ export default function ProjectDetail() {
           </div>
         </div>
 
-        {/* View More Button - Only show if there are additional gallery images and not expanded */}
-        {galleryImages.length > 1 && !expanded && (
-          <div className="text-center mb-16">
-            <button 
-              onClick={() => {
-                setExpanded(true);
-                // Delay scroll to allow content to render
-                setTimeout(() => {
-                  document.getElementById('additional-gallery')?.scrollIntoView({ 
-                    behavior: 'smooth' 
-                  });
-                }, 100);
-              }}
-              className="border border-zinc-600 text-zinc-300 px-8 py-3 text-sm uppercase tracking-wider hover:bg-zinc-800 transition-colors" 
-              data-testid="button-view-more"
-              aria-expanded={expanded}
-              aria-controls="additional-gallery"
-            >
-              {language === 'vi' ? 'XEM THÊM' : 'VIEW MORE'}
-            </button>
-          </div>
-        )}
-
         {/* Additional Gallery Section - Detailed Content */}
-        {expanded && galleryImages.length > 1 && (
+        {galleryImages.length > 1 && (
           <div id="additional-gallery" className="mt-24 space-y-16" data-testid="section-additional" tabIndex={-1}>
             {/* Additional detailed text content - only show if there's content */}
             {(project.designPhilosophy || project.materialSelection) && (
