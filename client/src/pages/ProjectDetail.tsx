@@ -446,10 +446,25 @@ export default function ProjectDetail() {
         </div>
       )}
 
-      {/* Section 3: Text left + Image right (alternating) */}
+      {/* Section 3: Image left + Text right */}
       {(project.materialSelection || (project.detailedDescription && project.designPhilosophy)) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-          <div className="flex flex-col justify-center px-8 md:px-12 lg:px-16 py-12 md:py-16 order-2 md:order-1">
+          <div>
+            {galleryImages[1] && (
+              <div className="aspect-[4/3] cursor-pointer" onClick={() => openLightbox(galleryImages[1])}>
+                <OptimizedImage
+                  src={galleryImages[1]}
+                  alt={`${project.title} - Gallery 2`}
+                  width={700}
+                  height={525}
+                  wrapperClassName="w-full h-full"
+                  className="w-full h-full object-cover hover:opacity-90 transition-opacity"
+                  data-testid="img-gallery-2"
+                />
+              </div>
+            )}
+          </div>
+          <div className="flex flex-col justify-center px-8 md:px-12 lg:px-16 py-12 md:py-16">
             {project.materialSelection && (
               <div className="space-y-4">
                 <h2 className="text-xs md:text-sm font-light tracking-[0.3em] text-zinc-400 uppercase">
@@ -463,21 +478,6 @@ export default function ProjectDetail() {
             {project.detailedDescription && project.designPhilosophy && (
               <div className="mt-6 text-zinc-300 leading-relaxed text-sm md:text-base break-words whitespace-pre-wrap" data-testid="text-detailed-description">
                 {parseFormattedText(project.detailedDescription)}
-              </div>
-            )}
-          </div>
-          <div className="order-1 md:order-2">
-            {galleryImages[1] && (
-              <div className="aspect-[4/3] cursor-pointer" onClick={() => openLightbox(galleryImages[1])}>
-                <OptimizedImage
-                  src={galleryImages[1]}
-                  alt={`${project.title} - Gallery 2`}
-                  width={700}
-                  height={525}
-                  wrapperClassName="w-full h-full"
-                  className="w-full h-full object-cover hover:opacity-90 transition-opacity"
-                  data-testid="img-gallery-2"
-                />
               </div>
             )}
           </div>
