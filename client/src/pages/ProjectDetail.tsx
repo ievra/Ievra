@@ -422,30 +422,32 @@ export default function ProjectDetail() {
 
         {/* Detailed Description + Design Philosophy + Material Selection */}
         {(project.detailedDescription || project.designPhilosophy || project.materialSelection) && (
-          <div className="space-y-6 mb-12 max-w-3xl">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            <div className="space-y-6">
+              {project.designPhilosophy && (
+                <div className="space-y-3">
+                  <h3 className="text-lg font-light tracking-wider text-white uppercase">
+                    {project.designPhilosophyTitle || (language === 'vi' ? 'Triết lý thiết kế' : 'Design Philosophy')}
+                  </h3>
+                  <div className="text-zinc-300 leading-relaxed">
+                    {parseFormattedText(project.designPhilosophy)}
+                  </div>
+                </div>
+              )}
+              {project.materialSelection && (
+                <div className="space-y-3">
+                  <h3 className="text-lg font-light tracking-wider text-white uppercase">
+                    {project.materialSelectionTitle || (language === 'vi' ? 'Lựa chọn vật liệu' : 'Material Selection')}
+                  </h3>
+                  <div className="text-zinc-300 leading-relaxed">
+                    {parseFormattedText(project.materialSelection)}
+                  </div>
+                </div>
+              )}
+            </div>
             {project.detailedDescription && (
               <div className="text-zinc-300 leading-relaxed text-base break-words whitespace-pre-wrap" data-testid="text-detailed-description">
                 {parseFormattedText(project.detailedDescription)}
-              </div>
-            )}
-            {project.designPhilosophy && (
-              <div className="space-y-3">
-                <h3 className="text-lg font-light tracking-wider text-white uppercase">
-                  {project.designPhilosophyTitle || (language === 'vi' ? 'Triết lý thiết kế' : 'Design Philosophy')}
-                </h3>
-                <div className="text-zinc-300 leading-relaxed">
-                  {parseFormattedText(project.designPhilosophy)}
-                </div>
-              </div>
-            )}
-            {project.materialSelection && (
-              <div className="space-y-3">
-                <h3 className="text-lg font-light tracking-wider text-white uppercase">
-                  {project.materialSelectionTitle || (language === 'vi' ? 'Lựa chọn vật liệu' : 'Material Selection')}
-                </h3>
-                <div className="text-zinc-300 leading-relaxed">
-                  {parseFormattedText(project.materialSelection)}
-                </div>
               </div>
             )}
           </div>
