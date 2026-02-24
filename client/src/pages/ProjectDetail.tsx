@@ -481,13 +481,14 @@ export default function ProjectDetail() {
               </h2>
             </div>
           )}
-          <div className="w-full cursor-pointer" onClick={() => openLightbox(project.bannerImage!)}>
+          <div className="w-full aspect-video cursor-pointer" onClick={() => openLightbox(project.bannerImage!)}>
             <OptimizedImage
               src={project.bannerImage}
               alt={project.bannerTitle || project.title}
               width={1920}
-              height={600}
-              className="w-full h-auto object-cover"
+              height={1080}
+              wrapperClassName="w-full h-full"
+              className="w-full h-full object-cover"
             />
           </div>
         </div>
