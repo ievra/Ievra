@@ -4439,7 +4439,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     name="contentImages"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{language === 'vi' ? 'Ảnh Nội Dung (Tối đa 1 ảnh, tỷ lệ 16:9 hoặc 1:1)' : 'Content Image (Max 1, ratio 16:9 or 1:1)'}</FormLabel>
+                        <FormLabel>{language === 'vi' ? 'Ảnh Mục 1 - Mô Tả Dự Án (Tối đa 1 ảnh, tỷ lệ 1:1)' : 'Section 1 Image - Project Description (Max 1, ratio 1:1)'}</FormLabel>
                         <FormControl>
                           <ImageUpload
                             value={field.value}
