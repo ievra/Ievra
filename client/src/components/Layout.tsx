@@ -168,21 +168,19 @@ export default function Layout({ children }: LayoutProps) {
 
       const startTime = performance.now();
       const isMobileCheck = window.innerWidth < 768;
-      const duration = isMobileCheck ? 1200 : 2000;
+      const duration = isMobileCheck ? 1400 : 2200;
 
       const isMobile = window.innerWidth < 768;
       const startY = window.innerHeight / 2;
-      const endY = isMobile ? 28 : 40;
-      const startScale = isMobile ? 2.0 : 2.5;
+      const endY = isMobile ? 32 : 52;
+      const startScale = isMobile ? 2.2 : 2.8;
 
       const animate = (currentTime: number) => {
         const elapsed = currentTime - startTime;
         const rawProgress = Math.min(1, elapsed / duration);
-        const eased = isMobile
-          ? rawProgress < 0.5
-            ? 4 * rawProgress * rawProgress * rawProgress
-            : 1 - Math.pow(-2 * rawProgress + 2, 3) / 2
-          : 1 - Math.pow(1 - rawProgress, 3);
+        const eased = rawProgress < 0.5
+          ? 4 * rawProgress * rawProgress * rawProgress
+          : 1 - Math.pow(-2 * rawProgress + 2, 3) / 2;
 
         if (isMobile && introLogoRef.current) {
           const top = startY + (endY - startY) * eased;
@@ -262,21 +260,21 @@ export default function Layout({ children }: LayoutProps) {
   const introActive = location === '/' && introProgress < 1;
   const showIntroLogo = location === '/' && !logoSwapped;
   const isMobileDevice = typeof window !== 'undefined' && window.innerWidth < 768;
-  let introLogoTop = 40;
+  let introLogoTop = 52;
   let introLogoScale = 1;
   if (showIntroLogo) {
     const p = introProgress;
     const startY = typeof window !== 'undefined' ? window.innerHeight / 2 : 400;
-    const endY = isMobileDevice ? 28 : 40;
+    const endY = isMobileDevice ? 32 : 52;
     introLogoTop = startY + (endY - startY) * p;
-    const startScale = isMobileDevice ? 2.0 : 2.5;
+    const startScale = isMobileDevice ? 2.2 : 2.8;
     introLogoScale = startScale - (startScale - 1) * p;
   }
 
   return (
     <div className="min-h-screen relative">
       <header className={`fixed top-0 left-0 right-0 z-50 ${
-        noTransition ? '' : `transition-transform ${!logoSwapped && location === '/' ? (isMobileDevice ? 'duration-[1200ms]' : 'duration-[2000ms]') + ' ease-[cubic-bezier(0.33,1,0.68,1)]' : 'duration-700 ease-in-out'}`
+        noTransition ? '' : `transition-transform ${!logoSwapped && location === '/' ? (isMobileDevice ? 'duration-[1400ms]' : 'duration-[2200ms]') + ' ease-[cubic-bezier(0.33,1,0.68,1)]' : 'duration-700 ease-in-out'}`
       } ${
         location === '/' && !headerRevealed ? '-translate-y-full' : ((isScrolled || isIdle) && logoSwapped ? '-translate-y-full' : 'translate-y-0')
       }`}>
@@ -306,7 +304,7 @@ export default function Layout({ children }: LayoutProps) {
             <img
               src={logoSrc}
               alt="IEVRA Design & Build"
-              className="h-10 md:h-16 w-auto hover:opacity-80 transition-opacity"
+              className="h-12 md:h-20 w-auto hover:opacity-80 transition-opacity"
               style={location === '/' && !logoSwapped ? { opacity: 0 } : undefined}
             />
           </Link>
@@ -378,7 +376,7 @@ export default function Layout({ children }: LayoutProps) {
           ref={introLogoRef}
           src={logoSrc}
           alt=""
-          className="fixed pointer-events-none z-[55] h-10 md:h-16 w-auto"
+          className="fixed pointer-events-none z-[55] h-12 md:h-20 w-auto"
           style={{
             left: '50%',
             top: 0,
