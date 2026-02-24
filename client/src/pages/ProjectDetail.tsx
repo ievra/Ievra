@@ -528,44 +528,14 @@ export default function ProjectDetail() {
         </div>
       )}
 
-      {/* Share & Other Projects */}
+      {/* Other Projects */}
       <div className="max-w-7xl mx-auto px-6">
-        {/* Share Section */}
-        <div className="flex items-center justify-between mt-16 mb-8 border-t border-gray-800 pt-6">
-          <div className="text-sm text-muted-foreground">
-            <p className="mb-1">
-              {language === 'vi' ? 'Thiết kế bởi' : 'Designed by'} <span className="text-white">{project.designer || 'IEVRA Team'}</span>
-            </p>
-            <p>{project.completionYear}</p>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleShare}
-            className="border border-white/20 rounded-none px-4 py-2 hover:bg-white/10 hover:text-white transition-all"
-            data-testid="button-share"
-            disabled={copied}
-          >
-            {copied ? (
-              <>
-                <Check className="h-5 w-5 mr-2" />
-                {language === 'vi' ? 'Đã sao chép!' : 'Copied!'}
-              </>
-            ) : (
-              <>
-                <Share2 className="h-5 w-5 mr-2" />
-                {language === 'vi' ? 'Chia sẻ' : 'Share'}
-              </>
-            )}
-          </Button>
-        </div>
-
         {/* OTHER PROJECTS Section - Horizontal Scroll */}
         {allProjects && allProjects.length > 0 && (
-          <div className="mt-4">
-            <div className="text-sm text-zinc-500 uppercase tracking-wider mb-8">
+          <div className="mt-16">
+            <h2 className="text-2xl md:text-3xl font-light text-white uppercase tracking-wider mb-10">
               {language === 'vi' ? 'DỰ ÁN KHÁC' : 'OTHER PROJECTS'}
-            </div>
+            </h2>
             <div className="overflow-x-auto scrollbar-hide">
               <div className="flex gap-6 pb-4" style={{ width: 'max-content' }}>
                 {allProjects.map((otherProject) => (
