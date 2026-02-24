@@ -316,17 +316,6 @@ export default function BlogDetail() {
         {/* Article Header */}
         <article className="prose prose-lg max-w-none">
           <div className="mb-8">
-            <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-              <Badge variant="outline">
-                {getCategoryLabel(article.category)}
-              </Badge>
-              {article.featured && (
-                <Badge className="bg-white/10 border-white/30 text-white">
-                  {language === 'vi' ? 'Nổi bật' : 'Featured'}
-                </Badge>
-              )}
-            </div>
-
             <h1 className="text-4xl md:text-6xl font-sans font-light mb-6 leading-tight text-white break-words" data-testid="article-title">
               {article.title}
             </h1>
