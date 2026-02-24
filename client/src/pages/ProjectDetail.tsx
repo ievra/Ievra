@@ -323,8 +323,8 @@ export default function ProjectDetail() {
 
   const firstImage = contentImages[0] || coverImages[0] || project.heroImage || galleryImages[0];
   const secondImage = contentImages[1] || coverImages[1] || galleryImages[1];
-  const detailImage = galleryImages[0] || coverImages[0];
-  const allClickableImages = [firstImage, secondImage, detailImage, ...galleryImages.slice(1)].filter(Boolean) as string[];
+  const detailImage = contentImages[0] || galleryImages[0] || coverImages[0];
+  const allClickableImages = [...new Set([firstImage, secondImage, detailImage, ...contentImages, ...galleryImages].filter(Boolean))] as string[];
 
   const openLightbox = (imageSrc: string) => {
     const idx = allClickableImages.indexOf(imageSrc);
@@ -388,9 +388,9 @@ export default function ProjectDetail() {
         })()}
 
         {/* Content Text Below Images */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
-          {/* Left Text Content - Description */}
-          <div className="text-zinc-300 leading-relaxed text-base overflow-hidden" data-testid="text-description">
+        <div className="mb-12">
+          {/* Description */}
+          <div className="text-zinc-300 leading-relaxed text-base overflow-hidden max-w-3xl" data-testid="text-description">
             <div className="break-words whitespace-pre-wrap">
               {parseFormattedText(project.description || 
                 (language === 'vi' 
@@ -400,75 +400,87 @@ export default function ProjectDetail() {
               )}
             </div>
           </div>
+        </div>
 
-          {/* Right Content with Image */}
-          <div className="space-y-6">
-            {/* Detail image - from gallery images or cover images */}
-            {detailImage && (
-              <div className="w-full aspect-video cursor-pointer" onClick={() => openLightbox(detailImage)}>
-                <OptimizedImage
-                  src={detailImage}
-                  alt={`${project.title} - Detail`}
-                  width={600}
-                  height={337}
-                  wrapperClassName="w-full h-full"
-                  className="w-full h-full object-cover hover:opacity-90 transition-opacity"
-                  data-testid="img-detail"
-                />
-              </div>
-            )}
-            
-            {/* Detailed Description */}
+        {/* Content Image + Design Text Side by Side */}
+        {contentImages.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 items-start">
+            <div className="aspect-video cursor-pointer" onClick={() => openLightbox(contentImages[0])}>
+              <OptimizedImage
+                src={contentImages[0]}
+                alt={`${project.title} - Content`}
+                width={600}
+                height={338}
+                wrapperClassName="w-full h-full"
+                className="w-full h-full object-cover hover:opacity-90 transition-opacity"
+                sizes="(max-width: 768px) 100vw, 50vw"
+                data-testid="img-content-featured"
+              />
+            </div>
+            <div className="space-y-6">
+              {project.detailedDescription && (
+                <div className="text-zinc-300 leading-relaxed text-base break-words whitespace-pre-wrap" data-testid="text-detailed-description">
+                  {parseFormattedText(project.detailedDescription)}
+                </div>
+              )}
+              {project.designPhilosophy && (
+                <div className="space-y-3">
+                  <h3 className="text-lg font-light tracking-wider text-white uppercase">
+                    {project.designPhilosophyTitle || (language === 'vi' ? 'Triết lý thiết kế' : 'Design Philosophy')}
+                  </h3>
+                  <div className="text-zinc-300 leading-relaxed">
+                    {parseFormattedText(project.designPhilosophy)}
+                  </div>
+                </div>
+              )}
+              {project.materialSelection && (
+                <div className="space-y-3">
+                  <h3 className="text-lg font-light tracking-wider text-white uppercase">
+                    {project.materialSelectionTitle || (language === 'vi' ? 'Lựa chọn vật liệu' : 'Material Selection')}
+                  </h3>
+                  <div className="text-zinc-300 leading-relaxed">
+                    {parseFormattedText(project.materialSelection)}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* If no content images, show text sections normally */}
+        {contentImages.length === 0 && (project.detailedDescription || project.designPhilosophy || project.materialSelection) && (
+          <div className="space-y-6 mb-12 max-w-3xl">
             {project.detailedDescription && (
               <div className="text-zinc-300 leading-relaxed text-base break-words whitespace-pre-wrap" data-testid="text-detailed-description">
                 {parseFormattedText(project.detailedDescription)}
               </div>
             )}
-          </div>
-        </div>
-
-        {/* Additional Gallery Section - Detailed Content */}
-        {galleryImages.length > 0 && (
-          <div id="additional-gallery" className="mt-24 space-y-16" data-testid="section-additional" tabIndex={-1}>
-            {/* Content image with text content side by side */}
-            {(project.designPhilosophy || project.materialSelection) && contentImages.length > 0 && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-                <div className="aspect-video cursor-pointer" onClick={() => openLightbox(contentImages[0])}>
-                  <OptimizedImage
-                    src={contentImages[0]}
-                    alt={`${project.title} - Content`}
-                    width={600}
-                    height={338}
-                    wrapperClassName="w-full h-full"
-                    className="w-full h-full object-cover hover:opacity-90 transition-opacity"
-                    sizes="(max-width: 768px) 100vw, 50vw"
-                    data-testid="img-content-featured"
-                  />
-                </div>
-                <div className="space-y-8 flex flex-col justify-center">
-                  {project.designPhilosophy && (
-                    <div className="space-y-4">
-                      <h3 className="text-xl font-light tracking-wider text-white uppercase">
-                        {project.designPhilosophyTitle || (language === 'vi' ? 'Triết lý thiết kế' : 'Design Philosophy')}
-                      </h3>
-                      <div className="text-zinc-300 leading-relaxed">
-                        {parseFormattedText(project.designPhilosophy)}
-                      </div>
-                    </div>
-                  )}
-                  {project.materialSelection && (
-                    <div className="space-y-4">
-                      <h3 className="text-xl font-light tracking-wider text-white uppercase">
-                        {project.materialSelectionTitle || (language === 'vi' ? 'Lựa chọn vật liệu' : 'Material Selection')}
-                      </h3>
-                      <div className="text-zinc-300 leading-relaxed">
-                        {parseFormattedText(project.materialSelection)}
-                      </div>
-                    </div>
-                  )}
+            {project.designPhilosophy && (
+              <div className="space-y-3">
+                <h3 className="text-lg font-light tracking-wider text-white uppercase">
+                  {project.designPhilosophyTitle || (language === 'vi' ? 'Triết lý thiết kế' : 'Design Philosophy')}
+                </h3>
+                <div className="text-zinc-300 leading-relaxed">
+                  {parseFormattedText(project.designPhilosophy)}
                 </div>
               </div>
             )}
+            {project.materialSelection && (
+              <div className="space-y-3">
+                <h3 className="text-lg font-light tracking-wider text-white uppercase">
+                  {project.materialSelectionTitle || (language === 'vi' ? 'Lựa chọn vật liệu' : 'Material Selection')}
+                </h3>
+                <div className="text-zinc-300 leading-relaxed">
+                  {parseFormattedText(project.materialSelection)}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Gallery Images */}
+        {galleryImages.length > 0 && (
+          <div id="additional-gallery" className="mt-12 space-y-12" data-testid="section-additional" tabIndex={-1}>
 
             {/* All Gallery Images */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
