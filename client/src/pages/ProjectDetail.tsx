@@ -430,19 +430,19 @@ export default function ProjectDetail() {
         {/* Additional Gallery Section - Detailed Content */}
         {galleryImages.length > 1 && (
           <div id="additional-gallery" className="mt-24 space-y-16" data-testid="section-additional" tabIndex={-1}>
-            {/* First gallery image with text content side by side */}
-            {(project.designPhilosophy || project.materialSelection) && (
+            {/* Content image with text content side by side */}
+            {(project.designPhilosophy || project.materialSelection) && contentImages.length > 0 && (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-                <div className="aspect-video cursor-pointer" onClick={() => openLightbox(galleryImages[1])}>
+                <div className="aspect-video cursor-pointer" onClick={() => openLightbox(contentImages[0])}>
                   <OptimizedImage
-                    src={galleryImages[1]}
-                    alt={`${project.title} - Gallery 2`}
+                    src={contentImages[0]}
+                    alt={`${project.title} - Content`}
                     width={600}
                     height={338}
                     wrapperClassName="w-full h-full"
                     className="w-full h-full object-cover hover:opacity-90 transition-opacity"
                     sizes="(max-width: 768px) 100vw, 50vw"
-                    data-testid="img-gallery-featured"
+                    data-testid="img-content-featured"
                   />
                 </div>
                 <div className="space-y-8 flex flex-col justify-center">
