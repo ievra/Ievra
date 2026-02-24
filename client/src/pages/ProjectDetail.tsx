@@ -494,20 +494,20 @@ export default function ProjectDetail() {
       )}
 
       {/* Gallery Grid */}
-      {galleryImages.length > 2 && (
+      {galleryImages.length > 0 && (
         <div className="w-full mt-16" id="additional-gallery" data-testid="section-additional" tabIndex={-1}>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0">
-            {galleryImages.slice(2).map((image: string, index: number) => (
+            {galleryImages.map((image: string, index: number) => (
               <div key={index} className="aspect-[4/3] cursor-pointer" onClick={() => openLightbox(image)}>
                 <OptimizedImage
                   src={image}
-                  alt={`${project.title} - Gallery ${index + 3}`}
+                  alt={`${project.title} - Gallery ${index + 1}`}
                   width={400}
                   height={300}
                   wrapperClassName="w-full h-full"
                   className="w-full h-full object-cover hover:opacity-90 transition-opacity"
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  data-testid={`img-gallery-${index + 3}`}
+                  data-testid={`img-gallery-${index + 1}`}
                 />
               </div>
             ))}
