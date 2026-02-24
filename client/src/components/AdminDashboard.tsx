@@ -74,6 +74,9 @@ const bilingualProjectSchema = z.object({
   descriptionTitleVi: z.string().optional(),
   section2Image: z.string().optional(),
   section3Image: z.string().optional(),
+  bannerTitleEn: z.string().optional(),
+  bannerTitleVi: z.string().optional(),
+  bannerImage: z.string().optional(),
   slug: z.string().optional(),
   category: z.string().min(1, "Category is required"),
   status: z.enum(["draft", "published", "archived"]).default("draft"),
@@ -928,6 +931,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       descriptionTitleVi: "",
       section2Image: "",
       section3Image: "",
+      bannerTitleEn: "",
+      bannerTitleVi: "",
+      bannerImage: "",
       slug: "",
       category: "",
       status: "draft",
@@ -2457,6 +2463,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       descriptionTitleVi: viVersion?.descriptionTitle || "",
       section2Image: (enVersion?.section2Image || viVersion?.section2Image || "") as string,
       section3Image: (enVersion?.section3Image || viVersion?.section3Image || "") as string,
+      bannerTitleEn: enVersion?.bannerTitle || "",
+      bannerTitleVi: viVersion?.bannerTitle || "",
+      bannerImage: (enVersion?.bannerImage || viVersion?.bannerImage || "") as string,
       metaTitleEn: enVersion?.metaTitle || "",
       metaTitleVi: viVersion?.metaTitle || "",
       metaDescriptionEn: enVersion?.metaDescription || "",
@@ -2562,6 +2571,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           descriptionTitle: data.descriptionTitleEn,
           section2Image: data.section2Image,
           section3Image: data.section3Image,
+          bannerTitle: data.bannerTitleEn,
+          bannerImage: data.bannerImage,
           category: data.category,
           status: data.status,
           location: data.locationEn,
@@ -2610,6 +2621,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           descriptionTitle: data.descriptionTitleVi,
           section2Image: data.section2Image,
           section3Image: data.section3Image,
+          bannerTitle: data.bannerTitleVi,
+          bannerImage: data.bannerImage,
           category: data.category,
           status: data.status,
           location: data.locationVi,
@@ -4318,6 +4331,60 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         )}
                       />
                     </div>
+                  </div>
+
+                  {/* Banner Section */}
+                  <div className="space-y-4 border-t pt-4">
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-light">{language === 'vi' ? 'Mục Banner (Bản Vẽ Kỹ Thuật)' : 'Banner Section (Technical Drawing)'}</h4>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={projectForm.control}
+                        name="bannerTitleEn"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{language === 'vi' ? 'Tiêu Đề Banner (Tiếng Anh)' : 'Banner Title (English)'}</FormLabel>
+                            <FormControl>
+                              <Input {...field} placeholder="Technical Drawing" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={projectForm.control}
+                        name="bannerTitleVi"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{language === 'vi' ? 'Tiêu Đề Banner (Tiếng Việt)' : 'Banner Title (Vietnamese)'}</FormLabel>
+                            <FormControl>
+                              <Input {...field} placeholder="Bản Vẽ Kĩ Thuật" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <FormField
+                      control={projectForm.control}
+                      name="bannerImage"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Ảnh Banner (Trải rộng toàn trang)' : 'Banner Image (Full width)'}</FormLabel>
+                          <FormControl>
+                            <ImageUpload
+                              value={field.value ? [field.value] : []}
+                              onChange={(urls: string[]) => field.onChange(urls[0] || "")}
+                              multiple={false}
+                              maxImages={1}
+                              disabled={!hasPermission(user, 'projects')}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
 
                   {/* Hình Ảnh */}
