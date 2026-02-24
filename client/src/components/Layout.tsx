@@ -167,30 +167,33 @@ export default function Layout({ children }: LayoutProps) {
       if (introAnimatingRef.current) return;
       introAnimatingRef.current = true;
 
-      const startTime = performance.now();
       const isMobile = window.innerWidth < 768;
       const duration = isMobile ? 1400 : 2200;
-
       const logoStartY = window.innerHeight / 2;
       const startScale = isMobile ? 2.2 : 2.8;
 
-      const headerHeight = headerRef.current ? headerRef.current.scrollHeight : (isMobile ? 56 : 92);
-      let logoCenterInHeader = isMobile ? 32 : 52;
-      if (headerLogoRef.current && headerRef.current) {
-        const style = window.getComputedStyle(headerRef.current.children[0] as Element);
-        const paddingTop = parseFloat(style.paddingTop) || 0;
-        const logoH = headerLogoRef.current.offsetHeight || (isMobile ? 48 : 80);
-        const calculatedCenter = paddingTop + logoH / 2;
-        if (calculatedCenter > 0) {
-          logoCenterInHeader = calculatedCenter;
-        }
-      }
-
       setHeaderRevealed(true);
+
+      let logoFinalScreenY = isMobile ? 32 : 52;
+      let headerHeight = isMobile ? 56 : 92;
+
       if (headerRef.current) {
         headerRef.current.style.transition = 'none';
+        headerRef.current.style.transform = 'translateY(0)';
+        headerRef.current.offsetHeight;
+
+        headerHeight = headerRef.current.getBoundingClientRect().height;
+
+        if (headerLogoRef.current) {
+          const logoRect = headerLogoRef.current.getBoundingClientRect();
+          logoFinalScreenY = logoRect.top + logoRect.height / 2;
+        }
+
         headerRef.current.style.transform = `translateY(-${headerHeight}px)`;
+        headerRef.current.offsetHeight;
       }
+
+      const startTime = performance.now();
 
       const animate = (currentTime: number) => {
         const elapsed = currentTime - startTime;
@@ -199,13 +202,12 @@ export default function Layout({ children }: LayoutProps) {
           ? 4 * rawProgress * rawProgress * rawProgress
           : 1 - Math.pow(-2 * rawProgress + 2, 3) / 2;
 
-        const headerY = -headerHeight * (1 - eased);
         if (headerRef.current) {
+          const headerY = -headerHeight * (1 - eased);
           headerRef.current.style.transform = `translateY(${headerY}px)`;
         }
 
-        const logoEndY = headerY + logoCenterInHeader;
-        const logoTop = logoStartY + (logoEndY - logoStartY) * eased;
+        const logoTop = logoStartY + (logoFinalScreenY - logoStartY) * eased;
         const scale = startScale - (startScale - 1) * eased;
 
         if (introLogoRef.current) {
@@ -229,11 +231,7 @@ export default function Layout({ children }: LayoutProps) {
             headerRef.current.style.transition = '';
             headerRef.current.style.transform = '';
           }
-          setLogoFading(true);
-          setTimeout(() => {
-            setLogoSwapped(true);
-            setLogoFading(false);
-          }, 300);
+          setLogoSwapped(true);
         }
       };
 
@@ -329,7 +327,7 @@ export default function Layout({ children }: LayoutProps) {
               src={logoSrc}
               alt="IEVRA Design & Build"
               className="h-12 md:h-20 w-auto hover:opacity-80 transition-opacity duration-400"
-              style={{ opacity: location === '/' && !logoSwapped && !logoFading ? 0 : logoFading ? 1 : undefined, transitionDuration: logoFading ? '400ms' : undefined }}
+              style={{ opacity: location === '/' && !logoSwapped ? 0 : undefined }}
             />
           </Link>
 
@@ -407,8 +405,7 @@ export default function Layout({ children }: LayoutProps) {
             transform: `translate(-50%, -50%) translateY(${introLogoStartY}px) scale(${introLogoStartScale})`,
             willChange: 'transform',
             backfaceVisibility: 'hidden',
-            opacity: logoFading ? 0 : 1,
-            transition: logoFading ? 'opacity 300ms ease-out' : undefined,
+            opacity: 1,
           }}
         />
       )}
