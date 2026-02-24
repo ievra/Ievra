@@ -347,6 +347,13 @@ export default function ProjectDetail() {
           <h1 className="text-4xl font-light tracking-wider mb-3 text-white uppercase" data-testid="text-project-title">
             {project.title}
           </h1>
+          {project.description && (
+            <div className="text-zinc-300 leading-relaxed text-base max-w-3xl mt-4" data-testid="text-description">
+              <div className="break-words whitespace-pre-wrap">
+                {parseFormattedText(project.description)}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Two Large Images Side by Side - Using contentImages (16:9 or 1:1) */}
@@ -386,21 +393,6 @@ export default function ProjectDetail() {
             </div>
           );
         })()}
-
-        {/* Content Text Below Images */}
-        <div className="mb-12">
-          {/* Description */}
-          <div className="text-zinc-300 leading-relaxed text-base overflow-hidden max-w-3xl" data-testid="text-description">
-            <div className="break-words whitespace-pre-wrap">
-              {parseFormattedText(project.description || 
-                (language === 'vi' 
-                  ? 'Một không gian nội thất nơi những sắc thái than chì nghiêm ngặt được kết hợp với sự ấm áp của đồ nội thất màu đất nung và các kết cấu mềm mại.'
-                  : 'An interior where strict graphite shades are combined with the warmth of terracotta furniture and soft textures.'
-                )
-              )}
-            </div>
-          </div>
-        </div>
 
         {/* Content Image */}
         {contentImages.length > 0 && (
