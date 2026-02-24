@@ -364,29 +364,16 @@ export default function ProjectDetail() {
         </div>
       </div>
 
-      {/* Section 1: Two images left + Description right */}
+      {/* Section 1: Single image left + Description right */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-        <div className="grid grid-cols-2 gap-0">
-          {secondImage && (
-            <div className="aspect-[3/4] cursor-pointer" onClick={() => openLightbox(secondImage)}>
+        <div>
+          {firstImage && (
+            <div className="aspect-square cursor-pointer" onClick={() => openLightbox(firstImage)}>
               <OptimizedImage
-                src={secondImage}
-                alt={`${project.title} - View 2`}
-                width={400}
-                height={533}
-                wrapperClassName="w-full h-full"
-                className="w-full h-full object-cover hover:opacity-90 transition-opacity"
-                data-testid="img-secondary"
-              />
-            </div>
-          )}
-          {contentImages[0] && (
-            <div className="aspect-[3/4] cursor-pointer" onClick={() => openLightbox(contentImages[0])}>
-              <OptimizedImage
-                src={contentImages[0]}
-                alt={`${project.title} - Content`}
-                width={400}
-                height={533}
+                src={firstImage}
+                alt={`${project.title} - Featured`}
+                width={700}
+                height={700}
                 wrapperClassName="w-full h-full"
                 className="w-full h-full object-cover hover:opacity-90 transition-opacity"
                 data-testid="img-content-featured"
