@@ -233,10 +233,13 @@ export default function Layout({ children }: LayoutProps) {
           if (headerLogoRef.current) {
             headerLogoRef.current.style.opacity = '1';
           }
-          requestAnimationFrame(() => {
+          if (introLogoRef.current) {
+            introLogoRef.current.style.opacity = '0';
+          }
+          setTimeout(() => {
             showIntroRef.current = false;
             setLogoSwapped(true);
-          });
+          }, 50);
         }
       };
 
