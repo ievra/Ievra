@@ -461,11 +461,15 @@ export default function ProjectDetail() {
                 </div>
               </div>
             )}
-            {project.detailedDescription && project.designPhilosophy && (
-              <div className="mt-6 text-zinc-300 leading-relaxed text-sm md:text-base break-words whitespace-pre-wrap" data-testid="text-detailed-description">
-                {parseFormattedText(project.detailedDescription)}
-              </div>
-            )}
+          </div>
+        </div>
+      )}
+
+      {/* Detailed Description - Full Width */}
+      {project.detailedDescription && project.designPhilosophy && (
+        <div className="w-full px-6 md:px-12 py-12 md:py-16">
+          <div className="text-zinc-300 leading-relaxed text-sm md:text-base break-words whitespace-pre-wrap max-w-4xl" data-testid="text-detailed-description">
+            {parseFormattedText(project.detailedDescription)}
           </div>
         </div>
       )}
