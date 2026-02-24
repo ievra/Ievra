@@ -218,7 +218,6 @@ export default function Layout({ children }: LayoutProps) {
         if (rawProgress < 1) {
           requestAnimationFrame(animate);
         } else {
-          showIntroRef.current = false;
           introAnimatingRef.current = false;
           document.body.style.overflow = '';
           document.body.style.position = '';
@@ -231,7 +230,13 @@ export default function Layout({ children }: LayoutProps) {
             headerRef.current.style.transition = '';
             headerRef.current.style.transform = '';
           }
-          setLogoSwapped(true);
+          if (headerLogoRef.current) {
+            headerLogoRef.current.style.opacity = '1';
+          }
+          requestAnimationFrame(() => {
+            showIntroRef.current = false;
+            setLogoSwapped(true);
+          });
         }
       };
 
