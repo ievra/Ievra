@@ -324,7 +324,7 @@ export default function ProjectDetail() {
   const firstImage = contentImages[0] || coverImages[0] || project.heroImage || galleryImages[0];
   const secondImage = contentImages[1] || coverImages[1] || galleryImages[1];
   const detailImage = contentImages[0] || galleryImages[0] || coverImages[0];
-  const allClickableImages = Array.from(new Set([firstImage, secondImage, detailImage, ...contentImages, ...galleryImages].filter(Boolean))) as string[];
+  const allClickableImages = Array.from(new Set([firstImage, secondImage, detailImage, ...contentImages, ...galleryImages, project.bannerImage].filter(Boolean))) as string[];
 
   const openLightbox = (imageSrc: string) => {
     const idx = allClickableImages.indexOf(imageSrc);
@@ -480,6 +480,28 @@ export default function ProjectDetail() {
                 {parseFormattedText(project.detailedDescription)}
               </div>
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Banner Section - Full Width */}
+      {project.bannerImage && (
+        <div className="w-full mt-16">
+          {project.bannerTitle && (
+            <div className="max-w-7xl mx-auto px-6 mb-6">
+              <h2 className="text-2xl md:text-3xl font-light tracking-wider text-white uppercase">
+                {project.bannerTitle}
+              </h2>
+            </div>
+          )}
+          <div className="w-full cursor-pointer" onClick={() => openLightbox(project.bannerImage!)}>
+            <OptimizedImage
+              src={project.bannerImage}
+              alt={project.bannerTitle || project.title}
+              width={1920}
+              height={600}
+              className="w-full h-auto object-cover"
+            />
           </div>
         </div>
       )}
