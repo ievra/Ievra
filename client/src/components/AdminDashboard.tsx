@@ -42,8 +42,8 @@ const projectSchema = z.object({
   designer: z.string().optional(),
   completionYear: z.string().optional(),
   // New image categories with specific constraints
-  coverImages: z.array(z.string()).max(2, "Maximum 2 cover images allowed").default([]),
-  contentImages: z.array(z.string()).max(2, "Maximum 2 content images allowed").default([]),
+  coverImages: z.array(z.string()).max(1, "Maximum 1 cover image allowed").default([]),
+  contentImages: z.array(z.string()).max(1, "Maximum 1 content image allowed").default([]),
   galleryImages: z.array(z.string()).max(10, "Maximum 10 gallery images allowed").default([]),
   featured: z.boolean().default(false),
   // Legacy fields for backward compatibility  
@@ -92,8 +92,8 @@ const bilingualProjectSchema = z.object({
   designerVi: z.string().optional(),
   completionYearEn: z.string().optional(),
   completionYearVi: z.string().optional(),
-  coverImages: z.array(z.string()).max(2, "Maximum 2 cover images allowed").default([]),
-  contentImages: z.array(z.string()).max(2, "Maximum 2 content images allowed").default([]),
+  coverImages: z.array(z.string()).max(1, "Maximum 1 cover image allowed").default([]),
+  contentImages: z.array(z.string()).max(1, "Maximum 1 content image allowed").default([]),
   galleryImages: z.array(z.string()).max(10, "Maximum 10 gallery images allowed").default([]),
   featured: z.boolean().default(false),
   heroImage: z.string().optional(),
@@ -4413,13 +4413,13 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     name="coverImages"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Ảnh Bìa (Tối đa 2 ảnh, tỷ lệ 3:4)</FormLabel>
+                        <FormLabel>{language === 'vi' ? 'Ảnh Bìa (Tối đa 1 ảnh, tỷ lệ 3:4)' : 'Cover Image (Max 1, ratio 3:4)'}</FormLabel>
                         <FormControl>
                           <ImageUpload
                             value={field.value}
                             onChange={field.onChange}
-                            multiple
-                            maxImages={2}
+                            multiple={false}
+                            maxImages={1}
                             disabled={!hasPermission(user, 'projects')}
                           />
                         </FormControl>
@@ -4433,13 +4433,13 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     name="contentImages"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Ảnh Nội Dung (2 ảnh, tỷ lệ 16:9 hoặc 1:1)</FormLabel>
+                        <FormLabel>{language === 'vi' ? 'Ảnh Nội Dung (Tối đa 1 ảnh, tỷ lệ 16:9 hoặc 1:1)' : 'Content Image (Max 1, ratio 16:9 or 1:1)'}</FormLabel>
                         <FormControl>
                           <ImageUpload
                             value={field.value}
                             onChange={field.onChange}
-                            multiple
-                            maxImages={2}
+                            multiple={false}
+                            maxImages={1}
                             disabled={!hasPermission(user, 'projects')}
                           />
                         </FormControl>
