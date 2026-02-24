@@ -3938,6 +3938,126 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     />
                   </div>
 
+                  {/* Vị Trí */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={projectForm.control}
+                      name="locationEn"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Vị Trí (Tiếng Anh)' : 'Location (English)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-location-en" placeholder={language === 'vi' ? 'Nhập vị trí tiếng Anh...' : 'Enter location...'} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={projectForm.control}
+                      name="locationVi"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Vị Trí (Tiếng Việt)' : 'Location (Vietnamese)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-location-vi" placeholder="Nhập vị trí tiếng Việt..." />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Diện Tích */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={projectForm.control}
+                      name="areaEn"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Diện Tích (Tiếng Anh)' : 'Area (English)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-area-en" placeholder={language === 'vi' ? 'Nhập diện tích...' : 'Enter area...'} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={projectForm.control}
+                      name="areaVi"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Diện Tích (Tiếng Việt)' : 'Area (Vietnamese)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-area-vi" placeholder="Nhập diện tích tiếng Việt..." />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Thời Gian */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={projectForm.control}
+                      name="durationEn"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Thời Gian (Tiếng Anh)' : 'Duration (English)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-duration-en" placeholder={language === 'vi' ? 'Nhập thời gian...' : 'Enter duration...'} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={projectForm.control}
+                      name="durationVi"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Thời Gian (Tiếng Việt)' : 'Duration (Vietnamese)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-duration-vi" placeholder="Nhập thời gian tiếng Việt..." />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Phong Cách */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={projectForm.control}
+                      name="styleEn"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Phong Cách (Tiếng Anh)' : 'Style (English)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-style-en" placeholder={language === 'vi' ? 'Nhập phong cách...' : 'Enter style...'} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={projectForm.control}
+                      name="styleVi"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Phong Cách (Tiếng Việt)' : 'Style (Vietnamese)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-style-vi" placeholder="Nhập phong cách tiếng Việt..." />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
                   {/* Mục 1: Mô Tả Dự Án */}
                   <div className="space-y-4 border-t pt-4">
                     <h4 className="text-sm font-light">{language === 'vi' ? 'Mục 1 — Mô Tả Dự Án' : 'Section 1 — Project Description'}</h4>
@@ -3997,219 +4117,28 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                       )}
                     />
                   </div>
-
-                    <div className="space-y-2">
-                      <div className="text-xs text-muted-foreground">Format: *text* = bold, **text** = heading, ***text*** = heading + bold</div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <FormField
-                          control={projectForm.control}
-                          name="detailedDescriptionEn"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>{language === 'vi' ? 'Mô Tả Chi Tiết (Tiếng Anh)' : 'Detailed Description (English)'} <span className="text-muted-foreground text-xs font-normal">- Max 1500</span></FormLabel>
-                              <FormControl>
-                                <Textarea {...field} rows={5} maxLength={1500} data-testid="textarea-project-detailed-description-en" placeholder={language === 'vi' ? 'Nhập nội dung chi tiết tiếng Anh...' : 'Enter detailed English content...'} />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                        <FormField
-                          control={projectForm.control}
-                          name="detailedDescriptionVi"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>{language === 'vi' ? 'Mô Tả Chi Tiết (Tiếng Việt)' : 'Detailed Description (Vietnamese)'} <span className="text-muted-foreground text-xs font-normal">- Tối đa 1500</span></FormLabel>
-                              <FormControl>
-                                <Textarea {...field} rows={5} maxLength={1500} data-testid="textarea-project-detailed-description-vi" placeholder="Nhập nội dung chi tiết tiếng Việt..." />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                    </div>
                   </div>
 
-                  {/* Bilingual Location */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={projectForm.control}
-                      name="locationEn"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Vị Trí (Tiếng Anh)' : 'Location (English)'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} data-testid="input-project-location-en" placeholder={language === 'vi' ? 'Nhập vị trí tiếng Anh...' : 'Enter location...'} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={projectForm.control}
-                      name="locationVi"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Vị Trí (Tiếng Việt)' : 'Location (Vietnamese)'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} data-testid="input-project-location-vi" placeholder="Nhập vị trí tiếng Việt..." />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  {/* Bilingual Area */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={projectForm.control}
-                      name="areaEn"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Diện Tích (Tiếng Anh)' : 'Area (English)'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} data-testid="input-project-area-en" placeholder={language === 'vi' ? 'Nhập diện tích...' : 'Enter area...'} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={projectForm.control}
-                      name="areaVi"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Diện Tích (Tiếng Việt)' : 'Area (Vietnamese)'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} data-testid="input-project-area-vi" placeholder="Nhập diện tích tiếng Việt..." />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  {/* Bilingual Duration */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={projectForm.control}
-                      name="durationEn"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Thời Gian (Tiếng Anh)' : 'Duration (English)'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} data-testid="input-project-duration-en" placeholder={language === 'vi' ? 'Nhập thời gian...' : 'Enter duration...'} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={projectForm.control}
-                      name="durationVi"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Thời Gian (Tiếng Việt)' : 'Duration (Vietnamese)'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} data-testid="input-project-duration-vi" placeholder="Nhập thời gian tiếng Việt..." />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  {/* Bilingual Style */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={projectForm.control}
-                      name="styleEn"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Phong Cách (Tiếng Anh)' : 'Style (English)'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} data-testid="input-project-style-en" placeholder={language === 'vi' ? 'Nhập phong cách...' : 'Enter style...'} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={projectForm.control}
-                      name="styleVi"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Phong Cách (Tiếng Việt)' : 'Style (Vietnamese)'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} data-testid="input-project-style-vi" placeholder="Nhập phong cách tiếng Việt..." />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  {/* Bilingual Designer */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={projectForm.control}
-                      name="designerEn"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Nhà Thiết Kế (Tiếng Anh)' : 'Interior Designer (English)'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} data-testid="input-project-designer-en" placeholder={language === 'vi' ? 'Nhập tên nhà thiết kế...' : 'Enter designer name...'} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={projectForm.control}
-                      name="designerVi"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Nhà Thiết Kế (Tiếng Việt)' : 'Interior Designer (Vietnamese)'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} data-testid="input-project-designer-vi" placeholder="Nhập tên nhà thiết kế tiếng Việt..." />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  {/* Bilingual Completion Year */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={projectForm.control}
-                      name="completionYearEn"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Năm Hoàn Thành (Tiếng Anh)' : 'Completion Year (English)'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} data-testid="input-project-year-en" placeholder={language === 'vi' ? 'Nhập năm hoàn thành...' : 'Enter completion year...'} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={projectForm.control}
-                      name="completionYearVi"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Năm Hoàn Thành (Tiếng Việt)' : 'Completion Year (Vietnamese)'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} data-testid="input-project-year-vi" placeholder="Nhập năm hoàn thành tiếng Việt..." />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+                  {/* Ảnh Mục 1 */}
+                  <FormField
+                    control={projectForm.control}
+                    name="contentImages"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{language === 'vi' ? 'Ảnh Mục 1 - Mô Tả Dự Án (Tối đa 1 ảnh, tỷ lệ 1:1)' : 'Section 1 Image - Project Description (Max 1, ratio 1:1)'}</FormLabel>
+                        <FormControl>
+                          <ImageUpload
+                            value={field.value}
+                            onChange={field.onChange}
+                            multiple={false}
+                            maxImages={1}
+                            disabled={!hasPermission(user, 'projects')}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
 
                   {/* Mục 2: Triết Lý Thiết Kế */}
                   <div className="space-y-4 border-t pt-4">
@@ -4275,6 +4204,27 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                     </div>
                   </div>
 
+                  {/* Ảnh Mục 2 */}
+                  <FormField
+                    control={projectForm.control}
+                    name="section2Image"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Ảnh Mục 2 - Triết Lý Thiết Kế (1 ảnh, tỷ lệ 1:1)</FormLabel>
+                        <FormControl>
+                          <ImageUpload
+                            value={field.value ? [field.value] : []}
+                            onChange={(urls: string[]) => field.onChange(urls[0] || "")}
+                            multiple={false}
+                            maxImages={1}
+                            disabled={!hasPermission(user, 'projects')}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
                   {/* Mục 3: Lựa Chọn Vật Liệu */}
                   <div className="space-y-4 border-t pt-4">
                     <div className="space-y-2">
@@ -4337,6 +4287,123 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         )}
                       />
                     </div>
+                  </div>
+
+                  {/* Ảnh Mục 3 */}
+                  <FormField
+                    control={projectForm.control}
+                    name="section3Image"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Ảnh Mục 3 - Lựa Chọn Vật Liệu (1 ảnh, tỷ lệ 1:1)</FormLabel>
+                        <FormControl>
+                          <ImageUpload
+                            value={field.value ? [field.value] : []}
+                            onChange={(urls: string[]) => field.onChange(urls[0] || "")}
+                            multiple={false}
+                            maxImages={1}
+                            disabled={!hasPermission(user, 'projects')}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {/* Nội Dung (Mô Tả Chi Tiết) */}
+                  <div className="space-y-4 border-t pt-4">
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-light">{language === 'vi' ? 'Nội Dung (Mô Tả Chi Tiết)' : 'Content (Detailed Description)'}</h4>
+                      <p className="text-xs text-muted-foreground">Format: *text* = bold, **text** = heading, ***text*** = heading + bold</p>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <FormField
+                        control={projectForm.control}
+                        name="detailedDescriptionEn"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{language === 'vi' ? 'Mô Tả Chi Tiết (Tiếng Anh)' : 'Detailed Description (English)'} <span className="text-muted-foreground text-xs font-normal">- Max 1500</span></FormLabel>
+                            <FormControl>
+                              <Textarea {...field} rows={5} maxLength={1500} data-testid="textarea-project-detailed-description-en" placeholder={language === 'vi' ? 'Nhập nội dung chi tiết tiếng Anh...' : 'Enter detailed English content...'} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={projectForm.control}
+                        name="detailedDescriptionVi"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>{language === 'vi' ? 'Mô Tả Chi Tiết (Tiếng Việt)' : 'Detailed Description (Vietnamese)'} <span className="text-muted-foreground text-xs font-normal">- Tối đa 1500</span></FormLabel>
+                            <FormControl>
+                              <Textarea {...field} rows={5} maxLength={1500} data-testid="textarea-project-detailed-description-vi" placeholder="Nhập nội dung chi tiết tiếng Việt..." />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Nhà Thiết Kế */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={projectForm.control}
+                      name="designerEn"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Nhà Thiết Kế (Tiếng Anh)' : 'Interior Designer (English)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-designer-en" placeholder={language === 'vi' ? 'Nhập tên nhà thiết kế...' : 'Enter designer name...'} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={projectForm.control}
+                      name="designerVi"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Nhà Thiết Kế (Tiếng Việt)' : 'Interior Designer (Vietnamese)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-designer-vi" placeholder="Nhập tên nhà thiết kế tiếng Việt..." />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Năm Hoàn Thành */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      control={projectForm.control}
+                      name="completionYearEn"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Năm Hoàn Thành (Tiếng Anh)' : 'Completion Year (English)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-year-en" placeholder={language === 'vi' ? 'Nhập năm hoàn thành...' : 'Enter completion year...'} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={projectForm.control}
+                      name="completionYearVi"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Năm Hoàn Thành (Tiếng Việt)' : 'Completion Year (Vietnamese)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} data-testid="input-project-year-vi" placeholder="Nhập năm hoàn thành tiếng Việt..." />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
                   </div>
 
                   {/* Banner Section */}
@@ -4436,26 +4503,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
 
                   <FormField
                     control={projectForm.control}
-                    name="contentImages"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{language === 'vi' ? 'Ảnh Mục 1 - Mô Tả Dự Án (Tối đa 1 ảnh, tỷ lệ 1:1)' : 'Section 1 Image - Project Description (Max 1, ratio 1:1)'}</FormLabel>
-                        <FormControl>
-                          <ImageUpload
-                            value={field.value}
-                            onChange={field.onChange}
-                            multiple={false}
-                            maxImages={1}
-                            disabled={!hasPermission(user, 'projects')}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={projectForm.control}
                     name="galleryImages"
                     render={({ field }) => (
                       <FormItem>
@@ -4466,46 +4513,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             onChange={field.onChange}
                             multiple
                             maxImages={6}
-                            disabled={!hasPermission(user, 'projects')}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={projectForm.control}
-                    name="section2Image"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Ảnh Mục 2 - Triết Lý Thiết Kế (1 ảnh, tỷ lệ 1:1)</FormLabel>
-                        <FormControl>
-                          <ImageUpload
-                            value={field.value ? [field.value] : []}
-                            onChange={(urls: string[]) => field.onChange(urls[0] || "")}
-                            multiple={false}
-                            maxImages={1}
-                            disabled={!hasPermission(user, 'projects')}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={projectForm.control}
-                    name="section3Image"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Ảnh Mục 3 - Lựa Chọn Vật Liệu (1 ảnh, tỷ lệ 1:1)</FormLabel>
-                        <FormControl>
-                          <ImageUpload
-                            value={field.value ? [field.value] : []}
-                            onChange={(urls: string[]) => field.onChange(urls[0] || "")}
-                            multiple={false}
-                            maxImages={1}
                             disabled={!hasPermission(user, 'projects')}
                           />
                         </FormControl>
@@ -4536,7 +4543,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         name="category"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Danh Mục *</FormLabel>
+                            <FormLabel>Danh Mục</FormLabel>
                             <Select onValueChange={field.onChange} value={field.value}>
                               <FormControl>
                                 <SelectTrigger data-testid="select-project-category">
@@ -4693,7 +4700,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             </Button>
           </div>
         </div>
-
         {/* Category Management Dialog for Projects */}
         <Dialog open={isCategoryManagementDialogOpen} onOpenChange={setIsCategoryManagementDialogOpen}>
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-black border border-white/20 rounded-none">
@@ -4817,7 +4823,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             </div>
           </DialogContent>
         </Dialog>
-
         {/* Delete Category Confirmation Alert */}
         <AlertDialog open={isDeleteCategoryAlertOpen} onOpenChange={setIsDeleteCategoryAlertOpen}>
           <AlertDialogContent className="bg-black border border-white/20 rounded-none">
@@ -4856,7 +4861,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-
         {/* Edit Category Dialog */}
         <Dialog open={isEditCategoryDialogOpen} onOpenChange={(open) => {
           setIsEditCategoryDialogOpen(open);
@@ -4914,7 +4918,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             </div>
           </DialogContent>
         </Dialog>
-
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
@@ -4961,7 +4964,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             </Select>
           </div>
         </div>
-
         <Card>
           <CardContent className="p-0">
             {projectsLoading ? (
@@ -5983,7 +5985,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             </Button>
           </div>
         </div>
-
         {/* CRM Settings Dialog */}
         <Dialog open={isCrmSettingsDialogOpen} onOpenChange={setIsCrmSettingsDialogOpen}>
           <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto bg-black border border-white/20 rounded-none">
@@ -5993,7 +5994,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <CrmSettingsManager context="client" />
           </DialogContent>
         </Dialog>
-
         {/* Client View Dialog */}
         <Dialog open={isClientViewDialogOpen} onOpenChange={setIsClientViewDialogOpen}>
             <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-black border border-white/20 rounded-none">
@@ -6260,150 +6260,148 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               )}
             </DialogContent>
           </Dialog>
+        {/* Transaction Dialog */}
+        <Dialog open={isTransactionDialogOpen} onOpenChange={setIsTransactionDialogOpen}>
+          <DialogContent className="max-w-md bg-black border border-white/20 rounded-none">
+            <DialogHeader>
+              <DialogTitle>
+                {editingTransaction ? (language === 'vi' ? "Chỉnh sửa giao dịch" : "Edit Transaction") : (language === 'vi' ? "Thêm giao dịch mới" : "Add New Transaction")}
+              </DialogTitle>
+            </DialogHeader>
+            <Form {...transactionForm}>
+              <form onSubmit={transactionForm.handleSubmit(onTransactionSubmit)} className="space-y-4">
+                <FormField
+                  control={transactionForm.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{language === 'vi' ? 'Tiêu đề' : 'Title'}</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder={language === 'vi' ? "VD: Thanh toán đợt 1" : "E.g.: Payment phase 1"} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-          {/* Transaction Dialog */}
-          <Dialog open={isTransactionDialogOpen} onOpenChange={setIsTransactionDialogOpen}>
-            <DialogContent className="max-w-md bg-black border border-white/20 rounded-none">
-              <DialogHeader>
-                <DialogTitle>
-                  {editingTransaction ? (language === 'vi' ? "Chỉnh sửa giao dịch" : "Edit Transaction") : (language === 'vi' ? "Thêm giao dịch mới" : "Add New Transaction")}
-                </DialogTitle>
-              </DialogHeader>
-              <Form {...transactionForm}>
-                <form onSubmit={transactionForm.handleSubmit(onTransactionSubmit)} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
                   <FormField
                     control={transactionForm.control}
-                    name="title"
+                    name="amount"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{language === 'vi' ? 'Tiêu đề' : 'Title'}</FormLabel>
+                        <FormLabel>{language === 'vi' ? 'Số tiền (đ)' : 'Amount (đ)'}</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder={language === 'vi' ? "VD: Thanh toán đợt 1" : "E.g.: Payment phase 1"} />
+                          <Input {...field} type="text" placeholder="VD: 50000000" maxLength={12} onKeyDown={(e) => { if (!/[0-9]/.test(e.key) && !['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(e.key)) e.preventDefault(); }} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={transactionForm.control}
+                    name="type"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{language === 'vi' ? 'Loại' : 'Type'}</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="border-t-0 border-l-0 border-r-0 border-b border-white/30 rounded-none">
+                              <SelectValue placeholder={language === 'vi' ? "Chọn loại" : "Select type"} />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="payment">{language === 'vi' ? 'Thanh toán' : 'Payment'}</SelectItem>
+                            <SelectItem value="refund">{language === 'vi' ? 'Hoàn tiền' : 'Refund'}</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={transactionForm.control}
+                    name="status"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{language === 'vi' ? 'Trạng thái' : 'Status'}</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="border-t-0 border-l-0 border-r-0 border-b border-white/30 rounded-none">
+                              <SelectValue placeholder={language === 'vi' ? "Chọn trạng thái" : "Select status"} />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="pending">{language === 'vi' ? 'Đang chờ' : 'Pending'}</SelectItem>
+                            <SelectItem value="completed">{language === 'vi' ? 'Hoàn thành' : 'Completed'}</SelectItem>
+                            <SelectItem value="cancelled">{language === 'vi' ? 'Đã hủy' : 'Cancelled'}</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {transactionForm.watch("status") === "completed" && (
                     <FormField
                       control={transactionForm.control}
-                      name="amount"
+                      name="paymentDate"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Số tiền (đ)' : 'Amount (đ)'}</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Ngày thanh toán' : 'Payment Date'}</FormLabel>
                           <FormControl>
-                            <Input {...field} type="text" placeholder="VD: 50000000" maxLength={12} onKeyDown={(e) => { if (!/[0-9]/.test(e.key) && !['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(e.key)) e.preventDefault(); }} />
+                            <Input {...field} type="date" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
+                  )}
+                </div>
 
-                    <FormField
-                      control={transactionForm.control}
-                      name="type"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Loại' : 'Type'}</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger className="border-t-0 border-l-0 border-r-0 border-b border-white/30 rounded-none">
-                                <SelectValue placeholder={language === 'vi' ? "Chọn loại" : "Select type"} />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="payment">{language === 'vi' ? 'Thanh toán' : 'Payment'}</SelectItem>
-                              <SelectItem value="refund">{language === 'vi' ? 'Hoàn tiền' : 'Refund'}</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+                <FormField
+                  control={transactionForm.control}
+                  name="notes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{language === 'vi' ? 'Ghi chú' : 'Notes'}</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder={language === 'vi' ? "Ghi chú thêm (tùy chọn)" : "Additional notes (optional)"} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <FormField
-                      control={transactionForm.control}
-                      name="status"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Trạng thái' : 'Status'}</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger className="border-t-0 border-l-0 border-r-0 border-b border-white/30 rounded-none">
-                                <SelectValue placeholder={language === 'vi' ? "Chọn trạng thái" : "Select status"} />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="pending">{language === 'vi' ? 'Đang chờ' : 'Pending'}</SelectItem>
-                              <SelectItem value="completed">{language === 'vi' ? 'Hoàn thành' : 'Completed'}</SelectItem>
-                              <SelectItem value="cancelled">{language === 'vi' ? 'Đã hủy' : 'Cancelled'}</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    {transactionForm.watch("status") === "completed" && (
-                      <FormField
-                        control={transactionForm.control}
-                        name="paymentDate"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{language === 'vi' ? 'Ngày thanh toán' : 'Payment Date'}</FormLabel>
-                            <FormControl>
-                              <Input {...field} type="date" />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    )}
-                  </div>
-
-                  <FormField
-                    control={transactionForm.control}
-                    name="notes"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{language === 'vi' ? 'Ghi chú' : 'Notes'}</FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder={language === 'vi' ? "Ghi chú thêm (tùy chọn)" : "Additional notes (optional)"} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="flex justify-end space-x-2 pt-4">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => {
-                        setIsTransactionDialogOpen(false);
-                        setEditingTransaction(null);
-                        transactionForm.reset();
-                      }}
-                      className="h-10 px-4"
-                    >
-                      {language === 'vi' ? 'Hủy' : 'Cancel'}
-                    </Button>
-                    <Button 
-                      type="submit"
-                      disabled={createTransactionMutation.isPending || updateTransactionMutation.isPending}
-                      className="h-10 px-4"
-                    >
-                      {editingTransaction ? (language === 'vi' ? "Cập nhật" : "Update") : (language === 'vi' ? "Thêm" : "Add")}
-                    </Button>
-                  </div>
-                </form>
-              </Form>
-            </DialogContent>
-          </Dialog>
-
+                <div className="flex justify-end space-x-2 pt-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setIsTransactionDialogOpen(false);
+                      setEditingTransaction(null);
+                      transactionForm.reset();
+                    }}
+                    className="h-10 px-4"
+                  >
+                    {language === 'vi' ? 'Hủy' : 'Cancel'}
+                  </Button>
+                  <Button 
+                    type="submit"
+                    disabled={createTransactionMutation.isPending || updateTransactionMutation.isPending}
+                    className="h-10 px-4"
+                  >
+                    {editingTransaction ? (language === 'vi' ? "Cập nhật" : "Update") : (language === 'vi' ? "Thêm" : "Add")}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
         {/* Summary Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 mb-6">
           <Card className="bg-black border-white/10 rounded-none">
@@ -6490,7 +6488,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             </CardContent>
           </Card>
         </div>
-
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
@@ -6553,7 +6550,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             </Select>
           </div>
         </div>
-
         <Card>
           <CardContent className="p-0">
             {clientsLoading ? (
@@ -7274,7 +7270,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             </Button>
           </div>
         </div>
-
         <Dialog open={isBpCrmSettingsDialogOpen} onOpenChange={setIsBpCrmSettingsDialogOpen}>
           <DialogContent className="max-w-5xl max-h-[90vh] overflow-y-auto bg-black border border-white/20 rounded-none">
             <DialogHeader>
@@ -7283,7 +7278,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             <CrmSettingsManager context="bp" />
           </DialogContent>
         </Dialog>
-
         <Dialog open={isBusinessPartnerViewDialogOpen} onOpenChange={setIsBusinessPartnerViewDialogOpen}>
             <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto bg-black border border-white/20 rounded-none">
               <DialogHeader>
@@ -7443,149 +7437,147 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
               )}
             </DialogContent>
           </Dialog>
+        <Dialog open={isBpTransactionDialogOpen} onOpenChange={setIsBpTransactionDialogOpen}>
+          <DialogContent className="max-w-md bg-black border border-white/20 rounded-none">
+            <DialogHeader>
+              <DialogTitle>
+                {editingBpTransaction ? (language === 'vi' ? "Chỉnh sửa giao dịch" : "Edit Transaction") : (language === 'vi' ? "Thêm giao dịch mới" : "Add New Transaction")}
+              </DialogTitle>
+            </DialogHeader>
+            <Form {...bpTransactionForm}>
+              <form onSubmit={bpTransactionForm.handleSubmit(onBpTransactionSubmit)} className="space-y-4">
+                <FormField
+                  control={bpTransactionForm.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{language === 'vi' ? 'Tiêu đề' : 'Title'}</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder={language === 'vi' ? "VD: Thu đợt 1" : "E.g.: Income phase 1"} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-          <Dialog open={isBpTransactionDialogOpen} onOpenChange={setIsBpTransactionDialogOpen}>
-            <DialogContent className="max-w-md bg-black border border-white/20 rounded-none">
-              <DialogHeader>
-                <DialogTitle>
-                  {editingBpTransaction ? (language === 'vi' ? "Chỉnh sửa giao dịch" : "Edit Transaction") : (language === 'vi' ? "Thêm giao dịch mới" : "Add New Transaction")}
-                </DialogTitle>
-              </DialogHeader>
-              <Form {...bpTransactionForm}>
-                <form onSubmit={bpTransactionForm.handleSubmit(onBpTransactionSubmit)} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
                   <FormField
                     control={bpTransactionForm.control}
-                    name="title"
+                    name="amount"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>{language === 'vi' ? 'Tiêu đề' : 'Title'}</FormLabel>
+                        <FormLabel>{language === 'vi' ? 'Số tiền (đ)' : 'Amount (đ)'}</FormLabel>
                         <FormControl>
-                          <Input {...field} placeholder={language === 'vi' ? "VD: Thu đợt 1" : "E.g.: Income phase 1"} />
+                          <Input {...field} type="text" placeholder="VD: 50000000" maxLength={12} onKeyDown={(e) => { if (!/[0-9]/.test(e.key) && !['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(e.key)) e.preventDefault(); }} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={bpTransactionForm.control}
+                    name="type"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{language === 'vi' ? 'Loại' : 'Type'}</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="border-t-0 border-l-0 border-r-0 border-b border-white/30 rounded-none">
+                              <SelectValue placeholder={language === 'vi' ? "Chọn loại" : "Select type"} />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="payment">{language === 'vi' ? 'Thu' : 'Income'}</SelectItem>
+                            <SelectItem value="refund">{language === 'vi' ? 'Chi' : 'Expense'}</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <FormField
+                    control={bpTransactionForm.control}
+                    name="status"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{language === 'vi' ? 'Trạng thái' : 'Status'}</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="border-t-0 border-l-0 border-r-0 border-b border-white/30 rounded-none">
+                              <SelectValue placeholder={language === 'vi' ? "Chọn trạng thái" : "Select status"} />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="pending">{language === 'vi' ? 'Đang chờ' : 'Pending'}</SelectItem>
+                            <SelectItem value="completed">{language === 'vi' ? 'Hoàn thành' : 'Completed'}</SelectItem>
+                            <SelectItem value="cancelled">{language === 'vi' ? 'Đã hủy' : 'Cancelled'}</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  {bpTransactionForm.watch("status") === "completed" && (
                     <FormField
                       control={bpTransactionForm.control}
-                      name="amount"
+                      name="paymentDate"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Số tiền (đ)' : 'Amount (đ)'}</FormLabel>
+                          <FormLabel>{language === 'vi' ? 'Ngày thanh toán' : 'Payment Date'}</FormLabel>
                           <FormControl>
-                            <Input {...field} type="text" placeholder="VD: 50000000" maxLength={12} onKeyDown={(e) => { if (!/[0-9]/.test(e.key) && !['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(e.key)) e.preventDefault(); }} />
+                            <Input {...field} type="date" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
+                  )}
+                </div>
 
-                    <FormField
-                      control={bpTransactionForm.control}
-                      name="type"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Loại' : 'Type'}</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger className="border-t-0 border-l-0 border-r-0 border-b border-white/30 rounded-none">
-                                <SelectValue placeholder={language === 'vi' ? "Chọn loại" : "Select type"} />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="payment">{language === 'vi' ? 'Thu' : 'Income'}</SelectItem>
-                              <SelectItem value="refund">{language === 'vi' ? 'Chi' : 'Expense'}</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
+                <FormField
+                  control={bpTransactionForm.control}
+                  name="notes"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{language === 'vi' ? 'Ghi chú' : 'Notes'}</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder={language === 'vi' ? "Ghi chú thêm (tùy chọn)" : "Additional notes (optional)"} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <FormField
-                      control={bpTransactionForm.control}
-                      name="status"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Trạng thái' : 'Status'}</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
-                            <FormControl>
-                              <SelectTrigger className="border-t-0 border-l-0 border-r-0 border-b border-white/30 rounded-none">
-                                <SelectValue placeholder={language === 'vi' ? "Chọn trạng thái" : "Select status"} />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="pending">{language === 'vi' ? 'Đang chờ' : 'Pending'}</SelectItem>
-                              <SelectItem value="completed">{language === 'vi' ? 'Hoàn thành' : 'Completed'}</SelectItem>
-                              <SelectItem value="cancelled">{language === 'vi' ? 'Đã hủy' : 'Cancelled'}</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    {bpTransactionForm.watch("status") === "completed" && (
-                      <FormField
-                        control={bpTransactionForm.control}
-                        name="paymentDate"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{language === 'vi' ? 'Ngày thanh toán' : 'Payment Date'}</FormLabel>
-                            <FormControl>
-                              <Input {...field} type="date" />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    )}
-                  </div>
-
-                  <FormField
-                    control={bpTransactionForm.control}
-                    name="notes"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{language === 'vi' ? 'Ghi chú' : 'Notes'}</FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder={language === 'vi' ? "Ghi chú thêm (tùy chọn)" : "Additional notes (optional)"} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <div className="flex justify-end space-x-2 pt-4">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => {
-                        setIsBpTransactionDialogOpen(false);
-                        setEditingBpTransaction(null);
-                        bpTransactionForm.reset();
-                      }}
-                      className="h-10 px-4"
-                    >
-                      {language === 'vi' ? 'Hủy' : 'Cancel'}
-                    </Button>
-                    <Button 
-                      type="submit"
-                      disabled={createBpTransactionMutation.isPending || updateBpTransactionMutation.isPending}
-                      className="h-10 px-4"
-                    >
-                      {editingBpTransaction ? (language === 'vi' ? "Cập nhật" : "Update") : (language === 'vi' ? "Thêm" : "Add")}
-                    </Button>
-                  </div>
-                </form>
-              </Form>
-            </DialogContent>
-          </Dialog>
-
+                <div className="flex justify-end space-x-2 pt-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => {
+                      setIsBpTransactionDialogOpen(false);
+                      setEditingBpTransaction(null);
+                      bpTransactionForm.reset();
+                    }}
+                    className="h-10 px-4"
+                  >
+                    {language === 'vi' ? 'Hủy' : 'Cancel'}
+                  </Button>
+                  <Button 
+                    type="submit"
+                    disabled={createBpTransactionMutation.isPending || updateBpTransactionMutation.isPending}
+                    className="h-10 px-4"
+                  >
+                    {editingBpTransaction ? (language === 'vi' ? "Cập nhật" : "Update") : (language === 'vi' ? "Thêm" : "Add")}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </DialogContent>
+        </Dialog>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <Card className="bg-black border-white/10 rounded-none">
             <CardContent className="p-6 min-h-[90px]">
@@ -7624,7 +7616,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             </CardContent>
           </Card>
         </div>
-
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
@@ -7677,7 +7668,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             </Select>
           </div>
         </div>
-
         <Card>
           <CardContent className="p-0">
             {businessPartnersLoading ? (
@@ -9676,7 +9666,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             </div>
           </DialogContent>
         </Dialog>
-
         {/* Delete Category Confirmation Alert */}
         <AlertDialog open={isDeleteCategoryAlertOpen} onOpenChange={setIsDeleteCategoryAlertOpen}>
           <AlertDialogContent className="bg-black border border-white/20 rounded-none">
@@ -9714,7 +9703,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
           <h2 className="text-2xl font-sans font-light min-h-[36px]">{language === 'vi' ? 'Quản Lý Bài Viết' : 'Articles Management'}</h2>
           <div className="flex gap-2 flex-shrink-0">
@@ -9774,447 +9762,445 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
             </Button>
           </div>
         </div>
+        <Dialog open={isArticleDialogOpen} onOpenChange={setIsArticleDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[85vh] flex flex-col">
+          <DialogHeader>
+            <DialogTitle>
+              {editingArticle ? (language === 'vi' ? 'Chỉnh Sửa Bài Viết' : 'Edit Article') : (language === 'vi' ? 'Thêm Bài Viết Mới' : 'Add New Article')}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="overflow-y-auto flex-1 px-1">
+            <Form {...articleForm}>
+              <form onSubmit={articleForm.handleSubmit(onArticleSubmit)} className="space-y-6">
+              
+              {/* Bilingual Title */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={articleForm.control}
+                  name="titleEn"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{language === 'vi' ? 'Tiêu Đề (Tiếng Anh)' : 'Title (English)'}</FormLabel>
+                      <FormControl>
+                        <Input {...field} data-testid="input-article-title-en" placeholder={language === 'vi' ? 'Nhập tiêu đề tiếng Anh...' : 'Enter English title...'} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <Dialog open={isArticleDialogOpen} onOpenChange={setIsArticleDialogOpen}>
-            <DialogContent className="max-w-4xl max-h-[85vh] flex flex-col">
-              <DialogHeader>
-                <DialogTitle>
-                  {editingArticle ? (language === 'vi' ? 'Chỉnh Sửa Bài Viết' : 'Edit Article') : (language === 'vi' ? 'Thêm Bài Viết Mới' : 'Add New Article')}
-                </DialogTitle>
-              </DialogHeader>
-              <div className="overflow-y-auto flex-1 px-1">
-                <Form {...articleForm}>
-                  <form onSubmit={articleForm.handleSubmit(onArticleSubmit)} className="space-y-6">
-                  
-                  {/* Bilingual Title */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={articleForm.control}
-                      name="titleEn"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Tiêu Đề (Tiếng Anh)' : 'Title (English)'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} data-testid="input-article-title-en" placeholder={language === 'vi' ? 'Nhập tiêu đề tiếng Anh...' : 'Enter English title...'} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+                <FormField
+                  control={articleForm.control}
+                  name="titleVi"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{language === 'vi' ? 'Tiêu Đề (Tiếng Việt)' : 'Title (Vietnamese)'}</FormLabel>
+                      <FormControl>
+                        <Input {...field} data-testid="input-article-title-vi" placeholder="Nhập tiêu đề tiếng Việt..." />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Bilingual Excerpt */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={articleForm.control}
+                  name="excerptEn"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{language === 'vi' ? 'Tóm Tắt (Tiếng Anh)' : 'Excerpt (English)'}</FormLabel>
+                      <FormControl>
+                        <Textarea {...field} value={field.value || ''} rows={4} data-testid="textarea-article-excerpt-en" placeholder={language === 'vi' ? 'Mô tả ngắn bằng tiếng Anh...' : 'Brief description in English...'} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={articleForm.control}
+                  name="excerptVi"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{language === 'vi' ? 'Tóm Tắt (Tiếng Việt)' : 'Excerpt (Vietnamese)'}</FormLabel>
+                      <FormControl>
+                        <Textarea {...field} value={field.value || ''} rows={4} data-testid="textarea-article-excerpt-vi" placeholder="Mô tả ngắn bằng tiếng Việt..." />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Bilingual Content */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={articleForm.control}
+                  name="contentEn"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{language === 'vi' ? 'Nội Dung (Tiếng Anh)' : 'Content (English)'}</FormLabel>
+                      <FormControl>
+                        <Textarea {...field} rows={10} data-testid="textarea-article-content-en" placeholder={language === 'vi' ? 'Viết nội dung bằng tiếng Anh...' : 'Write your content in English...'} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={articleForm.control}
+                  name="contentVi"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{language === 'vi' ? 'Nội Dung (Tiếng Việt)' : 'Content (Vietnamese)'}</FormLabel>
+                      <FormControl>
+                        <Textarea {...field} rows={10} data-testid="textarea-article-content-vi" placeholder="Viết nội dung bằng tiếng Việt..." />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              {/* Featured Image */}
+              <div className="border-t pt-6">
+                <h3 className="text-lg font-medium mb-4">{language === 'vi' ? 'Ảnh Đại Diện' : 'Featured Image'}</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="text-sm font-medium mb-2 block">{language === 'vi' ? 'Tải Ảnh Lên (PNG, JPG)' : 'Upload Image (PNG, JPG only)'}</label>
+                    <input
+                      type="file"
+                      accept=".jpg,.jpeg,.png"
+                      onChange={handleArticleImageFileChange}
+                      disabled={!hasPermission(user, 'articles')}
+                      className="block w-full text-sm text-foreground
+                        file:mr-4 file:py-2 file:px-4
+                        file:rounded-none file:border file:border-white/30
+                        file:text-sm file:font-medium
+                        file:bg-transparent file:text-white
+                        hover:file:bg-white/10 hover:file:border-white cursor-pointer
+                        disabled:opacity-50 disabled:cursor-not-allowed"
+                      data-testid="input-article-image-file"
                     />
-
-                    <FormField
-                      control={articleForm.control}
-                      name="titleVi"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Tiêu Đề (Tiếng Việt)' : 'Title (Vietnamese)'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} data-testid="input-article-title-vi" placeholder="Nhập tiêu đề tiếng Việt..." />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  {/* Bilingual Excerpt */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={articleForm.control}
-                      name="excerptEn"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Tóm Tắt (Tiếng Anh)' : 'Excerpt (English)'}</FormLabel>
-                          <FormControl>
-                            <Textarea {...field} value={field.value || ''} rows={4} data-testid="textarea-article-excerpt-en" placeholder={language === 'vi' ? 'Mô tả ngắn bằng tiếng Anh...' : 'Brief description in English...'} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={articleForm.control}
-                      name="excerptVi"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Tóm Tắt (Tiếng Việt)' : 'Excerpt (Vietnamese)'}</FormLabel>
-                          <FormControl>
-                            <Textarea {...field} value={field.value || ''} rows={4} data-testid="textarea-article-excerpt-vi" placeholder="Mô tả ngắn bằng tiếng Việt..." />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  {/* Bilingual Content */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <FormField
-                      control={articleForm.control}
-                      name="contentEn"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Nội Dung (Tiếng Anh)' : 'Content (English)'}</FormLabel>
-                          <FormControl>
-                            <Textarea {...field} rows={10} data-testid="textarea-article-content-en" placeholder={language === 'vi' ? 'Viết nội dung bằng tiếng Anh...' : 'Write your content in English...'} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={articleForm.control}
-                      name="contentVi"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Nội Dung (Tiếng Việt)' : 'Content (Vietnamese)'}</FormLabel>
-                          <FormControl>
-                            <Textarea {...field} rows={10} data-testid="textarea-article-content-vi" placeholder="Viết nội dung bằng tiếng Việt..." />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  {/* Featured Image */}
-                  <div className="border-t pt-6">
-                    <h3 className="text-lg font-medium mb-4">{language === 'vi' ? 'Ảnh Đại Diện' : 'Featured Image'}</h3>
-                    <div className="space-y-4">
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">{language === 'vi' ? 'Tải Ảnh Lên (PNG, JPG)' : 'Upload Image (PNG, JPG only)'}</label>
-                        <input
-                          type="file"
-                          accept=".jpg,.jpeg,.png"
-                          onChange={handleArticleImageFileChange}
-                          disabled={!hasPermission(user, 'articles')}
-                          className="block w-full text-sm text-foreground
-                            file:mr-4 file:py-2 file:px-4
-                            file:rounded-none file:border file:border-white/30
-                            file:text-sm file:font-medium
-                            file:bg-transparent file:text-white
-                            hover:file:bg-white/10 hover:file:border-white cursor-pointer
-                            disabled:opacity-50 disabled:cursor-not-allowed"
-                          data-testid="input-article-image-file"
-                        />
-                        <p className="text-xs text-muted-foreground mt-2">
-                          Định dạng: PNG, JPG • Giới hạn: 10MB • Khuyến nghị: 1200x630px (16:9)
-                        </p>
-                        {articleImagePreview && (
-                          <div className="mt-4">
-                            <p className="text-sm font-medium mb-2">{language === 'vi' ? 'Xem Trước:' : 'Preview:'}</p>
-                            <div className="border rounded p-4 bg-muted">
-                              <img 
-                                src={articleImagePreview} 
-                                alt="Article Image Preview" 
-                                className="w-full max-h-64 object-cover rounded" 
-                              />
-                            </div>
-                          </div>
-                        )}
-                      </div>
-
-                      <FormField
-                        control={articleForm.control}
-                        name="featuredImage"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{language === 'vi' ? 'Đường Dẫn Ảnh' : 'Image URL'}</FormLabel>
-                            <FormControl>
-                              <Input {...field} value={field.value || ''} data-testid="input-article-featured-image" placeholder="https://example.com/image.jpg" />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Content Images Upload */}
-                  <div className="border-t pt-6">
-                    <h3 className="text-lg font-medium mb-2">Ảnh Nội Dung (Upload từ máy tính để chèn vào bài viết)</h3>
-                    <p className="text-sm text-muted-foreground mb-4">
-                      Ảnh đã upload ({articleContentImages.length}/10):
+                    <p className="text-xs text-muted-foreground mt-2">
+                      Định dạng: PNG, JPG • Giới hạn: 10MB • Khuyến nghị: 1200x630px (16:9)
                     </p>
-                    
-                    {articleContentImages.length > 0 && (
-                      <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
-                        {articleContentImages.map((imagePath, index) => (
-                          <div key={index} className="relative group border rounded-lg overflow-hidden bg-muted/50 hover:border-primary transition-colors">
-                            <img 
-                              src={imagePath} 
-                              alt={`Content ${index + 1}`} 
-                              className="w-full h-32 object-cover"
-                            />
-                            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                              <Button
-                                type="button"
-                                size="sm"
-                                variant="secondary"
-                                onClick={() => {
-                                  navigator.clipboard.writeText(`(${imagePath})`);
-                                  toast({
-                                    title: "Đã copy",
-                                    description: `Đã copy: (${imagePath})`
-                                  });
-                                }}
-                                className="text-xs"
-                              >
-                                Copy Path
-                              </Button>
-                              <Button
-                                type="button"
-                                size="sm"
-                                variant="outline"
-                                className="bg-transparent border-white/30 hover:bg-white/10 hover:border-white"
-                                onClick={() => removeContentImage(index)}
-                              >
-                                <Trash2 className="h-4 w-4 text-white" />
-                              </Button>
-                            </div>
-                            <div className="absolute bottom-0 left-0 right-0 bg-black/80 px-2 py-1">
-                              <p className="text-xs text-white truncate" title={`(${imagePath})`}>
-                                ({imagePath})
-                              </p>
-                            </div>
-                          </div>
-                        ))}
+                    {articleImagePreview && (
+                      <div className="mt-4">
+                        <p className="text-sm font-medium mb-2">{language === 'vi' ? 'Xem Trước:' : 'Preview:'}</p>
+                        <div className="border rounded p-4 bg-muted">
+                          <img 
+                            src={articleImagePreview} 
+                            alt="Article Image Preview" 
+                            className="w-full max-h-64 object-cover rounded" 
+                          />
+                        </div>
                       </div>
                     )}
+                  </div>
 
-                    <div className="border-2 border-dashed rounded-lg p-8 text-center">
-                      <input
-                        type="file"
-                        multiple
-                        accept=".jpg,.jpeg,.png,.webp"
-                        onChange={handleContentImagesChange}
-                        className="hidden"
-                        id="content-images-upload"
-                        disabled={articleContentImages.length >= 10 || !hasPermission(user, 'articles')}
-                      />
-                      <label 
-                        htmlFor="content-images-upload" 
-                        className={`cursor-pointer ${articleContentImages.length >= 10 || !hasPermission(user, 'articles') ? 'opacity-50 cursor-not-allowed' : ''}`}
-                      >
-                        <div className="flex flex-col items-center gap-2">
-                          <svg className="w-12 h-12 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                          </svg>
-                          <p className="font-medium">
-                            {articleContentImages.length >= 10 
-                              ? "Đã đạt giới hạn 10 ảnh"
-                              : "Kéo thả ảnh nội dung vào đây (có thể chọn nhiều ảnh cùng lúc)"
-                            }
-                          </p>
-                          <p className="text-sm text-muted-foreground">
-                            Hỗ trợ: JPG, PNG, WebP (tối đa 10MB)
+                  <FormField
+                    control={articleForm.control}
+                    name="featuredImage"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{language === 'vi' ? 'Đường Dẫn Ảnh' : 'Image URL'}</FormLabel>
+                        <FormControl>
+                          <Input {...field} value={field.value || ''} data-testid="input-article-featured-image" placeholder="https://example.com/image.jpg" />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+
+              {/* Content Images Upload */}
+              <div className="border-t pt-6">
+                <h3 className="text-lg font-medium mb-2">Ảnh Nội Dung (Upload từ máy tính để chèn vào bài viết)</h3>
+                <p className="text-sm text-muted-foreground mb-4">
+                  Ảnh đã upload ({articleContentImages.length}/10):
+                </p>
+                
+                {articleContentImages.length > 0 && (
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
+                    {articleContentImages.map((imagePath, index) => (
+                      <div key={index} className="relative group border rounded-lg overflow-hidden bg-muted/50 hover:border-primary transition-colors">
+                        <img 
+                          src={imagePath} 
+                          alt={`Content ${index + 1}`} 
+                          className="w-full h-32 object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="secondary"
+                            onClick={() => {
+                              navigator.clipboard.writeText(`(${imagePath})`);
+                              toast({
+                                title: "Đã copy",
+                                description: `Đã copy: (${imagePath})`
+                              });
+                            }}
+                            className="text-xs"
+                          >
+                            Copy Path
+                          </Button>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            className="bg-transparent border-white/30 hover:bg-white/10 hover:border-white"
+                            onClick={() => removeContentImage(index)}
+                          >
+                            <Trash2 className="h-4 w-4 text-white" />
+                          </Button>
+                        </div>
+                        <div className="absolute bottom-0 left-0 right-0 bg-black/80 px-2 py-1">
+                          <p className="text-xs text-white truncate" title={`(${imagePath})`}>
+                            ({imagePath})
                           </p>
                         </div>
-                      </label>
-                    </div>
-                  </div>
-
-                  {/* Common Fields */}
-                  <div className="border-t pt-6">
-                    <h3 className="text-lg font-medium mb-4">{language === 'vi' ? 'Thông Tin Chung' : 'General Information'}</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <FormField
-                        control={articleForm.control}
-                        name="slug"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Slug</FormLabel>
-                            <FormControl>
-                              <Input {...field} data-testid="input-article-slug" placeholder={language === 'vi' ? 'tự động tạo' : 'auto-generated'} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={articleForm.control}
-                        name="category"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{language === 'vi' ? 'Danh Mục' : 'Category'}</FormLabel>
-                            <Select onValueChange={field.onChange} value={field.value}>
-                              <FormControl>
-                                <SelectTrigger data-testid="select-article-category">
-                                  <SelectValue placeholder={language === 'vi' ? 'Chọn danh mục' : 'Select a category'} />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {categories
-                                  .filter(cat => cat.type === 'article' && cat.active)
-                                  .map((category) => (
-                                    <SelectItem key={category.id} value={category.slug}>
-                                      {category.name}
-                                    </SelectItem>
-                                  ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
-                      <FormField
-                        control={articleForm.control}
-                        name="status"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{language === 'vi' ? 'Trạng Thái' : 'Status'}</FormLabel>
-                            <Select onValueChange={field.onChange} defaultValue={field.value}>
-                              <FormControl>
-                                <SelectTrigger data-testid="select-article-status">
-                                  <SelectValue />
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem value="draft">{language === 'vi' ? 'Bản Nháp' : 'Draft'}</SelectItem>
-                                <SelectItem value="published">{language === 'vi' ? 'Đã Đăng' : 'Published'}</SelectItem>
-                                <SelectItem value="archived">{language === 'vi' ? 'Lưu Trữ' : 'Archived'}</SelectItem>
-                              </SelectContent>
-                            </Select>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-
-                  </div>
-
-                  {/* SEO Settings Section - Bilingual */}
-                  <div className="border-t pt-6">
-                    <h3 className="text-lg font-medium mb-4">{language === 'vi' ? 'Cài Đặt SEO' : 'SEO Settings'}</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {/* English SEO */}
-                      <div className="space-y-4">
-                        <h4 className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'SEO Tiếng Anh' : 'English SEO'}</h4>
-                        <FormField
-                          control={articleForm.control}
-                          name="metaTitleEn"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Meta Title (EN)</FormLabel>
-                              <FormControl>
-                                <Input {...field} value={field.value || ''} data-testid="input-article-meta-title-en" placeholder="Custom SEO title in English..." />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={articleForm.control}
-                          name="metaDescriptionEn"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Meta Description (EN)</FormLabel>
-                              <FormControl>
-                                <Textarea {...field} value={field.value || ''} rows={3} data-testid="textarea-article-meta-description-en" placeholder="SEO description in English..." />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={articleForm.control}
-                          name="metaKeywordsEn"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Meta Keywords (EN)</FormLabel>
-                              <FormControl>
-                                <Input {...field} value={field.value || ''} data-testid="input-article-meta-keywords-en" placeholder="keyword1, keyword2, keyword3" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
                       </div>
+                    ))}
+                  </div>
+                )}
 
-                      {/* Vietnamese SEO */}
-                      <div className="space-y-4">
-                        <h4 className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'SEO Tiếng Việt' : 'Vietnamese SEO'}</h4>
-                        <FormField
-                          control={articleForm.control}
-                          name="metaTitleVi"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Meta Title (VI)</FormLabel>
-                              <FormControl>
-                                <Input {...field} value={field.value || ''} data-testid="input-article-meta-title-vi" placeholder="Tiêu đề SEO bằng tiếng Việt..." />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={articleForm.control}
-                          name="metaDescriptionVi"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Meta Description (VI)</FormLabel>
-                              <FormControl>
-                                <Textarea {...field} value={field.value || ''} rows={3} data-testid="textarea-article-meta-description-vi" placeholder="Mô tả SEO bằng tiếng Việt..." />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-
-                        <FormField
-                          control={articleForm.control}
-                          name="metaKeywordsVi"
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Meta Keywords (VI)</FormLabel>
-                              <FormControl>
-                                <Input {...field} value={field.value || ''} data-testid="input-article-meta-keywords-vi" placeholder="từ khóa 1, từ khóa 2, từ khóa 3" />
-                              </FormControl>
-                              <FormMessage />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
+                <div className="border-2 border-dashed rounded-lg p-8 text-center">
+                  <input
+                    type="file"
+                    multiple
+                    accept=".jpg,.jpeg,.png,.webp"
+                    onChange={handleContentImagesChange}
+                    className="hidden"
+                    id="content-images-upload"
+                    disabled={articleContentImages.length >= 10 || !hasPermission(user, 'articles')}
+                  />
+                  <label 
+                    htmlFor="content-images-upload" 
+                    className={`cursor-pointer ${articleContentImages.length >= 10 || !hasPermission(user, 'articles') ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  >
+                    <div className="flex flex-col items-center gap-2">
+                      <svg className="w-12 h-12 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                      </svg>
+                      <p className="font-medium">
+                        {articleContentImages.length >= 10 
+                          ? "Đã đạt giới hạn 10 ảnh"
+                          : "Kéo thả ảnh nội dung vào đây (có thể chọn nhiều ảnh cùng lúc)"
+                        }
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        Hỗ trợ: JPG, PNG, WebP (tối đa 10MB)
+                      </p>
                     </div>
-                  </div>
-
-                  <div className="flex justify-end space-x-2 pt-4">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => {
-                        setIsArticleDialogOpen(false);
-                        setEditingArticle(null);
-                        setArticleImagePreview('');
-                        setArticleImageFile(null);
-                        setArticleContentImages([]);
-                        articleForm.reset();
-                      }}
-                      data-testid="button-cancel-article"
-                    >
-                      {language === 'vi' ? 'Hủy' : 'Cancel'}
-                    </Button>
-                    <Button
-                      type="submit"
-                      disabled={createArticleMutation.isPending || updateArticleMutation.isPending}
-                      data-testid="button-save-article"
-                    >
-                      {editingArticle ? (language === 'vi' ? 'Cập Nhật Bài Viết' : 'Update Article') : (language === 'vi' ? 'Tạo Bài Viết' : 'Create Article')}
-                    </Button>
-                  </div>
-                  </form>
-                </Form>
+                  </label>
+                </div>
               </div>
-            </DialogContent>
-            </Dialog>
 
+              {/* Common Fields */}
+              <div className="border-t pt-6">
+                <h3 className="text-lg font-medium mb-4">{language === 'vi' ? 'Thông Tin Chung' : 'General Information'}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <FormField
+                    control={articleForm.control}
+                    name="slug"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Slug</FormLabel>
+                        <FormControl>
+                          <Input {...field} data-testid="input-article-slug" placeholder={language === 'vi' ? 'tự động tạo' : 'auto-generated'} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={articleForm.control}
+                    name="category"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{language === 'vi' ? 'Danh Mục' : 'Category'}</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <FormControl>
+                            <SelectTrigger data-testid="select-article-category">
+                              <SelectValue placeholder={language === 'vi' ? 'Chọn danh mục' : 'Select a category'} />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {categories
+                              .filter(cat => cat.type === 'article' && cat.active)
+                              .map((category) => (
+                                <SelectItem key={category.id} value={category.slug}>
+                                  {category.name}
+                                </SelectItem>
+                              ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={articleForm.control}
+                    name="status"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{language === 'vi' ? 'Trạng Thái' : 'Status'}</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger data-testid="select-article-status">
+                              <SelectValue />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="draft">{language === 'vi' ? 'Bản Nháp' : 'Draft'}</SelectItem>
+                            <SelectItem value="published">{language === 'vi' ? 'Đã Đăng' : 'Published'}</SelectItem>
+                            <SelectItem value="archived">{language === 'vi' ? 'Lưu Trữ' : 'Archived'}</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+              </div>
+
+              {/* SEO Settings Section - Bilingual */}
+              <div className="border-t pt-6">
+                <h3 className="text-lg font-medium mb-4">{language === 'vi' ? 'Cài Đặt SEO' : 'SEO Settings'}</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* English SEO */}
+                  <div className="space-y-4">
+                    <h4 className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'SEO Tiếng Anh' : 'English SEO'}</h4>
+                    <FormField
+                      control={articleForm.control}
+                      name="metaTitleEn"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Meta Title (EN)</FormLabel>
+                          <FormControl>
+                            <Input {...field} value={field.value || ''} data-testid="input-article-meta-title-en" placeholder="Custom SEO title in English..." />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={articleForm.control}
+                      name="metaDescriptionEn"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Meta Description (EN)</FormLabel>
+                          <FormControl>
+                            <Textarea {...field} value={field.value || ''} rows={3} data-testid="textarea-article-meta-description-en" placeholder="SEO description in English..." />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={articleForm.control}
+                      name="metaKeywordsEn"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Meta Keywords (EN)</FormLabel>
+                          <FormControl>
+                            <Input {...field} value={field.value || ''} data-testid="input-article-meta-keywords-en" placeholder="keyword1, keyword2, keyword3" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+
+                  {/* Vietnamese SEO */}
+                  <div className="space-y-4">
+                    <h4 className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'SEO Tiếng Việt' : 'Vietnamese SEO'}</h4>
+                    <FormField
+                      control={articleForm.control}
+                      name="metaTitleVi"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Meta Title (VI)</FormLabel>
+                          <FormControl>
+                            <Input {...field} value={field.value || ''} data-testid="input-article-meta-title-vi" placeholder="Tiêu đề SEO bằng tiếng Việt..." />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={articleForm.control}
+                      name="metaDescriptionVi"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Meta Description (VI)</FormLabel>
+                          <FormControl>
+                            <Textarea {...field} value={field.value || ''} rows={3} data-testid="textarea-article-meta-description-vi" placeholder="Mô tả SEO bằng tiếng Việt..." />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={articleForm.control}
+                      name="metaKeywordsVi"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Meta Keywords (VI)</FormLabel>
+                          <FormControl>
+                            <Input {...field} value={field.value || ''} data-testid="input-article-meta-keywords-vi" placeholder="từ khóa 1, từ khóa 2, từ khóa 3" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end space-x-2 pt-4">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setIsArticleDialogOpen(false);
+                    setEditingArticle(null);
+                    setArticleImagePreview('');
+                    setArticleImageFile(null);
+                    setArticleContentImages([]);
+                    articleForm.reset();
+                  }}
+                  data-testid="button-cancel-article"
+                >
+                  {language === 'vi' ? 'Hủy' : 'Cancel'}
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={createArticleMutation.isPending || updateArticleMutation.isPending}
+                  data-testid="button-save-article"
+                >
+                  {editingArticle ? (language === 'vi' ? 'Cập Nhật Bài Viết' : 'Update Article') : (language === 'vi' ? 'Tạo Bài Viết' : 'Create Article')}
+                </Button>
+              </div>
+              </form>
+            </Form>
+          </div>
+        </DialogContent>
+        </Dialog>
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
@@ -10250,7 +10236,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           </Select>
           </div>
         </div>
-
         <Card>
           <CardContent className="p-0">
             {articlesLoading ? (
