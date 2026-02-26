@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,12 +20,21 @@ import { insertAboutPageContentSchema, insertAboutCoreValueSchema, insertAboutSh
 import { useLanguage } from "@/contexts/LanguageContext";
 import AboutAdminTab from "@/components/AboutAdminTab";
 import LookupAdminTab from "@/components/LookupAdminTab";
-import AdminProjectsTab from "@/components/admin/AdminProjectsTab";
-import AdminClientsTab from "@/components/admin/AdminClientsTab";
-import AdminBusinessPartnersTab from "@/components/admin/AdminBusinessPartnersTab";
-import AdminArticlesTab from "@/components/admin/AdminArticlesTab";
-import AdminHomepageTab from "@/components/admin/AdminHomepageTab";
-import AdminUsersTab from "@/components/admin/AdminUsersTab";
+
+const AdminProjectsTab = lazy(() => import("@/components/admin/AdminProjectsTab"));
+const AdminClientsTab = lazy(() => import("@/components/admin/AdminClientsTab"));
+const AdminBusinessPartnersTab = lazy(() => import("@/components/admin/AdminBusinessPartnersTab"));
+const AdminArticlesTab = lazy(() => import("@/components/admin/AdminArticlesTab"));
+const AdminHomepageTab = lazy(() => import("@/components/admin/AdminHomepageTab"));
+const AdminUsersTab = lazy(() => import("@/components/admin/AdminUsersTab"));
+
+function TabLoader() {
+  return (
+    <div className="flex items-center justify-center py-12">
+      <div className="animate-pulse text-muted-foreground">Loading...</div>
+    </div>
+  );
+}
 
 const partnerSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -917,15 +926,15 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   }
 
   if (activeTab === 'projects') {
-    return <AdminProjectsTab user={user} hasPermission={hasPermission} />;
+    return <Suspense fallback={<TabLoader />}><AdminProjectsTab user={user} hasPermission={hasPermission} /></Suspense>;
   }
 
   if (activeTab === 'clients') {
-    return <AdminClientsTab user={user} hasPermission={hasPermission} />;
+    return <Suspense fallback={<TabLoader />}><AdminClientsTab user={user} hasPermission={hasPermission} /></Suspense>;
   }
 
   if (activeTab === 'business-partners') {
-    return <AdminBusinessPartnersTab user={user} hasPermission={hasPermission} />;
+    return <Suspense fallback={<TabLoader />}><AdminBusinessPartnersTab user={user} hasPermission={hasPermission} /></Suspense>;
   }
 
   if (activeTab === 'inquiries') {
@@ -1308,11 +1317,11 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   }
 
   if (activeTab === 'homepage') {
-    return <AdminHomepageTab user={user} hasPermission={hasPermission} />;
+    return <Suspense fallback={<TabLoader />}><AdminHomepageTab user={user} hasPermission={hasPermission} /></Suspense>;
   }
 
   if (activeTab === 'articles') {
-    return <AdminArticlesTab user={user} hasPermission={hasPermission} />;
+    return <Suspense fallback={<TabLoader />}><AdminArticlesTab user={user} hasPermission={hasPermission} /></Suspense>;
   }
 
   if (activeTab === 'partners') {
@@ -1478,7 +1487,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   }
 
   if (activeTab === 'users') {
-    return <AdminUsersTab user={user} hasPermission={hasPermission} />;
+    return <Suspense fallback={<TabLoader />}><AdminUsersTab user={user} hasPermission={hasPermission} /></Suspense>;
   }
 
   if (activeTab === 'lookup') {
