@@ -71,7 +71,13 @@ The application manages core entities:
   - Password change functionality with current password verification
   - User account management: username, display name, email, role, permissions
   - Super Admin protection: Cannot delete last Super Admin account
-- **Session Management**: PostgreSQL-backed session storage for persistent login state
+- **Session Management**: PostgreSQL-backed session storage via `connect-pg-simple`, sharing the same Neon pool as the rest of the app (prevents unhandled idle connection errors)
+
+## Database Connection Stability
+- The Neon serverless pool (`server/db.ts`) has an `error` event handler to catch idle client disconnects gracefully
+- `connect-pg-simple` session store uses the shared app pool (not its own internal pool) to avoid unmonitored connection errors
+- `idleTimeoutMillis: 1000` ensures the pool cycles connections before Neon's proxy resets them (~5-15s idle timeout)
+- `uncaughtException` and `unhandledRejection` handlers in `server/index.ts` log any unexpected errors without crashing
 
 ## Multilingual Support
 - **Language Context**: React Context-based translation system supporting English and Vietnamese

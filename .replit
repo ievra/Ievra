@@ -41,7 +41,7 @@ outputType = "webview"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "node /tmp/capture_wrapper.js"
+args = "npm run dev"
 waitForPort = 5000
 
 [objectStorage]
