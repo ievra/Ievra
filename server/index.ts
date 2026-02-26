@@ -11,27 +11,6 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { storage } from "./storage";
 
-const _origExit = process.exit.bind(process);
-(process as any).exit = (code?: number) => {
-  try { fs.appendFileSync('/tmp/crash.log', `[${new Date().toISOString()}] process.exit(${code})\n${new Error('exit stack').stack}\n`); } catch {}
-  _origExit(code as never);
-};
-const _origStderrWrite = process.stderr.write.bind(process.stderr);
-(process.stderr as any).write = (chunk: any, enc?: any, cb?: any) => {
-  try { fs.appendFileSync('/tmp/crash.log', `[STDERR] ${chunk}`); } catch {}
-  return _origStderrWrite(chunk, enc, cb);
-};
-process.on('SIGTERM', () => {
-  try { fs.appendFileSync('/tmp/crash.log', `[${new Date().toISOString()}] SIGTERM received\n`); } catch {}
-  process.exit(0);
-});
-process.on('uncaughtException', (err) => {
-  try { fs.appendFileSync('/tmp/crash.log', `[${new Date().toISOString()}] uncaughtException: ${err.stack}\n`); } catch {}
-});
-process.on('unhandledRejection', (reason) => {
-  try { fs.appendFileSync('/tmp/crash.log', `[${new Date().toISOString()}] unhandledRejection: ${String(reason)}\n`); } catch {}
-});
-
 const app = express();
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: false, limit: '50mb' }));
