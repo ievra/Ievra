@@ -24,7 +24,6 @@ const userSchema = z.object({
   email: z.string().email().optional().or(z.literal('')),
   role: z.enum(["superadmin", "admin", "editor"]).default("admin"),
   permissions: z.array(z.string()).default([]),
-  active: z.boolean().default(true),
 });
 
 type UserFormData = z.infer<typeof userSchema>;

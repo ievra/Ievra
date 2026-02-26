@@ -1459,7 +1459,7 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                     </div>
                   </div>
 
-                  {viewingClient.tags && Array.isArray(viewingClient.tags) && (viewingClient.tags as string[]).length > 0 && (
+                  {!!viewingClient.tags && Array.isArray(viewingClient.tags) && (viewingClient.tags as string[]).length > 0 && (
                     <div className="space-y-4">
                       <h3 className="text-lg font-medium border-b pb-2">{t('crm.tags')}</h3>
                       <div className="flex flex-wrap gap-2">

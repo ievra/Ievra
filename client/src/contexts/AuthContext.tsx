@@ -5,6 +5,10 @@ import { queryClient, apiRequest, getQueryFn } from '@/lib/queryClient';
 interface User {
   id: string;
   username: string;
+  displayName?: string | null;
+  email?: string | null;
+  role?: string;
+  permissions?: string[];
 }
 
 interface AuthContextType {

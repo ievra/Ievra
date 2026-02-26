@@ -11,16 +11,33 @@ import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { storage } from "./storage";
 
+const _origExit = process.exit.bind(process);
+(process as any).exit = (code?: number) => {
+  try { fs.appendFileSync('/tmp/crash.log', `[${new Date().toISOString()}] process.exit(${code})\n${new Error('exit stack').stack}\n`); } catch {}
+  _origExit(code as never);
+};
+const _origStderrWrite = process.stderr.write.bind(process.stderr);
+(process.stderr as any).write = (chunk: any, enc?: any, cb?: any) => {
+  try { fs.appendFileSync('/tmp/crash.log', `[STDERR] ${chunk}`); } catch {}
+  return _origStderrWrite(chunk, enc, cb);
+};
+process.on('SIGTERM', () => {
+  try { fs.appendFileSync('/tmp/crash.log', `[${new Date().toISOString()}] SIGTERM received\n`); } catch {}
+  process.exit(0);
+});
+process.on('uncaughtException', (err) => {
+  try { fs.appendFileSync('/tmp/crash.log', `[${new Date().toISOString()}] uncaughtException: ${err.stack}\n`); } catch {}
+});
+process.on('unhandledRejection', (reason) => {
+  try { fs.appendFileSync('/tmp/crash.log', `[${new Date().toISOString()}] unhandledRejection: ${String(reason)}\n`); } catch {}
+});
+
 const app = express();
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: false, limit: '50mb' }));
 
-// Images are now served via API route /api/assets/:filename in routes.ts
-
-// Trust proxy for production (Plesk/Nginx) - Always trust first proxy
 app.set('trust proxy', 1);
 
-// Session configuration
 const PgSession = ConnectPgSimple(session);
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -42,21 +59,19 @@ app.use(session({
   saveUninitialized: false,
   rolling: true,
   cookie: {
-    secure: false, // Temporarily disable for testing
+    secure: false,
     httpOnly: true,
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    maxAge: 30 * 24 * 60 * 60 * 1000,
     sameSite: 'lax',
     path: '/'
   },
   proxy: true
 }));
 
-// Hash password helper
 function hashPassword(password: string): string {
   return createHash('sha256').update(password).digest('hex');
 }
 
-// Passport configuration
 passport.use(new LocalStrategy(
   async (username: string, password: string, done) => {
     try {
@@ -65,12 +80,10 @@ passport.use(new LocalStrategy(
         return done(null, false, { message: 'Invalid credentials' });
       }
       
-      // Compare hashed password
       if (hashPassword(password) !== user.password) {
         return done(null, false, { message: 'Invalid credentials' });
       }
       
-      // Return user without password
       const { password: _, ...safeUser } = user;
       return done(null, safeUser);
     } catch (error) {
@@ -89,7 +102,6 @@ passport.deserializeUser(async (id: string, done) => {
     if (!user) {
       return done(null, false);
     }
-    // Return user without password
     const { password: _, ...safeUser } = user;
     done(null, safeUser);
   } catch (error) {
@@ -140,19 +152,12 @@ app.use((req, res, next) => {
     res.status(status).json({ message });
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
   if (app.get("env") === "development") {
     await setupVite(app, server);
   } else {
     serveStatic(app);
   }
 
-  // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
   const port = parseInt(process.env.PORT || '5000', 10);
   server.listen({
     port,

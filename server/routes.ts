@@ -106,7 +106,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // API route to serve images from attached_assets folder (supports subdirectories)
   app.get("/api/assets/*", (req, res) => {
-    const relativePath = req.params[0];
+    const relativePath = (req.params as Record<string, string>)[0];
     
     // Security: prevent directory traversal
     if (relativePath.includes('..')) {

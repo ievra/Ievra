@@ -758,7 +758,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       }
       if (historyImagePreview) {
         submitData.historyImage = historyImagePreview;
-        submitData.historyImageData = null;
       }
       if (missionVisionImagePreview) {
         submitData.missionVisionImage = missionVisionImagePreview;

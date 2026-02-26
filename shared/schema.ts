@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp, integer, boolean, jsonb, unique, decimal } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, integer, boolean, jsonb, unique, decimal, type AnyPgColumn } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -55,6 +55,8 @@ export const projects = pgTable("projects", {
   // Legacy fields for backward compatibility
   heroImage: text("hero_image"), // Legacy: Main project hero image
   images: jsonb("images").default([]), // Legacy field, keeping for compatibility
+  // Related projects
+  relatedProjects: jsonb("related_projects").default([]), // Array of related project IDs
   // SEO fields
   metaTitle: text("meta_title"),
   metaDescription: text("meta_description"),
@@ -83,7 +85,7 @@ export const clients = pgTable("clients", {
   commission: decimal("commission", { precision: 12, scale: 2 }).notNull().default("0"), // Total commission from transactions
   orderCount: integer("order_count").notNull().default(0),
   // Referral Program
-  referredById: varchar("referred_by_id").references(() => clients.id),
+  referredById: varchar("referred_by_id").references((): AnyPgColumn => clients.id),
   referralCount: integer("referral_count").notNull().default(0),
   referralRevenue: decimal("referral_revenue", { precision: 12, scale: 2 }).notNull().default("0"),
   // Intake date (thời gian tiếp nhận khách hàng)
