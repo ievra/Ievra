@@ -257,13 +257,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.get("/api/auth/me", (req, res) => {
-    console.log('[Auth Check]', {
-      sessionID: req.sessionID,
-      hasSession: !!req.session,
-      hasPassport: !!(req.session as any)?.passport,
-      isAuthenticated: req.isAuthenticated(),
-      cookies: req.headers.cookie ? 'present' : 'missing'
-    });
     if (req.isAuthenticated()) {
       res.json(req.user);
     } else {

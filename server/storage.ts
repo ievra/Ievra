@@ -334,8 +334,6 @@ export class DatabaseStorage implements IStorage {
 
     if (filters?.status && filters.status !== 'all') {
       conditions.push(eq(projects.status, filters.status));
-    } else if (!filters?.status) {
-      conditions.push(eq(projects.status, 'published'));
     }
     
     const query = conditions.length > 0

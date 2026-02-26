@@ -194,7 +194,9 @@ export default function ProjectDetail() {
         metaDesc.setAttribute('name', 'description');
         document.head.appendChild(metaDesc);
       }
-      metaDesc.setAttribute('content', description);
+      if (description) {
+        metaDesc.setAttribute('content', description.slice(0, 160));
+      }
       
       // Add Open Graph meta tags
       const updateMetaTag = (property: string, content: string) => {
