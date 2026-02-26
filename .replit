@@ -45,4 +45,4 @@ args = "node /tmp/capture_wrapper.js"
 waitForPort = 5000
 
 [objectStorage]
-defaultBucketID = "replit-objstore-c44275ac-d91b-4c59-a0d6-ba26729d2d03"
+defaultBucketID = "replit-objstore-7c00264e-8183-4c9c-8156-a5432394b28c"

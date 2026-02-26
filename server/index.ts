@@ -7,9 +7,18 @@ import { Strategy as LocalStrategy } from "passport-local";
 import { createHash } from "crypto";
 import path from "path";
 import fs from "fs";
+import { pool } from "./db";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { storage } from "./storage";
+
+process.on('uncaughtException', (err) => {
+  console.error('Uncaught exception:', err);
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.error('Unhandled rejection:', reason);
+});
 
 const app = express();
 app.use(express.json({ limit: '50mb' }));
@@ -28,9 +37,10 @@ console.log('[Session Config]', {
 
 app.use(session({
   store: new PgSession({
-    conString: process.env.DATABASE_URL,
+    pool: pool as any,
     tableName: 'session',
-    createTableIfMissing: true
+    createTableIfMissing: true,
+    pruneSessionInterval: 900,
   }),
   name: 'moderno.sid',
   secret: process.env.SESSION_SECRET || 'U/jU2wbJ9Rm7t+W+m5/N47ihf+DIkzzKXFv5z0/2Xsn5WrltM9NTAps9xnWJBWHYEeqDhph/xait8kLvWDed7g==',
