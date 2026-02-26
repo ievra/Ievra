@@ -3,9 +3,8 @@ import { Link, useParams } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Eye, ArrowLeft, Share2, Check } from "lucide-react";
+import { Eye, ArrowLeft } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { useToast } from "@/hooks/use-toast";
 import OptimizedImage from "@/components/OptimizedImage";
 import type { Article } from "@shared/schema";
 import { useEffect, useState } from "react";
@@ -116,8 +115,6 @@ function RelatedArticles({ currentArticleId, category, language }: { currentArti
 export default function BlogDetail() {
   const { slug } = useParams();
   const { language } = useLanguage();
-  const { toast } = useToast();
-  const [copied, setCopied] = useState(false);
 
   const { data: article, isLoading, error } = useQuery<Article>({
     queryKey: ['/api/articles/slug', slug, language],
@@ -219,23 +216,6 @@ export default function BlogDetail() {
     return categoryMap[language][category as keyof typeof categoryMap.en] || category;
   };
 
-  const handleShare = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000); // Reset after 2 seconds
-      toast({
-        title: language === 'vi' ? 'Đã sao chép liên kết' : 'Link copied',
-        description: language === 'vi' ? 'Liên kết đã được sao chép vào clipboard' : 'Link has been copied to clipboard',
-      });
-    } catch (error) {
-      toast({
-        title: language === 'vi' ? 'Lỗi' : 'Error',
-        description: language === 'vi' ? 'Không thể sao chép liên kết' : 'Failed to copy link',
-        variant: 'destructive',
-      });
-    }
-  };
 
   if (isLoading) {
     return (
@@ -346,35 +326,6 @@ export default function BlogDetail() {
           />
         </article>
 
-        {/* Share Section */}
-        <div className="flex items-center justify-between mt-12 mb-8 border-t border-gray-800 pt-6">
-          <div className="text-sm text-muted-foreground">
-            <p className="mb-1">
-              {language === 'vi' ? 'Xuất bản bởi' : 'Published by'} <span className="text-white">IEVRA Team</span>
-            </p>
-            <p>{formatDate(String(article.publishedAt || article.createdAt))}</p>
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleShare}
-            className="border border-white/20 rounded-none px-4 py-2 hover:bg-white/10 hover:text-white transition-all"
-            data-testid="button-share"
-            disabled={copied}
-          >
-            {copied ? (
-              <>
-                <Check className="h-5 w-5 mr-2" />
-                {language === 'vi' ? 'Đã sao chép!' : 'Copied!'}
-              </>
-            ) : (
-              <>
-                <Share2 className="h-5 w-5 mr-2" />
-                {language === 'vi' ? 'Chia sẻ' : 'Share'}
-              </>
-            )}
-          </Button>
-        </div>
 
         {/* Related Articles Section */}
         <RelatedArticles currentArticleId={article.id} category={article.category} language={language} />
