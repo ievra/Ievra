@@ -7,7 +7,7 @@ import { Eye, ArrowLeft } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import OptimizedImage from "@/components/OptimizedImage";
 import type { Article } from "@shared/schema";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { FormattedText, parseBoldTextToHTML } from "@/lib/textUtils";
 
 // Related Articles Component
