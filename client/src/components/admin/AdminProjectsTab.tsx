@@ -1617,7 +1617,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                   return (
                   <TableRow key={primary.id} data-testid={`row-project-${primary.id}`}>
                     <TableCell className="text-center">{(projectsPage - 1) * projectsPerPage + idx + 1}</TableCell>
-                    <TableCell>{primary.completionYear || "—"}</TableCell>
+                    <TableCell>{primary.completionYear ?? ""}</TableCell>
                     <TableCell>{(() => {
                       const cat = categories.find(c => c.slug === primary.category && c.type === 'project');
                       return cat ? (language === 'vi' && cat.nameVi ? cat.nameVi : cat.name) : primary.category;
