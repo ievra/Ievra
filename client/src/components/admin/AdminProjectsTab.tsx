@@ -1617,7 +1617,26 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                   return (
                   <TableRow key={primary.id} data-testid={`row-project-${primary.id}`}>
                     <TableCell className="text-center">{(projectsPage - 1) * projectsPerPage + idx + 1}</TableCell>
-                    <TableCell>{primary.completionYear ?? ""}</TableCell>
+                    <TableCell>
+                      <input
+                        type="number"
+                        defaultValue={primary.completionYear ?? ""}
+                        placeholder="—"
+                        min={1900}
+                        max={2100}
+                        className="w-[72px] bg-transparent border-none text-sm text-white/80 placeholder:text-white/30 focus:outline-none focus:ring-1 focus:ring-white/20 rounded px-1 py-0.5 hover:bg-white/5 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        onBlur={async (e) => {
+                          const val = e.target.value ? parseInt(e.target.value) : null;
+                          if (val === (primary.completionYear ?? null)) return;
+                          try {
+                            for (const p of group) {
+                              await updateProjectMutation.mutateAsync({ id: p.id, data: { completionYear: val } });
+                            }
+                          } catch {}
+                        }}
+                        onKeyDown={(e) => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur(); }}
+                      />
+                    </TableCell>
                     <TableCell>{(() => {
                       const cat = categories.find(c => c.slug === primary.category && c.type === 'project');
                       return cat ? (language === 'vi' && cat.nameVi ? cat.nameVi : cat.name) : primary.category;
