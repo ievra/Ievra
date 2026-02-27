@@ -66,9 +66,7 @@ export default function ProjectCard({
             )}
           </p>
           <h3
-            className={`text-white font-bold uppercase leading-tight tracking-wide ${
-              isLarge ? 'text-xl md:text-2xl' : 'text-base md:text-lg'
-            }`}
+            className="text-white uppercase tracking-wide text-xl md:text-2xl font-light"
             data-testid={`text-title-${project.id}`}
           >
             {title}
