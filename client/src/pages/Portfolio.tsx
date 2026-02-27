@@ -352,17 +352,15 @@ export default function Portfolio() {
 
         {/* Projects Grid */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-              <div key={i} className="animate-pulse">
-                <div className="bg-white/10 h-[28rem] rounded-none mb-4" />
-                <div className="space-y-2">
-                  <div className="h-4 bg-white/10 rounded w-3/4" />
-                  <div className="h-3 bg-white/10 rounded w-1/2" />
-                  <div className="h-3 bg-white/10 rounded w-2/3" />
-                </div>
-              </div>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-[3px]">
+            {[0,1,2,3,4,5,6].map((i) => {
+              const p = i % 7;
+              const lgSpan = (p===0||p===1) ? 'lg:col-span-3' : (p===5) ? 'lg:col-span-4' : 'lg:col-span-2';
+              const h = (p===0||p===1||p===5) ? 'h-[360px] md:h-[460px] lg:h-[500px]' : 'h-[280px] md:h-[360px] lg:h-[380px]';
+              return (
+                <div key={i} className={`animate-pulse bg-white/10 ${lgSpan} ${h}`} />
+              );
+            })}
           </div>
         ) : projects.length === 0 ? (
           <div className="text-center py-16">
@@ -375,10 +373,28 @@ export default function Portfolio() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {projects.map((project, index) => (
-                <ProjectCard key={project.id} project={project} index={index} />
-              ))}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-[3px]">
+              {projects.map((project, index) => {
+                const p = index % 7;
+                const isLarge = p === 0 || p === 1 || p === 5;
+                const lgSpan =
+                  p === 0 || p === 1 ? 'lg:col-span-3' :
+                  p === 5           ? 'lg:col-span-4' :
+                                      'lg:col-span-2';
+                const heightClass = isLarge
+                  ? 'h-[360px] md:h-[460px] lg:h-[500px]'
+                  : 'h-[280px] md:h-[360px] lg:h-[380px]';
+                return (
+                  <ProjectCard
+                    key={project.id}
+                    project={project}
+                    index={index}
+                    className={lgSpan}
+                    heightClass={heightClass}
+                    isLarge={isLarge}
+                  />
+                );
+              })}
             </div>
             <Pagination />
           </>

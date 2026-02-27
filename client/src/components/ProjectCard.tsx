@@ -6,9 +6,18 @@ import { useLanguage } from "@/contexts/LanguageContext";
 interface ProjectCardProps {
   project: Project;
   index?: number;
+  className?: string;
+  heightClass?: string;
+  isLarge?: boolean;
 }
 
-export default function ProjectCard({ project, index = 0 }: ProjectCardProps) {
+export default function ProjectCard({
+  project,
+  index = 0,
+  className = '',
+  heightClass = 'h-[420px]',
+  isLarge = false,
+}: ProjectCardProps) {
   const { language } = useLanguage();
   const projectImage = Array.isArray(project.images) && project.images[0] || null;
 
@@ -25,64 +34,49 @@ export default function ProjectCard({ project, index = 0 }: ProjectCardProps) {
     return categorySlug;
   };
 
+  const title = project.title;
+
   return (
-    <div 
-      className="project-card group relative overflow-hidden cursor-pointer h-[28rem] w-full flex-shrink-0 rounded-none border border-white/10 hover:bg-white/[0.04] transition-all duration-500 ease-out hover:shadow-2xl hover:shadow-white/10"
+    <div
+      className={`project-card group relative overflow-hidden cursor-pointer w-full ${heightClass} ${className}`}
       data-index={index}
     >
-      <Link href={project.slug ? `/portfolio/${project.slug}` : `/project/${project.id}`}>
+      <Link href={project.slug ? `/portfolio/${project.slug}` : `/project/${project.id}`} className="block w-full h-full">
         {projectImage ? (
-          <img 
+          <img
             src={projectImage}
-            alt={project.title}
-            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            alt={title}
+            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             data-testid={`img-project-${project.id}`}
           />
         ) : (
-          <div className="w-full h-full bg-transparent" data-testid={`img-project-${project.id}`} />
+          <div className="w-full h-full bg-zinc-900" data-testid={`img-project-${project.id}`} />
         )}
-        <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition-all duration-500" />
-        
-        <div className="absolute inset-0 p-6 flex flex-col justify-between">
-          <div>
-            <p className="text-white/80 text-sm uppercase tracking-wide mb-1" data-testid={`text-category-${project.id}`}>
-              {getCategoryLabel(project.category)}
+
+        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
+
+        <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
+          <p
+            className="text-white/55 text-[10px] uppercase tracking-[0.25em] mb-2 font-light"
+            data-testid={`text-category-${project.id}`}
+          >
+            {getCategoryLabel(project.category)}
+            {project.location && (
+              <span className="ml-3 text-white/40">· {project.location}</span>
+            )}
+          </p>
+          <h3
+            className={`text-white font-bold uppercase leading-tight tracking-wide ${
+              isLarge ? 'text-xl md:text-2xl' : 'text-base md:text-lg'
+            }`}
+            data-testid={`text-title-${project.id}`}
+          >
+            {title}
+          </h3>
+          {project.completionYear && (
+            <p className="text-white/40 text-[10px] uppercase tracking-widest mt-2" data-testid={`text-year-${project.id}`}>
+              {project.completionYear}
             </p>
-            {project.style && (
-              <p className="text-white/60 text-xs mb-1" data-testid={`text-style-${project.id}`}>
-                {project.style}
-              </p>
-            )}
-            {project.area && (
-              <p className="text-white/60 text-xs" data-testid={`text-area-${project.id}`}>
-                {project.area}
-              </p>
-            )}
-          </div>
-          
-          {(project.location || project.completionYear) && (
-            <div className="grid grid-cols-2 gap-4 text-white">
-              {project.completionYear && (
-                <div>
-                  <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
-                    {language === 'vi' ? 'Năm' : 'Year'}
-                  </p>
-                  <p className="font-light text-sm" data-testid={`text-year-${project.id}`}>
-                    {project.completionYear}
-                  </p>
-                </div>
-              )}
-              {project.location && (
-                <div>
-                  <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
-                    {language === 'vi' ? 'Khu vực' : 'Location'}
-                  </p>
-                  <p className="font-light text-sm" data-testid={`text-location-${project.id}`}>
-                    {project.location}
-                  </p>
-                </div>
-              )}
-            </div>
           )}
         </div>
       </Link>
