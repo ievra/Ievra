@@ -618,7 +618,7 @@ export default function Home() {
       {/* Hero Slider Section - IIDA Style */}
       <HeroSlider projects={featuredProjects || []} />
       {/* Featured Projects Section */}
-      <section id="featured-projects" className="py-16 bg-card">
+      <section id="featured-projects" className="min-h-screen bg-card py-16">
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="mb-16">
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
@@ -826,7 +826,7 @@ export default function Home() {
         </div>
       </section>
       {/* Quality Hero Section */}
-      <section className="relative h-[70vh] min-h-[600px]" style={{ clipPath: 'inset(0)' }}>
+      <section className="relative h-screen" style={{ clipPath: 'inset(0)' }}>
         <div
           className="fixed inset-0"
           style={{
@@ -857,7 +857,7 @@ export default function Home() {
         </div>
       </section>
       {/* Featured News Section */}
-      <section id="featured-news" className="py-16 bg-background">
+      <section id="featured-news" className="min-h-screen bg-background py-16">
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="mb-16">
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
@@ -972,7 +972,7 @@ export default function Home() {
         </div>
       </section>
       {/* Quality Materials Hero Section */}
-      <section className="relative h-[70vh] bg-black" style={{ clipPath: 'inset(0)' }}>
+      <section className="relative h-screen bg-black" style={{ clipPath: 'inset(0)' }}>
         <div
           className="fixed inset-0 -z-0"
           style={{
@@ -1006,7 +1006,7 @@ export default function Home() {
       </section>
       {/* Process Section */}
       <section
-        className="py-16 bg-black"
+        className="min-h-screen bg-black py-16"
         onMouseEnter={handleProcessSectionMouseEnter}
         onMouseLeave={handleProcessSectionMouseLeave}
       >
@@ -1093,7 +1093,7 @@ export default function Home() {
         </div>
       </section>
       {/* Why Choose Us Section */}
-      <section className="py-16 bg-black">
+      <section className="min-h-screen bg-black py-16">
         <div className="w-full px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="mb-16">
@@ -1156,7 +1156,7 @@ export default function Home() {
         </div>
       </section>
       {/* Partners Section */}
-      <section className="py-16 bg-black overflow-hidden">
+      <section className="min-h-screen bg-black overflow-hidden py-16">
         <div className="w-full px-4 sm:px-6 lg:px-8 mb-16">
           <div className="flex justify-end">
             <div className="max-w-4xl">
@@ -1243,7 +1243,7 @@ export default function Home() {
         )}
       </section>
       {/* Quick Contact Section */}
-      <section className="py-16 bg-black">
+      <section className="min-h-screen bg-black py-16">
         <div
           className="w-full px-4 sm:px-6 lg:px-8"
           onMouseEnter={handleContactMouseEnter}
@@ -1428,7 +1428,7 @@ export default function Home() {
       </section>
       {/* FAQ Section */}
       <section
-        className="py-16 bg-black"
+        className="min-h-screen bg-black py-16"
         onMouseEnter={handleFaqSectionMouseEnter}
         onMouseLeave={handleFaqSectionMouseLeave}
       >
