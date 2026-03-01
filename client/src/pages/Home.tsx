@@ -63,8 +63,10 @@ export default function Home() {
   const queryClient = useQueryClient();
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   const projectsScrollRef = useRef<HTMLDivElement>(null);
+  const [projectsContainerWidth, setProjectsContainerWidth] = useState(0);
   const [activeArticleIndex, setActiveArticleIndex] = useState(0);
   const articlesScrollRef = useRef<HTMLDivElement>(null);
+  const [articlesContainerWidth, setArticlesContainerWidth] = useState(0);
   const [expandedStepNumber, setExpandedStepNumber] = useState<number | null>(null);
   const [contactFormExpanded, setContactFormExpanded] = useState(false);
   const [autoCloseTimer, setAutoCloseTimer] = useState<NodeJS.Timeout | null>(
@@ -79,6 +81,20 @@ export default function Home() {
     {},
   );
   const [stepDescriptionTexts, setStepDescriptionTexts] = useState<Record<string, string>>({});
+
+  const measureContainers = useCallback(() => {
+    if (projectsScrollRef.current) setProjectsContainerWidth(projectsScrollRef.current.offsetWidth);
+    if (articlesScrollRef.current) setArticlesContainerWidth(articlesScrollRef.current.offsetWidth);
+  }, []);
+
+  useEffect(() => {
+    const frame = requestAnimationFrame(measureContainers);
+    const ro = new ResizeObserver(measureContainers);
+    if (projectsScrollRef.current) ro.observe(projectsScrollRef.current);
+    if (articlesScrollRef.current) ro.observe(articlesScrollRef.current);
+    window.addEventListener('resize', measureContainers);
+    return () => { cancelAnimationFrame(frame); ro.disconnect(); window.removeEventListener('resize', measureContainers); };
+  }, [measureContainers]);
 
   // Scroll animation with specific directions and stagger delays
   useEffect(() => {
@@ -392,6 +408,10 @@ export default function Home() {
       return response.json();
     },
   });
+
+  useEffect(() => {
+    requestAnimationFrame(measureContainers);
+  }, [featuredProjects?.length, featuredArticles?.length, measureContainers]);
 
   const { data: partners, isLoading: partnersLoading } = useQuery<Partner[]>({
     queryKey: ["/api/partners"],
@@ -748,7 +768,7 @@ export default function Home() {
                     if (isMobile) {
                       return `translateX(-${activeProjectIndex * 16}px)`;
                     }
-                    const containerPx = projectsScrollRef.current?.offsetWidth || 1200;
+                    const containerPx = projectsContainerWidth || window.innerWidth;
                     const activeWidthPx = Math.min(window.innerWidth * 0.55, 44 * 16);
                     const inactiveWidthPx = Math.max(120, (containerPx - activeWidthPx - 32) / 2);
                     const unitPx = inactiveWidthPx + 16;
@@ -763,12 +783,12 @@ export default function Home() {
                     const isMobile = window.innerWidth < 640;
                     const totalCards = Math.min(10, featuredProjects?.length || 0);
                     const isActive = index === activeProjectIndex;
-                    const containerPx = projectsScrollRef.current?.offsetWidth || 1200;
+                    const containerPx = projectsContainerWidth || window.innerWidth;
                     const activeWidthPx = Math.min(window.innerWidth * 0.55, 44 * 16);
                     const inactiveWidthPx = Math.max(120, (containerPx - activeWidthPx - 32) / 2);
                     let cardWidth: string;
                     if (isMobile) {
-                      cardWidth = isActive ? `${projectsScrollRef.current?.offsetWidth || window.innerWidth - 32}px` : '0px';
+                      cardWidth = isActive ? `${projectsContainerWidth || window.innerWidth - 32}px` : '0px';
                     } else if (isActive) {
                       cardWidth = `${activeWidthPx}px`;
                     } else {
@@ -1008,7 +1028,7 @@ export default function Home() {
                     if (isMobile) {
                       return `translateX(-${activeArticleIndex * 16}px)`;
                     }
-                    const containerPx = articlesScrollRef.current?.offsetWidth || 1200;
+                    const containerPx = articlesContainerWidth || window.innerWidth;
                     const activeWidthPx = Math.min(window.innerWidth * 0.55, 44 * 16);
                     const inactiveWidthPx = Math.max(120, (containerPx - activeWidthPx - 32) / 2);
                     const unitPx = inactiveWidthPx + 16;
@@ -1023,12 +1043,12 @@ export default function Home() {
                     const isMobile = window.innerWidth < 640;
                     const totalCards = Math.min(10, featuredArticles?.length || 0);
                     const isActive = index === activeArticleIndex;
-                    const containerPx = articlesScrollRef.current?.offsetWidth || 1200;
+                    const containerPx = articlesContainerWidth || window.innerWidth;
                     const activeWidthPx = Math.min(window.innerWidth * 0.55, 44 * 16);
                     const inactiveWidthPx = Math.max(120, (containerPx - activeWidthPx - 32) / 2);
                     let cardWidth: string;
                     if (isMobile) {
-                      cardWidth = isActive ? `${articlesScrollRef.current?.offsetWidth || window.innerWidth - 32}px` : '0px';
+                      cardWidth = isActive ? `${articlesContainerWidth || window.innerWidth - 32}px` : '0px';
                     } else if (isActive) {
                       cardWidth = `${activeWidthPx}px`;
                     } else {
