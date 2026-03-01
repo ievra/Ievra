@@ -413,7 +413,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/projects", requirePermission('projects'), requirePermission('crm'), async (req, res) => {
     try {
-      const validatedData = insertProjectSchema.parse(req.body);
+      const validatedData = insertProjectSchema.parse({ ...req.body, featured: false });
       const project = await storage.createProject(validatedData);
       res.status(201).json(project);
     } catch (error) {

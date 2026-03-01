@@ -547,6 +547,10 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
     return acc;
   }, {} as Record<string, Project[]>);
 
+  const featuredCount = Object.keys(groupedProjectsMap).filter(slug =>
+    groupedProjectsMap[slug].some(p => p.featured)
+  ).length;
+
   const projectYears = Array.from(new Set(projects.map(p => p.completionYear).filter(Boolean))).sort((a, b) => String(b).localeCompare(String(a)));
 
   const uniqueProjectSlugs = Object.keys(groupedProjectsMap).sort((a, b) => {
@@ -1676,10 +1680,11 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                           onClick={() => handleEditProject(primary)}
                           data-testid={`button-edit-project-${primary.id}`}
                         />
-                        <Star
-                          className={`h-4 w-4 ${(primary as any).status === 'published' ? 'cursor-pointer' : 'cursor-not-allowed opacity-30'} ${primary.featured ? 'text-white fill-white' : 'text-white/50 hover:text-white'}`}
+                        <span
+                          title={!primary.featured && featuredCount >= 10 ? (language === 'vi' ? 'Đã đạt tối đa 10 bài ghim' : 'Max 10 pinned projects reached') : undefined}
                           onClick={() => {
                             if ((primary as any).status !== 'published') return;
+                            if (!primary.featured && featuredCount >= 10) return;
                             group.forEach(p => {
                               updateProjectMutation.mutate({
                                 id: p.id,
@@ -1688,7 +1693,15 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                             });
                           }}
                           data-testid={`button-toggle-featured-${primary.id}`}
-                        />
+                        >
+                          <Star
+                            className={`h-4 w-4 ${
+                              (primary as any).status !== 'published' || (!primary.featured && featuredCount >= 10)
+                                ? 'cursor-not-allowed opacity-30'
+                                : 'cursor-pointer'
+                            } ${primary.featured ? 'text-white fill-white' : 'text-white/50 hover:text-white'}`}
+                          />
+                        </span>
                         <Trash2
                           className="h-4 w-4 cursor-pointer text-white/50 hover:text-red-400"
                           onClick={() => {
