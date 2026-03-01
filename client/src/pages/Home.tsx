@@ -1062,7 +1062,7 @@ export default function Home() {
                         data-testid={`article-card-${article.id}`}
                       >
                         {/* Fixed-height image - not full cover */}
-                        <div className="relative overflow-hidden" style={{ flex: '2' }}>
+                        <div className="relative overflow-hidden" style={{ flex: '3' }}>
                           {(article.featuredImage || article.featuredImageData) ? (
                             <img
                               src={article.featuredImage || article.featuredImageData || ''}
