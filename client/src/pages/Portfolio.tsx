@@ -16,19 +16,38 @@ function cardHash(str: string, seed = 0): number {
   return Math.abs(h);
 }
 
-const SPAN_OPTIONS = [
-  'lg:col-span-2',
-  'lg:col-span-3',
-  'lg:col-span-3',
-  'lg:col-span-4',
-  'lg:col-span-2',
-] as const;
+const LG_SPAN_CLASS: Record<number, string> = {
+  2: 'lg:col-span-2',
+  3: 'lg:col-span-3',
+  4: 'lg:col-span-4',
+  6: 'lg:col-span-6',
+};
 
 const HEIGHT_OPTIONS = [
   'h-[300px] md:h-[380px] lg:h-[360px]',
   'h-[320px] md:h-[420px] lg:h-[460px]',
   'h-[340px] md:h-[460px] lg:h-[520px]',
 ] as const;
+
+function computeSpans(projects: { id: string }[]): number[] {
+  let rowFill = 0;
+  return projects.map((p, i) => {
+    const isLast = i === projects.length - 1;
+    const remaining = rowFill === 0 ? 6 : 6 - rowFill;
+    let span: number;
+    if (isLast && rowFill !== 0) {
+      span = remaining;
+    } else {
+      const opts =
+        remaining >= 4 ? [2, 3, 4] :
+        remaining === 3 ? [3] :
+        [2];
+      span = opts[cardHash(p.id) % opts.length];
+    }
+    rowFill = (rowFill + span) % 6;
+    return span;
+  });
+}
 
 export default function Portfolio() {
   const { language } = useLanguage();
@@ -384,12 +403,13 @@ export default function Portfolio() {
 
         {/* Projects Grid */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 [grid-auto-flow:dense] gap-[3px]">
-            {['a','b','c','d','e','f','g'].map((id, i) => {
-              const lgSpan = SPAN_OPTIONS[i % SPAN_OPTIONS.length];
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-[3px]">
+            {[{id:'a'},{id:'b'},{id:'c'},{id:'d'},{id:'e'},{id:'f'},{id:'g'}].map((p, i) => {
+              const skeletonSpans = computeSpans([{id:'a'},{id:'b'},{id:'c'},{id:'d'},{id:'e'},{id:'f'},{id:'g'}]);
+              const lgSpan = LG_SPAN_CLASS[skeletonSpans[i]] || 'lg:col-span-2';
               const h = HEIGHT_OPTIONS[i % HEIGHT_OPTIONS.length];
               return (
-                <div key={id} className={`animate-pulse bg-white/10 ${lgSpan} ${h}`} />
+                <div key={p.id} className={`animate-pulse bg-white/10 ${lgSpan} ${h}`} />
               );
             })}
           </div>
@@ -404,23 +424,26 @@ export default function Portfolio() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 [grid-auto-flow:dense] gap-[3px]">
-              {projects.map((project, index) => {
-                const lgSpan = SPAN_OPTIONS[cardHash(project.id) % SPAN_OPTIONS.length];
-                const heightClass = HEIGHT_OPTIONS[cardHash(project.id, 7) % HEIGHT_OPTIONS.length];
-                const colNum = parseInt(lgSpan.replace('lg:col-span-', ''), 10);
-                const isLarge = colNum >= 3;
-                return (
-                  <ProjectCard
-                    key={project.id}
-                    project={project}
-                    index={index}
-                    className={lgSpan}
-                    heightClass={heightClass}
-                    isLarge={isLarge}
-                  />
-                );
-              })}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-[3px]">
+              {(() => {
+                const spans = computeSpans(projects);
+                return projects.map((project, index) => {
+                  const span = spans[index];
+                  const lgSpan = LG_SPAN_CLASS[span] || 'lg:col-span-2';
+                  const heightClass = HEIGHT_OPTIONS[cardHash(project.id, 7) % HEIGHT_OPTIONS.length];
+                  const isLarge = span >= 3;
+                  return (
+                    <ProjectCard
+                      key={project.id}
+                      project={project}
+                      index={index}
+                      className={lgSpan}
+                      heightClass={heightClass}
+                      isLarge={isLarge}
+                    />
+                  );
+                });
+              })()}
             </div>
             <Pagination />
           </>
