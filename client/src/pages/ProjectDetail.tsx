@@ -269,7 +269,7 @@ export default function ProjectDetail() {
           const bDate = new Date((b as any).updatedAt || (b as any).createdAt || 0);
           return bDate.getTime() - aDate.getTime();
         })
-        .slice(0, 6);
+        .slice(0, 5);
     },
     enabled: !!project,
   });
@@ -534,33 +534,33 @@ export default function ProjectDetail() {
             <h2 className="text-2xl md:text-3xl font-light text-white uppercase tracking-wider mb-10">
               {language === 'vi' ? 'DỰ ÁN KHÁC' : 'OTHER PROJECTS'}
             </h2>
-            <div className="overflow-x-auto scrollbar-hide">
-              <div className="flex gap-4 pb-4" style={{ width: 'max-content' }}>
-                {allProjects.map((otherProject) => (
-                  <Link key={otherProject.id} href={otherProject.slug ? `/portfolio/${otherProject.slug}` : `/project/${otherProject.id}`}>
-                    <div className="group cursor-pointer w-72 aspect-square flex-shrink-0">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+              {allProjects.map((otherProject) => (
+                <Link key={otherProject.id} href={otherProject.slug ? `/portfolio/${otherProject.slug}` : `/project/${otherProject.id}`}>
+                  <div className="group cursor-pointer">
+                    <div className="aspect-square overflow-hidden">
                       <OptimizedImage
                         src={(Array.isArray(otherProject.coverImages) ? otherProject.coverImages[0] : '') || (Array.isArray(otherProject.contentImages) ? otherProject.contentImages[0] : '') || otherProject.heroImage || (Array.isArray(otherProject.galleryImages) ? otherProject.galleryImages[0] : '') || (Array.isArray(otherProject.images) ? otherProject.images[0] : '') || '/placeholder-project.jpg'} 
                         alt={otherProject.title}
-                        width={288}
-                        height={288}
+                        width={300}
+                        height={300}
                         wrapperClassName="w-full h-full"
-                        className="w-full h-full object-cover group-hover:opacity-80 transition-opacity"
-                        sizes="288px"
+                        className="w-full h-full object-cover group-hover:opacity-80 transition-opacity duration-300"
+                        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                         data-testid={`img-other-project-${otherProject.id}`}
                       />
-                      <div className="mt-4 space-y-2">
-                        <h3 className="text-white font-light tracking-wider text-sm uppercase">
-                          {otherProject.title}
-                        </h3>
-                        <p className="text-zinc-400 text-xs">
-                          {otherProject.category}
-                        </p>
-                      </div>
                     </div>
-                  </Link>
-                ))}
-              </div>
+                    <div className="mt-3 space-y-1">
+                      <h3 className="text-white font-light tracking-wider text-xs uppercase line-clamp-2">
+                        {otherProject.title}
+                      </h3>
+                      <p className="text-zinc-400 text-xs">
+                        {otherProject.category}
+                      </p>
+                    </div>
+                  </div>
+                </Link>
+              ))}
             </div>
           </div>
         )}
