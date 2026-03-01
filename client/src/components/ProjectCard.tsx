@@ -38,7 +38,7 @@ export default function ProjectCard({
 
   return (
     <div
-      className={`project-card group relative overflow-hidden cursor-pointer w-full ${heightClass} ${className}`}
+      className={`project-card group relative overflow-hidden cursor-pointer w-full h-full ${className}`}
       data-index={index}
     >
       <Link href={project.slug ? `/portfolio/${project.slug}` : `/project/${project.id}`} className="block w-full h-full">

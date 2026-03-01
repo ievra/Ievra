@@ -23,11 +23,6 @@ const LG_SPAN_CLASS: Record<number, string> = {
   6: 'lg:col-span-6',
 };
 
-const HEIGHT_OPTIONS = [
-  'h-[300px] md:h-[380px] lg:h-[360px]',
-  'h-[320px] md:h-[420px] lg:h-[460px]',
-  'h-[340px] md:h-[460px] lg:h-[520px]',
-] as const;
 
 function computeSpans(projects: { id: string }[]): number[] {
   let rowFill = 0;
@@ -403,13 +398,12 @@ export default function Portfolio() {
 
         {/* Projects Grid */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-[3px]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 [grid-auto-rows:340px] gap-[3px]">
             {[{id:'a'},{id:'b'},{id:'c'},{id:'d'},{id:'e'},{id:'f'},{id:'g'}].map((p, i) => {
               const skeletonSpans = computeSpans([{id:'a'},{id:'b'},{id:'c'},{id:'d'},{id:'e'},{id:'f'},{id:'g'}]);
               const lgSpan = LG_SPAN_CLASS[skeletonSpans[i]] || 'lg:col-span-2';
-              const h = HEIGHT_OPTIONS[i % HEIGHT_OPTIONS.length];
               return (
-                <div key={p.id} className={`animate-pulse bg-white/10 ${lgSpan} ${h}`} />
+                <div key={p.id} className={`animate-pulse bg-white/10 ${lgSpan}`} />
               );
             })}
           </div>
@@ -424,13 +418,12 @@ export default function Portfolio() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-[3px]">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 [grid-auto-rows:340px] gap-[3px]">
               {(() => {
                 const spans = computeSpans(projects);
                 return projects.map((project, index) => {
                   const span = spans[index];
                   const lgSpan = LG_SPAN_CLASS[span] || 'lg:col-span-2';
-                  const heightClass = HEIGHT_OPTIONS[cardHash(project.id, 7) % HEIGHT_OPTIONS.length];
                   const isLarge = span >= 3;
                   return (
                     <ProjectCard
@@ -438,7 +431,6 @@ export default function Portfolio() {
                       project={project}
                       index={index}
                       className={lgSpan}
-                      heightClass={heightClass}
                       isLarge={isLarge}
                     />
                   );
