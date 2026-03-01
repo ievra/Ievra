@@ -37,11 +37,11 @@ export default function ProjectCard({
   const title = project.title;
   const p = project as any;
 
-  const topInfo = [
+  const topInfoItems = [
     getCategoryLabel(project.category),
     p.style,
     p.area,
-  ].filter(Boolean).join(' · ');
+  ].filter(Boolean);
 
   return (
     <div
@@ -62,12 +62,14 @@ export default function ProjectCard({
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
 
-        {/* Top-left: Category · Style · Area */}
-        {topInfo && (
-          <div className="absolute top-0 left-0 p-5 md:p-6">
-            <p className="text-white/55 text-[11px] uppercase tracking-[0.2em] font-light">
-              {topInfo}
-            </p>
+        {/* Top-left: Category / Style / Area (each on its own line) */}
+        {topInfoItems.length > 0 && (
+          <div className="absolute top-0 left-0 p-5 md:p-6 flex flex-col gap-0.5">
+            {topInfoItems.map((item, i) => (
+              <p key={i} className="text-white/55 text-[11px] uppercase tracking-[0.2em] font-light">
+                {item}
+              </p>
+            ))}
           </div>
         )}
 
