@@ -49,6 +49,7 @@ const bilingualProjectSchema = z.object({
   locationVi: z.string().optional(),
   areaEn: z.string().optional(),
   areaVi: z.string().optional(),
+  completionYear: z.string().optional(),
   styleEn: z.string().optional(),
   styleVi: z.string().optional(),
   designerEn: z.string().optional(),
@@ -182,6 +183,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       locationVi: "",
       areaEn: "",
       areaVi: "",
+      completionYear: "",
       styleEn: "",
       styleVi: "",
       designerEn: "",
@@ -370,6 +372,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       locationVi: viVersion?.location || "",
       areaEn: enVersion?.area || "",
       areaVi: viVersion?.area || "",
+      completionYear: project.completionYear || "",
       styleEn: enVersion?.style || "",
       styleVi: viVersion?.style || "",
       designerEn: enVersion?.designer || "",
@@ -494,6 +497,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
           status: data.status,
           location: data.locationEn,
           area: data.areaEn,
+          completionYear: data.completionYear,
           style: data.styleEn,
           designer: data.designerEn,
           coverImages: data.coverImages,
@@ -542,6 +546,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
           status: data.status,
           location: data.locationVi,
           area: data.areaVi,
+          completionYear: data.completionYear,
           style: data.styleVi,
           designer: data.designerVi,
           coverImages: data.coverImages,
@@ -745,6 +750,22 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                         <FormLabel>{language === 'vi' ? 'Diện Tích (Tiếng Việt)' : 'Area (Vietnamese)'}</FormLabel>
                         <FormControl>
                           <Input {...field} data-testid="input-project-area-vi" placeholder="Nhập diện tích tiếng Việt..." />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <FormField
+                    control={projectForm.control}
+                    name="completionYear"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{language === 'vi' ? 'Năm Hoàn Thành' : 'Completion Year'}</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="2024" maxLength={4} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
