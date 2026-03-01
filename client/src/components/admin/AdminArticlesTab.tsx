@@ -386,7 +386,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       setArticleImageFile(null);
       setArticleContentImages([]);
       articleForm.reset({
-        titleVi: 'Bài Viết Mới',
+        titleVi: '',
         titleEn: '',
         excerptVi: '',
         excerptEn: '',

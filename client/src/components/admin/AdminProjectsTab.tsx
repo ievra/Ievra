@@ -412,7 +412,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       setEditingProject(draft);
       setDialogKey(k => k + 1);
       projectForm.reset({
-        titleVi: 'Dự Án Mới',
+        titleVi: '',
         titleEn: '',
         slug: draftSlug,
         category: defaultCategory,
