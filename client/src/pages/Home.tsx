@@ -805,28 +805,14 @@ export default function Home() {
                             )}
                           </div>
 
-                          {(project.duration || project.completionYear) && (
-                            <div className="grid grid-cols-2 gap-4 text-white">
-                              {project.completionYear && (
-                                <div>
-                                  <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
-                                    {language === "vi" ? "Năm" : "Year"}
-                                  </p>
-                                  <p className="text-sm font-light" data-testid={`text-year-${project.id}`}>
-                                    {project.completionYear}
-                                  </p>
-                                </div>
-                              )}
-                              {project.duration && (
-                                <div>
-                                  <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
-                                    {language === "vi" ? "Thời gian" : "Duration"}
-                                  </p>
-                                  <p className="text-sm font-light" data-testid={`text-duration-${project.id}`}>
-                                    {project.duration}
-                                  </p>
-                                </div>
-                              )}
+                          {project.completionYear && (
+                            <div className="text-white">
+                              <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
+                                {language === "vi" ? "Năm" : "Year"}
+                              </p>
+                              <p className="text-sm font-light" data-testid={`text-year-${project.id}`}>
+                                {project.completionYear}
+                              </p>
                             </div>
                           )}
                         </div>
