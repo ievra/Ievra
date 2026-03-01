@@ -743,7 +743,12 @@ export default function Home() {
                 )}
                 <div className="flex gap-4 pb-4" style={{
                   transform: (() => {
+                    const isMobile = window.innerWidth < 640;
                     const totalCards = Math.min(10, featuredProjects?.length || 0);
+                    if (isMobile) {
+                      // On mobile: inactive cards are 0px, only 16px gaps contribute to offset
+                      return `translateX(-${activeProjectIndex * 16}px)`;
+                    }
                     const isLast = activeProjectIndex >= totalCards - 1;
                     if (isLast && totalCards >= 2) {
                       const unitPx = 18 * 16 + 16;
@@ -760,12 +765,15 @@ export default function Home() {
                   transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
                 }}>
                   {featuredProjects?.slice(0, 10).map((project, index) => {
+                    const isMobile = window.innerWidth < 640;
                     const totalCards = Math.min(10, featuredProjects?.length || 0);
                     const isActive = index === activeProjectIndex;
                     const isLast = activeProjectIndex >= totalCards - 1;
-                    const showBothLarge = isLast && totalCards >= 2 && (index === totalCards - 1 || index === totalCards - 2);
+                    const showBothLarge = !isMobile && isLast && totalCards >= 2 && (index === totalCards - 1 || index === totalCards - 2);
                     let cardWidth: string;
-                    if (showBothLarge) {
+                    if (isMobile) {
+                      cardWidth = isActive ? `${projectsScrollRef.current?.offsetWidth || window.innerWidth - 32}px` : '0px';
+                    } else if (showBothLarge) {
                       cardWidth = 'calc(50% - 0.5rem)';
                     } else if (isActive) {
                       cardWidth = 'min(55vw, 44rem)';
