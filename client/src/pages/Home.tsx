@@ -56,6 +56,65 @@ function TypewriterTitle({ text, className }: { text: string; isActive?: boolean
   return <h3 className={className}>{displayed || '\u00A0'}</h3>;
 }
 
+type TypewriterTextTag = 'p' | 'h2' | 'h3' | 'h4';
+function TypewriterText({
+  text,
+  className,
+  as: Tag = 'p',
+}: {
+  text: string;
+  className?: string;
+  as?: TypewriterTextTag;
+}) {
+  const [displayed, setDisplayed] = useState('');
+  const [hasStarted, setHasStarted] = useState(false);
+  const elRef = useRef<HTMLElement>(null);
+  const rafRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const el = elRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setHasStarted(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!hasStarted || !text) return;
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    let i = 0;
+    setDisplayed('');
+    const charSpeed = Math.max(20, Math.round(3200 / text.length));
+    let lastTime = 0;
+    const tick = (time: number) => {
+      if (time - lastTime >= charSpeed) {
+        lastTime = time;
+        i++;
+        setDisplayed(text.slice(0, i));
+        if (i < text.length) rafRef.current = requestAnimationFrame(tick);
+      } else {
+        rafRef.current = requestAnimationFrame(tick);
+      }
+    };
+    rafRef.current = requestAnimationFrame(tick);
+    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
+  }, [hasStarted, text]);
+
+  return (
+    <Tag ref={elRef as any} className={className}>
+      {displayed || '\u00A0'}
+    </Tag>
+  );
+}
+
 export default function Home() {
   const [, navigate] = useLocation();
   const { language, t } = useLanguage();
@@ -672,12 +731,13 @@ export default function Home() {
           <div className="mb-16">
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
               <div className="max-w-4xl">
-                <p className="text-2xl md:text-3xl font-light text-foreground leading-relaxed scroll-animate">
-                  {language === "vi"
+                <TypewriterText
+                  text={language === "vi"
                     ? (homepageContent?.featuredDescriptionVi || homepageContent?.featuredDescription || t("featured.projectsDesc"))
                     : (homepageContent?.featuredDescription || t("featured.projectsDesc"))
                   }
-                </p>
+                  className="text-2xl md:text-3xl font-light text-foreground leading-relaxed"
+                />
               </div>
               <div className="flex-shrink-0 -ml-4 sm:ml-8">
                 <Button
@@ -897,19 +957,21 @@ export default function Home() {
         </div>
         <div className="relative h-full w-full px-4 sm:px-6 lg:px-8 flex items-center">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 w-full items-center">
-            <div className="text-white space-y-6 scroll-animate">
-              <p className="md:text-5xl font-light text-[36px]">
-                {homepageContent?.qualityLeftText || (language === "vi"
+            <div className="text-white space-y-6">
+              <TypewriterText
+                text={homepageContent?.qualityLeftText || (language === "vi"
                   ? "Mỗi chi tiết được lựa chọn để nội thất phục vụ lâu dài và trông hoàn hảo."
                   : "Each detail is selected so that the interior will serve for a long time and look impeccable.")}
-              </p>
+                className="md:text-5xl font-light text-[36px]"
+              />
             </div>
-            <div className="text-white space-y-6 scroll-animate-right text-right">
-              <p className="text-xl md:text-2xl font-light leading-relaxed">
-                {homepageContent?.qualityRightText || (language === "vi"
+            <div className="text-white space-y-6 text-right">
+              <TypewriterText
+                text={homepageContent?.qualityRightText || (language === "vi"
                   ? "Chúng tôi chỉ sử dụng vật liệu và nội thất chất lượng cao từ các nhà sản xuất đáng tin cậy."
                   : "We use only high-quality materials and furniture from trusted manufacturers.")}
-              </p>
+                className="text-xl md:text-2xl font-light leading-relaxed"
+              />
             </div>
           </div>
         </div>
@@ -920,12 +982,13 @@ export default function Home() {
           <div className="mb-16">
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
               <div className="max-w-4xl">
-                <p className="text-2xl md:text-3xl font-light text-foreground leading-relaxed scroll-animate">
-                  {language === "vi"
+                <TypewriterText
+                  text={language === "vi"
                     ? (homepageContent?.featuredNewsSubtitleVi || homepageContent?.featuredNewsSubtitle || t("featured.newsDesc"))
                     : (homepageContent?.featuredNewsSubtitle || t("featured.newsDesc"))
                   }
-                </p>
+                  className="text-2xl md:text-3xl font-light text-foreground leading-relaxed"
+                />
               </div>
               <div className="flex-shrink-0 -ml-4 sm:ml-8">
                 <Button
@@ -1138,18 +1201,20 @@ export default function Home() {
           <div className="w-full px-4 sm:px-6 lg:px-8 w-full">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center h-full">
               {/* Left side text */}
-              <p className="text-2xl md:text-3xl lg:text-4xl font-light leading-relaxed text-white scroll-animate">
-                {homepageContent?.quality2LeftText || (language === "vi"
+              <TypewriterText
+                text={homepageContent?.quality2LeftText || (language === "vi"
                   ? "Mỗi chi tiết được lựa chọn để nội thất phục vụ lâu dài và luôn hoàn hảo."
                   : "Each detail is selected so that the interior will serve for a long time and look impeccable.")}
-              </p>
+                className="text-2xl md:text-3xl lg:text-4xl font-light leading-relaxed text-white"
+              />
 
               {/* Right side content */}
-              <p className="text-xl md:text-2xl font-light leading-relaxed text-white scroll-animate-right text-right">
-                {homepageContent?.quality2RightText || (language === "vi"
+              <TypewriterText
+                text={homepageContent?.quality2RightText || (language === "vi"
                   ? "Chúng tôi chỉ sử dụng vật liệu chất lượng cao và đồ nội thất từ các nhà sản xuất uy tín."
                   : "We use only high-quality materials and furniture from trusted manufacturers.")}
-              </p>
+                className="text-xl md:text-2xl font-light leading-relaxed text-white text-right"
+              />
             </div>
           </div>
         </div>
@@ -1164,12 +1229,13 @@ export default function Home() {
           {/* Section Title */}
           <div className="mb-16">
             <div className="max-w-4xl ml-auto">
-              <p className="text-2xl md:text-3xl font-light text-white leading-relaxed scroll-animate-right text-right">
-                {language === "vi"
+              <TypewriterText
+                text={language === "vi"
                   ? (homepageContent?.journeyDescriptionVi || homepageContent?.journeyDescription || "TỪ Ý TƯỞNG ĐẾN HIỆN THỰC, CHÚNG TÔI ĐỒNG HÀNH CÙNG BẠN QUA MỘT QUY TRÌNH 5 BƯỚC TINH GỌN, HIỆU QUẢ VÀ ĐẦY CẢM HỨNG.")
                   : (homepageContent?.journeyDescription || "FROM CONCEPT TO REALITY, WE GUIDE YOU THROUGH A STREAMLINED, EFFICIENT, AND INSPIRING 5-STEP PROCESS.")
                 }
-              </p>
+                className="text-2xl md:text-3xl font-light text-white leading-relaxed text-right"
+              />
             </div>
           </div>
 
@@ -1247,12 +1313,14 @@ export default function Home() {
         <div className="w-full px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="mb-16">
-            <h3 className="text-3xl md:text-4xl font-light text-white scroll-animate">
-              {language === "vi"
+            <TypewriterText
+              as="h3"
+              text={language === "vi"
                 ? (homepageContent?.advantagesSubtitleVi || homepageContent?.advantagesSubtitle || "Tại sao chọn IEVRA Design & Build")
                 : (homepageContent?.advantagesSubtitle || "Why Choose IEVRA Design & Build")
               }
-            </h3>
+              className="text-3xl md:text-4xl font-light text-white"
+            />
           </div>
 
           {/* Advantages Grid */}
@@ -1310,14 +1378,12 @@ export default function Home() {
         <div className="w-full px-4 sm:px-6 lg:px-8 mb-16">
           <div className="flex justify-end">
             <div className="max-w-4xl">
-              <p
-                className="text-2xl md:text-3xl font-light text-foreground leading-relaxed scroll-animate-right text-right"
-                data-testid="text-partners-description"
-              >
-                {language === "vi"
+              <TypewriterText
+                text={language === "vi"
                   ? "Chúng tôi tự hào hợp tác với những thương hiệu uy tín hàng đầu, mang đến những sản phẩm và dịch vụ chất lượng cao nhất cho khách hàng."
                   : "We are proud to work with leading prestigious brands, bringing the highest quality products and services to our clients."}
-              </p>
+                className="text-2xl md:text-3xl font-light text-foreground leading-relaxed text-right"
+              />
             </div>
           </div>
         </div>
@@ -1402,15 +1468,13 @@ export default function Home() {
           <div className="mb-16">
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
               <div className="max-w-4xl">
-                <p
-                  className="text-2xl md:text-3xl font-light text-foreground leading-relaxed scroll-animate"
-                  data-testid="text-consultation"
-                >
-                  {language === "vi"
+                <TypewriterText
+                  text={language === "vi"
                     ? (homepageContent?.ctaSubtitleVi || homepageContent?.ctaSubtitle || "Để lại yêu cầu tư vấn miễn phí và chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.")
                     : (homepageContent?.ctaSubtitle || "Leave a request for a free consultation and we will contact you as soon as possible.")
                   }
-                </p>
+                  className="text-2xl md:text-3xl font-light text-foreground leading-relaxed"
+                />
               </div>
             </div>
           </div>
@@ -1586,11 +1650,12 @@ export default function Home() {
           {/* Section Title */}
           <div className="mb-16">
             <div className="max-w-4xl ml-auto">
-              <p className="text-2xl md:text-3xl font-light text-white leading-relaxed scroll-animate-right text-right">
-                {language === "vi"
+              <TypewriterText
+                text={language === "vi"
                   ? "TÌM HIỂU THÊM VỀ QUY TRÌNH THIẾT KẾ VÀ DỊCH VỤ CỦA CHÚNG TÔI."
                   : "LEARN MORE ABOUT OUR DESIGN PROCESS AND SERVICES."}
-              </p>
+                className="text-2xl md:text-3xl font-light text-white leading-relaxed text-right"
+              />
             </div>
           </div>
 
