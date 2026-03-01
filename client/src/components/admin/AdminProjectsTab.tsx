@@ -131,6 +131,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
   const [newCategoryNameVi, setNewCategoryNameVi] = useState("");
   const [editingCategory, setEditingCategory] = useState<{ id: string; name: string; nameVi: string | null } | null>(null);
   const [isEditCategoryDialogOpen, setIsEditCategoryDialogOpen] = useState(false);
+  const [deleteProjectData, setDeleteProjectData] = useState<{ title: string; group: Project[] } | null>(null);
   const [deleteCategoryData, setDeleteCategoryData] = useState<{ id: string, name: string } | null>(null);
   const [isDeleteCategoryAlertOpen, setIsDeleteCategoryAlertOpen] = useState(false);
 
@@ -1789,13 +1790,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                         </span>
                         <Trash2
                           className="h-4 w-4 cursor-pointer text-white/50 hover:text-red-400"
-                          onClick={() => {
-                            if (window.confirm(language === 'vi' ? `Bạn có chắc chắn muốn xóa dự án "${primary.title}"?` : `Are you sure you want to delete project "${primary.title}"?`)) {
-                              group.forEach(p => {
-                                deleteProjectMutation.mutate(p.id);
-                              });
-                            }
-                          }}
+                          onClick={() => setDeleteProjectData({ title: primary.title, group })}
                           data-testid={`button-delete-project-${primary.id}`}
                         />
                       </div>
@@ -1867,6 +1862,39 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
             )}
         </CardContent>
       </Card>
+
+      <AlertDialog open={!!deleteProjectData} onOpenChange={(open) => { if (!open) setDeleteProjectData(null); }}>
+        <AlertDialogContent className="bg-black border border-white/20 rounded-none">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl font-light">{language === 'vi' ? 'Xác Nhận Xóa Dự Án' : 'Confirm Project Deletion'}</AlertDialogTitle>
+            <AlertDialogDescription className="text-white/70">
+              {language === 'vi'
+                ? <>Bạn có chắc chắn muốn xóa dự án <span className="font-medium text-white">"{deleteProjectData?.title}"</span>? Hành động này không thể hoàn tác.</>
+                : <>Are you sure you want to delete project <span className="font-medium text-white">"{deleteProjectData?.title}"</span>? This action cannot be undone.</>
+              }
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              className="bg-white/5 border-white/10 hover:bg-white/10 rounded-none"
+              onClick={() => setDeleteProjectData(null)}
+            >
+              {language === 'vi' ? 'Hủy' : 'Cancel'}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="rounded-none bg-red-600 hover:bg-red-700 text-white"
+              onClick={() => {
+                deleteProjectData?.group.forEach(p => {
+                  deleteProjectMutation.mutate(p.id);
+                });
+                setDeleteProjectData(null);
+              }}
+            >
+              {language === 'vi' ? 'Xóa' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
