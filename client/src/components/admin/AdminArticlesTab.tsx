@@ -25,7 +25,8 @@ const bilingualArticleSchema = z.object({
   excerptVi: z.string().optional(),
   contentEn: z.string().optional(),
   contentVi: z.string().optional(),
-  slug: z.string().optional(),
+  slugEn: z.string().optional(),
+  slugVi: z.string().optional(),
   category: z.string().min(1, "Category is required"),
   status: z.enum(["draft", "published", "archived"]).default("draft"),
   featured: z.boolean().default(false),
@@ -127,7 +128,8 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       excerptVi: "",
       contentEn: "",
       contentVi: "",
-      slug: "",
+      slugEn: "",
+      slugVi: "",
       category: "news",
       status: "draft",
       featured: false,
@@ -342,7 +344,8 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       excerptVi: viVersion?.excerpt || "",
       contentEn: enVersion?.content || "",
       contentVi: viVersion?.content || "",
-      slug: article.slug,
+      slugEn: enVersion?.slug || "",
+      slugVi: viVersion?.slug || article.slug || "",
       category: article.category,
       status: article.status as "draft" | "published" | "archived",
       featured: article.featured,
@@ -392,7 +395,8 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
         excerptEn: '',
         contentVi: '',
         contentEn: '',
-        slug: draftSlug,
+        slugEn: '',
+        slugVi: '',
         category: defaultCategory,
         status: 'draft',
         featured: false,
@@ -429,23 +433,33 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-+|-+$/g, '');
       };
-      const slugSource = data.slug || (hasEn ? data.titleEn! : data.titleVi!);
-      const slug = toSlug(slugSource);
+      const rawSlugEn = data.slugEn ? toSlug(data.slugEn) : (hasEn ? toSlug(data.titleEn!) : '');
+      const rawSlugVi = data.slugVi ? toSlug(data.slugVi) : (hasVi ? toSlug(data.titleVi!) : '');
+      const finalSlugEn = rawSlugEn || rawSlugVi;
+      const finalSlugVi = rawSlugVi || rawSlugEn;
 
-      const isDuplicateSlug = articles.some((a: any) =>
-        a.slug === slug && (!editingArticle || a.slug !== editingArticle.slug)
-      );
-      if (isDuplicateSlug) {
-        articleForm.setError('slug', {
-          type: 'manual',
-          message: 'URL/Slug này đã tồn tại. Vui lòng chọn URL khác.'
-        });
-        toast({
-          title: 'URL/Slug đã tồn tại',
-          description: 'Một bài viết khác đang dùng URL này. Vui lòng nhập URL khác.',
-          variant: 'destructive',
-        });
-        return;
+      const currentEnSlug = editingArticle
+        ? (articles.find((a: any) => a.slug === editingArticle.slug && a.language === 'en')?.slug || editingArticle.slug)
+        : null;
+      const currentViSlug = editingArticle
+        ? (articles.find((a: any) => a.slug === editingArticle.slug && a.language === 'vi')?.slug || editingArticle.slug)
+        : null;
+
+      if (hasEn && finalSlugEn) {
+        const dup = articles.some((a: any) => a.language === 'en' && a.slug === finalSlugEn && a.slug !== currentEnSlug);
+        if (dup) {
+          articleForm.setError('slugEn', { type: 'manual', message: 'URL này đã được dùng (EN).' });
+          toast({ title: 'URL/Slug đã tồn tại', description: 'URL tiếng Anh đang được dùng bởi bài viết khác.', variant: 'destructive' });
+          return;
+        }
+      }
+      if (hasVi && finalSlugVi) {
+        const dup = articles.some((a: any) => a.language === 'vi' && a.slug === finalSlugVi && a.slug !== currentViSlug);
+        if (dup) {
+          articleForm.setError('slugVi', { type: 'manual', message: 'URL này đã được dùng (VI).' });
+          toast({ title: 'URL/Slug đã tồn tại', description: 'URL tiếng Việt đang được dùng bởi bài viết khác.', variant: 'destructive' });
+          return;
+        }
       }
 
       const featuredImg = articleImagePreview || data.featuredImage || undefined;
@@ -455,7 +469,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       if (hasEn) {
         const enArticle: InsertArticle = {
           title: data.titleEn!,
-          slug: slug,
+          slug: finalSlugEn,
           excerpt: data.excerptEn,
           content: data.contentEn!,
           category: data.category,
@@ -488,7 +502,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       if (hasVi) {
         const viArticle: InsertArticle = {
           title: data.titleVi!,
-          slug: slug,
+          slug: finalSlugVi,
           excerpt: data.excerptVi,
           content: data.contentVi!,
           category: data.category,
@@ -1141,20 +1155,35 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
 
             <div className="border-t pt-6">
               <h3 className="text-lg font-medium mb-4">{language === 'vi' ? 'Thông Tin Chung' : 'General Information'}</h3>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <FormField
                   control={articleForm.control}
-                  name="slug"
+                  name="slugEn"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Slug</FormLabel>
+                      <FormLabel>URL (English)</FormLabel>
                       <FormControl>
-                        <Input {...field} data-testid="input-article-slug" placeholder={language === 'vi' ? 'tự động tạo' : 'auto-generated'} />
+                        <Input {...field} data-testid="input-article-slug" placeholder="auto-generated from EN title" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+                <FormField
+                  control={articleForm.control}
+                  name="slugVi"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>URL (Tiếng Việt)</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="tự động tạo từ tiêu đề VI" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
                 <FormField
                   control={articleForm.control}
