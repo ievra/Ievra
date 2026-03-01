@@ -848,7 +848,7 @@ export default function Home() {
                   : "Each detail is selected so that the interior will serve for a long time and look impeccable.")}
               </p>
             </div>
-            <div className="text-white space-y-6 scroll-animate-right">
+            <div className="text-white space-y-6 scroll-animate-right text-right">
               <p className="text-xl md:text-2xl font-light leading-relaxed">
                 {homepageContent?.qualityRightText || (language === "vi"
                   ? "Chúng tôi chỉ sử dụng vật liệu và nội thất chất lượng cao từ các nhà sản xuất đáng tin cậy."
