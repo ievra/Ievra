@@ -789,6 +789,15 @@ export default function Home() {
 
                         <div className="absolute inset-0 p-6 pb-8 flex flex-col justify-between">
                           <div>
+                            <h3
+                              className={`text-white font-light leading-snug transition-all duration-500 mb-3 ${
+                                isActive || showBothLarge
+                                  ? 'text-2xl line-clamp-none'
+                                  : 'text-base line-clamp-1 opacity-70'
+                              }`}
+                            >
+                              {project.title}
+                            </h3>
                             <p
                               className="text-white/80 text-sm uppercase tracking-wide mb-1"
                               data-testid={`text-category-${project.id}`}
@@ -806,16 +815,6 @@ export default function Home() {
                               </p>
                             )}
                           </div>
-
-                          <h3
-                            className={`text-white font-light leading-snug transition-all duration-500 ${
-                              isActive || showBothLarge
-                                ? 'text-2xl line-clamp-none'
-                                : 'text-base line-clamp-1 opacity-70'
-                            }`}
-                          >
-                            {project.title}
-                          </h3>
 
                           {project.completionYear && (
                             <div className="text-white">
