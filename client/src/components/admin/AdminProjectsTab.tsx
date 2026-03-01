@@ -757,19 +757,47 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                   />
                 </div>
 
-                <FormField
-                  control={projectForm.control}
-                  name="completionYear"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{language === 'vi' ? 'Năm Hoàn Thành' : 'Completion Year'}</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="2024" maxLength={4} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={projectForm.control}
+                    name="completionYear"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{language === 'vi' ? 'Năm Hoàn Thành' : 'Completion Year'}</FormLabel>
+                        <FormControl>
+                          <Input {...field} placeholder="2024" maxLength={4} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={projectForm.control}
+                    name="category"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Danh Mục</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value}>
+                          <FormControl>
+                            <SelectTrigger data-testid="select-project-category">
+                              <SelectValue placeholder="Chọn danh mục" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {categories
+                              .filter(cat => cat.type === 'project' && cat.active)
+                              .map((category) => (
+                                <SelectItem key={category.id} value={category.slug}>
+                                  {category.name}
+                                </SelectItem>
+                              ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField
@@ -1195,7 +1223,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                 />
 
                 <div className="border-t pt-6">
-                  <h3 className="text-lg font-medium mb-4 uppercase tracking-wide">Thông Tin Chung</h3>
+                  <h3 className="text-lg font-medium mb-4 uppercase tracking-wide">Cài Đặt SEO</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <FormField
                       control={projectForm.control}
@@ -1224,38 +1252,6 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                       )}
                     />
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <FormField
-                      control={projectForm.control}
-                      name="category"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Danh Mục</FormLabel>
-                          <Select onValueChange={field.onChange} value={field.value}>
-                            <FormControl>
-                              <SelectTrigger data-testid="select-project-category">
-                                <SelectValue placeholder="Chọn danh mục" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {categories
-                                .filter(cat => cat.type === 'project' && cat.active)
-                                .map((category) => (
-                                  <SelectItem key={category.id} value={category.slug}>
-                                    {category.name}
-                                  </SelectItem>
-                                ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-                </div>
-
-                <div className="border-t pt-6">
-                  <h3 className="text-lg font-medium mb-4 uppercase tracking-wide">Cài Đặt SEO</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-4">
                       <h4 className="text-sm font-medium text-muted-foreground uppercase">SEO Tiếng Anh</h4>
