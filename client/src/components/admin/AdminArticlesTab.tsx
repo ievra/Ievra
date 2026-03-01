@@ -390,6 +390,11 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
           type: 'manual',
           message: 'URL/Slug này đã tồn tại. Vui lòng chọn URL khác.'
         });
+        toast({
+          title: 'URL/Slug đã tồn tại',
+          description: 'Một bài viết khác đang dùng URL này. Vui lòng nhập URL khác.',
+          variant: 'destructive',
+        });
         return;
       }
 

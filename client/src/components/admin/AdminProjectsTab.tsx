@@ -417,6 +417,11 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
           type: 'manual',
           message: 'URL/Slug này đã tồn tại. Vui lòng chọn URL khác.'
         });
+        toast({
+          title: 'URL/Slug đã tồn tại',
+          description: 'Một dự án khác đang dùng URL này. Vui lòng nhập URL khác.',
+          variant: 'destructive',
+        });
         setIsProjectSubmitting(false);
         return;
       }
