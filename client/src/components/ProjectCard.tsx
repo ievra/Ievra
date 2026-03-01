@@ -57,7 +57,7 @@ export default function ProjectCard({
 
         <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
           <p
-            className="text-white/55 text-[10px] uppercase tracking-[0.25em] mb-2 font-light"
+            className="text-white/55 text-[12px] uppercase tracking-[0.25em] mb-2 font-light"
             data-testid={`text-category-${project.id}`}
           >
             {getCategoryLabel(project.category)}
