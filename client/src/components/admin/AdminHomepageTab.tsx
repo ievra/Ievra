@@ -1467,11 +1467,11 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                           <AlertDialog>
                             <AlertDialogTrigger asChild>
                               <Button
-                                variant="destructive"
+                                variant="outline"
                                 size="sm"
                                 data-testid={`button-delete-partner-${partner.id}`}
                               >
-                                <Trash2 className="h-4 w-4 text-white" />
+                                <Trash2 className="h-4 w-4" />
                               </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
@@ -1677,7 +1677,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                                   <Pencil className="h-4 w-4" />
                                 </Button>
                                 <Button
-                                  variant="destructive"
+                                  variant="outline"
                                   size="icon"
                                   onClick={() => {
                                     if (enFaq) deleteFaqMutation.mutate(enFaq.id);
@@ -1864,7 +1864,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                                 <Pencil className="h-4 w-4" />
                               </Button>
                               <Button
-                                variant="destructive"
+                                variant="outline"
                                 size="icon"
                                 onClick={() => deleteAdvantageMutation.mutate(advantage.id)}
                                 data-testid={`button-delete-advantage-${index}`}
@@ -2031,7 +2031,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                               <Pencil className="h-4 w-4" />
                             </Button>
                             <Button
-                              variant="destructive"
+                              variant="outline"
                               size="icon"
                               onClick={() => deleteJourneyStepMutation.mutate(journeyStep.id)}
                               data-testid={`button-delete-journey-step-${index}`}
