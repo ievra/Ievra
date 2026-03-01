@@ -26,22 +26,40 @@ const LG_SPAN_CLASS: Record<number, string> = {
 
 function computeSpans(projects: { id: string }[]): number[] {
   let rowFill = 0;
-  return projects.map((p, i) => {
+  let prevRowFirstSpan = -1;
+  const result: number[] = [];
+
+  for (let i = 0; i < projects.length; i++) {
+    const p = projects[i];
     const isLast = i === projects.length - 1;
-    const remaining = rowFill === 0 ? 6 : 6 - rowFill;
+    const isRowStart = rowFill === 0;
+    const remaining = isRowStart ? 6 : 6 - rowFill;
+
     let span: number;
-    if (isLast && rowFill !== 0) {
+
+    if (isLast && !isRowStart) {
       span = remaining;
     } else {
-      const opts =
-        remaining >= 4 ? [2, 3, 4] :
-        remaining === 3 ? [3] :
-        [2];
+      let opts: number[];
+      if (isRowStart) {
+        const all = [2, 3, 4];
+        const filtered = all.filter(s => s !== prevRowFirstSpan);
+        opts = filtered.length > 0 ? filtered : all;
+      } else {
+        opts =
+          remaining === 4 ? [2, 4] :
+          remaining === 3 ? [3] :
+          [2];
+      }
       span = opts[cardHash(p.id) % opts.length];
     }
+
+    if (isRowStart) prevRowFirstSpan = span;
     rowFill = (rowFill + span) % 6;
-    return span;
-  });
+    result.push(span);
+  }
+
+  return result;
 }
 
 export default function Portfolio() {
