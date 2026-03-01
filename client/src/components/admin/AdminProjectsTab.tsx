@@ -390,6 +390,45 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
     setIsProjectDialogOpen(true);
   };
 
+  const handleCreateProjectDraft = async () => {
+    const timestamp = Date.now();
+    const draftSlug = `ban-nhap-${timestamp}`;
+    const defaultCategory = (categories.find(c => c.type === 'project' && c.active) || categories.find(c => c.type === 'project'))?.slug || 'residential';
+    try {
+      const res = await apiRequest('POST', '/api/projects', {
+        title: 'Dự Án Mới',
+        slug: draftSlug,
+        category: defaultCategory,
+        language: 'vi',
+        status: 'draft',
+        featured: false,
+        images: [],
+      });
+      const draft = await res.json();
+      queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
+      setEditingProject(draft);
+      setDialogKey(k => k + 1);
+      projectForm.reset({
+        titleVi: 'Dự Án Mới',
+        titleEn: '',
+        slug: draftSlug,
+        category: defaultCategory,
+        status: 'draft',
+        featured: false,
+        coverImages: [],
+        contentImages: [],
+        galleryImages: [],
+        images: [],
+      });
+      setIsProjectDialogOpen(true);
+    } catch {
+      setEditingProject(null);
+      setDialogKey(k => k + 1);
+      projectForm.reset();
+      setIsProjectDialogOpen(true);
+    }
+  };
+
   const onProjectSubmit = async (data: BilingualProjectFormData) => {
     try {
       setIsProjectSubmitting(true);
@@ -608,12 +647,10 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
               projectForm.reset();
             }
           }}>
-            <DialogTrigger asChild>
-              <Button data-testid="button-add-project" className="h-10 px-4 min-w-[140px] justify-center" onClick={() => { setEditingProject(null); setDialogKey(k => k + 1); projectForm.reset(); }}>
-                <Plus className="mr-2 h-4 w-4" />
-                {language === 'vi' ? 'Thêm Dự Án' : 'Add Project'}
-              </Button>
-            </DialogTrigger>
+            <Button data-testid="button-add-project" className="h-10 px-4 min-w-[140px] justify-center" onClick={handleCreateProjectDraft}>
+              <Plus className="mr-2 h-4 w-4" />
+              {language === 'vi' ? 'Thêm Dự Án' : 'Add Project'}
+            </Button>
           <DialogContent className="max-w-4xl max-h-[85vh] flex flex-col">
             <DialogHeader>
               <DialogTitle>

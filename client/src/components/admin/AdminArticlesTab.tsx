@@ -365,6 +365,56 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
     setIsArticleDialogOpen(true);
   };
 
+  const handleCreateArticleDraft = async () => {
+    const timestamp = Date.now();
+    const draftSlug = `bai-viet-${timestamp}`;
+    const defaultCategory = (categories.find(c => c.type === 'article' && c.active) || categories.find(c => c.type === 'article'))?.slug || 'news';
+    try {
+      const res = await apiRequest('POST', '/api/articles', {
+        title: 'Bài Viết Mới',
+        slug: draftSlug,
+        content: ' ',
+        category: defaultCategory,
+        language: 'vi',
+        status: 'draft',
+        featured: false,
+      });
+      const draft = await res.json();
+      queryClient.invalidateQueries({ queryKey: ['/api/articles', 'all'] });
+      setEditingArticle(draft);
+      setArticleImagePreview('');
+      setArticleImageFile(null);
+      setArticleContentImages([]);
+      articleForm.reset({
+        titleVi: 'Bài Viết Mới',
+        titleEn: '',
+        excerptVi: '',
+        excerptEn: '',
+        contentVi: '',
+        contentEn: '',
+        slug: draftSlug,
+        category: defaultCategory,
+        status: 'draft',
+        featured: false,
+        featuredImage: '',
+        metaTitleEn: '',
+        metaTitleVi: '',
+        metaDescriptionEn: '',
+        metaDescriptionVi: '',
+        metaKeywordsEn: '',
+        metaKeywordsVi: '',
+      });
+      setIsArticleDialogOpen(true);
+    } catch {
+      setEditingArticle(null);
+      setArticleImagePreview('');
+      setArticleImageFile(null);
+      setArticleContentImages([]);
+      articleForm.reset();
+      setIsArticleDialogOpen(true);
+    }
+  };
+
   const onArticleSubmit = async (data: BilingualArticleFormData) => {
     try {
       const hasEn = data.titleEn && data.titleEn.trim() && data.contentEn && data.contentEn.trim();
@@ -833,40 +883,14 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
               articleForm.reset();
             }
           }}>
-            <DialogTrigger asChild>
-              <Button
-                onClick={() => {
-                  setEditingArticle(null);
-                  setArticleImagePreview('');
-                  setArticleImageFile(null);
-                  setArticleContentImages([]);
-                  articleForm.reset({
-                    titleEn: "",
-                    titleVi: "",
-                    excerptEn: "",
-                    excerptVi: "",
-                    contentEn: "",
-                    contentVi: "",
-                    slug: "",
-                    category: "news",
-                    status: "draft",
-                    featured: false,
-                    featuredImage: "",
-                    metaTitleEn: "",
-                    metaTitleVi: "",
-                    metaDescriptionEn: "",
-                    metaDescriptionVi: "",
-                    metaKeywordsEn: "",
-                    metaKeywordsVi: "",
-                  });
-                }}
-                data-testid="button-add-article"
-                className="h-10 px-4 min-w-[140px] justify-center"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                {language === 'vi' ? 'Thêm Bài Viết' : 'Add Article'}
-              </Button>
-            </DialogTrigger>
+            <Button
+              onClick={handleCreateArticleDraft}
+              data-testid="button-add-article"
+              className="h-10 px-4 min-w-[140px] justify-center"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              {language === 'vi' ? 'Thêm Bài Viết' : 'Add Article'}
+            </Button>
           </Dialog>
           <Button
             variant="outline"
