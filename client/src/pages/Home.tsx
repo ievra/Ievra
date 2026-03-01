@@ -807,6 +807,16 @@ export default function Home() {
                             )}
                           </div>
 
+                          <h3
+                            className={`text-white font-light leading-snug transition-all duration-500 ${
+                              isActive || showBothLarge
+                                ? 'text-2xl line-clamp-none'
+                                : 'text-base line-clamp-1 opacity-70'
+                            }`}
+                          >
+                            {project.title}
+                          </h3>
+
                           {project.completionYear && (
                             <div className="text-white">
                               <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
