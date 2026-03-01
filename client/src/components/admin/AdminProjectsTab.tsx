@@ -55,8 +55,6 @@ const bilingualProjectSchema = z.object({
   styleVi: z.string().optional(),
   designerEn: z.string().optional(),
   designerVi: z.string().optional(),
-  completionYearEn: z.string().optional(),
-  completionYearVi: z.string().optional(),
   coverImages: z.array(z.string()).max(1, "Maximum 1 cover image allowed").default([]),
   contentImages: z.array(z.string()).max(1, "Maximum 1 content image allowed").default([]),
   galleryImages: z.array(z.string()).max(10, "Maximum 10 gallery images allowed").default([]),
@@ -192,8 +190,6 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       styleVi: "",
       designerEn: "",
       designerVi: "",
-      completionYearEn: "",
-      completionYearVi: "",
       coverImages: [],
       contentImages: [],
       galleryImages: [],
@@ -384,8 +380,6 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       styleVi: viVersion?.style || "",
       designerEn: enVersion?.designer || "",
       designerVi: viVersion?.designer || "",
-      completionYearEn: enVersion?.completionYear || "",
-      completionYearVi: viVersion?.completionYear || "",
       coverImages: Array.isArray(project.coverImages) ? project.coverImages : [],
       contentImages: Array.isArray(project.contentImages) ? project.contentImages : [],
       galleryImages: Array.isArray(project.galleryImages) ? project.galleryImages : [],
@@ -509,7 +503,6 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
           duration: data.durationEn,
           style: data.styleEn,
           designer: data.designerEn,
-          completionYear: data.completionYearEn,
           coverImages: data.coverImages,
           contentImages: data.contentImages,
           galleryImages: data.galleryImages,
@@ -559,7 +552,6 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
           duration: data.durationVi,
           style: data.styleVi,
           designer: data.designerVi,
-          completionYear: data.completionYearVi,
           coverImages: data.coverImages,
           contentImages: data.contentImages,
           galleryImages: data.galleryImages,
@@ -1753,8 +1745,6 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                             if (!hasLocation) missingFields.push('Khu vực');
                             const hasArea = group.some(p => p.area && p.area.trim());
                             if (!hasArea) missingFields.push('Diện tích');
-                            const hasYear = group.some(p => p.completionYear && p.completionYear.trim());
-                            if (!hasYear) missingFields.push('Năm hoàn thành');
                             const hasMetaTitle = group.some(p => p.metaTitle && p.metaTitle.trim());
                             if (!hasMetaTitle) missingFields.push('SEO: Tiêu đề');
                             const hasMetaDesc = group.some(p => p.metaDescription && p.metaDescription.trim());
