@@ -152,6 +152,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
 
   const projectForm = useForm<BilingualProjectFormData>({
     resolver: zodResolver(bilingualProjectSchema),
+    shouldUnregister: true,
     defaultValues: {
       titleEn: "",
       titleVi: "",

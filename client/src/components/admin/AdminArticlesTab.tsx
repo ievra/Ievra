@@ -119,6 +119,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
 
   const articleForm = useForm<BilingualArticleFormData>({
     resolver: zodResolver(bilingualArticleSchema),
+    shouldUnregister: true,
     defaultValues: {
       titleEn: "",
       titleVi: "",
