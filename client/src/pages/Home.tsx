@@ -746,17 +746,12 @@ export default function Home() {
                     const isMobile = window.innerWidth < 640;
                     const totalCards = Math.min(10, featuredProjects?.length || 0);
                     if (isMobile) {
-                      // On mobile: inactive cards are 0px, only 16px gaps contribute to offset
                       return `translateX(-${activeProjectIndex * 16}px)`;
                     }
-                    const isLast = activeProjectIndex >= totalCards - 1;
-                    if (isLast && totalCards >= 2) {
-                      const unitPx = 18 * 16 + 16;
-                      return `translateX(-${(totalCards - 2) * unitPx}px)`;
-                    }
-                    const unitPx = 18 * 16 + 16;
                     const containerPx = projectsScrollRef.current?.offsetWidth || 1200;
                     const activeWidthPx = Math.min(window.innerWidth * 0.55, 44 * 16);
+                    const inactiveWidthPx = Math.max(120, (containerPx - activeWidthPx - 32) / 2);
+                    const unitPx = inactiveWidthPx + 16;
                     const totalContentPx = activeWidthPx + (totalCards - 1) * unitPx;
                     const maxOffsetPx = Math.max(0, totalContentPx - containerPx);
                     const desiredOffsetPx = activeProjectIndex * unitPx;
@@ -768,30 +763,16 @@ export default function Home() {
                     const isMobile = window.innerWidth < 640;
                     const totalCards = Math.min(10, featuredProjects?.length || 0);
                     const isActive = index === activeProjectIndex;
-                    const isLast = activeProjectIndex >= totalCards - 1;
-                    const showBothLarge = !isMobile && isLast && totalCards >= 2 && (index === totalCards - 1 || index === totalCards - 2);
+                    const containerPx = projectsScrollRef.current?.offsetWidth || 1200;
+                    const activeWidthPx = Math.min(window.innerWidth * 0.55, 44 * 16);
+                    const inactiveWidthPx = Math.max(120, (containerPx - activeWidthPx - 32) / 2);
                     let cardWidth: string;
                     if (isMobile) {
                       cardWidth = isActive ? `${projectsScrollRef.current?.offsetWidth || window.innerWidth - 32}px` : '0px';
-                    } else if (showBothLarge) {
-                      cardWidth = 'calc(50% - 0.5rem)';
                     } else if (isActive) {
-                      cardWidth = 'min(55vw, 44rem)';
+                      cardWidth = `${activeWidthPx}px`;
                     } else {
-                      const unitPx = 18 * 16 + 16;
-                      const containerPx = projectsScrollRef.current?.offsetWidth || 1200;
-                      const activeWidthPx = Math.min(window.innerWidth * 0.55, 44 * 16);
-                      const totalContentPx = activeWidthPx + (totalCards - 1) * unitPx;
-                      const maxOffsetPx = Math.max(0, totalContentPx - containerPx);
-                      const desiredOffsetPx = activeProjectIndex * unitPx;
-                      const atEnd = desiredOffsetPx >= maxOffsetPx && activeProjectIndex > 0;
-                      if (atEnd && index > activeProjectIndex) {
-                        const remaining = totalCards - activeProjectIndex - 1;
-                        const spaceForInactive = containerPx - activeWidthPx - remaining * 16;
-                        cardWidth = `${spaceForInactive / remaining}px`;
-                      } else {
-                        cardWidth = '18rem';
-                      }
+                      cardWidth = `${inactiveWidthPx}px`;
                     }
                     return (
                       <div
@@ -803,7 +784,7 @@ export default function Home() {
                           transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
                         }}
                         onClick={() => {
-                          if (isActive || showBothLarge) {
+                          if (isActive) {
                             navigate(project.slug ? `/portfolio/${project.slug}` : `/project/${project.id}`);
                           } else {
                             setActiveProjectIndex(index);
@@ -843,10 +824,9 @@ export default function Home() {
                           </div>
 
                           <div>
-                            {(isActive || showBothLarge) && (
+                            {isActive && (
                               <TypewriterTitle
                                 text={project.title}
-                                isActive={isActive || showBothLarge}
                                 className="text-white text-2xl font-light leading-snug mb-3"
                               />
                             )}
@@ -1028,14 +1008,10 @@ export default function Home() {
                     if (isMobile) {
                       return `translateX(-${activeArticleIndex * 16}px)`;
                     }
-                    const isLast = activeArticleIndex >= totalCards - 1;
-                    if (isLast && totalCards >= 2) {
-                      const unitPx = 18 * 16 + 16;
-                      return `translateX(-${(totalCards - 2) * unitPx}px)`;
-                    }
-                    const unitPx = 18 * 16 + 16;
                     const containerPx = articlesScrollRef.current?.offsetWidth || 1200;
                     const activeWidthPx = Math.min(window.innerWidth * 0.55, 44 * 16);
+                    const inactiveWidthPx = Math.max(120, (containerPx - activeWidthPx - 32) / 2);
+                    const unitPx = inactiveWidthPx + 16;
                     const totalContentPx = activeWidthPx + (totalCards - 1) * unitPx;
                     const maxOffsetPx = Math.max(0, totalContentPx - containerPx);
                     const desiredOffsetPx = activeArticleIndex * unitPx;
@@ -1047,17 +1023,16 @@ export default function Home() {
                     const isMobile = window.innerWidth < 640;
                     const totalCards = Math.min(10, featuredArticles?.length || 0);
                     const isActive = index === activeArticleIndex;
-                    const isLast = activeArticleIndex >= totalCards - 1;
-                    const showBothLarge = !isMobile && isLast && totalCards >= 2 && (index === totalCards - 1 || index === totalCards - 2);
+                    const containerPx = articlesScrollRef.current?.offsetWidth || 1200;
+                    const activeWidthPx = Math.min(window.innerWidth * 0.55, 44 * 16);
+                    const inactiveWidthPx = Math.max(120, (containerPx - activeWidthPx - 32) / 2);
                     let cardWidth: string;
                     if (isMobile) {
                       cardWidth = isActive ? `${articlesScrollRef.current?.offsetWidth || window.innerWidth - 32}px` : '0px';
-                    } else if (showBothLarge) {
-                      cardWidth = 'calc(50% - 0.5rem)';
                     } else if (isActive) {
-                      cardWidth = 'min(55vw, 44rem)';
+                      cardWidth = `${activeWidthPx}px`;
                     } else {
-                      cardWidth = '18rem';
+                      cardWidth = `${inactiveWidthPx}px`;
                     }
                     return (
                       <div
@@ -1068,7 +1043,7 @@ export default function Home() {
                           transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
                         }}
                         onClick={() => {
-                          if (isActive || showBothLarge) {
+                          if (isActive) {
                             navigate(`/blog/${article.slug}`);
                           } else {
                             setActiveArticleIndex(index);
@@ -1093,7 +1068,7 @@ export default function Home() {
 
                         {/* Content below image */}
                         <div className="p-4 flex flex-col" style={{ flex: '1' }}>
-                          {(isActive || showBothLarge) && (
+                          {isActive && (
                             <TypewriterTitle
                               text={article.title}
                               className="text-xl font-sans font-light mb-2"
@@ -1106,7 +1081,7 @@ export default function Home() {
                                 { year: "numeric", month: "long", day: "numeric" },
                               )}
                           </p>
-                          {(isActive || showBothLarge) && (
+                          {isActive && (
                             <p
                               className="text-foreground/80 text-sm line-clamp-3"
                               data-testid={`text-article-excerpt-${article.id}`}
