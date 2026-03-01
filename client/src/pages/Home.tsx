@@ -1659,8 +1659,8 @@ export default function Home() {
               <TypewriterText
                 reverse
                 text={language === "vi"
-                  ? "TÌM HIỂU THÊM VỀ QUY TRÌNH THIẾT KẾ VÀ DỊCH VỤ CỦA CHÚNG TÔI."
-                  : "LEARN MORE ABOUT OUR DESIGN PROCESS AND SERVICES."}
+                  ? (homepageContent?.faqSectionSubtitleVi || homepageContent?.faqSectionSubtitle || "TÌM HIỂU THÊM VỀ QUY TRÌNH THIẾT KẾ VÀ DỊCH VỤ CỦA CHÚNG TÔI.")
+                  : (homepageContent?.faqSectionSubtitle || "LEARN MORE ABOUT OUR DESIGN PROCESS AND SERVICES.")}
                 className="text-2xl md:text-3xl font-light text-white leading-relaxed text-right"
               />
             </div>

@@ -45,6 +45,8 @@ const homepageContentSchema = z.object({
   advantagesSubtitleVi: z.string().optional(),
   faqSectionTitle: z.string().optional(),
   faqSectionTitleVi: z.string().optional(),
+  faqSectionSubtitle: z.string().optional(),
+  faqSectionSubtitleVi: z.string().optional(),
   partnersTitle: z.string().optional(),
   partnersTitleVi: z.string().optional(),
   partnersSubtitle: z.string().optional(),
@@ -215,6 +217,8 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
       advantagesSubtitleVi: "",
       faqSectionTitle: "",
       faqSectionTitleVi: "",
+      faqSectionSubtitle: "",
+      faqSectionSubtitleVi: "",
       partnersTitle: "",
       partnersTitleVi: "",
       partnersSubtitle: "",
@@ -303,6 +307,8 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
         advantagesSubtitleVi: homepageContent.advantagesSubtitleVi || "Tại sao chọn IEVRA Design & Build",
         faqSectionTitle: homepageContent.faqSectionTitle || "HAVE ANY QUESTIONS?",
         faqSectionTitleVi: homepageContent.faqSectionTitleVi || "CÓ THẮC MẮC GÌ KHÔNG?",
+        faqSectionSubtitle: homepageContent.faqSectionSubtitle || "",
+        faqSectionSubtitleVi: homepageContent.faqSectionSubtitleVi || "",
         partnersTitle: homepageContent.partnersTitle || "OUR PARTNERS",
         partnersTitleVi: homepageContent.partnersTitleVi || "ĐỐI TÁC CỦA CHÚNG TÔI",
         partnersSubtitle: homepageContent.partnersSubtitle || "",
@@ -1032,6 +1038,31 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                       placeholder="e.g., Để lại yêu cầu tư vấn miễn phí và chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất."
                       rows={2}
                       data-testid="textarea-cta-subtitle-vi"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* FAQ Section */}
+              <div className="p-4">
+                <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Mục FAQ' : 'FAQ Section'}</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-light mb-2 block">Subtitle (EN)</label>
+                    <Textarea 
+                      {...homepageContentForm.register("faqSectionSubtitle")}
+                      placeholder="e.g., LEARN MORE ABOUT OUR DESIGN PROCESS AND SERVICES."
+                      rows={2}
+                      data-testid="textarea-faq-subtitle-en"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-light mb-2 block">Subtitle (VI)</label>
+                    <Textarea 
+                      {...homepageContentForm.register("faqSectionSubtitleVi")}
+                      placeholder="e.g., TÌM HIỂU THÊM VỀ QUY TRÌNH THIẾT KẾ VÀ DỊCH VỤ CỦA CHÚNG TÔI."
+                      rows={2}
+                      data-testid="textarea-faq-subtitle-vi"
                     />
                   </div>
                 </div>

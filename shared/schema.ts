@@ -235,6 +235,8 @@ export const homepageContent = pgTable("homepage_content", {
   // FAQ Section Header
   faqSectionTitle: text("faq_section_title"),
   faqSectionTitleVi: text("faq_section_title_vi"),
+  faqSectionSubtitle: text("faq_section_subtitle"),
+  faqSectionSubtitleVi: text("faq_section_subtitle_vi"),
   // Partners Section Header
   partnersTitle: text("partners_title"),
   partnersTitleVi: text("partners_title_vi"),
