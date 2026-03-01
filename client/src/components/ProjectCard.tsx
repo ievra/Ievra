@@ -61,14 +61,14 @@ export default function ProjectCard({
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
 
         {/* Top-left: Category (large) / Style / Area (small) */}
-        <div className="absolute top-0 left-0 p-5 md:p-6 flex flex-col gap-1">
+        <div className="absolute top-0 left-0 p-5 md:p-6 flex flex-col gap-0">
           {categoryLabel && (
-            <p className="text-white text-sm md:text-base uppercase tracking-[0.15em] font-light leading-tight">
+            <p className="text-white text-sm md:text-base uppercase tracking-[0.15em] font-light leading-snug mb-0.5">
               {categoryLabel}
             </p>
           )}
           {subInfoItems.map((item, i) => (
-            <p key={i} className="text-white/60 text-[11px] tracking-[0.1em] font-light">
+            <p key={i} className="text-white/60 text-[11px] tracking-[0.08em] font-light leading-snug">
               {item}
             </p>
           ))}
