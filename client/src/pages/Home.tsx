@@ -1394,16 +1394,19 @@ export default function Home() {
           </div>
         </div>
 
-        {partners && partners.length > 0 && (
-          <div className="space-y-8">
-            {/* First row - scrolling right */}
-            <div className="relative overflow-hidden">
-              <div className="inline-flex animate-scroll-right-seamless">
-                {/* Create multiple copies for seamless infinite loop */}
-                {Array.from({ length: 20 }).flatMap((_, setIndex) =>
-                  partners
-                    .slice(0, Math.ceil(partners.length / 2))
-                    .map((partner) => (
+        {partners && partners.length > 0 && (() => {
+          // w-64 (256px) + mx-6*2 (48px) = 304px per logo
+          // Need one "set" >= viewport so translateX(-50%) loops seamlessly
+          const logoWidth = 304;
+          const reps = Math.max(1, Math.ceil(1600 / (partners.length * logoWidth)));
+          const row2 = [...partners].reverse();
+          return (
+            <div className="space-y-8">
+              {/* First row - scrolling right */}
+              <div className="relative overflow-hidden">
+                <div className="inline-flex animate-scroll-right-seamless">
+                  {Array.from({ length: reps * 2 }).flatMap((_, setIndex) =>
+                    partners.map((partner) => (
                       <div
                         key={`row1-${setIndex}-${partner.id}`}
                         className="flex-shrink-0 w-64 h-32 mx-6 flex items-center justify-center"
@@ -1416,18 +1419,15 @@ export default function Home() {
                         />
                       </div>
                     ))
-                )}
+                  )}
+                </div>
               </div>
-            </div>
 
-            {/* Second row - scrolling left */}
-            <div className="relative overflow-hidden">
-              <div className="inline-flex animate-scroll-left-seamless">
-                {/* Create multiple copies for seamless infinite loop */}
-                {Array.from({ length: 20 }).flatMap((_, setIndex) =>
-                  partners
-                    .slice(Math.ceil(partners.length / 2))
-                    .map((partner) => (
+              {/* Second row - scrolling left (reversed for variety) */}
+              <div className="relative overflow-hidden">
+                <div className="inline-flex animate-scroll-left-seamless">
+                  {Array.from({ length: reps * 2 }).flatMap((_, setIndex) =>
+                    row2.map((partner) => (
                       <div
                         key={`row2-${setIndex}-${partner.id}`}
                         className="flex-shrink-0 w-64 h-32 mx-6 flex items-center justify-center"
@@ -1440,11 +1440,12 @@ export default function Home() {
                         />
                       </div>
                     ))
-                )}
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {partnersLoading && (
           <div className="space-y-8">
