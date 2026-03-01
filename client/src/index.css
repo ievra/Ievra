@@ -477,7 +477,7 @@
   }
 
   .animate-hero-progress {
-    animation: hero-progress 5s linear forwards;
+    animation: hero-progress 3s linear forwards;
   }
 
   /* Navigation Link Underline Animation */
