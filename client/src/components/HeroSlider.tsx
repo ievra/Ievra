@@ -121,10 +121,10 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
                 </div>
                 
                 <div className="relative h-full flex flex-col justify-between" style={{ zIndex: 10 }}>
-                  <div className="flex-1 flex items-center">
+                  <div className="flex-1 flex items-end pb-4">
                     <Link 
                       href={project.slug ? `/portfolio/${project.slug}` : `/project/${project.id}`} 
-                      className="block"
+                      className="block group"
                       data-testid={`slide-link-${project.id}`}
                     >
                       <div className="max-w-4xl">
@@ -132,6 +132,9 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
                         <span className="js-slider-slide-author sr-only">{project.designer || 'MODERNO INTERIORS Design'}</span>
                         <time className="js-slider-slide-date sr-only">{project.completionYear || new Date().getFullYear()}</time>
                         <span className="js-slider-slide-published-in sr-only">{project.category}</span>
+                        <h2 className="text-white text-2xl md:text-3xl font-light tracking-wide leading-snug group-hover:text-white/80 transition-colors duration-300">
+                          {project.title}
+                        </h2>
                       </div>
                     </Link>
                   </div>
