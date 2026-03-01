@@ -789,15 +789,6 @@ export default function Home() {
 
                         <div className="absolute inset-0 p-6 pb-8 flex flex-col justify-between">
                           <div>
-                            <h3
-                              className={`text-white font-light leading-snug transition-all duration-500 mb-3 ${
-                                isActive || showBothLarge
-                                  ? 'text-2xl line-clamp-none'
-                                  : 'text-base line-clamp-1 opacity-70'
-                              }`}
-                            >
-                              {project.title}
-                            </h3>
                             <p
                               className="text-white/80 text-sm uppercase tracking-wide mb-1"
                               data-testid={`text-category-${project.id}`}
@@ -809,23 +800,41 @@ export default function Home() {
                                 {project.style}
                               </p>
                             )}
-                            {project.area && (
-                              <p className="text-white/60 text-xs" data-testid={`text-area-${project.id}`}>
-                                {project.area}
-                              </p>
-                            )}
                           </div>
 
-                          {project.completionYear && (
-                            <div className="text-white">
-                              <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
-                                {language === "vi" ? "Năm" : "Year"}
-                              </p>
-                              <p className="text-sm font-light" data-testid={`text-year-${project.id}`}>
-                                {project.completionYear}
-                              </p>
+                          <div>
+                            <h3
+                              className={`text-white font-light leading-snug transition-all duration-500 mb-3 ${
+                                isActive || showBothLarge
+                                  ? 'text-2xl line-clamp-none'
+                                  : 'text-base line-clamp-1 opacity-70'
+                              }`}
+                            >
+                              {project.title}
+                            </h3>
+                            <div className="flex items-end justify-between">
+                              {project.completionYear && (
+                                <div className="text-white">
+                                  <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
+                                    {language === "vi" ? "Năm" : "Year"}
+                                  </p>
+                                  <p className="text-sm font-light" data-testid={`text-year-${project.id}`}>
+                                    {project.completionYear}
+                                  </p>
+                                </div>
+                              )}
+                              {project.area && (
+                                <div className="text-white text-right">
+                                  <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
+                                    {language === "vi" ? "Khu vực" : "Area"}
+                                  </p>
+                                  <p className="text-sm font-light" data-testid={`text-area-${project.id}`}>
+                                    {project.area}
+                                  </p>
+                                </div>
+                              )}
                             </div>
-                          )}
+                          </div>
                         </div>
                       </div>
                     );
