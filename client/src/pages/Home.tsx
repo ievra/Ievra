@@ -1087,7 +1087,7 @@ export default function Home() {
               </p>
 
               {/* Right side content */}
-              <p className="text-xl md:text-2xl font-light leading-relaxed text-white scroll-animate-right">
+              <p className="text-xl md:text-2xl font-light leading-relaxed text-white scroll-animate-right text-right">
                 {homepageContent?.quality2RightText || (language === "vi"
                   ? "Chúng tôi chỉ sử dụng vật liệu chất lượng cao và đồ nội thất từ các nhà sản xuất uy tín."
                   : "We use only high-quality materials and furniture from trusted manufacturers.")}
