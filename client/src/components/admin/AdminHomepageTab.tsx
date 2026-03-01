@@ -1018,56 +1018,6 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                 </div>
               </div>
 
-              {/* CTA/Questions */}
-              <div className="p-4">
-                <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Mục CTA/Câu Hỏi' : 'CTA/Questions Section'}</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-light mb-2 block">Subtitle (EN)</label>
-                    <Textarea 
-                      {...homepageContentForm.register("ctaSubtitle")}
-                      placeholder="e.g., Leave a request for a free consultation and we will contact you as soon as possible."
-                      rows={2}
-                      data-testid="textarea-cta-subtitle-en"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm font-light mb-2 block">Subtitle (VI)</label>
-                    <Textarea 
-                      {...homepageContentForm.register("ctaSubtitleVi")}
-                      placeholder="e.g., Để lại yêu cầu tư vấn miễn phí và chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất."
-                      rows={2}
-                      data-testid="textarea-cta-subtitle-vi"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* FAQ Section */}
-              <div className="p-4">
-                <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Mục FAQ' : 'FAQ Section'}</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-light mb-2 block">Subtitle (EN)</label>
-                    <Textarea 
-                      {...homepageContentForm.register("faqSectionSubtitle")}
-                      placeholder="e.g., LEARN MORE ABOUT OUR DESIGN PROCESS AND SERVICES."
-                      rows={2}
-                      data-testid="textarea-faq-subtitle-en"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm font-light mb-2 block">Subtitle (VI)</label>
-                    <Textarea 
-                      {...homepageContentForm.register("faqSectionSubtitleVi")}
-                      placeholder="e.g., TÌM HIỂU THÊM VỀ QUY TRÌNH THIẾT KẾ VÀ DỊCH VỤ CỦA CHÚNG TÔI."
-                      rows={2}
-                      data-testid="textarea-faq-subtitle-vi"
-                    />
-                  </div>
-                </div>
-              </div>
-
               {/* Journey Steps */}
               <div className="p-4">
                 <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Mục Các Bước Hành Trình' : 'Journey Steps Section'}</h3>
@@ -1136,6 +1086,56 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                       placeholder="e.g., Chúng tôi tự hào hợp tác với những thương hiệu uy tín hàng đầu."
                       rows={2}
                       data-testid="textarea-partners-subtitle-vi"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* CTA/Questions */}
+              <div className="p-4">
+                <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Mục CTA/Câu Hỏi' : 'CTA/Questions Section'}</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-light mb-2 block">Subtitle (EN)</label>
+                    <Textarea 
+                      {...homepageContentForm.register("ctaSubtitle")}
+                      placeholder="e.g., Leave a request for a free consultation and we will contact you as soon as possible."
+                      rows={2}
+                      data-testid="textarea-cta-subtitle-en"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-light mb-2 block">Subtitle (VI)</label>
+                    <Textarea 
+                      {...homepageContentForm.register("ctaSubtitleVi")}
+                      placeholder="e.g., Để lại yêu cầu tư vấn miễn phí và chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất."
+                      rows={2}
+                      data-testid="textarea-cta-subtitle-vi"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* FAQ Section */}
+              <div className="p-4">
+                <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Mục FAQ' : 'FAQ Section'}</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-light mb-2 block">Subtitle (EN)</label>
+                    <Textarea 
+                      {...homepageContentForm.register("faqSectionSubtitle")}
+                      placeholder="e.g., LEARN MORE ABOUT OUR DESIGN PROCESS AND SERVICES."
+                      rows={2}
+                      data-testid="textarea-faq-subtitle-en"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-light mb-2 block">Subtitle (VI)</label>
+                    <Textarea 
+                      {...homepageContentForm.register("faqSectionSubtitleVi")}
+                      placeholder="e.g., TÌM HIỂU THÊM VỀ QUY TRÌNH THIẾT KẾ VÀ DỊCH VỤ CỦA CHÚNG TÔI."
+                      rows={2}
+                      data-testid="textarea-faq-subtitle-vi"
                     />
                   </div>
                 </div>
