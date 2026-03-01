@@ -35,6 +35,13 @@ export default function ProjectCard({
   };
 
   const title = project.title;
+  const p = project as any;
+
+  const topInfo = [
+    getCategoryLabel(project.category),
+    p.style,
+    p.area,
+  ].filter(Boolean).join(' · ');
 
   return (
     <div
@@ -55,22 +62,41 @@ export default function ProjectCard({
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
 
+        {/* Top-left: Category · Style · Area */}
+        {topInfo && (
+          <div className="absolute top-0 left-0 p-5 md:p-6">
+            <p className="text-white/55 text-[11px] uppercase tracking-[0.2em] font-light">
+              {topInfo}
+            </p>
+          </div>
+        )}
+
+        {/* Bottom: Title + Year/Location row */}
         <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
-          <p
-            className="text-white/55 text-[12px] uppercase tracking-[0.25em] mb-2 font-light"
-            data-testid={`text-category-${project.id}`}
-          >
-            {getCategoryLabel(project.category)}
-            {project.location && (
-              <span className="ml-3 text-white/40">· {project.location}</span>
-            )}
-          </p>
           <h3
-            className="text-white uppercase tracking-wide text-sm md:text-base font-light"
+            className="text-white uppercase tracking-wide text-sm md:text-base font-light mb-3"
             data-testid={`text-title-${project.id}`}
           >
             {title}
           </h3>
+          <div className="flex items-end justify-between">
+            {p.completionYear && (
+              <div className="text-white">
+                <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
+                  {language === 'vi' ? 'Năm' : 'Year'}
+                </p>
+                <p className="text-white/90 text-xs font-light">{p.completionYear}</p>
+              </div>
+            )}
+            {p.location && (
+              <div className="text-right text-white">
+                <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
+                  {language === 'vi' ? 'Khu vực' : 'Location'}
+                </p>
+                <p className="text-white/90 text-xs font-light">{p.location}</p>
+              </div>
+            )}
+          </div>
         </div>
       </Link>
     </div>
