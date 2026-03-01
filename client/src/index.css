@@ -566,11 +566,11 @@ img {
   }
 
   .animate-scroll-right-seamless {
-    animation: scroll-right-seamless 40s linear infinite;
+    animation: scroll-right-seamless 20s linear infinite;
   }
 
   .animate-scroll-left-seamless {
-    animation: scroll-left-seamless 40s linear infinite;
+    animation: scroll-left-seamless 20s linear infinite;
   }
 
   /* Section title slide-in animations */
