@@ -47,6 +47,8 @@ const homepageContentSchema = z.object({
   faqSectionTitleVi: z.string().optional(),
   partnersTitle: z.string().optional(),
   partnersTitleVi: z.string().optional(),
+  partnersSubtitle: z.string().optional(),
+  partnersSubtitleVi: z.string().optional(),
   featuredNewsTitle: z.string().optional(),
   featuredNewsTitleVi: z.string().optional(),
   featuredNewsSubtitle: z.string().optional(),
@@ -215,6 +217,8 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
       faqSectionTitleVi: "",
       partnersTitle: "",
       partnersTitleVi: "",
+      partnersSubtitle: "",
+      partnersSubtitleVi: "",
       ctaSubtitle: "",
       ctaSubtitleVi: "",
       statsProjectsLabel: "",
@@ -301,6 +305,8 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
         faqSectionTitleVi: homepageContent.faqSectionTitleVi || "CÓ THẮC MẮC GÌ KHÔNG?",
         partnersTitle: homepageContent.partnersTitle || "OUR PARTNERS",
         partnersTitleVi: homepageContent.partnersTitleVi || "ĐỐI TÁC CỦA CHÚNG TÔI",
+        partnersSubtitle: homepageContent.partnersSubtitle || "",
+        partnersSubtitleVi: homepageContent.partnersSubtitleVi || "",
         featuredNewsTitle: homepageContent.featuredNewsTitle || "FEATURED NEWS",
         featuredNewsTitleVi: homepageContent.featuredNewsTitleVi || "TIN TỨC NỔI BẬT",
         featuredNewsSubtitle: homepageContent.featuredNewsSubtitle || "Discover the latest design trends and expert insights from our professional team.",
@@ -960,43 +966,23 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
               <div className="p-4">
                 <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Mục Dự Án Nổi Bật' : 'Featured Projects Section'}</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-light mb-2 block">Title (EN)</label>
-                      <Input 
-                        {...homepageContentForm.register("featuredBadge")}
-                        placeholder="e.g., FEATURED PROJECTS"
-                        data-testid="input-featured-projects-title-en"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-light mb-2 block">Subtitle (EN)</label>
-                      <Textarea 
-                        {...homepageContentForm.register("featuredDescription")}
-                        placeholder="e.g., Discover our latest projects where innovation meets elegance."
-                        rows={2}
-                        data-testid="textarea-featured-projects-subtitle-en"
-                      />
-                    </div>
+                  <div>
+                    <label className="text-sm font-light mb-2 block">Subtitle (EN)</label>
+                    <Textarea 
+                      {...homepageContentForm.register("featuredDescription")}
+                      placeholder="e.g., Discover our latest projects where innovation meets elegance."
+                      rows={2}
+                      data-testid="textarea-featured-projects-subtitle-en"
+                    />
                   </div>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-light mb-2 block">Title (VI)</label>
-                      <Input 
-                        {...homepageContentForm.register("featuredBadgeVi")}
-                        placeholder="e.g., DỰ ÁN NỔI BẬT"
-                        data-testid="input-featured-projects-title-vi"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-light mb-2 block">Subtitle (VI)</label>
-                      <Textarea 
-                        {...homepageContentForm.register("featuredDescriptionVi")}
-                        placeholder="e.g., Khám phá các dự án mới nhất của chúng tôi nơi sự đổi mới gặp gỡ sự thanh lịch."
-                        rows={2}
-                        data-testid="textarea-featured-projects-subtitle-vi"
-                      />
-                    </div>
+                  <div>
+                    <label className="text-sm font-light mb-2 block">Subtitle (VI)</label>
+                    <Textarea 
+                      {...homepageContentForm.register("featuredDescriptionVi")}
+                      placeholder="e.g., Khám phá các dự án mới nhất của chúng tôi nơi sự đổi mới gặp gỡ sự thanh lịch."
+                      rows={2}
+                      data-testid="textarea-featured-projects-subtitle-vi"
+                    />
                   </div>
                 </div>
               </div>
@@ -1005,43 +991,23 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
               <div className="p-4">
                 <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Mục Tin Tức Nổi Bật' : 'Featured News Section'}</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-light mb-2 block">Title (EN)</label>
-                      <Input 
-                        {...homepageContentForm.register("featuredNewsTitle")}
-                        placeholder="e.g., FEATURED NEWS"
-                        data-testid="input-featured-news-title-en"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-light mb-2 block">Subtitle (EN)</label>
-                      <Textarea 
-                        {...homepageContentForm.register("featuredNewsSubtitle")}
-                        placeholder="e.g., Discover the latest design trends and expert insights from our professional team."
-                        rows={2}
-                        data-testid="textarea-featured-news-subtitle-en"
-                      />
-                    </div>
+                  <div>
+                    <label className="text-sm font-light mb-2 block">Subtitle (EN)</label>
+                    <Textarea 
+                      {...homepageContentForm.register("featuredNewsSubtitle")}
+                      placeholder="e.g., Discover the latest design trends and expert insights from our professional team."
+                      rows={2}
+                      data-testid="textarea-featured-news-subtitle-en"
+                    />
                   </div>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-light mb-2 block">Title (VI)</label>
-                      <Input 
-                        {...homepageContentForm.register("featuredNewsTitleVi")}
-                        placeholder="e.g., TIN TỨC NỔI BẬT"
-                        data-testid="input-featured-news-title-vi"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-light mb-2 block">Subtitle (VI)</label>
-                      <Textarea 
-                        {...homepageContentForm.register("featuredNewsSubtitleVi")}
-                        placeholder="e.g., Khám phá xu hướng thiết kế mới nhất và những hiểu biết chuyên sâu từ đội ngũ chuyên nghiệp của chúng tôi."
-                        rows={2}
-                        data-testid="textarea-featured-news-subtitle-vi"
-                      />
-                    </div>
+                  <div>
+                    <label className="text-sm font-light mb-2 block">Subtitle (VI)</label>
+                    <Textarea 
+                      {...homepageContentForm.register("featuredNewsSubtitleVi")}
+                      placeholder="e.g., Khám phá xu hướng thiết kế mới nhất và những hiểu biết chuyên sâu từ đội ngũ chuyên nghiệp của chúng tôi."
+                      rows={2}
+                      data-testid="textarea-featured-news-subtitle-vi"
+                    />
                   </div>
                 </div>
               </div>
@@ -1050,43 +1016,23 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
               <div className="p-4">
                 <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Mục CTA/Câu Hỏi' : 'CTA/Questions Section'}</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-light mb-2 block">Title (EN)</label>
-                      <Input 
-                        {...homepageContentForm.register("faqSectionTitle")}
-                        placeholder="e.g., GOT QUESTIONS?"
-                        data-testid="input-cta-title-en"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-light mb-2 block">Subtitle (EN)</label>
-                      <Textarea 
-                        {...homepageContentForm.register("ctaSubtitle")}
-                        placeholder="e.g., Leave a request for a free consultation and we will contact you as soon as possible."
-                        rows={2}
-                        data-testid="textarea-cta-subtitle-en"
-                      />
-                    </div>
+                  <div>
+                    <label className="text-sm font-light mb-2 block">Subtitle (EN)</label>
+                    <Textarea 
+                      {...homepageContentForm.register("ctaSubtitle")}
+                      placeholder="e.g., Leave a request for a free consultation and we will contact you as soon as possible."
+                      rows={2}
+                      data-testid="textarea-cta-subtitle-en"
+                    />
                   </div>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-light mb-2 block">Title (VI)</label>
-                      <Input 
-                        {...homepageContentForm.register("faqSectionTitleVi")}
-                        placeholder="e.g., CÓ CÂU HỎI?"
-                        data-testid="input-cta-title-vi"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-light mb-2 block">Subtitle (VI)</label>
-                      <Textarea 
-                        {...homepageContentForm.register("ctaSubtitleVi")}
-                        placeholder="e.g., Để lại yêu cầu tư vấn miễn phí và chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất."
-                        rows={2}
-                        data-testid="textarea-cta-subtitle-vi"
-                      />
-                    </div>
+                  <div>
+                    <label className="text-sm font-light mb-2 block">Subtitle (VI)</label>
+                    <Textarea 
+                      {...homepageContentForm.register("ctaSubtitleVi")}
+                      placeholder="e.g., Để lại yêu cầu tư vấn miễn phí và chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất."
+                      rows={2}
+                      data-testid="textarea-cta-subtitle-vi"
+                    />
                   </div>
                 </div>
               </div>
@@ -1095,43 +1041,23 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
               <div className="p-4">
                 <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Mục Các Bước Hành Trình' : 'Journey Steps Section'}</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-light mb-2 block">Journey Title (EN)</label>
-                      <Input 
-                        {...homepageContentForm.register("journeyTitle")}
-                        placeholder="e.g., THE JOURNEY TO YOUR DREAM SPACE"
-                        data-testid="input-journey-title-en"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-light mb-2 block">Journey Description (EN)</label>
-                      <Textarea 
-                        {...homepageContentForm.register("journeyDescription")}
-                        rows={3}
-                        placeholder="Description for the journey/process section"
-                        data-testid="textarea-journey-description-en"
-                      />
-                    </div>
+                  <div>
+                    <label className="text-sm font-light mb-2 block">Description (EN)</label>
+                    <Textarea 
+                      {...homepageContentForm.register("journeyDescription")}
+                      rows={3}
+                      placeholder="Description for the journey/process section"
+                      data-testid="textarea-journey-description-en"
+                    />
                   </div>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-light mb-2 block">Journey Title (VI)</label>
-                      <Input 
-                        {...homepageContentForm.register("journeyTitleVi")}
-                        placeholder="e.g., HÀNH TRÌNH ĐẾN KHÔNG GIAN MONG ƯỚC"
-                        data-testid="input-journey-title-vi"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-light mb-2 block">Journey Description (VI)</label>
-                      <Textarea 
-                        {...homepageContentForm.register("journeyDescriptionVi")}
-                        rows={3}
-                        placeholder="Mô tả cho phần hành trình/quy trình"
-                        data-testid="textarea-journey-description-vi"
-                      />
-                    </div>
+                  <div>
+                    <label className="text-sm font-light mb-2 block">Description (VI)</label>
+                    <Textarea 
+                      {...homepageContentForm.register("journeyDescriptionVi")}
+                      rows={3}
+                      placeholder="Mô tả cho phần hành trình/quy trình"
+                      data-testid="textarea-journey-description-vi"
+                    />
                   </div>
                 </div>
               </div>
@@ -1140,41 +1066,21 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
               <div className="p-4">
                 <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Mục Ưu Điểm' : 'Advantages Section'}</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-light mb-2 block">Advantages Title (EN)</label>
-                      <Input 
-                        {...homepageContentForm.register("advantagesTitle")}
-                        placeholder="e.g., ADVANTAGES"
-                        data-testid="input-advantages-title-en"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-light mb-2 block">Advantages Subtitle (EN)</label>
-                      <Input 
-                        {...homepageContentForm.register("advantagesSubtitle")}
-                        placeholder="e.g., Why Choose IEVRA Design & Build"
-                        data-testid="input-advantages-subtitle-en"
-                      />
-                    </div>
+                  <div>
+                    <label className="text-sm font-light mb-2 block">Subtitle (EN)</label>
+                    <Input 
+                      {...homepageContentForm.register("advantagesSubtitle")}
+                      placeholder="e.g., Why Choose IEVRA Design & Build"
+                      data-testid="input-advantages-subtitle-en"
+                    />
                   </div>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-light mb-2 block">Advantages Title (VI)</label>
-                      <Input 
-                        {...homepageContentForm.register("advantagesTitleVi")}
-                        placeholder="e.g., ƯU ĐIỂM"
-                        data-testid="input-advantages-title-vi"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-light mb-2 block">Advantages Subtitle (VI)</label>
-                      <Input 
-                        {...homepageContentForm.register("advantagesSubtitleVi")}
-                        placeholder="e.g., Tại Sao Chọn IEVRA Design & Build"
-                        data-testid="input-advantages-subtitle-vi"
-                      />
-                    </div>
+                  <div>
+                    <label className="text-sm font-light mb-2 block">Subtitle (VI)</label>
+                    <Input 
+                      {...homepageContentForm.register("advantagesSubtitleVi")}
+                      placeholder="e.g., Tại Sao Chọn IEVRA Design & Build"
+                      data-testid="input-advantages-subtitle-vi"
+                    />
                   </div>
                 </div>
               </div>
@@ -1184,19 +1090,21 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                 <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Mục Đối Tác' : 'Partners Section'}</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-light mb-2 block">Partners Title (EN)</label>
-                    <Input 
-                      {...homepageContentForm.register("partnersTitle")}
-                      placeholder="e.g., OUR PARTNERS"
-                      data-testid="input-partners-title-en"
+                    <label className="text-sm font-light mb-2 block">Subtitle (EN)</label>
+                    <Textarea 
+                      {...homepageContentForm.register("partnersSubtitle")}
+                      placeholder="e.g., We are proud to work with leading prestigious brands."
+                      rows={2}
+                      data-testid="textarea-partners-subtitle-en"
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-light mb-2 block">Partners Title (VI)</label>
-                    <Input 
-                      {...homepageContentForm.register("partnersTitleVi")}
-                      placeholder="e.g., ĐỐI TÁC CỦA CHÚNG TÔI"
-                      data-testid="input-partners-title-vi"
+                    <label className="text-sm font-light mb-2 block">Subtitle (VI)</label>
+                    <Textarea 
+                      {...homepageContentForm.register("partnersSubtitleVi")}
+                      placeholder="e.g., Chúng tôi tự hào hợp tác với những thương hiệu uy tín hàng đầu."
+                      rows={2}
+                      data-testid="textarea-partners-subtitle-vi"
                     />
                   </div>
                 </div>

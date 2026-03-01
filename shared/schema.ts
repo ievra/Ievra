@@ -238,6 +238,8 @@ export const homepageContent = pgTable("homepage_content", {
   // Partners Section Header
   partnersTitle: text("partners_title"),
   partnersTitleVi: text("partners_title_vi"),
+  partnersSubtitle: text("partners_subtitle"),
+  partnersSubtitleVi: text("partners_subtitle_vi"),
   // Featured News Section
   featuredNewsTitle: text("featured_news_title"),
   featuredNewsTitleVi: text("featured_news_title_vi"),

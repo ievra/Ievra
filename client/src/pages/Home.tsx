@@ -1386,8 +1386,8 @@ export default function Home() {
               <TypewriterText
                 reverse
                 text={language === "vi"
-                  ? "Chúng tôi tự hào hợp tác với những thương hiệu uy tín hàng đầu, mang đến những sản phẩm và dịch vụ chất lượng cao nhất cho khách hàng."
-                  : "We are proud to work with leading prestigious brands, bringing the highest quality products and services to our clients."}
+                  ? (homepageContent?.partnersSubtitleVi || homepageContent?.partnersSubtitle || "Chúng tôi tự hào hợp tác với những thương hiệu uy tín hàng đầu, mang đến những sản phẩm và dịch vụ chất lượng cao nhất cho khách hàng.")
+                  : (homepageContent?.partnersSubtitle || "We are proud to work with leading prestigious brands, bringing the highest quality products and services to our clients.")}
                 className="text-2xl md:text-3xl font-light text-foreground leading-relaxed text-right"
               />
             </div>
