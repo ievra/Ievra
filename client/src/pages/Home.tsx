@@ -619,7 +619,7 @@ export default function Home() {
       <HeroSlider projects={featuredProjects || []} />
       {/* Featured Projects Section */}
       <section id="featured-projects" className="py-16 bg-card">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="mb-16">
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
               <div className="max-w-4xl">
@@ -837,7 +837,7 @@ export default function Home() {
         >
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/60" />
         </div>
-        <div className="relative h-full max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center">
+        <div className="relative h-full w-full px-4 sm:px-6 lg:px-8 flex items-center">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 w-full items-center">
             <div className="text-white space-y-6 scroll-animate">
               <p className="md:text-5xl font-light text-[36px]">
@@ -858,7 +858,7 @@ export default function Home() {
       </section>
       {/* Featured News Section */}
       <section id="featured-news" className="py-16 bg-background">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="mb-16">
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
               <div className="max-w-4xl">
@@ -985,7 +985,7 @@ export default function Home() {
         </div>
 
         <div className="relative h-full flex items-center">
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="w-full px-4 sm:px-6 lg:px-8 w-full">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center h-full">
               {/* Left side text */}
               <p className="text-2xl md:text-3xl lg:text-4xl font-light leading-relaxed text-white scroll-animate">
@@ -1010,7 +1010,7 @@ export default function Home() {
         onMouseEnter={handleProcessSectionMouseEnter}
         onMouseLeave={handleProcessSectionMouseLeave}
       >
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           {/* Section Title */}
           <div className="mb-16">
             <div className="max-w-4xl ml-auto">
@@ -1094,7 +1094,7 @@ export default function Home() {
       </section>
       {/* Why Choose Us Section */}
       <section className="py-16 bg-black">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="mb-16">
             <h3 className="text-3xl md:text-4xl font-light text-white scroll-animate">
@@ -1157,7 +1157,7 @@ export default function Home() {
       </section>
       {/* Partners Section */}
       <section className="py-16 bg-black overflow-hidden">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 mb-16">
+        <div className="w-full px-4 sm:px-6 lg:px-8 mb-16">
           <div className="flex justify-end">
             <div className="max-w-4xl">
               <p
@@ -1245,7 +1245,7 @@ export default function Home() {
       {/* Quick Contact Section */}
       <section className="py-16 bg-black">
         <div
-          className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8"
+          className="w-full px-4 sm:px-6 lg:px-8"
           onMouseEnter={handleContactMouseEnter}
           onMouseLeave={handleContactMouseLeave}
         >
@@ -1432,7 +1432,7 @@ export default function Home() {
         onMouseEnter={handleFaqSectionMouseEnter}
         onMouseLeave={handleFaqSectionMouseLeave}
       >
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           {/* Section Title */}
           <div className="mb-16">
             <div className="max-w-4xl ml-auto">
