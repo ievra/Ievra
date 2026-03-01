@@ -1399,23 +1399,20 @@ export default function Home() {
             {/* First row - scrolling right */}
             <div className="relative overflow-hidden">
               <div className="inline-flex animate-scroll-right-seamless">
-                {/* Create multiple copies for seamless infinite loop */}
-                {Array.from({ length: 20 }).flatMap((_, setIndex) =>
-                  partners
-                    .slice(0, Math.ceil(partners.length / 2))
-                    .map((partner) => (
-                      <div
-                        key={`row1-${setIndex}-${partner.id}`}
-                        className="flex-shrink-0 w-64 h-32 mx-6 flex items-center justify-center"
-                        data-testid={`partner-logo-row1-${partner.id}`}
-                      >
-                        <img
-                          src={partner.logoData || partner.logo || ""}
-                          alt={partner.name}
-                          className="max-w-full max-h-full object-contain opacity-60 hover:opacity-100 transition-opacity duration-300 filter grayscale hover:grayscale-0"
-                        />
-                      </div>
-                    ))
+                {[0, 1].flatMap((setIndex) =>
+                  partners.map((partner) => (
+                    <div
+                      key={`row1-${setIndex}-${partner.id}`}
+                      className="flex-shrink-0 w-64 h-32 mx-6 flex items-center justify-center"
+                      data-testid={setIndex === 0 ? `partner-logo-row1-${partner.id}` : undefined}
+                    >
+                      <img
+                        src={partner.logoData || partner.logo || ""}
+                        alt={partner.name}
+                        className="max-w-full max-h-full object-contain opacity-60 hover:opacity-100 transition-opacity duration-300 filter grayscale hover:grayscale-0"
+                      />
+                    </div>
+                  ))
                 )}
               </div>
             </div>
@@ -1423,23 +1420,20 @@ export default function Home() {
             {/* Second row - scrolling left */}
             <div className="relative overflow-hidden">
               <div className="inline-flex animate-scroll-left-seamless">
-                {/* Create multiple copies for seamless infinite loop */}
-                {Array.from({ length: 20 }).flatMap((_, setIndex) =>
-                  partners
-                    .slice(Math.ceil(partners.length / 2))
-                    .map((partner) => (
-                      <div
-                        key={`row2-${setIndex}-${partner.id}`}
-                        className="flex-shrink-0 w-64 h-32 mx-6 flex items-center justify-center"
-                        data-testid={`partner-logo-row2-${partner.id}`}
-                      >
-                        <img
-                          src={partner.logoData || partner.logo || ""}
-                          alt={partner.name}
-                          className="max-w-full max-h-full object-contain opacity-60 hover:opacity-100 transition-opacity duration-300 filter grayscale hover:grayscale-0"
-                        />
-                      </div>
-                    ))
+                {[0, 1].flatMap((setIndex) =>
+                  partners.map((partner) => (
+                    <div
+                      key={`row2-${setIndex}-${partner.id}`}
+                      className="flex-shrink-0 w-64 h-32 mx-6 flex items-center justify-center"
+                      data-testid={setIndex === 0 ? `partner-logo-row2-${partner.id}` : undefined}
+                    >
+                      <img
+                        src={partner.logoData || partner.logo || ""}
+                        alt={partner.name}
+                        className="max-w-full max-h-full object-contain opacity-60 hover:opacity-100 transition-opacity duration-300 filter grayscale hover:grayscale-0"
+                      />
+                    </div>
+                  ))
                 )}
               </div>
             </div>
