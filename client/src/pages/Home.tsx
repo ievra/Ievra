@@ -800,6 +800,11 @@ export default function Home() {
                                 {project.style}
                               </p>
                             )}
+                            {project.area && (
+                              <p className="text-white/60 text-xs" data-testid={`text-area-${project.id}`}>
+                                {project.area}
+                              </p>
+                            )}
                           </div>
 
                           <div>
@@ -823,13 +828,13 @@ export default function Home() {
                                   </p>
                                 </div>
                               )}
-                              {project.area && (
+                              {(project as any).location && (
                                 <div className="text-white text-right">
                                   <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
-                                    {language === "vi" ? "Khu vực" : "Area"}
+                                    {language === "vi" ? "Khu vực" : "Location"}
                                   </p>
-                                  <p className="text-sm font-light" data-testid={`text-area-${project.id}`}>
-                                    {project.area}
+                                  <p className="text-sm font-light">
+                                    {(project as any).location}
                                   </p>
                                 </div>
                               )}
