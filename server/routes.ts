@@ -414,6 +414,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/projects", requirePermission('projects'), requirePermission('crm'), async (req, res) => {
     try {
       const validatedData = insertProjectSchema.parse({ ...req.body, featured: false });
+      if (validatedData.slug) {
+        const existing = await storage.getProjectBySlug(validatedData.slug);
+        if (existing) {
+          return res.status(409).json({ message: "URL/Slug này đã tồn tại. Vui lòng chọn URL khác." });
+        }
+      }
       const project = await storage.createProject(validatedData);
       res.status(201).json(project);
     } catch (error) {
@@ -427,6 +433,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put("/api/projects/:id", requirePermission('projects'), requirePermission('crm'), async (req, res) => {
     try {
       const validatedData = insertProjectSchema.partial().parse(req.body);
+      if (validatedData.slug) {
+        const current = await storage.getProject(req.params.id);
+        if (current && current.slug !== validatedData.slug) {
+          const existing = await storage.getProjectBySlug(validatedData.slug);
+          if (existing) {
+            return res.status(409).json({ message: "URL/Slug này đã tồn tại. Vui lòng chọn URL khác." });
+          }
+        }
+      }
       const project = await storage.updateProject(req.params.id, validatedData);
       res.json(project);
     } catch (error) {
@@ -819,6 +834,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-+|-+$/g, '');
       }
+
+      const existingArticle = await storage.getArticleBySlug(validatedData.slug);
+      if (existingArticle) {
+        return res.status(409).json({ message: "URL/Slug này đã tồn tại. Vui lòng chọn URL khác." });
+      }
       
       // Set publishedAt if status is published and not already set
       if (validatedData.status === 'published' && !validatedData.publishedAt) {
@@ -839,12 +859,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.put("/api/articles/:id", requirePermission('articles'), async (req, res) => {
     try {
       const validatedData = insertArticleSchema.partial().parse(req.body);
-      
-      // Update publishedAt if status is being set to published
-      if (validatedData.status === 'published') {
+
+      if (validatedData.slug) {
         const currentArticle = await storage.getArticle(req.params.id);
-        if (currentArticle && currentArticle.status !== 'published') {
-          validatedData.publishedAt = new Date();
+        if (currentArticle && currentArticle.slug !== validatedData.slug) {
+          const existing = await storage.getArticleBySlug(validatedData.slug);
+          if (existing) {
+            return res.status(409).json({ message: "URL/Slug này đã tồn tại. Vui lòng chọn URL khác." });
+          }
+        }
+        // Update publishedAt if status is being set to published
+        if (validatedData.status === 'published') {
+          const currentArticle2 = await storage.getArticle(req.params.id);
+          if (currentArticle2 && currentArticle2.status !== 'published') {
+            validatedData.publishedAt = new Date();
+          }
+        }
+      } else {
+        // Update publishedAt if status is being set to published
+        if (validatedData.status === 'published') {
+          const currentArticle = await storage.getArticle(req.params.id);
+          if (currentArticle && currentArticle.status !== 'published') {
+            validatedData.publishedAt = new Date();
+          }
         }
       }
       

@@ -382,6 +382,17 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       const slugSource = data.slug || (hasEn ? data.titleEn! : data.titleVi!);
       const slug = toSlug(slugSource);
 
+      const isDuplicateSlug = articles.some((a: any) =>
+        a.slug === slug && (!editingArticle || a.slug !== editingArticle.slug)
+      );
+      if (isDuplicateSlug) {
+        articleForm.setError('slug', {
+          type: 'manual',
+          message: 'URL/Slug này đã tồn tại. Vui lòng chọn URL khác.'
+        });
+        return;
+      }
+
       const featuredImg = articleImagePreview || data.featuredImage || undefined;
 
       const mutations: Promise<any>[] = [];

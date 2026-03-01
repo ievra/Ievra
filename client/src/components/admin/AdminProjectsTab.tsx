@@ -409,6 +409,18 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       const slugSource = data.slug || (hasEn ? data.titleEn! : data.titleVi!);
       const slug = toSlug(slugSource);
 
+      const isDuplicateSlug = projects.some(p =>
+        p.slug === slug && (!editingProject || p.slug !== editingProject.slug)
+      );
+      if (isDuplicateSlug) {
+        projectForm.setError('slug', {
+          type: 'manual',
+          message: 'URL/Slug này đã tồn tại. Vui lòng chọn URL khác.'
+        });
+        setIsProjectSubmitting(false);
+        return;
+      }
+
       const mutations: Promise<any>[] = [];
 
       if (hasEn) {
