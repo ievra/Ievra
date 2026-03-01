@@ -61,10 +61,12 @@ function TypewriterText({
   text,
   className,
   as: Tag = 'p',
+  reverse = false,
 }: {
   text: string;
   className?: string;
   as?: TypewriterTextTag;
+  reverse?: boolean;
 }) {
   const [displayed, setDisplayed] = useState('');
   const [hasStarted, setHasStarted] = useState(false);
@@ -98,7 +100,7 @@ function TypewriterText({
       if (time - lastTime >= charSpeed) {
         lastTime = time;
         i++;
-        setDisplayed(text.slice(0, i));
+        setDisplayed(reverse ? text.slice(text.length - i) : text.slice(0, i));
         if (i < text.length) rafRef.current = requestAnimationFrame(tick);
       } else {
         rafRef.current = requestAnimationFrame(tick);
@@ -106,7 +108,7 @@ function TypewriterText({
     };
     rafRef.current = requestAnimationFrame(tick);
     return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
-  }, [hasStarted, text]);
+  }, [hasStarted, text, reverse]);
 
   return (
     <Tag ref={elRef as any} className={className}>
@@ -967,6 +969,7 @@ export default function Home() {
             </div>
             <div className="text-white space-y-6 text-right">
               <TypewriterText
+                reverse
                 text={homepageContent?.qualityRightText || (language === "vi"
                   ? "Chúng tôi chỉ sử dụng vật liệu và nội thất chất lượng cao từ các nhà sản xuất đáng tin cậy."
                   : "We use only high-quality materials and furniture from trusted manufacturers.")}
@@ -1210,6 +1213,7 @@ export default function Home() {
 
               {/* Right side content */}
               <TypewriterText
+                reverse
                 text={homepageContent?.quality2RightText || (language === "vi"
                   ? "Chúng tôi chỉ sử dụng vật liệu chất lượng cao và đồ nội thất từ các nhà sản xuất uy tín."
                   : "We use only high-quality materials and furniture from trusted manufacturers.")}
@@ -1230,6 +1234,7 @@ export default function Home() {
           <div className="mb-16">
             <div className="max-w-4xl ml-auto">
               <TypewriterText
+                reverse
                 text={language === "vi"
                   ? (homepageContent?.journeyDescriptionVi || homepageContent?.journeyDescription || "TỪ Ý TƯỞNG ĐẾN HIỆN THỰC, CHÚNG TÔI ĐỒNG HÀNH CÙNG BẠN QUA MỘT QUY TRÌNH 5 BƯỚC TINH GỌN, HIỆU QUẢ VÀ ĐẦY CẢM HỨNG.")
                   : (homepageContent?.journeyDescription || "FROM CONCEPT TO REALITY, WE GUIDE YOU THROUGH A STREAMLINED, EFFICIENT, AND INSPIRING 5-STEP PROCESS.")
@@ -1379,6 +1384,7 @@ export default function Home() {
           <div className="flex justify-end">
             <div className="max-w-4xl">
               <TypewriterText
+                reverse
                 text={language === "vi"
                   ? "Chúng tôi tự hào hợp tác với những thương hiệu uy tín hàng đầu, mang đến những sản phẩm và dịch vụ chất lượng cao nhất cho khách hàng."
                   : "We are proud to work with leading prestigious brands, bringing the highest quality products and services to our clients."}
@@ -1651,6 +1657,7 @@ export default function Home() {
           <div className="mb-16">
             <div className="max-w-4xl ml-auto">
               <TypewriterText
+                reverse
                 text={language === "vi"
                   ? "TÌM HIỂU THÊM VỀ QUY TRÌNH THIẾT KẾ VÀ DỊCH VỤ CỦA CHÚNG TÔI."
                   : "LEARN MORE ABOUT OUR DESIGN PROCESS AND SERVICES."}
