@@ -36,6 +36,8 @@ export default function Home() {
   const queryClient = useQueryClient();
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   const projectsScrollRef = useRef<HTMLDivElement>(null);
+  const [activeArticleIndex, setActiveArticleIndex] = useState(0);
+  const articlesScrollRef = useRef<HTMLDivElement>(null);
   const [expandedStepNumber, setExpandedStepNumber] = useState<number | null>(null);
   const [contactFormExpanded, setContactFormExpanded] = useState(false);
   const [autoCloseTimer, setAutoCloseTimer] = useState<NodeJS.Timeout | null>(
@@ -911,62 +913,152 @@ export default function Home() {
             </div>
           ) : (
             <>
-              {/* Scrollable Articles Grid - 5 columns visible, scroll to see up to 10 */}
-              <ScrollableContainer>
-                <div
-                  className="flex gap-4 pb-4"
-                  style={{ width: "max-content" }}
-                >
-                  {featuredArticles?.slice(0, 10).map((article, index) => (
-                    <Card
-                      key={article.id}
-                      className="group overflow-hidden cursor-pointer h-[28rem] w-72 flex-shrink-0 rounded-none border border-white/10 hover:bg-white/[0.04] transition-all duration-300 article-card"
-                      onClick={() => navigate(`/blog/${article.slug}`)}
-                    >
-                      <div className="relative">
-                        {(article.featuredImage || article.featuredImageData) ? (
-                          <img
-                            src={article.featuredImage || article.featuredImageData || ''}
-                            alt={article.title}
-                            className="w-full h-48 object-cover"
-                            data-testid={`img-article-${article.id}`}
-                          />
-                        ) : (
-                          <div className="w-full h-48 bg-transparent" />
-                        )}
-                        <div className="absolute inset-0 bg-white/[0.06] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div
+                ref={articlesScrollRef}
+                className="relative overflow-hidden"
+                onPointerDown={(e) => {
+                  if (e.pointerType === 'mouse' && e.button !== 0) return;
+                  const el = articlesScrollRef.current;
+                  if (!el) return;
+                  (el as any)._swipeStartX = e.clientX;
+                  (el as any)._swipeSwiped = false;
+                  if (e.pointerType !== 'mouse') el.setPointerCapture(e.pointerId);
+                }}
+                onPointerMove={(e) => {
+                  const el = articlesScrollRef.current;
+                  if (!el || (el as any)._swipeStartX == null) return;
+                  const diff = (el as any)._swipeStartX - e.clientX;
+                  if (Math.abs(diff) > 50 && !(el as any)._swipeSwiped) {
+                    (el as any)._swipeSwiped = true;
+                    const maxIndex = Math.min(10, featuredArticles?.length || 1) - 1;
+                    if (diff > 0 && activeArticleIndex < maxIndex) {
+                      setActiveArticleIndex(activeArticleIndex + 1);
+                    } else if (diff < 0 && activeArticleIndex > 0) {
+                      setActiveArticleIndex(activeArticleIndex - 1);
+                    }
+                    (el as any)._swipeStartX = null;
+                  }
+                }}
+                onPointerUp={() => {
+                  const el = articlesScrollRef.current;
+                  if (el) (el as any)._swipeStartX = null;
+                }}
+                onPointerCancel={() => {
+                  const el = articlesScrollRef.current;
+                  if (el) (el as any)._swipeStartX = null;
+                }}
+                style={{ touchAction: 'pan-y' }}
+              >
+                {activeArticleIndex > 0 && (
+                  <button
+                    onClick={() => setActiveArticleIndex(activeArticleIndex - 1)}
+                    className="absolute left-4 top-1/2 -translate-y-1/2 z-10 opacity-40 hover:opacity-100 transition-opacity duration-300"
+                  >
+                    <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
+                  </button>
+                )}
+                {featuredArticles && activeArticleIndex < Math.min(10, featuredArticles.length) - 1 && (
+                  <button
+                    onClick={() => setActiveArticleIndex(Math.min((featuredArticles?.length || 1) - 1, activeArticleIndex + 1))}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 z-10 opacity-40 hover:opacity-100 transition-opacity duration-300"
+                  >
+                    <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
+                  </button>
+                )}
+                <div className="flex gap-4 pb-4" style={{
+                  transform: (() => {
+                    const totalCards = Math.min(10, featuredArticles?.length || 0);
+                    const isLast = activeArticleIndex >= totalCards - 1;
+                    if (isLast && totalCards >= 2) {
+                      const unitPx = 18 * 16 + 16;
+                      return `translateX(-${(totalCards - 2) * unitPx}px)`;
+                    }
+                    const unitPx = 18 * 16 + 16;
+                    const containerPx = articlesScrollRef.current?.offsetWidth || 1200;
+                    const activeWidthPx = Math.min(window.innerWidth * 0.55, 44 * 16);
+                    const totalContentPx = activeWidthPx + (totalCards - 1) * unitPx;
+                    const maxOffsetPx = Math.max(0, totalContentPx - containerPx);
+                    const desiredOffsetPx = activeArticleIndex * unitPx;
+                    return `translateX(-${Math.min(desiredOffsetPx, maxOffsetPx)}px)`;
+                  })(),
+                  transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                }}>
+                  {featuredArticles?.slice(0, 10).map((article, index) => {
+                    const totalCards = Math.min(10, featuredArticles?.length || 0);
+                    const isActive = index === activeArticleIndex;
+                    const isLast = activeArticleIndex >= totalCards - 1;
+                    const showBothLarge = isLast && totalCards >= 2 && (index === totalCards - 1 || index === totalCards - 2);
+                    let cardWidth: string;
+                    if (showBothLarge) {
+                      cardWidth = 'calc(50% - 0.5rem)';
+                    } else if (isActive) {
+                      cardWidth = 'min(55vw, 44rem)';
+                    } else {
+                      cardWidth = '18rem';
+                    }
+                    return (
+                      <div
+                        key={article.id}
+                        className="group overflow-hidden cursor-pointer flex-shrink-0 rounded-none border border-white/10 hover:bg-white/[0.04] transition-colors duration-300 article-card flex flex-col"
+                        style={{
+                          width: cardWidth,
+                          transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                        }}
+                        onClick={() => {
+                          if (isActive || showBothLarge) {
+                            navigate(`/blog/${article.slug}`);
+                          } else {
+                            setActiveArticleIndex(index);
+                          }
+                        }}
+                        data-testid={`article-card-${article.id}`}
+                      >
+                        {/* Fixed-height image - not full cover */}
+                        <div className="relative flex-shrink-0 h-48 overflow-hidden">
+                          {(article.featuredImage || article.featuredImageData) ? (
+                            <img
+                              src={article.featuredImage || article.featuredImageData || ''}
+                              alt={article.title}
+                              className="w-full h-full object-cover"
+                              data-testid={`img-article-${article.id}`}
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-white/5" data-testid={`img-article-${article.id}`} />
+                          )}
+                          <div className="absolute inset-0 bg-white/[0.06] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        </div>
+
+                        {/* Content below image */}
+                        <div className="p-6 flex flex-col flex-1">
+                          <h3
+                            className="text-xl font-sans font-light mb-2 line-clamp-2"
+                            data-testid={`text-article-title-${article.id}`}
+                          >
+                            {article.title}
+                          </h3>
+                          <p className="text-muted-foreground mb-3 text-sm">
+                            {article.publishedAt &&
+                              new Date(article.publishedAt).toLocaleDateString(
+                                language === "vi" ? "vi-VN" : "en-US",
+                                { year: "numeric", month: "long", day: "numeric" },
+                              )}
+                          </p>
+                          {(isActive || showBothLarge) && (
+                            <p
+                              className="text-foreground/80 text-sm line-clamp-3"
+                              data-testid={`text-article-excerpt-${article.id}`}
+                            >
+                              {article.excerpt
+                                ? <FormattedText text={article.excerpt} />
+                                : "Discover insights and trends in interior design..."}
+                            </p>
+                          )}
+                        </div>
                       </div>
-                      <CardContent className="p-6">
-                        <h3
-                          className="text-xl font-sans font-light mb-2 line-clamp-2"
-                          data-testid={`text-article-title-${article.id}`}
-                        >
-                          {article.title}
-                        </h3>
-                        <p className="text-muted-foreground mb-3 text-sm">
-                          {article.publishedAt &&
-                            new Date(article.publishedAt).toLocaleDateString(
-                              language === "vi" ? "vi-VN" : "en-US",
-                              {
-                                year: "numeric",
-                                month: "long",
-                                day: "numeric",
-                              },
-                            )}
-                        </p>
-                        <p
-                          className="text-foreground/80 text-sm line-clamp-3"
-                          data-testid={`text-article-excerpt-${article.id}`}
-                        >
-                          {article.excerpt 
-                            ? <FormattedText text={article.excerpt} />
-                            : "Discover insights and trends in interior design..."}
-                        </p>
-                      </CardContent>
-                    </Card>
-                  ))}
+                    );
+                  })}
                 </div>
-              </ScrollableContainer>
+              </div>
             </>
           )}
         </div>
