@@ -659,7 +659,7 @@ export default function Home() {
                   }
                 </p>
               </div>
-              <div className="flex-shrink-0 sm:ml-8">
+              <div className="flex-shrink-0 -ml-4 sm:ml-8">
                 <Button
                   variant="ghost"
                   size="default"
@@ -927,7 +927,7 @@ export default function Home() {
                   }
                 </p>
               </div>
-              <div className="flex-shrink-0 sm:ml-8">
+              <div className="flex-shrink-0 -ml-4 sm:ml-8">
                 <Button
                   variant="ghost"
                   size="default"
