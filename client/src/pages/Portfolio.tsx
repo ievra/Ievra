@@ -8,6 +8,28 @@ import { useLanguage } from "@/contexts/LanguageContext";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search } from 'lucide-react';
 import type { Project, Category } from "@shared/schema";
 
+function cardHash(str: string, seed = 0): number {
+  let h = seed;
+  for (let i = 0; i < str.length; i++) {
+    h = Math.imul(31, h) + str.charCodeAt(i) | 0;
+  }
+  return Math.abs(h);
+}
+
+const SPAN_OPTIONS = [
+  'lg:col-span-2',
+  'lg:col-span-3',
+  'lg:col-span-3',
+  'lg:col-span-4',
+  'lg:col-span-2',
+] as const;
+
+const HEIGHT_OPTIONS = [
+  'h-[300px] md:h-[380px] lg:h-[360px]',
+  'h-[320px] md:h-[420px] lg:h-[460px]',
+  'h-[340px] md:h-[460px] lg:h-[520px]',
+] as const;
+
 export default function Portfolio() {
   const { language } = useLanguage();
 
@@ -156,11 +178,21 @@ export default function Portfolio() {
     );
   });
 
+  // Sort: featured projects first, preserve relative order within each group
+  const sortedFilteredProjects = useMemo(() =>
+    filteredProjects.slice().sort((a, b) => {
+      if (a.featured && !b.featured) return -1;
+      if (!a.featured && b.featured) return 1;
+      return 0;
+    }),
+    [filteredProjects]
+  );
+
   // Calculate pagination
-  const totalPages = Math.ceil(filteredProjects.length / projectsPerPage);
+  const totalPages = Math.ceil(sortedFilteredProjects.length / projectsPerPage);
   const startIndex = (currentPage - 1) * projectsPerPage;
   const endIndex = startIndex + projectsPerPage;
-  const projects = filteredProjects.slice(startIndex, endIndex);
+  const projects = sortedFilteredProjects.slice(startIndex, endIndex);
 
   // Pagination component
   const Pagination = () => {
@@ -352,13 +384,12 @@ export default function Portfolio() {
 
         {/* Projects Grid */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-[3px]">
-            {[0,1,2,3,4,5,6].map((i) => {
-              const p = i % 7;
-              const lgSpan = (p===0||p===1) ? 'lg:col-span-3' : (p===5) ? 'lg:col-span-4' : 'lg:col-span-2';
-              const h = (p===0||p===1||p===5) ? 'h-[360px] md:h-[460px] lg:h-[500px]' : 'h-[280px] md:h-[360px] lg:h-[380px]';
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 [grid-auto-flow:dense] gap-[3px]">
+            {['a','b','c','d','e','f','g'].map((id, i) => {
+              const lgSpan = SPAN_OPTIONS[i % SPAN_OPTIONS.length];
+              const h = HEIGHT_OPTIONS[i % HEIGHT_OPTIONS.length];
               return (
-                <div key={i} className={`animate-pulse bg-white/10 ${lgSpan} ${h}`} />
+                <div key={id} className={`animate-pulse bg-white/10 ${lgSpan} ${h}`} />
               );
             })}
           </div>
@@ -373,17 +404,12 @@ export default function Portfolio() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-[3px]">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 [grid-auto-flow:dense] gap-[3px]">
               {projects.map((project, index) => {
-                const p = index % 7;
-                const isLarge = p === 0 || p === 1 || p === 5;
-                const lgSpan =
-                  p === 0 || p === 1 ? 'lg:col-span-3' :
-                  p === 5           ? 'lg:col-span-4' :
-                                      'lg:col-span-2';
-                const heightClass = isLarge
-                  ? 'h-[360px] md:h-[460px] lg:h-[500px]'
-                  : 'h-[280px] md:h-[360px] lg:h-[380px]';
+                const lgSpan = SPAN_OPTIONS[cardHash(project.id) % SPAN_OPTIONS.length];
+                const heightClass = HEIGHT_OPTIONS[cardHash(project.id, 7) % HEIGHT_OPTIONS.length];
+                const colNum = parseInt(lgSpan.replace('lg:col-span-', ''), 10);
+                const isLarge = colNum >= 3;
                 return (
                   <ProjectCard
                     key={project.id}
