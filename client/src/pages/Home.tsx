@@ -841,15 +841,13 @@ export default function Home() {
                           </div>
 
                           <div>
-                            <TypewriterTitle
-                              text={project.title}
-                              isActive={isActive || showBothLarge}
-                              className={`text-white font-light leading-snug transition-all duration-500 mb-3 ${
-                                isActive || showBothLarge
-                                  ? 'text-2xl'
-                                  : 'text-base line-clamp-1 opacity-70'
-                              }`}
-                            />
+                            {(isActive || showBothLarge) && (
+                              <TypewriterTitle
+                                text={project.title}
+                                isActive={isActive || showBothLarge}
+                                className="text-white text-2xl font-light leading-snug mb-3"
+                              />
+                            )}
                             <div className="flex items-end justify-between">
                               {project.completionYear && (
                                 <div className="text-white">
