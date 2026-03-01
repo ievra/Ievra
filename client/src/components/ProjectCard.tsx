@@ -65,19 +65,12 @@ export default function ProjectCard({
               <span className="ml-3 text-white/40">· {project.location}</span>
             )}
           </p>
-          <div className="flex items-baseline justify-between gap-2">
-            <h3
-              className="text-white uppercase tracking-wide text-sm md:text-base font-light"
-              data-testid={`text-title-${project.id}`}
-            >
-              {title}
-            </h3>
-            {project.completionYear && (
-              <p className="text-white/40 text-[10px] uppercase tracking-widest shrink-0" data-testid={`text-year-${project.id}`}>
-                {project.completionYear}
-              </p>
-            )}
-          </div>
+          <h3
+            className="text-white uppercase tracking-wide text-sm md:text-base font-light"
+            data-testid={`text-title-${project.id}`}
+          >
+            {title}
+          </h3>
         </div>
       </Link>
     </div>
