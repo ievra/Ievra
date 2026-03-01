@@ -121,7 +121,7 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
                 </div>
                 
                 <div className="relative h-full flex flex-col justify-between" style={{ zIndex: 10 }}>
-                  <div className="flex-1 flex items-end pb-4">
+                  <div className={`flex-1 flex items-end pb-4 transition-opacity duration-700 ${heroContentVisible ? 'opacity-100' : 'opacity-0'}`}>
                     <Link 
                       href={project.slug ? `/portfolio/${project.slug}` : `/project/${project.id}`} 
                       className="block group"
