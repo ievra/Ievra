@@ -37,11 +37,8 @@ export default function ProjectCard({
   const title = project.title;
   const p = project as any;
 
-  const topInfoItems = [
-    getCategoryLabel(project.category),
-    p.style,
-    p.area,
-  ].filter(Boolean);
+  const categoryLabel = getCategoryLabel(project.category);
+  const subInfoItems = [p.style, p.area].filter(Boolean);
 
   return (
     <div
@@ -62,16 +59,19 @@ export default function ProjectCard({
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
 
-        {/* Top-left: Category / Style / Area (each on its own line) */}
-        {topInfoItems.length > 0 && (
-          <div className="absolute top-0 left-0 p-5 md:p-6 flex flex-col gap-0.5">
-            {topInfoItems.map((item, i) => (
-              <p key={i} className="text-white/55 text-[11px] uppercase tracking-[0.2em] font-light">
-                {item}
-              </p>
-            ))}
-          </div>
-        )}
+        {/* Top-left: Category (large) / Style / Area (small) */}
+        <div className="absolute top-0 left-0 p-5 md:p-6 flex flex-col gap-1">
+          {categoryLabel && (
+            <p className="text-white text-sm md:text-base uppercase tracking-[0.15em] font-light leading-tight">
+              {categoryLabel}
+            </p>
+          )}
+          {subInfoItems.map((item, i) => (
+            <p key={i} className="text-white/60 text-[11px] tracking-[0.1em] font-light">
+              {item}
+            </p>
+          ))}
+        </div>
 
         {/* Bottom: Title + Year/Location row */}
         <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
