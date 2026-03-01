@@ -9,7 +9,7 @@ import { ArrowLeft, Calendar, MapPin, User, Eye, Share2, Check, X, ChevronLeft, 
 import OptimizedImage from "@/components/OptimizedImage";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
-import type { Project, Category } from "@shared/schema";
+import type { Project } from "@shared/schema";
 
 function parseFormattedText(text: string): JSX.Element[] {
   if (!text) return [];
@@ -171,16 +171,6 @@ export default function ProjectDetail() {
     },
     enabled: !!(projectSlug || projectId),
   });
-
-  const { data: categories = [] } = useQuery<Category[]>({
-    queryKey: ['/api/categories'],
-  });
-
-  const getCategoryName = (slug: string) => {
-    const cat = categories.find(c => c.slug === slug || c.name.toLowerCase() === slug.toLowerCase());
-    if (cat) return language === 'vi' && cat.nameVi ? cat.nameVi : cat.name;
-    return slug;
-  };
 
   // Redirect to slug-based URL if accessing by ID and project has a slug
   useEffect(() => {
@@ -372,31 +362,6 @@ export default function ProjectDetail() {
             <h1 className="font-light tracking-wider text-white uppercase" style={{ fontSize: '48px', lineHeight: '1.4' }} data-testid="text-project-title">
               {project.title}
             </h1>
-
-            {/* Subtle metadata row */}
-            {(() => {
-              const p = project as any;
-              const items = [
-                p.completionYear && { label: language === 'vi' ? 'Năm' : 'Year', value: p.completionYear },
-                p.location      && { label: language === 'vi' ? 'Khu vực' : 'Location', value: p.location },
-                p.style         && { label: language === 'vi' ? 'Phong cách' : 'Style', value: p.style },
-                p.area          && { label: language === 'vi' ? 'Diện tích' : 'Area', value: p.area },
-                project.category && { label: language === 'vi' ? 'Danh mục' : 'Category', value: getCategoryName(project.category) },
-              ].filter(Boolean) as { label: string; value: string }[];
-
-              if (!items.length) return null;
-              return (
-                <div className="flex flex-wrap items-center gap-x-6 gap-y-1 mt-3">
-                  {items.map((item, i) => (
-                    <span key={i} className="flex items-baseline gap-1.5">
-                      <span className="text-white/40 text-[10px] uppercase tracking-widest font-light">{item.label}</span>
-                      <span className="text-white/75 text-xs font-light tracking-wide">{item.value}</span>
-                    </span>
-                  ))}
-                </div>
-              );
-            })()}
-
             <Link href="/portfolio" className="inline-flex items-center mt-4 text-zinc-300 hover:text-white transition-colors text-sm" data-testid="button-back-to-portfolio">
               <ArrowLeft className="mr-2 h-4 w-4" />
               {language === 'vi' ? 'Quay lại Danh mục' : 'Back to Portfolio'}
