@@ -49,8 +49,6 @@ const bilingualProjectSchema = z.object({
   locationVi: z.string().optional(),
   areaEn: z.string().optional(),
   areaVi: z.string().optional(),
-  durationEn: z.string().optional(),
-  durationVi: z.string().optional(),
   styleEn: z.string().optional(),
   styleVi: z.string().optional(),
   designerEn: z.string().optional(),
@@ -184,8 +182,6 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       locationVi: "",
       areaEn: "",
       areaVi: "",
-      durationEn: "",
-      durationVi: "",
       styleEn: "",
       styleVi: "",
       designerEn: "",
@@ -374,8 +370,6 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       locationVi: viVersion?.location || "",
       areaEn: enVersion?.area || "",
       areaVi: viVersion?.area || "",
-      durationEn: enVersion?.duration || "",
-      durationVi: viVersion?.duration || "",
       styleEn: enVersion?.style || "",
       styleVi: viVersion?.style || "",
       designerEn: enVersion?.designer || "",
@@ -500,7 +494,6 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
           status: data.status,
           location: data.locationEn,
           area: data.areaEn,
-          duration: data.durationEn,
           style: data.styleEn,
           designer: data.designerEn,
           coverImages: data.coverImages,
@@ -549,7 +542,6 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
           status: data.status,
           location: data.locationVi,
           area: data.areaVi,
-          duration: data.durationVi,
           style: data.styleVi,
           designer: data.designerVi,
           coverImages: data.coverImages,
@@ -753,35 +745,6 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                         <FormLabel>{language === 'vi' ? 'Diện Tích (Tiếng Việt)' : 'Area (Vietnamese)'}</FormLabel>
                         <FormControl>
                           <Input {...field} data-testid="input-project-area-vi" placeholder="Nhập diện tích tiếng Việt..." />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormField
-                    control={projectForm.control}
-                    name="durationEn"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{language === 'vi' ? 'Thời Gian (Tiếng Anh)' : 'Duration (English)'}</FormLabel>
-                        <FormControl>
-                          <Input {...field} data-testid="input-project-duration-en" placeholder={language === 'vi' ? 'Nhập thời gian...' : 'Enter duration...'} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={projectForm.control}
-                    name="durationVi"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{language === 'vi' ? 'Thời Gian (Tiếng Việt)' : 'Duration (Vietnamese)'}</FormLabel>
-                        <FormControl>
-                          <Input {...field} data-testid="input-project-duration-vi" placeholder="Nhập thời gian tiếng Việt..." />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
