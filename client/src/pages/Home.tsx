@@ -1394,57 +1394,44 @@ export default function Home() {
           </div>
         </div>
 
-        {partners && partners.length > 0 && (
-          <div className="space-y-8">
-            {/* First row - scrolling right */}
-            <div className="relative overflow-hidden">
-              <div className="inline-flex animate-scroll-right-seamless">
-                {/* Create multiple copies for seamless infinite loop */}
-                {Array.from({ length: 20 }).flatMap((_, setIndex) =>
-                  partners
-                    .slice(0, Math.ceil(partners.length / 2))
-                    .map((partner) => (
-                      <div
-                        key={`row1-${setIndex}-${partner.id}`}
-                        className="flex-shrink-0 w-64 h-32 mx-6 flex items-center justify-center"
-                        data-testid={`partner-logo-row1-${partner.id}`}
-                      >
-                        <img
-                          src={partner.logoData || partner.logo || ""}
-                          alt={partner.name}
-                          className="max-w-full max-h-full object-contain opacity-60 hover:opacity-100 transition-opacity duration-300 filter grayscale hover:grayscale-0"
-                        />
-                      </div>
-                    ))
-                )}
-              </div>
-            </div>
+        {partners && partners.length > 0 && (() => {
+          const row1 = partners.slice(0, 12);
+          const row2 = partners.slice(12, 24);
 
-            {/* Second row - scrolling left */}
-            <div className="relative overflow-hidden">
-              <div className="inline-flex animate-scroll-left-seamless">
-                {/* Create multiple copies for seamless infinite loop */}
-                {Array.from({ length: 20 }).flatMap((_, setIndex) =>
-                  partners
-                    .slice(Math.ceil(partners.length / 2))
-                    .map((partner) => (
-                      <div
-                        key={`row2-${setIndex}-${partner.id}`}
-                        className="flex-shrink-0 w-64 h-32 mx-6 flex items-center justify-center"
-                        data-testid={`partner-logo-row2-${partner.id}`}
-                      >
-                        <img
-                          src={partner.logoData || partner.logo || ""}
-                          alt={partner.name}
-                          className="max-w-full max-h-full object-contain opacity-60 hover:opacity-100 transition-opacity duration-300 filter grayscale hover:grayscale-0"
-                        />
-                      </div>
-                    ))
-                )}
+          const renderRow = (logos: typeof partners, direction: 'right' | 'left', rowKey: string) => {
+            if (logos.length === 0) return null;
+            const doubled = [...logos, ...logos];
+            return (
+              <div className="relative overflow-hidden w-full">
+                <div
+                  className={`flex ${direction === 'right' ? 'animate-scroll-right-seamless' : 'animate-scroll-left-seamless'}`}
+                  style={{ width: '200%' }}
+                >
+                  {doubled.map((partner, i) => (
+                    <div
+                      key={`${rowKey}-${i}`}
+                      className="flex-1 h-32 flex items-center justify-center px-4"
+                      data-testid={i < logos.length ? `partner-logo-${rowKey}-${partner.id}` : undefined}
+                    >
+                      <img
+                        src={partner.logoData || partner.logo || ""}
+                        alt={partner.name}
+                        className="max-w-full max-h-full object-contain opacity-60 hover:opacity-100 transition-opacity duration-300 filter grayscale hover:grayscale-0"
+                      />
+                    </div>
+                  ))}
+                </div>
               </div>
+            );
+          };
+
+          return (
+            <div className="space-y-8">
+              {renderRow(row1, 'right', 'row1')}
+              {row2.length > 0 && renderRow(row2, 'left', 'row2')}
             </div>
-          </div>
-        )}
+          );
+        })()}
 
         {partnersLoading && (
           <div className="space-y-8">
