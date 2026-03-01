@@ -832,7 +832,9 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                 </div>
                 </div>
 
-                <div className="space-y-4 border-t pt-4">
+                <h3 className="text-lg font-medium uppercase tracking-wide border-t pt-6">{language === 'vi' ? 'Nội Dung' : 'Content'}</h3>
+
+                <div className="space-y-4">
                   <h4 className="text-sm font-light">{language === 'vi' ? 'Mục 1 — Mô Tả Dự Án' : 'Section 1 — Project Description'}</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
