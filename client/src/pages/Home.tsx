@@ -29,37 +29,31 @@ import type {
   Category,
 } from "@shared/schema";
 
-function TypewriterTitle({ text, isActive, className }: { text: string; isActive: boolean; className?: string }) {
-  const [displayed, setDisplayed] = useState(isActive ? text : text.slice(0, 20));
+function TypewriterTitle({ text, className }: { text: string; isActive?: boolean; className?: string }) {
+  const [displayed, setDisplayed] = useState('');
   const rafRef = useRef<number | null>(null);
-  const prevActiveRef = useRef(isActive);
 
   useEffect(() => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    if (isActive && !prevActiveRef.current) {
-      let i = 0;
-      setDisplayed('');
-      const speed = Math.max(18, Math.round(600 / text.length));
-      let lastTime = 0;
-      const tick = (time: number) => {
-        if (time - lastTime >= speed) {
-          lastTime = time;
-          i++;
-          setDisplayed(text.slice(0, i));
-          if (i < text.length) rafRef.current = requestAnimationFrame(tick);
-        } else {
-          rafRef.current = requestAnimationFrame(tick);
-        }
-      };
-      rafRef.current = requestAnimationFrame(tick);
-    } else if (!isActive) {
-      setDisplayed(text.slice(0, 20));
-    }
-    prevActiveRef.current = isActive;
+    let i = 0;
+    setDisplayed('');
+    const speed = Math.max(35, Math.round(1400 / text.length));
+    let lastTime = 0;
+    const tick = (time: number) => {
+      if (time - lastTime >= speed) {
+        lastTime = time;
+        i++;
+        setDisplayed(text.slice(0, i));
+        if (i < text.length) rafRef.current = requestAnimationFrame(tick);
+      } else {
+        rafRef.current = requestAnimationFrame(tick);
+      }
+    };
+    rafRef.current = requestAnimationFrame(tick);
     return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
-  }, [isActive, text]);
+  }, [text]);
 
-  return <h3 className={className}>{displayed}</h3>;
+  return <h3 className={className}>{displayed || '\u00A0'}</h3>;
 }
 
 export default function Home() {
