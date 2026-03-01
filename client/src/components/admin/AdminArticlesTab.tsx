@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -139,6 +139,15 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       metaKeywordsVi: "",
     },
   });
+
+  useEffect(() => {
+    if (isArticleDialogOpen && !editingArticle) {
+      articleForm.reset();
+      setArticleImagePreview('');
+      setArticleContentImages([]);
+      setArticleImageFile(null);
+    }
+  }, [isArticleDialogOpen, editingArticle]);
 
   const groupedArticlesMap = articles.reduce((acc, article) => {
     if (!acc[article.slug]) {

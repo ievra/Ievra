@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -203,6 +203,12 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       metaKeywordsVi: "",
     },
   });
+
+  useEffect(() => {
+    if (isProjectDialogOpen && !editingProject) {
+      projectForm.reset();
+    }
+  }, [isProjectDialogOpen, editingProject]);
 
   const createProjectMutation = useMutation({
     mutationFn: async (data: any) => {
