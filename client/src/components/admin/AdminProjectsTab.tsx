@@ -1706,6 +1706,33 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                       <Select
                         value={(primary as any).status || 'draft'}
                         onValueChange={async (newStatus) => {
+                          if (newStatus === 'published') {
+                            const missingFields: string[] = [];
+                            const hasTitle = group.some(p => p.title && p.title.trim() && p.title !== 'Dự Án Mới');
+                            if (!hasTitle) missingFields.push('Tiêu đề');
+                            if (!primary.category) missingFields.push('Danh mục');
+                            if (!primary.slug) missingFields.push('URL/Slug');
+                            const hasStyle = group.some(p => p.style && p.style.trim());
+                            if (!hasStyle) missingFields.push('Phong cách');
+                            const hasLocation = group.some(p => p.location && p.location.trim());
+                            if (!hasLocation) missingFields.push('Khu vực');
+                            const hasArea = group.some(p => p.area && p.area.trim());
+                            if (!hasArea) missingFields.push('Diện tích');
+                            const hasYear = group.some(p => p.completionYear && p.completionYear.trim());
+                            if (!hasYear) missingFields.push('Năm hoàn thành');
+                            const hasMetaTitle = group.some(p => p.metaTitle && p.metaTitle.trim());
+                            if (!hasMetaTitle) missingFields.push('SEO: Tiêu đề');
+                            const hasMetaDesc = group.some(p => p.metaDescription && p.metaDescription.trim());
+                            if (!hasMetaDesc) missingFields.push('SEO: Mô tả');
+                            if (missingFields.length > 0) {
+                              toast({
+                                title: language === 'vi' ? 'Không thể đăng dự án' : 'Cannot publish project',
+                                description: (language === 'vi' ? 'Vui lòng điền đầy đủ: ' : 'Please fill in: ') + missingFields.join(', '),
+                                variant: 'destructive',
+                              });
+                              return;
+                            }
+                          }
                           try {
                             for (const p of group) {
                               await updateProjectMutation.mutateAsync({
