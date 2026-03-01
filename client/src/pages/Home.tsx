@@ -29,6 +29,39 @@ import type {
   Category,
 } from "@shared/schema";
 
+function TypewriterTitle({ text, isActive, className }: { text: string; isActive: boolean; className?: string }) {
+  const [displayed, setDisplayed] = useState(isActive ? text : text.slice(0, 20));
+  const rafRef = useRef<number | null>(null);
+  const prevActiveRef = useRef(isActive);
+
+  useEffect(() => {
+    if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    if (isActive && !prevActiveRef.current) {
+      let i = 0;
+      setDisplayed('');
+      const speed = Math.max(18, Math.round(600 / text.length));
+      let lastTime = 0;
+      const tick = (time: number) => {
+        if (time - lastTime >= speed) {
+          lastTime = time;
+          i++;
+          setDisplayed(text.slice(0, i));
+          if (i < text.length) rafRef.current = requestAnimationFrame(tick);
+        } else {
+          rafRef.current = requestAnimationFrame(tick);
+        }
+      };
+      rafRef.current = requestAnimationFrame(tick);
+    } else if (!isActive) {
+      setDisplayed(text.slice(0, 20));
+    }
+    prevActiveRef.current = isActive;
+    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
+  }, [isActive, text]);
+
+  return <h3 className={className}>{displayed}</h3>;
+}
+
 export default function Home() {
   const [, navigate] = useLocation();
   const { language, t } = useLanguage();
@@ -808,15 +841,15 @@ export default function Home() {
                           </div>
 
                           <div>
-                            <h3
+                            <TypewriterTitle
+                              text={project.title}
+                              isActive={isActive || showBothLarge}
                               className={`text-white font-light leading-snug transition-all duration-500 mb-3 ${
                                 isActive || showBothLarge
-                                  ? 'text-2xl line-clamp-none'
+                                  ? 'text-2xl'
                                   : 'text-base line-clamp-1 opacity-70'
                               }`}
-                            >
-                              {project.title}
-                            </h3>
+                            />
                             <div className="flex items-end justify-between">
                               {project.completionYear && (
                                 <div className="text-white">
