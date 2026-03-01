@@ -1023,7 +1023,11 @@ export default function Home() {
                 )}
                 <div className="flex gap-4 pb-4" style={{
                   transform: (() => {
+                    const isMobile = window.innerWidth < 640;
                     const totalCards = Math.min(10, featuredArticles?.length || 0);
+                    if (isMobile) {
+                      return `translateX(-${activeArticleIndex * 16}px)`;
+                    }
                     const isLast = activeArticleIndex >= totalCards - 1;
                     if (isLast && totalCards >= 2) {
                       const unitPx = 18 * 16 + 16;
@@ -1040,12 +1044,15 @@ export default function Home() {
                   transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
                 }}>
                   {featuredArticles?.slice(0, 10).map((article, index) => {
+                    const isMobile = window.innerWidth < 640;
                     const totalCards = Math.min(10, featuredArticles?.length || 0);
                     const isActive = index === activeArticleIndex;
                     const isLast = activeArticleIndex >= totalCards - 1;
-                    const showBothLarge = isLast && totalCards >= 2 && (index === totalCards - 1 || index === totalCards - 2);
+                    const showBothLarge = !isMobile && isLast && totalCards >= 2 && (index === totalCards - 1 || index === totalCards - 2);
                     let cardWidth: string;
-                    if (showBothLarge) {
+                    if (isMobile) {
+                      cardWidth = isActive ? `${articlesScrollRef.current?.offsetWidth || window.innerWidth - 32}px` : '0px';
+                    } else if (showBothLarge) {
                       cardWidth = 'calc(50% - 0.5rem)';
                     } else if (isActive) {
                       cardWidth = 'min(55vw, 44rem)';
