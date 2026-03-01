@@ -549,19 +549,19 @@ img {
   /* Partners scrolling animations - seamless infinite loop */
   @keyframes scroll-right-seamless {
     0% {
-      transform: translateX(0);
+      transform: translateX(-5%);
     }
     100% {
-      transform: translateX(-50%);
+      transform: translateX(0);
     }
   }
 
   @keyframes scroll-left-seamless {
     0% {
-      transform: translateX(-50%);
+      transform: translateX(0);
     }
     100% {
-      transform: translateX(0);
+      transform: translateX(-5%);
     }
   }
 
