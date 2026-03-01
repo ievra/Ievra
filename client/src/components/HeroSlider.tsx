@@ -150,7 +150,7 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
                     </div>
                     
                     {/* Navigation Arrows */}
-                    <div className="flex gap-4">
+                    <div className="hidden sm:flex gap-4">
                       <button className="swiper-button-prev-custom w-10 h-10 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white/10 transition-colors">
                         &lt;
                       </button>
