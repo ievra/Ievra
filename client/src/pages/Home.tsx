@@ -999,7 +999,7 @@ export default function Home() {
                     return (
                       <div
                         key={article.id}
-                        className="group overflow-hidden cursor-pointer flex-shrink-0 rounded-none border border-white/10 hover:bg-white/[0.04] transition-colors duration-300 article-card flex flex-col"
+                        className="group overflow-hidden cursor-pointer flex-shrink-0 rounded-none border border-white/10 hover:bg-white/[0.04] transition-colors duration-300 article-card flex flex-col h-[38rem]"
                         style={{
                           width: cardWidth,
                           transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
