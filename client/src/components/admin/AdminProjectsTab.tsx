@@ -757,21 +757,19 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <FormField
-                    control={projectForm.control}
-                    name="completionYear"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{language === 'vi' ? 'Năm Hoàn Thành' : 'Completion Year'}</FormLabel>
-                        <FormControl>
-                          <Input {...field} placeholder="2024" maxLength={4} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+                <FormField
+                  control={projectForm.control}
+                  name="completionYear"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{language === 'vi' ? 'Năm Hoàn Thành' : 'Completion Year'}</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="2024" maxLength={4} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField
