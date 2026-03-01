@@ -670,6 +670,9 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
             <Form {...projectForm}>
               <form onSubmit={projectForm.handleSubmit(onProjectSubmit)} className="space-y-6">
 
+                <div className="space-y-4">
+                  <h3 className="text-lg font-medium uppercase tracking-wide">{language === 'vi' ? 'Thông Tin Dự Án' : 'Project Information'}</h3>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField
                     control={projectForm.control}
@@ -826,6 +829,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                       </FormItem>
                     )}
                   />
+                </div>
                 </div>
 
                 <div className="space-y-4 border-t pt-4">
