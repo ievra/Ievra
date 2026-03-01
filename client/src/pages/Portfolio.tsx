@@ -362,7 +362,7 @@ export default function Portfolio() {
 
   return (
     <div className="min-h-[120vh] pt-32 pb-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1600px] mx-auto px-2 sm:px-3 lg:px-4">
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-6xl font-sans font-light mb-6" data-testid="heading-portfolio">
@@ -416,7 +416,7 @@ export default function Portfolio() {
 
         {/* Projects Grid */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 [grid-auto-rows:340px] gap-[3px]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 [grid-auto-rows:480px] gap-[3px]">
             {[{id:'a'},{id:'b'},{id:'c'},{id:'d'},{id:'e'},{id:'f'},{id:'g'}].map((p, i) => {
               const skeletonSpans = computeSpans([{id:'a'},{id:'b'},{id:'c'},{id:'d'},{id:'e'},{id:'f'},{id:'g'}]);
               const lgSpan = LG_SPAN_CLASS[skeletonSpans[i]] || 'lg:col-span-2';
@@ -436,7 +436,7 @@ export default function Portfolio() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 [grid-auto-rows:340px] gap-[3px]">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 [grid-auto-rows:480px] gap-[3px]">
               {(() => {
                 const spans = computeSpans(projects);
                 return projects.map((project, index) => {
