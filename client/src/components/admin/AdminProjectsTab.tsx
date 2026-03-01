@@ -116,6 +116,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
   const [isProjectSubmitting, setIsProjectSubmitting] = useState(false);
+  const [dialogKey, setDialogKey] = useState(0);
   const [projectSearchQuery, setProjectSearchQuery] = useState('');
   const [projectYearFilter, setProjectYearFilter] = useState('all');
   const [projectCategoryFilter, setProjectCategoryFilter] = useState('all');
@@ -212,6 +213,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
       queryClient.invalidateQueries({ queryKey: ['/api/dashboard/stats'] });
       toast({ title: "Đã tạo dự án thành công" });
+      setDialogKey(k => k + 1);
       projectForm.reset();
       setIsProjectDialogOpen(false);
     },
@@ -323,6 +325,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
 
   const handleEditProject = (project: Project) => {
     setEditingProject(project);
+    setDialogKey(k => k + 1);
 
     const enVersion = projects.find(p => p.slug === project.slug && p.language === 'en');
     const viVersion = projects.find(p => p.slug === project.slug && p.language === 'vi');
@@ -578,7 +581,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
             }
           }}>
             <DialogTrigger asChild>
-              <Button data-testid="button-add-project" className="h-10 px-4 min-w-[140px] justify-center" onClick={() => { setEditingProject(null); projectForm.reset(); }}>
+              <Button data-testid="button-add-project" className="h-10 px-4 min-w-[140px] justify-center" onClick={() => { setEditingProject(null); setDialogKey(k => k + 1); projectForm.reset(); }}>
                 <Plus className="mr-2 h-4 w-4" />
                 {language === 'vi' ? 'Thêm Dự Án' : 'Add Project'}
               </Button>
@@ -589,7 +592,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                 {editingProject ? (language === 'vi' ? 'Chỉnh Sửa Dự Án' : 'Edit Project') : (language === 'vi' ? 'Thêm Dự Án Mới' : 'Add New Project')}
               </DialogTitle>
             </DialogHeader>
-            <div className="overflow-y-auto flex-1 px-1">
+            <div key={dialogKey} className="overflow-y-auto flex-1 px-1">
             <Form {...projectForm}>
               <form onSubmit={projectForm.handleSubmit(onProjectSubmit)} className="space-y-6">
 
