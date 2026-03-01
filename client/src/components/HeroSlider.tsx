@@ -70,6 +70,10 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
         spaceBetween={0}
         slidesPerView={1}
         speed={1000}
+        allowTouchMove={true}
+        grabCursor={true}
+        touchEventsTarget="container"
+        simulateTouch={true}
         autoplay={{
           delay: 3000,
           disableOnInteraction: false,
@@ -81,9 +85,7 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
         }}
         loop={true}
         onSlideChange={handleSlideChange}
-        onAutoplayTimeLeft={(s, time, progress) => {
-          // Optional: could use this for more precise sync
-        }}
+        onAutoplayTimeLeft={(s, time, progress) => {}}
         className="js-slider h-screen"
         data-slider-slug="hero"
         data-testid="hero-slider"
