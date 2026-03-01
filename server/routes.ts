@@ -908,10 +908,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/homepage-content", async (req, res) => {
     try {
       const { language = "en" } = req.query;
-      const content = await storage.getHomepageContent(language as string);
+      let content = await storage.getHomepageContent(language as string);
       
       if (!content) {
-        // Return default content if none exists
+        // Fallback: return any available row (e.g. only VI exists)
+        const fallback = await storage.getAnyHomepageContent();
+        if (fallback) {
+          return res.json(fallback);
+        }
+        // Last resort: hardcoded defaults
         const defaultContent = {
           language: language as string,
           heroTitle: "IEVRA Design & Build",

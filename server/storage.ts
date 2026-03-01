@@ -115,6 +115,7 @@ export interface IStorage {
 
   // Homepage Content
   getHomepageContent(language?: string): Promise<HomepageContent | undefined>;
+  getAnyHomepageContent(): Promise<HomepageContent | undefined>;
   upsertHomepageContent(content: InsertHomepageContent): Promise<HomepageContent>;
 
   // Partners
@@ -597,6 +598,11 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(homepageContent)
       .where(eq(homepageContent.language, language));
+    return content || undefined;
+  }
+
+  async getAnyHomepageContent(): Promise<HomepageContent | undefined> {
+    const [content] = await db.select().from(homepageContent).limit(1);
     return content || undefined;
   }
 
