@@ -1727,6 +1727,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                             if (!hasLocation) missingFields.push('Khu vực');
                             const hasArea = group.some(p => p.area && p.area.trim());
                             if (!hasArea) missingFields.push('Diện tích');
+                            if (!primary.completionYear || !String(primary.completionYear).trim()) missingFields.push('Năm hoàn thành');
                             const hasMetaTitle = group.some(p => p.metaTitle && p.metaTitle.trim());
                             if (!hasMetaTitle) missingFields.push('SEO: Tiêu đề');
                             const hasMetaDesc = group.some(p => p.metaDescription && p.metaDescription.trim());
