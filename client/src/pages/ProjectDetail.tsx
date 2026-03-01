@@ -241,30 +241,35 @@ export default function ProjectDetail() {
 
   // Fetch projects for "OTHER PROJECTS" section - ONLY same category
   const { data: allProjects } = useQuery<Project[]>({
-    queryKey: ['/api/projects', 'other', language, project?.category],
+    queryKey: ['/api/projects', 'other', language],
     queryFn: async () => {
       const response = await fetch(`/api/projects?language=${language}`);
       if (!response.ok) throw new Error("Failed to fetch projects");
       return response.json();
     },
     select: (data) => {
-      if (!project || !project.category) return [];
-      
-      // Filter: only same category AND not current project
-      const sameCategoryProjects = data.filter(p => 
-        p.id !== project.id && 
-        p.category === project.category
-      );
-      
-      // Sort by most recent
-      const sortedProjects = sameCategoryProjects.sort((a, b) => {
-        const aDate = new Date((a as any).updatedAt || (a as any).createdAt || 0);
-        const bDate = new Date((b as any).updatedAt || (b as any).createdAt || 0);
-        return bDate.getTime() - aDate.getTime();
-      });
-      
-      // Return up to 4 projects
-      return sortedProjects.slice(0, 4);
+      if (!project) return [];
+
+      const others = data.filter(p => p.id !== project.id);
+
+      const score = (p: Project) => {
+        const sameCategory = p.category === project.category;
+        const pinned = (p as any).featured === true;
+        if (sameCategory && pinned) return 0;
+        if (sameCategory) return 1;
+        if (pinned) return 2;
+        return 3;
+      };
+
+      return others
+        .sort((a, b) => {
+          const diff = score(a) - score(b);
+          if (diff !== 0) return diff;
+          const aDate = new Date((a as any).updatedAt || (a as any).createdAt || 0);
+          const bDate = new Date((b as any).updatedAt || (b as any).createdAt || 0);
+          return bDate.getTime() - aDate.getTime();
+        })
+        .slice(0, 6);
     },
     enabled: !!project,
   });
