@@ -1023,7 +1023,7 @@ export default function Home() {
                         data-testid={`article-card-${article.id}`}
                       >
                         {/* Fixed-height image - not full cover */}
-                        <div className="relative flex-shrink-0 h-64 overflow-hidden">
+                        <div className="relative overflow-hidden" style={{ flex: '2' }}>
                           {(article.featuredImage || article.featuredImageData) ? (
                             <img
                               src={article.featuredImage || article.featuredImageData || ''}
@@ -1038,7 +1038,7 @@ export default function Home() {
                         </div>
 
                         {/* Content below image */}
-                        <div className="p-4 flex flex-col flex-1">
+                        <div className="p-4 flex flex-col" style={{ flex: '1' }}>
                           <h3
                             className="text-xl font-sans font-light mb-2 line-clamp-2"
                             data-testid={`text-article-title-${article.id}`}
