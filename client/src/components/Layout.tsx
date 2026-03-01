@@ -29,6 +29,7 @@ export default function Layout({ children }: LayoutProps) {
   const [introProgress, setIntroProgress] = useState(location === '/' ? 0 : 1);
   const [headerRevealed, setHeaderRevealed] = useState(location !== '/');
   const [logoSwapped, setLogoSwapped] = useState(location !== '/');
+  const [headerLogoVisible, setHeaderLogoVisible] = useState(location !== '/');
   const [logoFading, setLogoFading] = useState(false);
   const showIntroRef = useRef(location === '/');
   const isHomepageRef = useRef(location === '/');
@@ -56,6 +57,7 @@ export default function Layout({ children }: LayoutProps) {
       setIntroProgress(0);
       setHeaderRevealed(false);
       setLogoSwapped(false);
+      setHeaderLogoVisible(false);
       setIsScrolled(false);
       setNoTransition(false);
       hasScrolledRef.current = true;
@@ -64,6 +66,7 @@ export default function Layout({ children }: LayoutProps) {
       setIntroProgress(1);
       setHeaderRevealed(true);
       setLogoSwapped(true);
+      setHeaderLogoVisible(true);
       setNoTransition(true);
       setIsScrolled(true);
       hasScrolledRef.current = false;
@@ -230,16 +233,9 @@ export default function Layout({ children }: LayoutProps) {
             headerRef.current.style.transition = '';
             headerRef.current.style.transform = '';
           }
-          if (headerLogoRef.current) {
-            headerLogoRef.current.style.opacity = '1';
-          }
-          if (introLogoRef.current) {
-            introLogoRef.current.style.opacity = '0';
-          }
-          setTimeout(() => {
-            showIntroRef.current = false;
-            setLogoSwapped(true);
-          }, 50);
+          setHeaderLogoVisible(true);
+          showIntroRef.current = false;
+          setLogoSwapped(true);
         }
       };
 
@@ -334,8 +330,8 @@ export default function Layout({ children }: LayoutProps) {
               ref={headerLogoRef}
               src={logoSrc}
               alt="IEVRA Design & Build"
-              className="h-12 md:h-20 w-auto hover:opacity-80 transition-opacity duration-400"
-              style={{ opacity: location === '/' && !logoSwapped ? 0 : undefined }}
+              className="h-12 md:h-20 w-auto hover:opacity-80"
+              style={{ opacity: headerLogoVisible ? 1 : 0 }}
             />
           </Link>
 
