@@ -1078,12 +1078,12 @@ export default function Home() {
 
                         {/* Content below image */}
                         <div className="p-4 flex flex-col" style={{ flex: '1' }}>
-                          <h3
-                            className="text-xl font-sans font-light mb-2 line-clamp-2"
-                            data-testid={`text-article-title-${article.id}`}
-                          >
-                            {article.title}
-                          </h3>
+                          {(isActive || showBothLarge) && (
+                            <TypewriterTitle
+                              text={article.title}
+                              className="text-xl font-sans font-light mb-2"
+                            />
+                          )}
                           <p className="text-muted-foreground mb-3 text-sm">
                             {article.publishedAt &&
                               new Date(article.publishedAt).toLocaleDateString(
