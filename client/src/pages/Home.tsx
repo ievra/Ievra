@@ -37,7 +37,7 @@ function TypewriterTitle({ text, className }: { text: string; isActive?: boolean
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
     let i = 0;
     setDisplayed('');
-    const speed = Math.max(35, Math.round(1400 / text.length));
+    const speed = Math.max(60, Math.round(2800 / text.length));
     let lastTime = 0;
     const tick = (time: number) => {
       if (time - lastTime >= speed) {
