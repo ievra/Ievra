@@ -114,6 +114,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
   const { language } = useLanguage();
 
   const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [isNewProject, setIsNewProject] = useState(false);
   const [isProjectDialogOpen, setIsProjectDialogOpen] = useState(false);
   const [isProjectSubmitting, setIsProjectSubmitting] = useState(false);
   const [dialogKey, setDialogKey] = useState(0);
@@ -331,6 +332,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
   });
 
   const handleEditProject = (project: Project) => {
+    setIsNewProject(false);
     setEditingProject(project);
     setDialogKey(k => k + 1);
 
@@ -406,6 +408,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       });
       const draft = await res.json();
       queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
+      setIsNewProject(true);
       setEditingProject(draft);
       setDialogKey(k => k + 1);
       projectForm.reset({
@@ -422,6 +425,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       });
       setIsProjectDialogOpen(true);
     } catch {
+      setIsNewProject(true);
       setEditingProject(null);
       setDialogKey(k => k + 1);
       projectForm.reset();
@@ -654,7 +658,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
           <DialogContent className="max-w-4xl max-h-[85vh] flex flex-col">
             <DialogHeader>
               <DialogTitle>
-                {editingProject ? (language === 'vi' ? 'Chỉnh Sửa Dự Án' : 'Edit Project') : (language === 'vi' ? 'Thêm Dự Án Mới' : 'Add New Project')}
+                {isNewProject ? (language === 'vi' ? 'Dự Án Mới' : 'New Project') : (language === 'vi' ? 'Chỉnh Sửa Dự Án' : 'Edit Project')}
               </DialogTitle>
             </DialogHeader>
             <div key={dialogKey} className="overflow-y-auto flex-1 px-1">
