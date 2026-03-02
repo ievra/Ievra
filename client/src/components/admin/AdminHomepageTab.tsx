@@ -1461,8 +1461,8 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                                 style={{
                                   width: logoShape === 'landscape' ? '100%' : logoShape === 'square' ? '160px' : '100px',
                                   height: logoShape === 'landscape' ? '120px' : logoShape === 'square' ? '160px' : '180px',
-                                  backgroundColor: '#f8f8f8',
-                                  backgroundImage: 'linear-gradient(to right, #d0d0d0 1px, transparent 1px), linear-gradient(to bottom, #d0d0d0 1px, transparent 1px)',
+                                  backgroundColor: '#111111',
+                                  backgroundImage: 'linear-gradient(to right, #333333 1px, transparent 1px), linear-gradient(to bottom, #333333 1px, transparent 1px)',
                                   backgroundSize: '20px 20px',
                                 }}
                                 onMouseDown={(e) => {
