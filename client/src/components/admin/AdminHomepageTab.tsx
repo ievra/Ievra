@@ -1628,7 +1628,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                           <img 
                             src={partner.logoData || partner.logo || ''} 
                             alt={partner.name}
-                            className="max-w-full max-h-full object-contain"
+                            className="w-full h-full object-contain"
                             style={{
                               transform: `translate(${partner.logoOffsetX ?? 0}px, ${partner.logoOffsetY ?? 0}px) scale(${partner.logoZoom ?? 1})`,
                               transformOrigin: 'center',
