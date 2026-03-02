@@ -437,7 +437,7 @@ export default function ProjectDetail() {
       {/* Section 2: Text left + Image right (alternating) */}
       {(project.detailedDescription || project.designPhilosophy) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-          <div className="aspect-square flex flex-col justify-center px-8 md:px-12 lg:px-16 py-12 md:py-16 overflow-hidden order-2 md:order-1">
+          <div className="aspect-square flex flex-col justify-center px-16 md:px-20 lg:px-32 py-12 md:py-16 overflow-hidden order-2 md:order-1">
             {project.designPhilosophy && (
               <div className="space-y-4">
                 <h2 className="text-sm md:text-base font-light tracking-[0.15em] text-white uppercase">
@@ -490,7 +490,7 @@ export default function ProjectDetail() {
               </div>
             )}
           </div>
-          <div className="aspect-square flex flex-col justify-center px-8 md:px-12 lg:px-16 py-12 md:py-16 overflow-hidden">
+          <div className="aspect-square flex flex-col justify-center px-16 md:px-20 lg:px-32 py-12 md:py-16 overflow-hidden">
             {project.materialSelection && (
               <div className="space-y-4">
                 <h2 className="text-sm md:text-base font-light tracking-[0.15em] text-white uppercase">
