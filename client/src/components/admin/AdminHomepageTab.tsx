@@ -1564,14 +1564,36 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead className="text-white/70 w-16">{language === 'vi' ? 'Thứ Tự' : 'Order'}</TableHead>
                     <TableHead className="text-white/70 w-24">Logo</TableHead>
                     <TableHead className="text-white/70">{language === 'vi' ? 'Tên' : 'Name'}</TableHead>
                     <TableHead className="text-white/70 w-32">{language === 'vi' ? 'Thao Tác' : 'Actions'}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {partners.map((partner) => (
+                  {[...partners].sort((a, b) => a.order - b.order).map((partner) => (
                     <TableRow key={partner.id}>
+                      <TableCell>
+                        <input
+                          type="text"
+                          defaultValue={partner.order}
+                          key={`order-${partner.id}-${partner.order}`}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.currentTarget.blur();
+                            }
+                          }}
+                          onBlur={(e) => {
+                            const val = parseInt(e.target.value, 10);
+                            if (!isNaN(val) && val !== partner.order) {
+                              updatePartnerMutation.mutate({ id: partner.id, data: { order: val } as any });
+                            } else {
+                              e.target.value = String(partner.order);
+                            }
+                          }}
+                          className="w-12 text-center text-sm text-white bg-transparent border border-white/20 rounded px-1 py-0.5 focus:outline-none focus:border-white/60 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        />
+                      </TableCell>
                       <TableCell>
                         <div className="w-16 h-16 flex items-center justify-center bg-white/5 rounded p-2">
                           <img 
