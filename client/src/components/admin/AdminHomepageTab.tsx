@@ -2070,6 +2070,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                 onClick={() => {
                   setEditingJourneyStep(null);
                   journeyStepForm.reset({
+                    stepNumber: (journeySteps?.length ? Math.max(...journeySteps.map(j => j.stepNumber)) : 0) + 1,
                     titleEn: "",
                     titleVi: "",
                     descriptionEn: "",
