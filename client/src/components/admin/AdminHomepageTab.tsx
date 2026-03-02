@@ -1402,7 +1402,8 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                                   className={`flex items-center gap-1 px-3 py-1 text-xs border rounded transition-colors ${logoShape === 'landscape' ? 'bg-black text-white border-white' : 'bg-black text-white/50 border-white/20 hover:text-white hover:border-white/60'}`}
                                 >
                                   <RectangleVertical className="h-3 w-3 rotate-90" />
-                                  {language === 'vi' ? 'Ngang' : 'Landscape'}
+                                  <span>{language === 'vi' ? 'Ngang' : 'Landscape'}</span>
+                                  <span className="opacity-50">220px</span>
                                 </button>
                                 <button
                                   type="button"
@@ -1410,7 +1411,8 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                                   className={`flex items-center gap-1 px-3 py-1 text-xs border rounded transition-colors ${logoShape === 'square' ? 'bg-black text-white border-white' : 'bg-black text-white/50 border-white/20 hover:text-white hover:border-white/60'}`}
                                 >
                                   <Square className="h-3 w-3" />
-                                  {language === 'vi' ? 'Vuông' : 'Square'}
+                                  <span>{language === 'vi' ? 'Vuông' : 'Square'}</span>
+                                  <span className="opacity-50">140px</span>
                                 </button>
                                 <button
                                   type="button"
@@ -1418,7 +1420,8 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                                   className={`flex items-center gap-1 px-3 py-1 text-xs border rounded transition-colors ${logoShape === 'portrait' ? 'bg-black text-white border-white' : 'bg-black text-white/50 border-white/20 hover:text-white hover:border-white/60'}`}
                                 >
                                   <RectangleVertical className="h-3 w-3" />
-                                  {language === 'vi' ? 'Dọc' : 'Portrait'}
+                                  <span>{language === 'vi' ? 'Dọc' : 'Portrait'}</span>
+                                  <span className="opacity-50">100px</span>
                                 </button>
                               </div>
 
