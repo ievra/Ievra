@@ -1462,8 +1462,8 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                                   width: logoShape === 'landscape' ? '100%' : logoShape === 'square' ? '160px' : '100px',
                                   height: logoShape === 'landscape' ? '120px' : logoShape === 'square' ? '160px' : '180px',
                                   backgroundColor: '#111111',
-                                  backgroundImage: 'linear-gradient(to right, #333333 1px, transparent 1px), linear-gradient(to bottom, #333333 1px, transparent 1px)',
-                                  backgroundSize: '20px 20px',
+                                  backgroundImage: 'linear-gradient(to right, #2a2a2a 1px, transparent 1px), linear-gradient(to bottom, #2a2a2a 1px, transparent 1px)',
+                                  backgroundSize: '40px 40px',
                                 }}
                                 onMouseDown={(e) => {
                                   e.preventDefault();
