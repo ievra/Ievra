@@ -1618,13 +1618,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                         />
                       </TableCell>
                       <TableCell>
-                        <div className="w-16 h-16 flex items-center justify-center rounded overflow-hidden"
-                          style={{
-                            backgroundColor: '#000000',
-                            backgroundImage: 'linear-gradient(to right, #3a3a3a 1px, transparent 1px), linear-gradient(to bottom, #3a3a3a 1px, transparent 1px)',
-                            backgroundSize: '8px 8px',
-                          }}
-                        >
+                        <div className="w-16 h-16 flex items-center justify-center rounded overflow-hidden bg-black">
                           <img 
                             src={partner.logoData || partner.logo || ''} 
                             alt={partner.name}
