@@ -1395,7 +1395,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                                 <button
                                   type="button"
                                   onClick={() => { setLogoShape('landscape'); setLogoOffset({ x: 0, y: 0 }); }}
-                                  className={`flex items-center gap-1 px-3 py-1 text-xs border rounded transition-colors ${logoShape === 'landscape' ? 'bg-foreground text-background border-foreground' : 'border-muted-foreground/30 hover:bg-foreground hover:text-background hover:border-foreground'}`}
+                                  className={`flex items-center gap-1 px-3 py-1 text-xs border rounded transition-colors ${logoShape === 'landscape' ? 'bg-white text-black border-white' : 'bg-black text-white border-white/20 hover:bg-white/20'}`}
                                 >
                                   <RectangleVertical className="h-3 w-3 rotate-90" />
                                   {language === 'vi' ? 'Ngang' : 'Landscape'}
@@ -1403,7 +1403,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                                 <button
                                   type="button"
                                   onClick={() => { setLogoShape('square'); setLogoOffset({ x: 0, y: 0 }); }}
-                                  className={`flex items-center gap-1 px-3 py-1 text-xs border rounded transition-colors ${logoShape === 'square' ? 'bg-foreground text-background border-foreground' : 'border-muted-foreground/30 hover:bg-foreground hover:text-background hover:border-foreground'}`}
+                                  className={`flex items-center gap-1 px-3 py-1 text-xs border rounded transition-colors ${logoShape === 'square' ? 'bg-white text-black border-white' : 'bg-black text-white border-white/20 hover:bg-white/20'}`}
                                 >
                                   <Square className="h-3 w-3" />
                                   {language === 'vi' ? 'Vuông' : 'Square'}
@@ -1411,7 +1411,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                                 <button
                                   type="button"
                                   onClick={() => { setLogoShape('portrait'); setLogoOffset({ x: 0, y: 0 }); }}
-                                  className={`flex items-center gap-1 px-3 py-1 text-xs border rounded transition-colors ${logoShape === 'portrait' ? 'bg-foreground text-background border-foreground' : 'border-muted-foreground/30 hover:bg-foreground hover:text-background hover:border-foreground'}`}
+                                  className={`flex items-center gap-1 px-3 py-1 text-xs border rounded transition-colors ${logoShape === 'portrait' ? 'bg-white text-black border-white' : 'bg-black text-white border-white/20 hover:bg-white/20'}`}
                                 >
                                   <RectangleVertical className="h-3 w-3" />
                                   {language === 'vi' ? 'Dọc' : 'Portrait'}
