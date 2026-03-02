@@ -676,8 +676,6 @@ export const journeySteps = pgTable("journey_steps", {
 
 export const insertJourneyStepSchema = createInsertSchema(journeySteps).omit({
   id: true,
-  stepNumber: true,
-  active: true,
   createdAt: true,
   updatedAt: true,
 });
