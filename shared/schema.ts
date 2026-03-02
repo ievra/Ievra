@@ -275,6 +275,7 @@ export const partners = pgTable("partners", {
   logoData: text("logo_data"), // Base64 encoded logo file
   website: text("website"), // Optional partner website URL
   description: text("description"), // Optional description
+  shape: varchar("shape", { length: 20 }).default('landscape'), // 'landscape' | 'square' | 'portrait'
   order: integer("order").notNull().default(0), // For display ordering
   active: boolean("active").notNull().default(true),
   createdAt: timestamp("created_at").notNull().defaultNow(),

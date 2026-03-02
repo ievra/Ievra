@@ -755,7 +755,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
     }
     setLogoZoom(1);
     setLogoZoomInput('100');
-    setLogoShape('landscape');
+    setLogoShape((partner.shape as 'landscape' | 'square' | 'portrait') || 'landscape');
     setLogoOffset({ x: 0, y: 0 });
     setIsPartnerDialogOpen(true);
   };
@@ -764,6 +764,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
     try {
       const partnerData: any = {
         name: data.name,
+        shape: logoShape,
         order: 0,
         active: true,
       };

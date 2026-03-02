@@ -1404,13 +1404,15 @@ export default function Home() {
             return (
               <div className="relative overflow-hidden w-full">
                 <div
-                  className={`flex ${direction === 'right' ? 'animate-scroll-right-seamless' : 'animate-scroll-left-seamless'}`}
-                  style={{ width: '200%' }}
+                  className={`flex w-max ${direction === 'right' ? 'animate-scroll-right-seamless' : 'animate-scroll-left-seamless'}`}
                 >
-                  {doubled.map((partner, i) => (
+                  {doubled.map((partner, i) => {
+                    const shape = partner.shape || 'landscape';
+                    const widthClass = shape === 'portrait' ? 'w-[100px]' : shape === 'square' ? 'w-[140px]' : 'w-[220px]';
+                    return (
                     <div
                       key={`${rowKey}-${i}`}
-                      className="flex-1 h-32 flex items-center justify-center px-4"
+                      className={`flex-shrink-0 ${widthClass} h-28 flex items-center justify-center px-3`}
                       data-testid={i < logos.length ? `partner-logo-${rowKey}-${partner.id}` : undefined}
                     >
                       <img
@@ -1419,7 +1421,8 @@ export default function Home() {
                         className="max-w-full max-h-full object-contain opacity-60 hover:opacity-100 transition-opacity duration-300 filter grayscale hover:grayscale-0"
                       />
                     </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             );
