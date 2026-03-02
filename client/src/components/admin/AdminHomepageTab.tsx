@@ -762,10 +762,11 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
 
   const onPartnerSubmit = async (data: PartnerFormData) => {
     try {
+      const nextOrder = partners.length > 0 ? Math.max(...partners.map(p => p.order)) + 1 : 1;
       const partnerData: any = {
         name: data.name,
         shape: logoShape,
-        order: 0,
+        order: editingPartner ? editingPartner.order : nextOrder,
         active: true,
       };
       
