@@ -303,7 +303,7 @@ export default function Layout({ children }: LayoutProps) {
       } ${
         location === '/' && !headerRevealed ? '-translate-y-full' : ((isScrolled || isIdle) && logoSwapped ? '-translate-y-full' : 'translate-y-0')
       }`}>
-        <div className={`flex items-center justify-between py-2 px-6 md:py-3 md:px-10 lg:px-16 transition-colors duration-300 ${isInHero ? 'bg-black/30' : 'bg-black/70'}`}>
+        <div className={`flex items-center justify-between py-2 px-6 md:py-3 md:px-10 lg:px-16 transition-colors duration-300 ${isInHero ? '' : 'bg-black/70'}`}>
           <nav className="hidden lg:flex items-center gap-8 transition-opacity duration-500" style={{ opacity: location === '/' && !logoSwapped ? (introProgress > 0 ? 1 : 0) : 1 }}>
             {navigation.map((item) => (
               <Link
