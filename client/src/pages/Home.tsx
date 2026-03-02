@@ -499,6 +499,7 @@ export default function Home() {
       if (!response.ok) return [];
       return response.json();
     },
+    staleTime: 0,
   });
 
   // Prefetch About page data for instant navigation
