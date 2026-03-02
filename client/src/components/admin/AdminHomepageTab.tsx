@@ -1428,7 +1428,17 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                                 >
                                   <ZoomOut className="h-3.5 w-3.5" />
                                 </button>
-                                <span className="text-xs w-10 text-center font-mono">{Math.round(logoZoom * 100)}%</span>
+                                <input
+                                  type="number"
+                                  min={30}
+                                  max={200}
+                                  value={Math.round(logoZoom * 100)}
+                                  onChange={(e) => {
+                                    const val = parseInt(e.target.value, 10);
+                                    if (!isNaN(val)) setLogoZoom(Math.min(2, Math.max(0.3, val / 100)));
+                                  }}
+                                  className="text-xs w-14 text-center font-mono border rounded px-1 py-0.5 bg-background focus:outline-none focus:ring-1 focus:ring-primary"
+                                />
                                 <button
                                   type="button"
                                   onClick={() => setLogoZoom(z => Math.min(2, +(z + 0.1).toFixed(1)))}
