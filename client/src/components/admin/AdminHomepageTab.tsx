@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -165,6 +165,9 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
   const [partnerLogoPreview, setPartnerLogoPreview] = useState<string>('');
   const [logoZoom, setLogoZoom] = useState(1);
   const [logoShape, setLogoShape] = useState<'landscape' | 'square' | 'portrait'>('landscape');
+  const [logoOffset, setLogoOffset] = useState({ x: 0, y: 0 });
+  const [isDragging, setIsDragging] = useState(false);
+  const dragRef = useRef({ startX: 0, startY: 0, ox: 0, oy: 0 });
 
   const { data: homepageContent, isLoading: homepageContentLoading } = useQuery<HomepageContent>({
     queryKey: ['/api/homepage-content', language],
@@ -751,6 +754,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
     }
     setLogoZoom(1);
     setLogoShape('landscape');
+    setLogoOffset({ x: 0, y: 0 });
     setIsPartnerDialogOpen(true);
   };
 
@@ -1329,6 +1333,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                       setPartnerLogoPreview('');
                       setLogoZoom(1);
                       setLogoShape('landscape');
+                      setLogoOffset({ x: 0, y: 0 });
                       setIsPartnerDialogOpen(true);
                     }} 
                     disabled={partners.length >= 24}
@@ -1389,7 +1394,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                                 <span className="text-xs text-muted-foreground">{language === 'vi' ? 'Kiểu hiển thị:' : 'Shape:'}</span>
                                 <button
                                   type="button"
-                                  onClick={() => setLogoShape('landscape')}
+                                  onClick={() => { setLogoShape('landscape'); setLogoOffset({ x: 0, y: 0 }); }}
                                   className={`flex items-center gap-1 px-3 py-1 text-xs border rounded transition-colors ${logoShape === 'landscape' ? 'bg-primary text-primary-foreground border-primary' : 'border-muted-foreground/30 hover:border-primary'}`}
                                 >
                                   <RectangleVertical className="h-3 w-3 rotate-90" />
@@ -1397,7 +1402,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                                 </button>
                                 <button
                                   type="button"
-                                  onClick={() => setLogoShape('square')}
+                                  onClick={() => { setLogoShape('square'); setLogoOffset({ x: 0, y: 0 }); }}
                                   className={`flex items-center gap-1 px-3 py-1 text-xs border rounded transition-colors ${logoShape === 'square' ? 'bg-primary text-primary-foreground border-primary' : 'border-muted-foreground/30 hover:border-primary'}`}
                                 >
                                   <Square className="h-3 w-3" />
@@ -1405,7 +1410,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                                 </button>
                                 <button
                                   type="button"
-                                  onClick={() => setLogoShape('portrait')}
+                                  onClick={() => { setLogoShape('portrait'); setLogoOffset({ x: 0, y: 0 }); }}
                                   className={`flex items-center gap-1 px-3 py-1 text-xs border rounded transition-colors ${logoShape === 'portrait' ? 'bg-primary text-primary-foreground border-primary' : 'border-muted-foreground/30 hover:border-primary'}`}
                                 >
                                   <RectangleVertical className="h-3 w-3" />
@@ -1433,28 +1438,47 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                                 </button>
                                 <button
                                   type="button"
-                                  onClick={() => setLogoZoom(1)}
+                                  onClick={() => { setLogoZoom(1); setLogoOffset({ x: 0, y: 0 }); }}
                                   className="px-2 py-0.5 text-xs border rounded hover:bg-muted transition-colors"
                                 >
                                   {language === 'vi' ? 'Đặt lại' : 'Reset'}
                                 </button>
                               </div>
 
-                              {/* Preview box */}
+                              {/* Preview box with drag */}
                               <div
-                                className="border bg-muted flex items-center justify-center overflow-hidden"
+                                className={`border bg-muted flex items-center justify-center overflow-hidden select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
                                 style={{
                                   width: logoShape === 'landscape' ? '100%' : logoShape === 'square' ? '160px' : '100px',
                                   height: logoShape === 'landscape' ? '120px' : logoShape === 'square' ? '160px' : '180px',
                                 }}
+                                onMouseDown={(e) => {
+                                  e.preventDefault();
+                                  setIsDragging(true);
+                                  dragRef.current = { startX: e.clientX, startY: e.clientY, ox: logoOffset.x, oy: logoOffset.y };
+                                }}
+                                onMouseMove={(e) => {
+                                  if (!isDragging) return;
+                                  const dx = e.clientX - dragRef.current.startX;
+                                  const dy = e.clientY - dragRef.current.startY;
+                                  setLogoOffset({ x: dragRef.current.ox + dx, y: dragRef.current.oy + dy });
+                                }}
+                                onMouseUp={() => setIsDragging(false)}
+                                onMouseLeave={() => setIsDragging(false)}
                               >
                                 <img
                                   src={partnerLogoPreview || editingPartner?.logoData || editingPartner?.logo || ''}
                                   alt="Partner Logo Preview"
-                                  style={{ transform: `scale(${logoZoom})`, transformOrigin: 'center', transition: 'transform 0.2s' }}
+                                  draggable={false}
+                                  style={{
+                                    transform: `translate(${logoOffset.x}px, ${logoOffset.y}px) scale(${logoZoom})`,
+                                    transformOrigin: 'center',
+                                    transition: isDragging ? 'none' : 'transform 0.2s',
+                                  }}
                                   className="max-w-full max-h-full object-contain"
                                 />
                               </div>
+                              <p className="text-xs text-muted-foreground">{language === 'vi' ? 'Kéo để di chuyển logo trong khung xem trước' : 'Drag to reposition the logo within the preview'}</p>
                             </div>
                           )}
                         </div>
