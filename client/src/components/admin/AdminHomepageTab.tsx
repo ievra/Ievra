@@ -1437,7 +1437,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                                     const val = parseInt(e.target.value, 10);
                                     if (!isNaN(val)) setLogoZoom(Math.min(2, Math.max(0.3, val / 100)));
                                   }}
-                                  className="text-xs w-14 text-center font-mono border rounded px-1 py-0.5 bg-background focus:outline-none focus:ring-1 focus:ring-foreground"
+                                  className="text-xs w-14 text-center font-mono border rounded px-1 py-0.5 bg-background focus:outline-none focus:ring-1 focus:ring-foreground [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                 />
                                 <button
                                   type="button"
