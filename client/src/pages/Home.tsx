@@ -733,7 +733,7 @@ export default function Home() {
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="mb-16">
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
-              <div className="max-w-6xl">
+              <div className="max-w-none">
                 <TypewriterText
                   text={language === "vi"
                     ? (homepageContent?.featuredDescriptionVi || homepageContent?.featuredDescription || t("featured.projectsDesc"))
@@ -986,7 +986,7 @@ export default function Home() {
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="mb-16">
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
-              <div className="max-w-6xl">
+              <div className="max-w-none">
                 <TypewriterText
                   text={language === "vi"
                     ? (homepageContent?.featuredNewsSubtitleVi || homepageContent?.featuredNewsSubtitle || t("featured.newsDesc"))
@@ -1234,7 +1234,7 @@ export default function Home() {
         <div className="w-full px-4 sm:px-6 lg:px-8">
           {/* Section Title */}
           <div className="mb-16">
-            <div className="max-w-6xl">
+            <div className="max-w-none">
               <TypewriterText
                 text={language === "vi"
                   ? (homepageContent?.journeyDescriptionVi || homepageContent?.journeyDescription || "TỪ Ý TƯỞNG ĐẾN HIỆN THỰC, CHÚNG TÔI ĐỒNG HÀNH CÙNG BẠN QUA MỘT QUY TRÌNH 5 BƯỚC TINH GỌN, HIỆU QUẢ VÀ ĐẦY CẢM HỨNG.")
@@ -1383,7 +1383,7 @@ export default function Home() {
       <section className="min-h-screen bg-black overflow-hidden py-16">
         <div className="w-full px-4 sm:px-6 lg:px-8 mb-16">
           <div className="flex justify-end">
-            <div className="max-w-6xl">
+            <div className="max-w-none">
               <TypewriterText
                 reverse
                 text={language === "vi"
@@ -1468,7 +1468,7 @@ export default function Home() {
         >
           <div className="mb-16">
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
-              <div className="max-w-6xl">
+              <div className="max-w-none">
                 <TypewriterText
                   text={language === "vi"
                     ? (homepageContent?.ctaSubtitleVi || homepageContent?.ctaSubtitle || "Để lại yêu cầu tư vấn miễn phí và chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.")
@@ -1650,7 +1650,7 @@ export default function Home() {
         <div className="w-full px-4 sm:px-6 lg:px-8">
           {/* Section Title */}
           <div className="mb-16">
-            <div className="max-w-6xl ml-auto">
+            <div className="max-w-none">
               <TypewriterText
                 reverse
                 text={language === "vi"
