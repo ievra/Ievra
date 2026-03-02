@@ -1485,35 +1485,17 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                                 </button>
                                 <button
                                   type="button"
-                                  onClick={() => {
-                                    const container = previewContainerRef.current;
-                                    const img = previewImgRef.current;
-                                    if (!container || !img || !img.naturalWidth) return;
-                                    const z = container.clientWidth / img.naturalWidth;
-                                    const clamped = Math.min(2, Math.max(0.3, z));
-                                    setLogoZoom(clamped);
-                                    setLogoZoomInput(String(Math.round(clamped * 100)));
-                                    setLogoOffset({ x: 0, y: 0 });
-                                  }}
+                                  onClick={() => setLogoOffset(prev => ({ ...prev, x: 0 }))}
                                   className="px-2 py-0.5 text-xs border rounded hover:bg-muted transition-colors whitespace-nowrap"
                                 >
-                                  ↔ {language === 'vi' ? 'Căng ngang' : 'Fit width'}
+                                  ↔ {language === 'vi' ? 'Căng ngang' : 'Center H'}
                                 </button>
                                 <button
                                   type="button"
-                                  onClick={() => {
-                                    const container = previewContainerRef.current;
-                                    const img = previewImgRef.current;
-                                    if (!container || !img || !img.naturalHeight) return;
-                                    const z = container.clientHeight / img.naturalHeight;
-                                    const clamped = Math.min(2, Math.max(0.3, z));
-                                    setLogoZoom(clamped);
-                                    setLogoZoomInput(String(Math.round(clamped * 100)));
-                                    setLogoOffset({ x: 0, y: 0 });
-                                  }}
+                                  onClick={() => setLogoOffset(prev => ({ ...prev, y: 0 }))}
                                   className="px-2 py-0.5 text-xs border rounded hover:bg-muted transition-colors whitespace-nowrap"
                                 >
-                                  ↕ {language === 'vi' ? 'Căng dọc' : 'Fit height'}
+                                  ↕ {language === 'vi' ? 'Căng dọc' : 'Center V'}
                                 </button>
                               </div>
 
