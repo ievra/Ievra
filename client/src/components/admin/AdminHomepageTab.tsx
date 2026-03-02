@@ -1447,10 +1447,13 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
 
                               {/* Preview box with drag */}
                               <div
-                                className={`border bg-muted flex items-center justify-center overflow-hidden select-none ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
+                                className={`border flex items-center justify-center overflow-hidden select-none relative ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
                                 style={{
                                   width: logoShape === 'landscape' ? '100%' : logoShape === 'square' ? '160px' : '100px',
                                   height: logoShape === 'landscape' ? '120px' : logoShape === 'square' ? '160px' : '180px',
+                                  backgroundColor: '#f8f8f8',
+                                  backgroundImage: 'linear-gradient(to right, #d0d0d0 1px, transparent 1px), linear-gradient(to bottom, #d0d0d0 1px, transparent 1px)',
+                                  backgroundSize: '20px 20px',
                                 }}
                                 onMouseDown={(e) => {
                                   e.preventDefault();
