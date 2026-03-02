@@ -169,6 +169,8 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
   const [logoOffset, setLogoOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const dragRef = useRef({ startX: 0, startY: 0, ox: 0, oy: 0 });
+  const previewContainerRef = useRef<HTMLDivElement>(null);
+  const previewImgRef = useRef<HTMLImageElement>(null);
 
   const { data: homepageContent, isLoading: homepageContentLoading } = useQuery<HomepageContent>({
     queryKey: ['/api/homepage-content', language],
@@ -1431,7 +1433,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                               </div>
 
                               {/* Zoom controls */}
-                              <div className="flex items-center gap-2">
+                              <div className="flex flex-wrap items-center gap-2">
                                 <span className="text-xs text-muted-foreground">Zoom:</span>
                                 <button
                                   type="button"
@@ -1481,10 +1483,43 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                                 >
                                   {language === 'vi' ? 'Đặt lại' : 'Reset'}
                                 </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const container = previewContainerRef.current;
+                                    const img = previewImgRef.current;
+                                    if (!container || !img || !img.naturalWidth) return;
+                                    const z = container.clientWidth / img.naturalWidth;
+                                    const clamped = Math.min(2, Math.max(0.3, z));
+                                    setLogoZoom(clamped);
+                                    setLogoZoomInput(String(Math.round(clamped * 100)));
+                                    setLogoOffset({ x: 0, y: 0 });
+                                  }}
+                                  className="px-2 py-0.5 text-xs border rounded hover:bg-muted transition-colors whitespace-nowrap"
+                                >
+                                  ↔ {language === 'vi' ? 'Căng ngang' : 'Fit width'}
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    const container = previewContainerRef.current;
+                                    const img = previewImgRef.current;
+                                    if (!container || !img || !img.naturalHeight) return;
+                                    const z = container.clientHeight / img.naturalHeight;
+                                    const clamped = Math.min(2, Math.max(0.3, z));
+                                    setLogoZoom(clamped);
+                                    setLogoZoomInput(String(Math.round(clamped * 100)));
+                                    setLogoOffset({ x: 0, y: 0 });
+                                  }}
+                                  className="px-2 py-0.5 text-xs border rounded hover:bg-muted transition-colors whitespace-nowrap"
+                                >
+                                  ↕ {language === 'vi' ? 'Căng dọc' : 'Fit height'}
+                                </button>
                               </div>
 
                               {/* Preview box with drag */}
                               <div
+                                ref={previewContainerRef}
                                 className={`border flex items-center justify-center overflow-hidden select-none relative ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
                                 style={{
                                   width: logoShape === 'landscape' ? '100%' : logoShape === 'square' ? '240px' : '160px',
@@ -1508,6 +1543,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                                 onMouseLeave={() => setIsDragging(false)}
                               >
                                 <img
+                                  ref={previewImgRef}
                                   src={partnerLogoPreview || editingPartner?.logoData || editingPartner?.logo || ''}
                                   alt="Partner Logo Preview"
                                   draggable={false}
