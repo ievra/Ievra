@@ -9,7 +9,7 @@ import { ArrowLeft, Calendar, MapPin, User, Eye, Share2, Check, X, ChevronLeft, 
 import OptimizedImage from "@/components/OptimizedImage";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
-import type { Project } from "@shared/schema";
+import type { Project, Category } from "@shared/schema";
 
 function parseFormattedText(text: string): JSX.Element[] {
   if (!text) return [];
@@ -274,6 +274,16 @@ export default function ProjectDetail() {
     enabled: !!project,
   });
 
+  const { data: dbCategories = [] } = useQuery<Category[]>({
+    queryKey: ['/api/categories'],
+  });
+
+  const getCategoryLabel = (slug: string) => {
+    const cat = dbCategories.find(c => c.slug === slug && c.type === 'project' && c.active);
+    if (cat) return language === 'vi' ? (cat.nameVi || cat.name) : cat.name;
+    return slug;
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-black">
@@ -410,7 +420,7 @@ export default function ProjectDetail() {
                   { label: language === 'vi' ? 'ĐỊA ĐIỂM' : 'LOCATION', value: project.location },
                   { label: language === 'vi' ? 'NĂM' : 'YEAR', value: project.completionYear },
                   { label: language === 'vi' ? 'DIỆN TÍCH' : 'CONSTRUCTION AREA', value: project.area },
-                  { label: language === 'vi' ? 'LOẠI HÌNH' : 'CATEGORY', value: project.category },
+                  { label: language === 'vi' ? 'LOẠI HÌNH' : 'CATEGORY', value: project.category ? getCategoryLabel(project.category) : undefined },
                 ].filter(row => row.value).map((row, i) => (
                   <div key={i} className="border-t border-white/15 py-3 flex items-center justify-between gap-4">
                     <span className="text-[11px] font-light tracking-[0.15em] text-white/50 uppercase flex-shrink-0">{row.label}</span>
