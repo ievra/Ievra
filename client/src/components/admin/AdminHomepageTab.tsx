@@ -1459,8 +1459,8 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                               <div
                                 className={`border flex items-center justify-center overflow-hidden select-none relative ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
                                 style={{
-                                  width: logoShape === 'landscape' ? '100%' : logoShape === 'square' ? '160px' : '100px',
-                                  height: logoShape === 'landscape' ? '120px' : logoShape === 'square' ? '160px' : '180px',
+                                  width: logoShape === 'landscape' ? '100%' : logoShape === 'square' ? '240px' : '160px',
+                                  height: logoShape === 'landscape' ? '200px' : logoShape === 'square' ? '240px' : '280px',
                                   backgroundColor: '#000000',
                                   backgroundImage: 'linear-gradient(to right, #3a3a3a 1px, transparent 1px), linear-gradient(to bottom, #3a3a3a 1px, transparent 1px)',
                                   backgroundSize: '20px 20px',
