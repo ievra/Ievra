@@ -404,7 +404,7 @@ export default function ProjectDetail() {
             </h2>
           )}
           {project.description && (
-            <div className="text-zinc-300 leading-relaxed text-sm md:text-base break-words whitespace-pre-wrap" data-testid="text-description">
+            <div className="text-zinc-300 leading-relaxed text-base md:text-lg break-words whitespace-pre-wrap" data-testid="text-description">
               {parseFormattedText(project.description)}
             </div>
           )}
@@ -443,13 +443,13 @@ export default function ProjectDetail() {
                 <h2 className="text-sm md:text-base font-light tracking-[0.15em] text-white uppercase">
                   {project.designPhilosophyTitle || (language === 'vi' ? 'Triết lý thiết kế' : 'Design Philosophy')}
                 </h2>
-                <div className="text-zinc-300 leading-relaxed text-sm md:text-base break-words whitespace-pre-wrap">
+                <div className="text-zinc-300 leading-relaxed text-base md:text-lg break-words whitespace-pre-wrap">
                   {parseFormattedText(project.designPhilosophy)}
                 </div>
               </div>
             )}
             {!project.designPhilosophy && project.detailedDescription && (
-              <div className="text-zinc-300 leading-relaxed text-sm md:text-base break-words whitespace-pre-wrap" data-testid="text-detailed-description">
+              <div className="text-zinc-300 leading-relaxed text-base md:text-lg break-words whitespace-pre-wrap" data-testid="text-detailed-description">
                 {parseFormattedText(project.detailedDescription)}
               </div>
             )}
@@ -496,7 +496,7 @@ export default function ProjectDetail() {
                 <h2 className="text-sm md:text-base font-light tracking-[0.15em] text-white uppercase">
                   {project.materialSelectionTitle || (language === 'vi' ? 'Lựa chọn vật liệu' : 'Material Selection')}
                 </h2>
-                <div className="text-zinc-300 leading-relaxed text-sm md:text-base break-words whitespace-pre-wrap">
+                <div className="text-zinc-300 leading-relaxed text-base md:text-lg break-words whitespace-pre-wrap">
                   {parseFormattedText(project.materialSelection)}
                 </div>
               </div>
@@ -508,7 +508,7 @@ export default function ProjectDetail() {
       {/* Detailed Description - Full Width */}
       {project.detailedDescription && project.designPhilosophy && (
         <div className="w-full px-10 md:px-20 lg:px-32 py-12 md:py-16">
-          <div className="text-zinc-300 leading-relaxed text-sm md:text-base break-words whitespace-pre-wrap" data-testid="text-detailed-description">
+          <div className="text-zinc-300 leading-relaxed text-base md:text-lg break-words whitespace-pre-wrap" data-testid="text-detailed-description">
             {parseFormattedText(project.detailedDescription)}
           </div>
         </div>
