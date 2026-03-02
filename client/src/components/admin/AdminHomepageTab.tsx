@@ -1618,11 +1618,20 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                         />
                       </TableCell>
                       <TableCell>
-                        <div className="w-16 h-16 flex items-center justify-center bg-white/5 rounded p-2">
+                        <div className="w-16 h-16 flex items-center justify-center bg-black rounded overflow-hidden"
+                          style={{
+                            backgroundImage: 'linear-gradient(to right, #2a2a2a 1px, transparent 1px), linear-gradient(to bottom, #2a2a2a 1px, transparent 1px)',
+                            backgroundSize: '8px 8px',
+                          }}
+                        >
                           <img 
                             src={partner.logoData || partner.logo || ''} 
                             alt={partner.name}
                             className="max-w-full max-h-full object-contain"
+                            style={{
+                              transform: `translate(${partner.logoOffsetX ?? 0}px, ${partner.logoOffsetY ?? 0}px) scale(${partner.logoZoom ?? 1})`,
+                              transformOrigin: 'center',
+                            }}
                             data-testid={`img-partner-logo-${partner.id}`}
                           />
                         </div>
