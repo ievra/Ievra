@@ -1618,7 +1618,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                         />
                       </TableCell>
                       <TableCell>
-                        <div className="w-16 h-16 flex items-center justify-center rounded overflow-hidden bg-black">
+                        <div className="w-16 h-16 flex items-center justify-center rounded overflow-hidden bg-black border border-white/20">
                           <img 
                             src={partner.logoData || partner.logo || ''} 
                             alt={partner.name}
