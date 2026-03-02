@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp, integer, boolean, jsonb, unique, decimal, type AnyPgColumn } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, integer, boolean, jsonb, unique, decimal, real, type AnyPgColumn } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
@@ -276,6 +276,9 @@ export const partners = pgTable("partners", {
   website: text("website"), // Optional partner website URL
   description: text("description"), // Optional description
   shape: varchar("shape", { length: 20 }).default('landscape'), // 'landscape' | 'square' | 'portrait'
+  logoZoom: real("logo_zoom").notNull().default(1),
+  logoOffsetX: integer("logo_offset_x").notNull().default(0),
+  logoOffsetY: integer("logo_offset_y").notNull().default(0),
   order: integer("order").notNull().default(0), // For display ordering
   active: boolean("active").notNull().default(true),
   createdAt: timestamp("created_at").notNull().defaultNow(),

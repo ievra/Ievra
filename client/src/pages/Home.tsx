@@ -1412,13 +1412,17 @@ export default function Home() {
                     return (
                     <div
                       key={`${rowKey}-${i}`}
-                      className={`flex-shrink-0 ${widthClass} h-28 flex items-center justify-center px-3`}
+                      className={`flex-shrink-0 ${widthClass} h-28 flex items-center justify-center px-3 overflow-hidden`}
                       data-testid={i < logos.length ? `partner-logo-${rowKey}-${partner.id}` : undefined}
                     >
                       <img
                         src={partner.logoData || partner.logo || ""}
                         alt={partner.name}
                         className="max-w-full max-h-full object-contain opacity-60 hover:opacity-100 transition-opacity duration-300 filter grayscale hover:grayscale-0"
+                        style={{
+                          transform: `translate(${partner.logoOffsetX ?? 0}px, ${partner.logoOffsetY ?? 0}px) scale(${partner.logoZoom ?? 1})`,
+                          transformOrigin: 'center',
+                        }}
                       />
                     </div>
                     );

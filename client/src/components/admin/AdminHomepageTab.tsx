@@ -753,10 +753,11 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
     } else {
       setPartnerLogoPreview('');
     }
-    setLogoZoom(1);
-    setLogoZoomInput('100');
+    const zoom = partner.logoZoom ?? 1;
+    setLogoZoom(zoom);
+    setLogoZoomInput(String(Math.round(zoom * 100)));
     setLogoShape((partner.shape as 'landscape' | 'square' | 'portrait') || 'landscape');
-    setLogoOffset({ x: 0, y: 0 });
+    setLogoOffset({ x: partner.logoOffsetX ?? 0, y: partner.logoOffsetY ?? 0 });
     setIsPartnerDialogOpen(true);
   };
 
@@ -766,6 +767,9 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
       const partnerData: any = {
         name: data.name,
         shape: logoShape,
+        logoZoom: logoZoom,
+        logoOffsetX: Math.round(logoOffset.x),
+        logoOffsetY: Math.round(logoOffset.y),
         order: editingPartner ? editingPartner.order : nextOrder,
         active: true,
       };
