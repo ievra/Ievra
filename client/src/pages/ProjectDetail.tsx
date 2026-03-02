@@ -507,7 +507,7 @@ export default function ProjectDetail() {
 
       {/* Detailed Description - Full Width */}
       {project.detailedDescription && project.designPhilosophy && (
-        <div className="w-full px-6 md:px-12 py-12 md:py-16">
+        <div className="w-full px-10 md:px-20 lg:px-32 py-12 md:py-16">
           <div className="text-zinc-300 leading-relaxed text-sm md:text-base break-words whitespace-pre-wrap" data-testid="text-detailed-description">
             {parseFormattedText(project.detailedDescription)}
           </div>
@@ -518,7 +518,7 @@ export default function ProjectDetail() {
       {project.bannerImage && (
         <div className="w-full mt-16">
           {project.bannerTitle && (
-            <div className="px-6 md:px-12 mb-6">
+            <div className="px-10 md:px-20 lg:px-32 mb-6">
               <h2 className="text-2xl md:text-3xl font-light tracking-wider text-white uppercase">
                 {project.bannerTitle}
               </h2>
