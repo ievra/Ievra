@@ -1618,9 +1618,10 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                         />
                       </TableCell>
                       <TableCell>
-                        <div className="w-16 h-16 flex items-center justify-center bg-black rounded overflow-hidden"
+                        <div className="w-16 h-16 flex items-center justify-center rounded overflow-hidden"
                           style={{
-                            backgroundImage: 'linear-gradient(to right, #2a2a2a 1px, transparent 1px), linear-gradient(to bottom, #2a2a2a 1px, transparent 1px)',
+                            backgroundColor: '#000000',
+                            backgroundImage: 'linear-gradient(to right, #3a3a3a 1px, transparent 1px), linear-gradient(to bottom, #3a3a3a 1px, transparent 1px)',
                             backgroundSize: '8px 8px',
                           }}
                         >
