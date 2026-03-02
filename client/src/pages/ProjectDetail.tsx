@@ -422,9 +422,9 @@ export default function ProjectDetail() {
                   { label: language === 'vi' ? 'DIỆN TÍCH' : 'CONSTRUCTION AREA', value: project.area },
                   { label: language === 'vi' ? 'LOẠI HÌNH' : 'CATEGORY', value: project.category ? getCategoryLabel(project.category) : undefined },
                 ].filter(row => row.value).map((row, i) => (
-                  <div key={i} className="border-t border-white/15 py-4 flex items-center justify-between gap-6">
-                    <span className="text-xs font-light tracking-[0.15em] text-white/50 uppercase flex-shrink-0">{row.label}</span>
-                    <span className="text-xs font-light tracking-[0.12em] text-white/80 uppercase text-right">{row.value}</span>
+                  <div key={i} className="border-t border-white/15 py-2 flex items-center justify-between gap-6">
+                    <span className="text-sm font-light tracking-[0.15em] text-white/50 uppercase flex-shrink-0">{row.label}</span>
+                    <span className="text-sm font-light tracking-[0.12em] text-white/80 uppercase text-right">{row.value}</span>
                   </div>
                 ))}
                 <div className="border-t border-white/15" />
