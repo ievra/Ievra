@@ -164,6 +164,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
   const [partnerLogoFile, setPartnerLogoFile] = useState<File | null>(null);
   const [partnerLogoPreview, setPartnerLogoPreview] = useState<string>('');
   const [logoZoom, setLogoZoom] = useState(1);
+  const [logoZoomInput, setLogoZoomInput] = useState('100');
   const [logoShape, setLogoShape] = useState<'landscape' | 'square' | 'portrait'>('landscape');
   const [logoOffset, setLogoOffset] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
@@ -753,6 +754,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
       setPartnerLogoPreview('');
     }
     setLogoZoom(1);
+    setLogoZoomInput('100');
     setLogoShape('landscape');
     setLogoOffset({ x: 0, y: 0 });
     setIsPartnerDialogOpen(true);
@@ -1332,6 +1334,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                       });
                       setPartnerLogoPreview('');
                       setLogoZoom(1);
+                      setLogoZoomInput('100');
                       setLogoShape('landscape');
                       setLogoOffset({ x: 0, y: 0 });
                       setIsPartnerDialogOpen(true);
@@ -1423,32 +1426,48 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                                 <span className="text-xs text-muted-foreground">Zoom:</span>
                                 <button
                                   type="button"
-                                  onClick={() => setLogoZoom(z => Math.max(0.3, +(z - 0.1).toFixed(1)))}
+                                  onClick={() => { const z = Math.max(0.3, +(logoZoom - 0.1).toFixed(1)); setLogoZoom(z); setLogoZoomInput(String(Math.round(z * 100))); }}
                                   className="p-1 border rounded hover:bg-muted transition-colors"
                                 >
                                   <ZoomOut className="h-3.5 w-3.5" />
                                 </button>
                                 <input
-                                  type="number"
-                                  min={30}
-                                  max={200}
-                                  value={Math.round(logoZoom * 100)}
-                                  onChange={(e) => {
-                                    const val = parseInt(e.target.value, 10);
-                                    if (!isNaN(val)) setLogoZoom(Math.min(2, Math.max(0.3, val / 100)));
+                                  type="text"
+                                  value={logoZoomInput}
+                                  onChange={(e) => setLogoZoomInput(e.target.value)}
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                      e.preventDefault();
+                                      const val = parseInt(logoZoomInput, 10);
+                                      if (!isNaN(val) && val >= 30 && val <= 200) {
+                                        setLogoZoom(val / 100);
+                                        setLogoZoomInput(String(val));
+                                      } else {
+                                        setLogoZoomInput(String(Math.round(logoZoom * 100)));
+                                      }
+                                    }
+                                  }}
+                                  onBlur={() => {
+                                    const val = parseInt(logoZoomInput, 10);
+                                    if (!isNaN(val) && val >= 30 && val <= 200) {
+                                      setLogoZoom(val / 100);
+                                      setLogoZoomInput(String(val));
+                                    } else {
+                                      setLogoZoomInput(String(Math.round(logoZoom * 100)));
+                                    }
                                   }}
                                   className="text-xs w-14 text-center font-mono border rounded px-1 py-0.5 bg-background focus:outline-none focus:ring-1 focus:ring-foreground [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                                 />
                                 <button
                                   type="button"
-                                  onClick={() => setLogoZoom(z => Math.min(2, +(z + 0.1).toFixed(1)))}
+                                  onClick={() => { const z = Math.min(2, +(logoZoom + 0.1).toFixed(1)); setLogoZoom(z); setLogoZoomInput(String(Math.round(z * 100))); }}
                                   className="p-1 border rounded hover:bg-muted transition-colors"
                                 >
                                   <ZoomIn className="h-3.5 w-3.5" />
                                 </button>
                                 <button
                                   type="button"
-                                  onClick={() => { setLogoZoom(1); setLogoOffset({ x: 0, y: 0 }); }}
+                                  onClick={() => { setLogoZoom(1); setLogoZoomInput('100'); setLogoOffset({ x: 0, y: 0 }); }}
                                   className="px-2 py-0.5 text-xs border rounded hover:bg-muted transition-colors"
                                 >
                                   {language === 'vi' ? 'Đặt lại' : 'Reset'}
