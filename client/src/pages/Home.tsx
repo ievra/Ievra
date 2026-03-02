@@ -1233,14 +1233,13 @@ export default function Home() {
         <div className="w-full px-4 sm:px-6 lg:px-8">
           {/* Section Title */}
           <div className="mb-16">
-            <div className="max-w-4xl ml-auto">
+            <div className="max-w-4xl">
               <TypewriterText
-                reverse
                 text={language === "vi"
                   ? (homepageContent?.journeyDescriptionVi || homepageContent?.journeyDescription || "TỪ Ý TƯỞNG ĐẾN HIỆN THỰC, CHÚNG TÔI ĐỒNG HÀNH CÙNG BẠN QUA MỘT QUY TRÌNH 5 BƯỚC TINH GỌN, HIỆU QUẢ VÀ ĐẦY CẢM HỨNG.")
                   : (homepageContent?.journeyDescription || "FROM CONCEPT TO REALITY, WE GUIDE YOU THROUGH A STREAMLINED, EFFICIENT, AND INSPIRING 5-STEP PROCESS.")
                 }
-                className="text-2xl md:text-3xl font-light text-white leading-relaxed text-right"
+                className="text-2xl md:text-3xl font-light text-white leading-relaxed"
               />
             </div>
           </div>
