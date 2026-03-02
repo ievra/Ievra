@@ -141,7 +141,7 @@ export default function About() {
                   <h4 className="text-xl font-light text-white uppercase tracking-wide">
                     {language === "vi" ? principle.titleVi : principle.titleEn}
                   </h4>
-                  <p className="text-white/70 font-light leading-relaxed">
+                  <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed">
                     {language === "vi" ? principle.descriptionVi : principle.descriptionEn}
                   </p>
                 </div>
@@ -298,7 +298,7 @@ export default function About() {
                     <h3 className="text-2xl md:text-3xl font-light text-white uppercase tracking-wide mb-6">
                       {language === "vi" ? aboutContent.missionTitleVi : aboutContent.missionTitleEn}
                     </h3>
-                    <p className="text-white/70 font-light leading-relaxed whitespace-pre-line">
+                    <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed whitespace-pre-line">
                       {language === "vi" ? aboutContent.missionContentVi : aboutContent.missionContentEn}
                     </p>
                   </div>
@@ -309,7 +309,7 @@ export default function About() {
                     <h3 className="text-2xl md:text-3xl font-light text-white uppercase tracking-wide mb-6">
                       {language === "vi" ? aboutContent.visionTitleVi : aboutContent.visionTitleEn}
                     </h3>
-                    <p className="text-white/70 font-light leading-relaxed whitespace-pre-line">
+                    <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed whitespace-pre-line">
                       {language === "vi" ? aboutContent.visionContentVi : aboutContent.visionContentEn}
                     </p>
                   </div>
@@ -338,7 +338,7 @@ export default function About() {
                   <h4 className="text-xl font-light text-white uppercase tracking-wide">
                     {language === "vi" ? value.titleVi : value.titleEn}
                   </h4>
-                  <p className="text-white/70 font-light leading-relaxed">
+                  <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed">
                     {language === "vi" ? value.descriptionVi : value.descriptionEn}
                   </p>
                 </div>
@@ -445,7 +445,7 @@ export default function About() {
                             </div>
                             
                             {member.bioEn && member.bioVi && (
-                              <p className="text-white/70 font-light leading-relaxed text-justify">
+                              <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed text-justify">
                                 {language === "vi" ? member.bioVi : member.bioEn}
                               </p>
                             )}
@@ -455,7 +455,7 @@ export default function About() {
                                 <h5 className="text-sm font-light text-white/80 uppercase tracking-wider">
                                   {language === "vi" ? "Thành tựu" : "Achievements"}
                                 </h5>
-                                <p className="text-white/70 font-light leading-relaxed text-justify">
+                                <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed text-justify">
                                   {language === "vi" ? member.achievementsVi : member.achievementsEn}
                                 </p>
                               </div>
@@ -466,7 +466,7 @@ export default function About() {
                                 <h5 className="text-sm font-light text-white/80 uppercase tracking-wider">
                                   {language === "vi" ? "Triết lý" : "Philosophy"}
                                 </h5>
-                                <p className="text-white/70 font-light leading-relaxed text-justify">
+                                <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed text-justify">
                                   {language === "vi" ? member.philosophyVi : member.philosophyEn}
                                 </p>
                               </div>
