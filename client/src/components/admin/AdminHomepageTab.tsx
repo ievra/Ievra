@@ -13,7 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Pencil, Trash2, Plus, Lock } from "lucide-react";
+import { Pencil, Trash2, Plus, Lock, ZoomIn, ZoomOut, Square, RectangleVertical } from "lucide-react";
 import type { HomepageContent, Partner, Faq, JourneyStep } from "@shared/schema";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -163,6 +163,8 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
   const [isPartnerDialogOpen, setIsPartnerDialogOpen] = useState(false);
   const [partnerLogoFile, setPartnerLogoFile] = useState<File | null>(null);
   const [partnerLogoPreview, setPartnerLogoPreview] = useState<string>('');
+  const [logoZoom, setLogoZoom] = useState(1);
+  const [logoShape, setLogoShape] = useState<'landscape' | 'square' | 'portrait'>('landscape');
 
   const { data: homepageContent, isLoading: homepageContentLoading } = useQuery<HomepageContent>({
     queryKey: ['/api/homepage-content', language],
@@ -747,6 +749,8 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
     } else {
       setPartnerLogoPreview('');
     }
+    setLogoZoom(1);
+    setLogoShape('landscape');
     setIsPartnerDialogOpen(true);
   };
 
@@ -1323,6 +1327,8 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                         logo: "",
                       });
                       setPartnerLogoPreview('');
+                      setLogoZoom(1);
+                      setLogoShape('landscape');
                       setIsPartnerDialogOpen(true);
                     }} 
                     disabled={partners.length >= 24}
@@ -1375,13 +1381,78 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                             Định dạng: PNG, JPG • Giới hạn: 10MB • Khuyến nghị: 500x200px
                           </p>
                           {(partnerLogoPreview || editingPartner?.logoData || editingPartner?.logo) && (
-                            <div className="mt-4">
-                              <p className="text-sm font-medium mb-2">Preview:</p>
-                              <div className="border rounded p-4 bg-muted flex items-center justify-center">
-                                <img 
-                                  src={partnerLogoPreview || editingPartner?.logoData || editingPartner?.logo || ''} 
-                                  alt="Partner Logo Preview" 
-                                  className="h-24 object-contain" 
+                            <div className="mt-4 space-y-3">
+                              <p className="text-sm font-medium">{language === 'vi' ? 'Xem Trước & Điều Chỉnh Kích Thước' : 'Preview & Size Adjustment'}</p>
+
+                              {/* Shape presets */}
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs text-muted-foreground">{language === 'vi' ? 'Kiểu hiển thị:' : 'Shape:'}</span>
+                                <button
+                                  type="button"
+                                  onClick={() => setLogoShape('landscape')}
+                                  className={`flex items-center gap-1 px-3 py-1 text-xs border rounded transition-colors ${logoShape === 'landscape' ? 'bg-primary text-primary-foreground border-primary' : 'border-muted-foreground/30 hover:border-primary'}`}
+                                >
+                                  <RectangleVertical className="h-3 w-3 rotate-90" />
+                                  {language === 'vi' ? 'Ngang' : 'Landscape'}
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => setLogoShape('square')}
+                                  className={`flex items-center gap-1 px-3 py-1 text-xs border rounded transition-colors ${logoShape === 'square' ? 'bg-primary text-primary-foreground border-primary' : 'border-muted-foreground/30 hover:border-primary'}`}
+                                >
+                                  <Square className="h-3 w-3" />
+                                  {language === 'vi' ? 'Vuông' : 'Square'}
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => setLogoShape('portrait')}
+                                  className={`flex items-center gap-1 px-3 py-1 text-xs border rounded transition-colors ${logoShape === 'portrait' ? 'bg-primary text-primary-foreground border-primary' : 'border-muted-foreground/30 hover:border-primary'}`}
+                                >
+                                  <RectangleVertical className="h-3 w-3" />
+                                  {language === 'vi' ? 'Dọc' : 'Portrait'}
+                                </button>
+                              </div>
+
+                              {/* Zoom controls */}
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs text-muted-foreground">Zoom:</span>
+                                <button
+                                  type="button"
+                                  onClick={() => setLogoZoom(z => Math.max(0.3, +(z - 0.1).toFixed(1)))}
+                                  className="p-1 border rounded hover:bg-muted transition-colors"
+                                >
+                                  <ZoomOut className="h-3.5 w-3.5" />
+                                </button>
+                                <span className="text-xs w-10 text-center font-mono">{Math.round(logoZoom * 100)}%</span>
+                                <button
+                                  type="button"
+                                  onClick={() => setLogoZoom(z => Math.min(2, +(z + 0.1).toFixed(1)))}
+                                  className="p-1 border rounded hover:bg-muted transition-colors"
+                                >
+                                  <ZoomIn className="h-3.5 w-3.5" />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => setLogoZoom(1)}
+                                  className="px-2 py-0.5 text-xs border rounded hover:bg-muted transition-colors"
+                                >
+                                  {language === 'vi' ? 'Đặt lại' : 'Reset'}
+                                </button>
+                              </div>
+
+                              {/* Preview box */}
+                              <div
+                                className="border bg-muted flex items-center justify-center overflow-hidden"
+                                style={{
+                                  width: logoShape === 'landscape' ? '100%' : logoShape === 'square' ? '160px' : '100px',
+                                  height: logoShape === 'landscape' ? '120px' : logoShape === 'square' ? '160px' : '180px',
+                                }}
+                              >
+                                <img
+                                  src={partnerLogoPreview || editingPartner?.logoData || editingPartner?.logo || ''}
+                                  alt="Partner Logo Preview"
+                                  style={{ transform: `scale(${logoZoom})`, transformOrigin: 'center', transition: 'transform 0.2s' }}
+                                  className="max-w-full max-h-full object-contain"
                                 />
                               </div>
                             </div>
