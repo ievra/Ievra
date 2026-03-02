@@ -2079,10 +2079,13 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                   });
                   setIsJourneyStepDialogOpen(true);
                 }}
+                disabled={(journeySteps?.length ?? 0) >= 7}
+                title={(journeySteps?.length ?? 0) >= 7 ? (language === 'vi' ? 'Tối đa 7 bước' : 'Maximum 7 steps') : undefined}
                 data-testid="button-add-journey-step"
               >
                 <Plus className="mr-2 h-4 w-4" />
                 {language === 'vi' ? 'Thêm Bước Hành Trình' : 'Add Journey Step'}
+                {(journeySteps?.length ?? 0) >= 7 && <span className="ml-2 text-xs opacity-70">(7/7)</span>}
               </Button>
             </div>
           </CardHeader>
