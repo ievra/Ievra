@@ -192,102 +192,138 @@ export default function Contact() {
     <div className="min-h-[120vh] pb-20 bg-black text-white">
       {/* Request Section */}
       <section className="pt-60 pb-16">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-6">
-            <h1 className="text-3xl md:text-5xl font-light mb-4" data-testid="heading-questions">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
+          <div className="mb-10">
+            <h1 className="text-3xl md:text-5xl font-light mb-3" data-testid="heading-questions">
               {t('contact.title')}
             </h1>
-            <p className="text-lg text-white mb-6" data-testid="text-consultation">
+            <p className="text-lg text-white/70 font-light" data-testid="text-consultation">
               {t('contact.subtitle')}
             </p>
           </div>
 
-          <form onSubmit={handleSubmit}>
-            <div className="space-y-4">
-              {/* First row - Name and Email */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-12 lg:gap-20">
+            {/* Left: Form */}
+            <form onSubmit={handleSubmit}>
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Input
+                      type="text"
+                      placeholder={placeholders.name}
+                      value={formData.name}
+                      onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                      className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
+                      data-testid="input-name"
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      type="email"
+                      placeholder={placeholders.email}
+                      value={formData.email}
+                      onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                      className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
+                      data-testid="input-email"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Input
+                      type="tel"
+                      placeholder={placeholders.phone}
+                      value={formData.phone}
+                      onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
+                      className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
+                      data-testid="input-phone"
+                    />
+                  </div>
+                  <div>
+                    <Input
+                      type="text"
+                      placeholder={placeholders.address}
+                      value={formData.address}
+                      onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
+                      className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
+                      data-testid="input-address"
+                    />
+                  </div>
+                </div>
                 <div>
                   <Input
                     type="text"
-                    placeholder={placeholders.name}
-                    value={formData.name}
-                    onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+                    placeholder={placeholders.projectType}
+                    value={formData.projectType}
+                    onChange={(e) => setFormData(prev => ({ ...prev, projectType: e.target.value }))}
                     className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
-                    data-testid="input-name"
+                    data-testid="input-project-type"
                   />
                 </div>
                 <div>
-                  <Input
-                    type="email"
-                    placeholder={placeholders.email}
-                    value={formData.email}
-                    onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                    className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
-                    data-testid="input-email"
+                  <Textarea
+                    placeholder={placeholders.requirements}
+                    value={formData.requirements}
+                    onChange={(e) => setFormData(prev => ({ ...prev, requirements: e.target.value }))}
+                    className="bg-transparent border border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0 min-h-[120px] resize-none"
+                    data-testid="textarea-requirements"
                   />
+                </div>
+                <div className="flex justify-start pt-6">
+                  <Button
+                    type="submit"
+                    disabled={mutation.isPending}
+                    className="bg-transparent border border-white/30 text-white hover:border-white hover:bg-white/10 px-8 py-3 font-light tracking-widest uppercase transition-all duration-300 ease-in-out rounded-none"
+                    data-testid="button-leave-request"
+                  >
+                    {mutation.isPending ? t('contact.form.sending') : (language === 'vi' ? 'GỬI YÊU CẦU' : 'LEAVE A REQUEST')}
+                  </Button>
                 </div>
               </div>
-              
-              {/* Second row - Phone and Address */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <Input
-                    type="tel"
-                    placeholder={placeholders.phone}
-                    value={formData.phone}
-                    onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                    className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
-                    data-testid="input-phone"
-                  />
-                </div>
-                <div>
-                  <Input
-                    type="text"
-                    placeholder={placeholders.address}
-                    value={formData.address}
-                    onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
-                    className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
-                    data-testid="input-address"
-                  />
-                </div>
-              </div>
-              
-              {/* Third row - Project Type */}
+            </form>
+
+            {/* Right: Contact Info */}
+            <div className="space-y-5">
               <div>
-                <Input
-                  type="text"
-                  placeholder={placeholders.projectType}
-                  value={formData.projectType}
-                  onChange={(e) => setFormData(prev => ({ ...prev, projectType: e.target.value }))}
-                  className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
-                  data-testid="input-project-type"
-                />
+                <p className="text-white/40 text-xs tracking-widest uppercase mb-2">
+                  {language === 'vi' ? 'Thông Tin Liên Hệ' : 'Contact Information'}
+                </p>
+                <div className="space-y-1">
+                  <p className="text-white font-light text-base leading-relaxed">
+                    {language === 'vi'
+                      ? 'CÔNG TY TNHH THIẾT KẾ VÀ THI CÔNG NỘI THẤT IEVRA'
+                      : 'IEVRA INTERIOR DESIGN AND CONSTRUCTION CO., LTD'}
+                  </p>
+                  <p className="text-white/60 font-light text-base">
+                    {language === 'vi' ? 'Mã số thuế' : 'Tax code'}: 0319384424
+                  </p>
+                  <p className="text-white/60 font-light text-base">
+                    Email: contact@ievra.com
+                  </p>
+                  <p className="text-white/60 font-light text-base">
+                    {language === 'vi' ? 'Điện thoại' : 'Phone'}: 0767 5544 80 - 0969 8642 72
+                  </p>
+                </div>
               </div>
-              
-              {/* Fourth row - Requirements */}
               <div>
-                <Textarea
-                  placeholder={placeholders.requirements}
-                  value={formData.requirements}
-                  onChange={(e) => setFormData(prev => ({ ...prev, requirements: e.target.value }))}
-                  className="bg-transparent border border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0 min-h-[120px] resize-none"
-                  data-testid="textarea-requirements"
-                />
-              </div>
-              
-              {/* Submit button */}
-              <div className="flex justify-center pt-6">
-                <Button
-                  type="submit"
-                  disabled={mutation.isPending}
-                  className="bg-transparent border border-white/30 text-white hover:border-white hover:bg-white/10 px-8 py-3 font-light tracking-widest uppercase transition-all duration-300 ease-in-out rounded-none"
-                  data-testid="button-leave-request"
-                >
-                  {mutation.isPending ? t('contact.form.sending') : (language === 'vi' ? 'GỬI YÊU CẦU' : 'LEAVE A REQUEST')}
-                </Button>
+                <p className="text-white/40 text-xs tracking-widest uppercase mb-2">
+                  {language === 'vi' ? 'Địa Chỉ Văn Phòng' : 'Office Addresses'}
+                </p>
+                <div className="space-y-1">
+                  <p className="text-white/60 font-light text-base leading-relaxed">
+                    {language === 'vi'
+                      ? '422 Đào Trí, Phường Phú Thuận, Quận 7, Tp. Hồ Chí Minh.'
+                      : '422 Dao Tri, Phu Thuan Ward, District 7, Ho Chi Minh City.'}
+                  </p>
+                  <p className="text-white/60 font-light text-base leading-relaxed">
+                    {language === 'vi'
+                      ? '64 Nguyễn Khoái, Phường 2, Quận 4, Tp. Hồ Chí Minh.'
+                      : '64 Nguyen Khoai, Ward 2, District 4, Ho Chi Minh City.'}
+                  </p>
+                </div>
               </div>
             </div>
-          </form>
+          </div>
         </div>
       </section>
 
