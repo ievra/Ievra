@@ -1897,18 +1897,16 @@ export default function Home() {
                     }
                   >
                     <ArrowRight
-                      className={`w-5 h-5 text-white/40 group-hover:text-white transition-all ${
+                      className={`w-5 h-5 text-white/40 group-hover:text-white transition-all flex-shrink-0 ${
                         expandedFaqIndex === index ? "rotate-90 text-white" : "rotate-180"
                       }`}
                     />
-                    <div className="flex items-center gap-3 sm:gap-8">
-                      <span className="text-white/40 font-light text-lg">
-                        [{String(index + 1).padStart(2, "0")}]
-                      </span>
-                      <h3 className="text-xl md:text-2xl font-light text-white text-right">
-                        {faq.question}
-                      </h3>
-                    </div>
+                    <h3 className="flex-1 text-xl md:text-2xl font-light text-white text-right px-4">
+                      {faq.question}
+                    </h3>
+                    <span className="text-white/40 font-light text-lg flex-shrink-0">
+                      [{String(index + 1).padStart(2, "0")}]
+                    </span>
                   </div>
 
                   <div
