@@ -1371,7 +1371,7 @@ export default function Home() {
       </section>
       {/* Process Section */}
       <section
-        className="min-h-screen bg-black py-16 overflow-hidden"
+        className="min-h-screen bg-black py-16"
         onMouseEnter={handleProcessSectionMouseEnter}
         onMouseLeave={handleProcessSectionMouseLeave}
       >
