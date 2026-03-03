@@ -411,7 +411,7 @@ export default function Contact() {
         </div>
 
         {/* Copyright bar - full width */}
-        <div className="flex items-center justify-between mt-10 pt-6 px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between mt-4 pt-4 px-4 sm:px-6 lg:px-8">
           <p className="text-white/40 text-xs font-light">
             Copyright © {new Date().getFullYear()} IEVRA. All rights reserved.
           </p>
