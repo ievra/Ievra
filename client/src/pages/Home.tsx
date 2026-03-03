@@ -947,11 +947,11 @@ export default function Home() {
         </div>
       </section>
       {/* Quality Hero Section */}
-      <section className="relative h-screen" style={{ clipPath: 'inset(0)' }}>
+      <section className="relative h-screen bg-black" style={{ clipPath: 'inset(0)' }}>
         <div
           className="fixed inset-0"
           style={{
-            backgroundImage: `url(${homepageContent?.qualityBackgroundImage || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"})`,
+            ...(homepageContent?.qualityBackgroundImage ? { backgroundImage: `url(${homepageContent.qualityBackgroundImage})` } : {}),
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
@@ -1193,7 +1193,7 @@ export default function Home() {
         <div
           className="fixed inset-0 -z-0"
           style={{
-            backgroundImage: `url(${homepageContent?.quality2BackgroundImage || "/api/assets/stock_images/contemporary_bedroom_e9bd2ed1.jpg"})`,
+            ...(homepageContent?.quality2BackgroundImage ? { backgroundImage: `url(${homepageContent.quality2BackgroundImage})` } : {}),
             backgroundSize: 'cover',
             backgroundPosition: 'center',
           }}
