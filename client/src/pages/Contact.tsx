@@ -193,17 +193,16 @@ export default function Contact() {
       {/* Request Section */}
       <section className="pt-60 pb-16">
         <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="mb-10">
-            <h1 className="text-3xl md:text-5xl font-light mb-3" data-testid="heading-questions">
-              {t('contact.title')}
-            </h1>
-            <p className="text-lg text-white/70 font-light" data-testid="text-consultation">
-              {t('contact.subtitle')}
-            </p>
-          </div>
+          <div className="max-w-3xl mx-auto">
+            <div className="text-center mb-10">
+              <h1 className="text-3xl md:text-5xl font-light mb-3" data-testid="heading-questions">
+                {t('contact.title')}
+              </h1>
+              <p className="text-lg text-white/70 font-light" data-testid="text-consultation">
+                {t('contact.subtitle')}
+              </p>
+            </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-12 lg:gap-20">
-            {/* Left: Form */}
             <form onSubmit={handleSubmit}>
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -269,7 +268,7 @@ export default function Contact() {
                     data-testid="textarea-requirements"
                   />
                 </div>
-                <div className="flex justify-start pt-6">
+                <div className="flex justify-center pt-6">
                   <Button
                     type="submit"
                     disabled={mutation.isPending}
@@ -282,8 +281,8 @@ export default function Contact() {
               </div>
             </form>
 
-            {/* Right: Contact Info */}
-            <div className="space-y-5">
+            {/* Bottom: Contact Info 2 columns */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-16 pt-8 border-t border-white/20">
               <div>
                 <p className="text-white/40 text-xs tracking-widest uppercase mb-2">
                   {language === 'vi' ? 'Thông Tin Liên Hệ' : 'Contact Information'}
