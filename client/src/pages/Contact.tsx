@@ -8,6 +8,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { insertInquirySchema, type InsertInquiry } from "@shared/schema";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ArrowRight } from "lucide-react";
+import { SiFacebook, SiInstagram, SiTiktok } from "react-icons/si";
 
 export default function Contact() {
   const { t, language } = useLanguage();
@@ -404,6 +405,24 @@ export default function Contact() {
                     : '64 Nguyen Khoai, Ward 2, District 4, Ho Chi Minh City.'}
                 </p>
               </div>
+            </div>
+          </div>
+
+          {/* Copyright bar */}
+          <div className="flex items-center justify-between mt-10 pt-6 border-t border-white/10">
+            <p className="text-white/40 text-xs font-light">
+              Copyright © {new Date().getFullYear()} IEVRA. All rights reserved.
+            </p>
+            <div className="flex items-center gap-5">
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors">
+                <SiFacebook size={16} />
+              </a>
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors">
+                <SiInstagram size={16} />
+              </a>
+              <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors">
+                <SiTiktok size={16} />
+              </a>
             </div>
           </div>
         </div>
