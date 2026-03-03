@@ -1973,20 +1973,6 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                   </DialogHeader>
                   <Form {...advantageForm}>
                     <form onSubmit={advantageForm.handleSubmit(onAdvantageSubmit)} className="space-y-4">
-                      <FormField
-                        control={advantageForm.control}
-                        name="icon"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Lucide Icon Name *</FormLabel>
-                            <FormControl>
-                              <Input {...field} placeholder="e.g. Sparkles, Headset, Users, Store" data-testid="input-advantage-icon" />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-4">
                           <FormField
