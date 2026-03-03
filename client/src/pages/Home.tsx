@@ -1378,6 +1378,28 @@ export default function Home() {
           </div>
         </div>
       </section>
+      {/* Stats Section */}
+      {homepageContent && [(homepageContent as any).statsProjectsValue, (homepageContent as any).statsClientsValue, (homepageContent as any).statsAwardsValue, (homepageContent as any).statsExperienceValue].some(Boolean) && (
+        <section className="bg-black py-20">
+          <div className="w-full px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+              {[
+                { value: (homepageContent as any).statsProjectsValue, labelEn: (homepageContent as any).statsProjectsLabelEn, labelVi: (homepageContent as any).statsProjectsLabelVi },
+                { value: (homepageContent as any).statsClientsValue, labelEn: (homepageContent as any).statsClientsLabelEn, labelVi: (homepageContent as any).statsClientsLabelVi },
+                { value: (homepageContent as any).statsAwardsValue, labelEn: (homepageContent as any).statsAwardsLabelEn, labelVi: (homepageContent as any).statsAwardsLabelVi },
+                { value: (homepageContent as any).statsExperienceValue, labelEn: (homepageContent as any).statsExperienceLabelEn, labelVi: (homepageContent as any).statsExperienceLabelVi },
+              ].filter(s => s.value).map((stat, i) => (
+                <div key={i} className="space-y-3">
+                  <p className="text-6xl md:text-7xl lg:text-8xl font-light text-white tracking-tight">{stat.value}</p>
+                  <p className="text-sm font-light text-white/50 uppercase tracking-widest">
+                    {language === 'vi' ? (stat.labelVi || stat.labelEn) : (stat.labelEn || stat.labelVi)}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
       {/* Partners Section */}
       <section className="min-h-screen bg-black overflow-hidden py-16">
         <div className="w-full px-4 sm:px-6 lg:px-8 mb-16">

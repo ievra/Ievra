@@ -31,10 +31,18 @@ const homepageContentSchema = z.object({
   featuredTitle: z.string().optional(),
   featuredDescription: z.string().optional(),
   featuredDescriptionVi: z.string().optional(),
-  statsProjectsLabel: z.string().optional(),
-  statsClientsLabel: z.string().optional(),
-  statsAwardsLabel: z.string().optional(),
-  statsExperienceLabel: z.string().optional(),
+  statsProjectsValue: z.string().optional(),
+  statsProjectsLabelEn: z.string().optional(),
+  statsProjectsLabelVi: z.string().optional(),
+  statsClientsValue: z.string().optional(),
+  statsClientsLabelEn: z.string().optional(),
+  statsClientsLabelVi: z.string().optional(),
+  statsAwardsValue: z.string().optional(),
+  statsAwardsLabelEn: z.string().optional(),
+  statsAwardsLabelVi: z.string().optional(),
+  statsExperienceValue: z.string().optional(),
+  statsExperienceLabelEn: z.string().optional(),
+  statsExperienceLabelVi: z.string().optional(),
   journeyTitle: z.string().optional(),
   journeyTitleVi: z.string().optional(),
   journeyDescription: z.string().optional(),
@@ -233,10 +241,18 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
       partnersSubtitleVi: "",
       ctaSubtitle: "",
       ctaSubtitleVi: "",
-      statsProjectsLabel: "",
-      statsClientsLabel: "",
-      statsAwardsLabel: "",
-      statsExperienceLabel: "",
+      statsProjectsValue: "",
+      statsProjectsLabelEn: "",
+      statsProjectsLabelVi: "",
+      statsClientsValue: "",
+      statsClientsLabelEn: "",
+      statsClientsLabelVi: "",
+      statsAwardsValue: "",
+      statsAwardsLabelEn: "",
+      statsAwardsLabelVi: "",
+      statsExperienceValue: "",
+      statsExperienceLabelEn: "",
+      statsExperienceLabelVi: "",
       ctaTitle: "",
       ctaDescription: "",
       ctaButtonText: "",
@@ -301,10 +317,18 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
         featuredTitle: homepageContent.featuredTitle || undefined,
         featuredDescription: homepageContent.featuredDescription || "Discover our latest projects where innovation meets elegance.",
         featuredDescriptionVi: homepageContent.featuredDescriptionVi || "Khám phá các dự án mới nhất của chúng tôi nơi sự đổi mới gặp gỡ sự thanh lịch.",
-        statsProjectsLabel: homepageContent.statsProjectsLabel || undefined,
-        statsClientsLabel: homepageContent.statsClientsLabel || undefined,
-        statsAwardsLabel: homepageContent.statsAwardsLabel || undefined,
-        statsExperienceLabel: homepageContent.statsExperienceLabel || undefined,
+        statsProjectsValue: (homepageContent as any).statsProjectsValue || "",
+        statsProjectsLabelEn: (homepageContent as any).statsProjectsLabelEn || "",
+        statsProjectsLabelVi: (homepageContent as any).statsProjectsLabelVi || "",
+        statsClientsValue: (homepageContent as any).statsClientsValue || "",
+        statsClientsLabelEn: (homepageContent as any).statsClientsLabelEn || "",
+        statsClientsLabelVi: (homepageContent as any).statsClientsLabelVi || "",
+        statsAwardsValue: (homepageContent as any).statsAwardsValue || "",
+        statsAwardsLabelEn: (homepageContent as any).statsAwardsLabelEn || "",
+        statsAwardsLabelVi: (homepageContent as any).statsAwardsLabelVi || "",
+        statsExperienceValue: (homepageContent as any).statsExperienceValue || "",
+        statsExperienceLabelEn: (homepageContent as any).statsExperienceLabelEn || "",
+        statsExperienceLabelVi: (homepageContent as any).statsExperienceLabelVi || "",
         journeyTitle: homepageContent.journeyTitle || "THE JOURNEY TO YOUR DREAM SPACE",
         journeyTitleVi: homepageContent.journeyTitleVi || "HÀNH TRÌNH KIẾN TẠO KHÔNG GIAN SỐNG CỦA BẠN",
         journeyDescription: homepageContent.journeyDescription || "FROM CONCEPT TO REALITY, WE GUIDE YOU THROUGH A STREAMLINED, EFFICIENT, AND INSPIRING 5-STEP PROCESS.",
@@ -1081,6 +1105,37 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                       data-testid="input-advantages-subtitle-vi"
                     />
                   </div>
+                </div>
+              </div>
+
+              {/* Stats */}
+              <div className="p-4">
+                <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Số Liệu Thống Kê' : 'Stats Section'}</h3>
+                <div className="grid grid-cols-1 gap-6">
+                  {[
+                    { key: 'statsProjects', label: language === 'vi' ? 'Chỉ số 1 (VD: Dự án)' : 'Stat 1 (e.g. Projects)' },
+                    { key: 'statsClients', label: language === 'vi' ? 'Chỉ số 2 (VD: Năm KN)' : 'Stat 2 (e.g. Experience)' },
+                    { key: 'statsAwards', label: language === 'vi' ? 'Chỉ số 3 (VD: Khách hàng)' : 'Stat 3 (e.g. Clients)' },
+                    { key: 'statsExperience', label: language === 'vi' ? 'Chỉ số 4 (VD: Đối tác)' : 'Stat 4 (e.g. Partners)' },
+                  ].map(({ key, label }) => (
+                    <div key={key} className="border border-white/10 rounded p-3 space-y-3">
+                      <p className="text-xs font-medium uppercase tracking-wider text-white/60">{label}</p>
+                      <div className="grid grid-cols-3 gap-3">
+                        <div>
+                          <label className="text-xs font-light mb-1 block">Giá trị (VD: 600+)</label>
+                          <Input {...homepageContentForm.register(`${key}Value` as any)} placeholder="600+" />
+                        </div>
+                        <div>
+                          <label className="text-xs font-light mb-1 block">Nhãn (EN)</label>
+                          <Input {...homepageContentForm.register(`${key}LabelEn` as any)} placeholder="Completed Projects" />
+                        </div>
+                        <div>
+                          <label className="text-xs font-light mb-1 block">Nhãn (VI)</label>
+                          <Input {...homepageContentForm.register(`${key}LabelVi` as any)} placeholder="Dự án thành công" />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
 
