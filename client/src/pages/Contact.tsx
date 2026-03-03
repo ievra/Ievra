@@ -288,13 +288,6 @@ export default function Contact() {
       {/* FAQ Section */}
       <section className="py-16 bg-black">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Section Title */}
-          <div className="mb-16">
-            <h2 className="text-sm font-light tracking-widest text-white/60">
-              {language === 'vi' ? 'CÂU HỎI THƯỜNG GẶP' : 'FREQUENTLY ASKED QUESTIONS'}
-            </h2>
-          </div>
-
           {/* FAQ Items */}
           <div className="space-y-8">
             {faqsLoading ? (
