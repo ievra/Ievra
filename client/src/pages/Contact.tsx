@@ -190,7 +190,7 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-[120vh] pb-20 bg-black text-white">
+    <div className="bg-black text-white">
       {/* Request Section */}
       <section className="pt-60 pb-16">
         <div className="w-full px-4 sm:px-6 lg:px-8">
@@ -365,7 +365,7 @@ export default function Contact() {
       </section>
 
       {/* Footer: Contact Info */}
-      <section className="pb-12 bg-black">
+      <section className="pb-8 bg-black">
         <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div>
@@ -409,7 +409,7 @@ export default function Contact() {
           </div>
 
           {/* Copyright bar */}
-          <div className="flex items-center justify-between mt-10 pt-6 border-t border-white/10">
+          <div className="flex items-center justify-between mt-10 pt-6">
             <p className="text-white/40 text-xs font-light">
               Copyright © {new Date().getFullYear()} IEVRA. All rights reserved.
             </p>
