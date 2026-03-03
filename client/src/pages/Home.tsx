@@ -1811,21 +1811,20 @@ export default function Home() {
         onMouseLeave={handleFaqSectionMouseLeave}
       >
         <div className="w-full px-4 sm:px-6 lg:px-8">
-          {/* Section Title */}
-          <div className="mb-16">
-            <div className="max-w-none">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+            {/* Left: TypewriterText */}
+            <div className="lg:pt-2">
               <TypewriterText
                 reverse
                 text={language === "vi"
                   ? (homepageContent?.faqSectionSubtitleVi || homepageContent?.faqSectionSubtitle || "TÌM HIỂU THÊM VỀ QUY TRÌNH THIẾT KẾ VÀ DỊCH VỤ CỦA CHÚNG TÔI.")
                   : (homepageContent?.faqSectionSubtitle || "LEARN MORE ABOUT OUR DESIGN PROCESS AND SERVICES.")}
-                className="text-2xl md:text-3xl font-light text-white leading-relaxed text-right"
+                className="text-2xl md:text-3xl font-light text-white leading-relaxed"
               />
             </div>
-          </div>
 
-          {/* FAQ Items */}
-          <div className="space-y-8">
+            {/* Right: FAQ Items */}
+            <div className="space-y-8">
             {faqsLoading ? (
               <div className="text-white/50 text-center py-8">
                 Loading FAQs...
@@ -1880,6 +1879,7 @@ export default function Home() {
                 </div>
               ))
             )}
+          </div>
           </div>
         </div>
       </section>
