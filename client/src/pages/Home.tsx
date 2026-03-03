@@ -234,21 +234,26 @@ function AdvantageCard({
   const [hovered, setHovered] = useState(false);
   return (
     <div
-      className="group advantage-card scroll-animate px-10 py-8 rounded-none h-full flex flex-col"
+      className="group advantage-card scroll-animate px-10 py-8 rounded-none flex flex-col"
+      style={{ minHeight: '380px' }}
       data-testid={`advantage-card-${index + 1}`}
       onMouseEnter={() => setHovered(true)}
     >
-      <TypewriterText
-        as="h4"
-        text={title}
-        className="text-2xl font-light text-white/60 group-hover:text-white mb-6 uppercase tracking-wide transition-colors duration-300 flex-shrink-0"
-      />
-      <TypewriterText
-        as="p"
-        text={description}
-        active={hovered}
-        className="text-white/50 group-hover:text-white/90 font-light text-xl leading-relaxed transition-colors duration-300 flex-1"
-      />
+      <div className="flex-shrink-0 mb-6" style={{ height: '5rem', overflow: 'hidden' }}>
+        <TypewriterText
+          as="h4"
+          text={title}
+          className="text-2xl font-light text-white/60 group-hover:text-white uppercase tracking-wide transition-colors duration-300"
+        />
+      </div>
+      <div className="flex-1 overflow-hidden">
+        <TypewriterText
+          as="p"
+          text={description}
+          active={hovered}
+          className="text-white/50 group-hover:text-white/90 font-light text-xl leading-relaxed transition-colors duration-300"
+        />
+      </div>
     </div>
   );
 }
@@ -1465,7 +1470,7 @@ export default function Home() {
           </div>
 
           {/* Advantages Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 mb-20 items-stretch">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 mb-20">
             {advantagesLoading ? (
               // Loading skeleton
               (Array.from({ length: 4 }).map((_, i) => (
