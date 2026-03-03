@@ -156,7 +156,7 @@ function StatCounter({ value, className }: { value: string; className?: string }
 
     const runAnimation = () => {
       started.current = true;
-      const duration = 4000;
+      const duration = 7000;
       const start = performance.now();
       const tick = (now: number) => {
         const elapsed = now - start;
@@ -1443,7 +1443,7 @@ export default function Home() {
                   return (
                     <div 
                       key={advantage.id} 
-                      className="group advantage-card scroll-animate transition-all duration-500 ease-out hover:-translate-y-3 hover:scale-95 hover:shadow-2xl hover:shadow-white/10 p-6 rounded-none h-full flex flex-col"
+                      className="group advantage-card scroll-animate transition-all duration-500 ease-out hover:-translate-y-3 hover:scale-95 p-6 rounded-none h-full flex flex-col"
                       data-testid={`advantage-card-${index + 1}`}
                     >
                       <h4 className="text-lg font-light text-white/60 group-hover:text-white mb-4 uppercase tracking-wide transition-colors duration-300 flex-shrink-0 min-h-[3.5rem]">
