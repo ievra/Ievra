@@ -1382,7 +1382,7 @@ export default function Home() {
       {homepageContent && [(homepageContent as any).statsProjectsValue, (homepageContent as any).statsClientsValue, (homepageContent as any).statsAwardsValue, (homepageContent as any).statsExperienceValue].some(Boolean) && (
         <section className="bg-black py-24">
           <div className="w-full px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-wrap justify-center gap-x-32 gap-y-12">
+            <div className="flex flex-wrap justify-center gap-x-52 gap-y-12">
               {[
                 { value: (homepageContent as any).statsProjectsValue, labelEn: (homepageContent as any).statsProjectsLabelEn, labelVi: (homepageContent as any).statsProjectsLabelVi },
                 { value: (homepageContent as any).statsClientsValue, labelEn: (homepageContent as any).statsClientsLabelEn, labelVi: (homepageContent as any).statsClientsLabelVi },
