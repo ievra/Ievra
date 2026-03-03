@@ -34,15 +34,23 @@ const homepageContentSchema = z.object({
   statsProjectsValue: z.string().optional(),
   statsProjectsLabelEn: z.string().optional(),
   statsProjectsLabelVi: z.string().optional(),
+  statsProjectsDescEn: z.string().optional(),
+  statsProjectsDescVi: z.string().optional(),
   statsClientsValue: z.string().optional(),
   statsClientsLabelEn: z.string().optional(),
   statsClientsLabelVi: z.string().optional(),
+  statsClientsDescEn: z.string().optional(),
+  statsClientsDescVi: z.string().optional(),
   statsAwardsValue: z.string().optional(),
   statsAwardsLabelEn: z.string().optional(),
   statsAwardsLabelVi: z.string().optional(),
+  statsAwardsDescEn: z.string().optional(),
+  statsAwardsDescVi: z.string().optional(),
   statsExperienceValue: z.string().optional(),
   statsExperienceLabelEn: z.string().optional(),
   statsExperienceLabelVi: z.string().optional(),
+  statsExperienceDescEn: z.string().optional(),
+  statsExperienceDescVi: z.string().optional(),
   journeyTitle: z.string().optional(),
   journeyTitleVi: z.string().optional(),
   journeyDescription: z.string().optional(),
@@ -244,15 +252,23 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
       statsProjectsValue: "",
       statsProjectsLabelEn: "",
       statsProjectsLabelVi: "",
+      statsProjectsDescEn: "",
+      statsProjectsDescVi: "",
       statsClientsValue: "",
       statsClientsLabelEn: "",
       statsClientsLabelVi: "",
+      statsClientsDescEn: "",
+      statsClientsDescVi: "",
       statsAwardsValue: "",
       statsAwardsLabelEn: "",
       statsAwardsLabelVi: "",
+      statsAwardsDescEn: "",
+      statsAwardsDescVi: "",
       statsExperienceValue: "",
       statsExperienceLabelEn: "",
       statsExperienceLabelVi: "",
+      statsExperienceDescEn: "",
+      statsExperienceDescVi: "",
       ctaTitle: "",
       ctaDescription: "",
       ctaButtonText: "",
@@ -320,15 +336,23 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
         statsProjectsValue: (homepageContent as any).statsProjectsValue || "",
         statsProjectsLabelEn: (homepageContent as any).statsProjectsLabelEn || "",
         statsProjectsLabelVi: (homepageContent as any).statsProjectsLabelVi || "",
+        statsProjectsDescEn: (homepageContent as any).statsProjectsDescEn || "",
+        statsProjectsDescVi: (homepageContent as any).statsProjectsDescVi || "",
         statsClientsValue: (homepageContent as any).statsClientsValue || "",
         statsClientsLabelEn: (homepageContent as any).statsClientsLabelEn || "",
         statsClientsLabelVi: (homepageContent as any).statsClientsLabelVi || "",
+        statsClientsDescEn: (homepageContent as any).statsClientsDescEn || "",
+        statsClientsDescVi: (homepageContent as any).statsClientsDescVi || "",
         statsAwardsValue: (homepageContent as any).statsAwardsValue || "",
         statsAwardsLabelEn: (homepageContent as any).statsAwardsLabelEn || "",
         statsAwardsLabelVi: (homepageContent as any).statsAwardsLabelVi || "",
+        statsAwardsDescEn: (homepageContent as any).statsAwardsDescEn || "",
+        statsAwardsDescVi: (homepageContent as any).statsAwardsDescVi || "",
         statsExperienceValue: (homepageContent as any).statsExperienceValue || "",
         statsExperienceLabelEn: (homepageContent as any).statsExperienceLabelEn || "",
         statsExperienceLabelVi: (homepageContent as any).statsExperienceLabelVi || "",
+        statsExperienceDescEn: (homepageContent as any).statsExperienceDescEn || "",
+        statsExperienceDescVi: (homepageContent as any).statsExperienceDescVi || "",
         journeyTitle: homepageContent.journeyTitle || "THE JOURNEY TO YOUR DREAM SPACE",
         journeyTitleVi: homepageContent.journeyTitleVi || "HÀNH TRÌNH KIẾN TẠO KHÔNG GIAN SỐNG CỦA BẠN",
         journeyDescription: homepageContent.journeyDescription || "FROM CONCEPT TO REALITY, WE GUIDE YOU THROUGH A STREAMLINED, EFFICIENT, AND INSPIRING 5-STEP PROCESS.",
@@ -1132,6 +1156,16 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                         <div>
                           <label className="text-xs font-light mb-1 block">Nhãn (VI)</label>
                           <Input {...homepageContentForm.register(`${key}LabelVi` as any)} placeholder="Dự án thành công" />
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div>
+                          <label className="text-xs font-light mb-1 block">Mô tả (EN)</label>
+                          <Input {...homepageContentForm.register(`${key}DescEn` as any)} placeholder="Short description in English" />
+                        </div>
+                        <div>
+                          <label className="text-xs font-light mb-1 block">Mô tả (VI)</label>
+                          <Input {...homepageContentForm.register(`${key}DescVi` as any)} placeholder="Mô tả ngắn bằng tiếng Việt" />
                         </div>
                       </div>
                     </div>
