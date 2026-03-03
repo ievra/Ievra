@@ -234,11 +234,14 @@ function AdvantageCard({
   const [hovered, setHovered] = useState(false);
   return (
     <div
-      className="group advantage-card scroll-animate px-10 py-8 rounded-none flex flex-col"
+      className="group advantage-card scroll-animate px-10 py-8 rounded-none flex flex-col relative"
       style={{ minHeight: '380px' }}
       data-testid={`advantage-card-${index + 1}`}
       onMouseEnter={() => setHovered(true)}
     >
+      {index > 0 && (
+        <div className="hidden md:block absolute left-0 top-[20%] h-[60%] w-px bg-white/10" />
+      )}
       <div className="flex-shrink-0 mb-6" style={{ height: '5rem', overflow: 'hidden' }}>
         <TypewriterText
           as="h4"
@@ -1474,7 +1477,7 @@ export default function Home() {
           </div>
 
           {/* Advantages Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 mb-6 divide-y divide-white/10 md:divide-y-0 md:divide-x">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 mb-6">
             {advantagesLoading ? (
               // Loading skeleton
               (Array.from({ length: 4 }).map((_, i) => (
