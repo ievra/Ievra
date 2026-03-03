@@ -952,9 +952,8 @@ export default function Home() {
           className="fixed inset-0"
           style={{
             backgroundImage: `url(${homepageContent?.qualityBackgroundImage || "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80"})`,
-            backgroundSize: 'contain',
+            backgroundSize: 'cover',
             backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/60" />
