@@ -117,6 +117,49 @@ function TypewriterText({
   );
 }
 
+function StatCounter({ value, className }: { value: string; className?: string }) {
+  const [display, setDisplay] = useState(0);
+  const ref = useRef<HTMLParagraphElement>(null);
+  const started = useRef(false);
+
+  const parsed = (() => {
+    const match = value.match(/^(\d+)(.*)/);
+    if (!match) return { num: 0, suffix: value };
+    return { num: parseInt(match[1], 10), suffix: match[2] };
+  })();
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !started.current) {
+          started.current = true;
+          const duration = 2000;
+          const start = performance.now();
+          const tick = (now: number) => {
+            const elapsed = now - start;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            setDisplay(Math.round(eased * parsed.num));
+            if (progress < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [parsed.num]);
+
+  return (
+    <p ref={ref} className={className}>
+      {display}{parsed.suffix}
+    </p>
+  );
+}
+
 export default function Home() {
   const [, navigate] = useLocation();
   const { language, t } = useLanguage();
@@ -1390,7 +1433,7 @@ export default function Home() {
                 { value: (homepageContent as any).statsExperienceValue, labelEn: (homepageContent as any).statsExperienceLabelEn, labelVi: (homepageContent as any).statsExperienceLabelVi },
               ].filter(s => s.value).map((stat, i) => (
                 <div key={i} className="flex flex-col items-center text-center space-y-4 min-w-[160px]">
-                  <p className="text-7xl md:text-8xl font-light text-white tracking-tight leading-none">{stat.value}</p>
+                  <StatCounter value={stat.value} className="text-7xl md:text-8xl font-light text-white tracking-tight leading-none" />
                   <p className="text-base font-light text-white/50 uppercase tracking-widest">
                     {language === 'vi' ? (stat.labelVi || stat.labelEn) : (stat.labelEn || stat.labelVi)}
                   </p>
