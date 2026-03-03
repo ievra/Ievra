@@ -365,8 +365,8 @@ export default function Contact() {
 
       {/* Footer: Contact Info */}
       <section className="pb-12 bg-black">
-        <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-12">
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
             <div>
               <p className="text-white/40 text-xs tracking-widest uppercase mb-2">
                 {language === 'vi' ? 'Thông Tin Liên Hệ' : 'Contact Information'}
