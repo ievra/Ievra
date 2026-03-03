@@ -1113,7 +1113,7 @@ export default function Home() {
                 text={homepageContent?.qualityLeftText || (language === "vi"
                   ? "Mỗi chi tiết được lựa chọn để nội thất phục vụ lâu dài và trông hoàn hảo."
                   : "Each detail is selected so that the interior will serve for a long time and look impeccable.")}
-                className="md:text-5xl font-light text-[36px]"
+                className="text-[36px] font-light"
               />
             </div>
             <div className="text-white space-y-6 text-right">
@@ -1122,7 +1122,7 @@ export default function Home() {
                 text={homepageContent?.qualityRightText || (language === "vi"
                   ? "Chúng tôi chỉ sử dụng vật liệu và nội thất chất lượng cao từ các nhà sản xuất đáng tin cậy."
                   : "We use only high-quality materials and furniture from trusted manufacturers.")}
-                className="text-xl md:text-2xl font-light leading-relaxed"
+                className="text-[24px] font-light leading-relaxed"
               />
             </div>
           </div>
