@@ -1537,7 +1537,7 @@ export default function Home() {
         </div>
       </section>
       {/* Partners Section */}
-      <section className="min-h-screen bg-black overflow-hidden py-16">
+      <section className="bg-black overflow-hidden py-16">
         <div className="w-full px-4 sm:px-6 lg:px-8 mb-16">
           <div className="flex justify-end">
             <div className="max-w-none">
