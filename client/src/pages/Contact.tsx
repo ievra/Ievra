@@ -296,8 +296,8 @@ export default function Contact() {
           <div className="mb-16">
             <p className="text-2xl md:text-3xl font-light text-white leading-relaxed">
               {language === 'vi'
-                ? (homepageContent?.faqSectionSubtitleVi || homepageContent?.faqSectionSubtitle || 'NHỮNG ĐIỀU CÓ THỂ BẠN CHƯA BIẾT TRONG THI CÔNG THIẾT KẾ?')
-                : (homepageContent?.faqSectionSubtitle || 'THINGS YOU MAY NOT KNOW ABOUT INTERIOR DESIGN AND CONSTRUCTION?')}
+                ? (homepageContent?.faqSectionSubtitleVi || homepageContent?.faqSectionSubtitle || '')
+                : (homepageContent?.faqSectionSubtitle || '')}
             </p>
           </div>
 
