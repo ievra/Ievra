@@ -1807,6 +1807,7 @@ export default function Home() {
           </div>
           </div>
           {/* Right: Contact Info */}
+          <div className={`overflow-hidden transition-all duration-1000 ease-in-out ${contactFormExpanded ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"}`}>
           <div className="space-y-10 pt-2">
             <div>
               <p className="text-white/40 text-xs tracking-widest uppercase mb-4">
@@ -1846,6 +1847,7 @@ export default function Home() {
                 </p>
               </div>
             </div>
+          </div>
           </div>
           </div>
         </div>
