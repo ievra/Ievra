@@ -1108,7 +1108,7 @@ export default function Home() {
         </div>
         <div className="relative h-full w-full px-4 sm:px-6 lg:px-8 flex">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 w-full items-start">
-            <div className="text-white space-y-6 mt-[22vh]">
+            <div className="text-white space-y-6 mt-[30vh]">
               <TypewriterText
                 text={language === "vi"
                   ? (homepageContent?.qualityLeftTextVi || homepageContent?.qualityLeftText || "Mỗi chi tiết được lựa chọn để nội thất phục vụ lâu dài và trông hoàn hảo.")
@@ -1116,7 +1116,7 @@ export default function Home() {
                 className="text-[36px] font-light"
               />
             </div>
-            <div className="text-white space-y-6 text-right mt-[48vh]">
+            <div className="text-white space-y-6 text-right mt-[42vh]">
               <TypewriterText
                 reverse
                 text={language === "vi"
@@ -1353,7 +1353,7 @@ export default function Home() {
           <div className="w-full px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start w-full">
               {/* Left side text — lower */}
-              <div className="mt-[48vh]">
+              <div className="mt-[42vh]">
                 <TypewriterText
                   text={language === "vi"
                     ? (homepageContent?.quality2LeftTextVi || homepageContent?.quality2LeftText || "Mỗi chi tiết được lựa chọn để nội thất phục vụ lâu dài và luôn hoàn hảo.")
@@ -1363,7 +1363,7 @@ export default function Home() {
               </div>
 
               {/* Right side content — higher */}
-              <div className="text-right mt-[22vh]">
+              <div className="text-right mt-[30vh]">
                 <TypewriterText
                   reverse
                   text={language === "vi"
