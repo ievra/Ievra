@@ -1438,7 +1438,7 @@ export default function Home() {
           return (
             <div className="space-y-8">
               {renderRow(row1, 'right', 'row1', baseDuration)}
-              {row2.length > 0 && renderRow(row2, 'right', 'row2', row2Duration)}
+              {row2.length > 0 && renderRow(row2, 'left', 'row2', row2Duration)}
             </div>
           );
         })()}
