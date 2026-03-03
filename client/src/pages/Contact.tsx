@@ -345,7 +345,7 @@ export default function Contact() {
                     }`}
                   >
                     <div className="border-l-2 border-white/20 pl-8">
-                      <p className="text-white/70 font-light">
+                      <p className="text-white/70 font-light text-lg">
                         {faqAnswerTexts[faq.id] || ""}
                       </p>
                     </div>
