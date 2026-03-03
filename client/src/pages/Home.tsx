@@ -1859,7 +1859,6 @@ export default function Home() {
                 <div
                   key={faq.id}
                   className={`pb-8 pt-8 group transition-colors cursor-pointer scroll-animate-right ${index !== 0 ? 'border-t border-white/20' : ''}`}
-                  style={{ animationDelay: `${index * 0.1}s` }}
                   data-testid={`faq-item-${index + 1}`}
                 >
                   <div
