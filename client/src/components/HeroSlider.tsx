@@ -22,10 +22,11 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
   const [heroContentVisible, setHeroContentVisible] = useState(false);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
+    const handleIntroComplete = () => {
       setHeroContentVisible(true);
-    }, 300);
-    return () => clearTimeout(timer);
+    };
+    window.addEventListener('heroIntroComplete', handleIntroComplete);
+    return () => window.removeEventListener('heroIntroComplete', handleIntroComplete);
   }, []);
 
   const { data: categories = [] } = useQuery<Category[]>({

@@ -237,6 +237,7 @@ export default function Layout({ children }: LayoutProps) {
           setHeaderLogoVisible(true);
           showIntroRef.current = false;
           setLogoSwapped(true);
+          window.dispatchEvent(new CustomEvent('heroIntroComplete'));
         }
       };
 
