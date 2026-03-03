@@ -298,7 +298,7 @@ export default function Contact() {
           </div>
 
           {/* FAQ Items */}
-          <div className="space-y-8">
+          <div>
             {faqsLoading ? (
               <div className="text-white/50 text-center py-8">
                 Loading FAQs...
@@ -311,7 +311,7 @@ export default function Contact() {
               faqs.map((faq, index) => (
                 <div
                   key={faq.id}
-                  className="pb-8 group transition-colors cursor-pointer"
+                  className="border-t border-white/20 pt-8 pb-8 group transition-colors cursor-pointer"
                   data-testid={`faq-item-${index + 1}`}
                 >
                   <div
