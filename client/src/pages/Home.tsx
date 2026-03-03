@@ -72,21 +72,43 @@ function TypewriterText({
   const [hasStarted, setHasStarted] = useState(false);
   const elRef = useRef<HTMLElement>(null);
   const rafRef = useRef<number | null>(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
+  const startObservingRef = useRef<() => void>(() => {});
 
   useEffect(() => {
-    const el = elRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setHasStarted(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.15 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
+    startObservingRef.current = () => {
+      const el = elRef.current;
+      if (!el) return;
+      if (observerRef.current) observerRef.current.disconnect();
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) {
+            setHasStarted(true);
+            observer.disconnect();
+          }
+        },
+        { threshold: 0.15 }
+      );
+      observer.observe(el);
+      observerRef.current = observer;
+    };
+  });
+
+  useEffect(() => {
+    startObservingRef.current();
+    const handleScroll = () => {
+      if (window.scrollY < 50) {
+        if (rafRef.current) cancelAnimationFrame(rafRef.current);
+        setHasStarted(false);
+        setDisplayed('');
+        setTimeout(() => startObservingRef.current(), 100);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      observerRef.current?.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   useEffect(() => {
