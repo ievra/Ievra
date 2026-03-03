@@ -1620,7 +1620,7 @@ export default function Home() {
         )}
       </section>
       {/* Quick Contact Section */}
-      <section className="min-h-screen bg-black py-16">
+      <section className="bg-black py-16">
         <div
           className="w-full px-4 sm:px-6 lg:px-8"
           onMouseEnter={handleContactMouseEnter}
