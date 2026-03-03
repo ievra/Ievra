@@ -1398,13 +1398,14 @@ export default function Home() {
           const row1 = partners.slice(0, 12);
           const row2 = partners.slice(12, 24);
 
-          const renderRow = (logos: typeof partners, direction: 'right' | 'left', rowKey: string) => {
+          const renderRow = (logos: typeof partners, direction: 'right' | 'left', rowKey: string, duration: number) => {
             if (logos.length === 0) return null;
             const doubled = [...logos, ...logos];
             return (
               <div className="relative overflow-hidden w-full">
                 <div
                   className={`flex w-max ${direction === 'right' ? 'animate-scroll-right-seamless' : 'animate-scroll-left-seamless'}`}
+                  style={{ animationDuration: `${duration}s` }}
                 >
                   {doubled.map((partner, i) => {
                     const shape = partner.shape || 'landscape';
@@ -1432,10 +1433,12 @@ export default function Home() {
             );
           };
 
+          const baseDuration = 35;
+          const row2Duration = row1.length > 0 ? Math.round(baseDuration * row2.length / row1.length) : baseDuration;
           return (
             <div className="space-y-8">
-              {renderRow(row1, 'right', 'row1')}
-              {row2.length > 0 && renderRow(row2, 'left', 'row2')}
+              {renderRow(row1, 'right', 'row1', baseDuration)}
+              {row2.length > 0 && renderRow(row2, 'left', 'row2', row2Duration)}
             </div>
           );
         })()}
