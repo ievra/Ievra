@@ -1789,7 +1789,7 @@ export default function Home() {
                       Email: contact@ievra.com
                     </p>
                     <p className="text-white/60 font-light text-base">
-                      {language === "vi" ? "Điện thoại / Hotline" : "Phone / Hotline"}: 0767 5544 80 - 0969 8642 72
+                      {language === "vi" ? "Điện thoại" : "Phone"}: 0767 5544 80 - 0969 8642 72
                     </p>
                   </div>
                 </div>
