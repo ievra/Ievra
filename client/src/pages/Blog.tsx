@@ -435,41 +435,54 @@ export default function Blog() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[3px]">
               {articles.map((article) => (
                 <Link key={article.id} href={`/blog/${article.slug}`}>
-                  <Card className="article-card group overflow-hidden hover-scale project-hover rounded-none cursor-pointer h-[28rem] flex flex-col border border-white/10 hover:bg-white/[0.04] transition-all duration-300" data-testid={`card-article-${article.id}`}>
-                    <div className="relative">
-                      {(article.featuredImage || article.featuredImageData) ? (
-                        <OptimizedImage
-                          src={article.featuredImage || article.featuredImageData || ''}
-                          alt={article.title}
-                          width={600}
-                          height={192}
-                          wrapperClassName="w-full h-48"
-                          className="w-full h-full group-hover:scale-105 transition-transform duration-300"
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                          data-testid={`img-article-${article.id}`}
-                        />
-                      ) : (
-                        <div className="w-full h-48 bg-transparent" />
-                      )}
-                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div
+                    className="article-card group relative overflow-hidden cursor-pointer w-full h-[420px]"
+                    data-testid={`card-article-${article.id}`}
+                  >
+                    {(article.featuredImage || article.featuredImageData) ? (
+                      <img
+                        src={article.featuredImage || article.featuredImageData || ''}
+                        alt={article.title}
+                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                        data-testid={`img-article-${article.id}`}
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-zinc-900" data-testid={`img-article-${article.id}`} />
+                    )}
+
+                    <div className="absolute inset-0 bg-black/30 transition-opacity duration-500 group-hover:opacity-0" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
+
+                    {/* Top-left: Category */}
+                    <div className="absolute top-0 left-0 p-5 md:p-6">
+                      <p className="text-white text-sm uppercase tracking-[0.15em] font-light leading-snug" data-testid={`text-category-${article.id}`}>
+                        {getCategoryLabel(article.category)}
+                      </p>
                     </div>
-                    
-                    <CardContent className="p-6 flex-1 flex flex-col">
-                      <h3 className="text-xl font-sans font-light mb-2 line-clamp-2" data-testid={`text-title-${article.id}`}>
+
+                    {/* Bottom: Title + Date */}
+                    <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
+                      <h3
+                        className="text-white uppercase tracking-wide text-sm md:text-base font-light mb-3 line-clamp-2"
+                        data-testid={`text-title-${article.id}`}
+                      >
                         {article.title}
                       </h3>
-                      <div className="mb-3 text-sm" data-testid={`text-category-${article.id}`}>
-                        <p className="text-muted-foreground">{getCategoryLabel(article.category)}</p>
-                        <p className="text-muted-foreground">{formatDate(String(article.publishedAt || article.createdAt))}</p>
+                      <div className="flex items-end justify-between">
+                        <div className="text-white">
+                          <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
+                            {language === 'vi' ? 'Ngày đăng' : 'Published'}
+                          </p>
+                          <p className="text-white/90 text-xs font-light">
+                            {formatDate(String(article.publishedAt || article.createdAt))}
+                          </p>
+                        </div>
                       </div>
-                      <p className="text-foreground/80 text-sm line-clamp-3 flex-1" data-testid={`text-excerpt-${article.id}`}>
-                        {article.excerpt ? <FormattedText text={article.excerpt} /> : 'Discover insights and trends in interior design...'}
-                      </p>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 </Link>
               ))}
             </div>
