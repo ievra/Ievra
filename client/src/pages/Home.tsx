@@ -1521,7 +1521,7 @@ export default function Home() {
                 { value: (homepageContent as any).statsExperienceValue, labelEn: (homepageContent as any).statsExperienceLabelEn, labelVi: (homepageContent as any).statsExperienceLabelVi, descEn: (homepageContent as any).statsExperienceDescEn, descVi: (homepageContent as any).statsExperienceDescVi },
               ].filter(s => s.value).map((stat, i) => (
                 <div key={i} className="flex flex-col items-center text-center px-6 py-8 space-y-3">
-                  <StatCounter value={stat.value} className="text-5xl md:text-6xl font-light text-white tracking-tight leading-none" />
+                  <StatCounter value={stat.value} className="text-6xl md:text-7xl font-light text-white tracking-tight leading-none" />
                   <p className="text-base font-light text-white/50 uppercase tracking-widest">
                     {language === 'vi' ? (stat.labelVi || stat.labelEn) : (stat.labelEn || stat.labelVi)}
                   </p>
