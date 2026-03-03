@@ -439,7 +439,7 @@ export default function Blog() {
               {articles.map((article) => (
                 <Link key={article.id} href={`/blog/${article.slug}`}>
                   <div
-                    className="article-card group relative overflow-hidden cursor-pointer w-full h-[420px]"
+                    className="article-card group relative overflow-hidden cursor-pointer w-full h-[420px] transform-gpu backface-hidden"
                     data-testid={`card-article-${article.id}`}
                   >
                     {(article.featuredImage || article.featuredImageData) ? (
