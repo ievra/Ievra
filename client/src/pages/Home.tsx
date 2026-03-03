@@ -1594,7 +1594,7 @@ export default function Home() {
             );
           };
 
-          const baseDuration = 60;
+          const baseDuration = 35;
           const row2Duration = row1.length > 0 ? Math.round(baseDuration * row2.length / row1.length) : baseDuration;
           return (
             <div className="space-y-8">
