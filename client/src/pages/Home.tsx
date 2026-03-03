@@ -1871,7 +1871,7 @@ export default function Home() {
                         : "max-h-0 opacity-0"
                     }`}
                   >
-                    <div className="border-l-2 border-white/20 pl-8">
+                    <div className="border-r-2 border-white/20 pr-8 text-right">
                       <p className="text-white/70 font-light text-lg">
                         {faqAnswerTexts[faq.id] || ""}
                       </p>
