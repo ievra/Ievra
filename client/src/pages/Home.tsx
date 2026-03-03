@@ -1393,7 +1393,7 @@ export default function Home() {
           </div>
 
           {/* Process Steps */}
-          <div className="space-y-8">
+          <div>
             {journeyStepsLoading ? (
               Array.from({ length: 5 }).map((_, i) => (
                 <div key={i} className="pb-8 animate-pulse">
@@ -1418,7 +1418,7 @@ export default function Home() {
                   return (
                     <div 
                       key={step.id} 
-                      className={`pb-8 group transition-colors cursor-pointer process-step scroll-animate animate-delay-${(index + 1) * 100}`}
+                      className={`pb-8 pt-8 border-t border-white/20 group transition-colors cursor-pointer process-step scroll-animate animate-delay-${(index + 1) * 100}`}
                       data-testid={`journey-step-${step.stepNumber}`}
                     >
                       <div
