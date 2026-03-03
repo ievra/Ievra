@@ -1849,7 +1849,7 @@ export default function Home() {
               faqs.map((faq, index) => (
                 <div
                   key={faq.id}
-                  className="pb-8 pt-8 border-t border-white/20 group transition-colors cursor-pointer faq-item-animate"
+                  className={`pb-8 pt-8 group transition-colors cursor-pointer faq-item-animate ${index !== 0 ? 'border-t border-white/20' : ''}`}
                   style={{ animationDelay: `${index * 0.15}s` }}
                   data-testid={`faq-item-${index + 1}`}
                 >
