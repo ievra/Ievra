@@ -1884,7 +1884,7 @@ export default function Home() {
               faqs.map((faq, index) => (
                 <div
                   key={faq.id}
-                  className="pb-8 pt-8 border-t border-white/10 group transition-colors cursor-pointer scroll-animate-right"
+                  className="pb-8 pt-8 border-t border-white/10 group transition-colors cursor-pointer"
                   data-testid={`faq-item-${index + 1}`}
                 >
                   <div
