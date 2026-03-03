@@ -135,7 +135,7 @@ function StatCounter({ value, className }: { value: string; className?: string }
       ([entry]) => {
         if (entry.isIntersecting && !started.current) {
           started.current = true;
-          const duration = 2000;
+          const duration = 4000;
           const start = performance.now();
           const tick = (now: number) => {
             const elapsed = now - start;
