@@ -1110,18 +1110,18 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 w-full items-center">
             <div className="text-white space-y-6">
               <TypewriterText
-                text={homepageContent?.qualityLeftText || (language === "vi"
-                  ? "Mỗi chi tiết được lựa chọn để nội thất phục vụ lâu dài và trông hoàn hảo."
-                  : "Each detail is selected so that the interior will serve for a long time and look impeccable.")}
+                text={language === "vi"
+                  ? (homepageContent?.qualityLeftTextVi || homepageContent?.qualityLeftText || "Mỗi chi tiết được lựa chọn để nội thất phục vụ lâu dài và trông hoàn hảo.")
+                  : (homepageContent?.qualityLeftText || "Each detail is selected so that the interior will serve for a long time and look impeccable.")}
                 className="text-[36px] font-light"
               />
             </div>
             <div className="text-white space-y-6 text-right">
               <TypewriterText
                 reverse
-                text={homepageContent?.qualityRightText || (language === "vi"
-                  ? "Chúng tôi chỉ sử dụng vật liệu và nội thất chất lượng cao từ các nhà sản xuất đáng tin cậy."
-                  : "We use only high-quality materials and furniture from trusted manufacturers.")}
+                text={language === "vi"
+                  ? (homepageContent?.qualityRightTextVi || homepageContent?.qualityRightText || "Chúng tôi chỉ sử dụng vật liệu và nội thất chất lượng cao từ các nhà sản xuất đáng tin cậy.")
+                  : (homepageContent?.qualityRightText || "We use only high-quality materials and furniture from trusted manufacturers.")}
                 className="text-[24px] font-light leading-relaxed"
               />
             </div>
@@ -1354,18 +1354,18 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center h-full">
               {/* Left side text */}
               <TypewriterText
-                text={homepageContent?.quality2LeftText || (language === "vi"
-                  ? "Mỗi chi tiết được lựa chọn để nội thất phục vụ lâu dài và luôn hoàn hảo."
-                  : "Each detail is selected so that the interior will serve for a long time and look impeccable.")}
+                text={language === "vi"
+                  ? (homepageContent?.quality2LeftTextVi || homepageContent?.quality2LeftText || "Mỗi chi tiết được lựa chọn để nội thất phục vụ lâu dài và luôn hoàn hảo.")
+                  : (homepageContent?.quality2LeftText || "Each detail is selected so that the interior will serve for a long time and look impeccable.")}
                 className="text-2xl md:text-3xl lg:text-4xl font-light leading-relaxed text-white"
               />
 
               {/* Right side content */}
               <TypewriterText
                 reverse
-                text={homepageContent?.quality2RightText || (language === "vi"
-                  ? "Chúng tôi chỉ sử dụng vật liệu chất lượng cao và đồ nội thất từ các nhà sản xuất uy tín."
-                  : "We use only high-quality materials and furniture from trusted manufacturers.")}
+                text={language === "vi"
+                  ? (homepageContent?.quality2RightTextVi || homepageContent?.quality2RightText || "Chúng tôi chỉ sử dụng vật liệu chất lượng cao và đồ nội thất từ các nhà sản xuất uy tín.")
+                  : (homepageContent?.quality2RightText || "We use only high-quality materials and furniture from trusted manufacturers.")}
                 className="text-xl md:text-2xl font-light leading-relaxed text-white text-right"
               />
             </div>

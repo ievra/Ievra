@@ -75,10 +75,14 @@ const homepageContentSchema = z.object({
   ctaSubtitleVi: z.string().optional(),
   qualityBackgroundImage: z.string().optional(),
   qualityLeftText: z.string().optional(),
+  qualityLeftTextVi: z.string().optional(),
   qualityRightText: z.string().optional(),
+  qualityRightTextVi: z.string().optional(),
   quality2BackgroundImage: z.string().optional(),
   quality2LeftText: z.string().optional(),
+  quality2LeftTextVi: z.string().optional(),
   quality2RightText: z.string().optional(),
+  quality2RightTextVi: z.string().optional(),
   ctaTitle: z.string().optional(),
   ctaDescription: z.string().optional(),
   ctaButtonText: z.string().optional(),
@@ -377,10 +381,14 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
         ctaSubtitleVi: homepageContent.ctaSubtitleVi || "Để lại yêu cầu tư vấn miễn phí và chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.",
         qualityBackgroundImage: homepageContent.qualityBackgroundImage || "",
         qualityLeftText: homepageContent.qualityLeftText || "Each detail is selected so that the interior will serve for a long time and look impeccable.",
+        qualityLeftTextVi: homepageContent.qualityLeftTextVi || "Mỗi chi tiết được lựa chọn để nội thất phục vụ lâu dài và trông hoàn hảo.",
         qualityRightText: homepageContent.qualityRightText || "We use only high-quality materials and furniture from trusted manufacturers.",
+        qualityRightTextVi: homepageContent.qualityRightTextVi || "Chúng tôi chỉ sử dụng vật liệu và nội thất chất lượng cao từ các nhà sản xuất đáng tin cậy.",
         quality2BackgroundImage: homepageContent.quality2BackgroundImage || "",
         quality2LeftText: homepageContent.quality2LeftText || "Each detail is selected so that the interior will serve for a long time and look impeccable.",
+        quality2LeftTextVi: homepageContent.quality2LeftTextVi || "Mỗi chi tiết được lựa chọn để nội thất phục vụ lâu dài và trông hoàn hảo.",
         quality2RightText: homepageContent.quality2RightText || "We use only high-quality materials and furniture from trusted manufacturers.",
+        quality2RightTextVi: homepageContent.quality2RightTextVi || "Chúng tôi chỉ sử dụng vật liệu và nội thất chất lượng cao từ các nhà sản xuất đáng tin cậy.",
         ctaTitle: homepageContent.ctaTitle || undefined,
         ctaDescription: homepageContent.ctaDescription || undefined,
         ctaButtonText: homepageContent.ctaButtonText || undefined,
@@ -1306,22 +1314,50 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
 
                   <div>
                     <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Văn Bản Trái (Lớn)' : 'Left Text (Large)'}</label>
-                    <Textarea 
-                      {...homepageContentForm.register("qualityLeftText")}
-                      placeholder="e.g., Each detail is selected so that the interior will serve for a long time and look impeccable."
-                      rows={3}
-                      data-testid="textarea-quality-left-text"
-                    />
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <p className="text-xs text-muted-foreground mb-1">English</p>
+                        <Textarea 
+                          {...homepageContentForm.register("qualityLeftText")}
+                          placeholder="Each detail is selected so that the interior will serve for a long time and look impeccable."
+                          rows={3}
+                          data-testid="textarea-quality-left-text"
+                        />
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground mb-1">Tiếng Việt</p>
+                        <Textarea 
+                          {...homepageContentForm.register("qualityLeftTextVi")}
+                          placeholder="Mỗi chi tiết được lựa chọn để nội thất phục vụ lâu dài và trông hoàn hảo."
+                          rows={3}
+                          data-testid="textarea-quality-left-text-vi"
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   <div>
                     <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Văn Bản Phải (Nhỏ)' : 'Right Text (Small)'}</label>
-                    <Textarea 
-                      {...homepageContentForm.register("qualityRightText")}
-                      placeholder="e.g., We use only high-quality materials and furniture from trusted manufacturers."
-                      rows={3}
-                      data-testid="textarea-quality-right-text"
-                    />
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <p className="text-xs text-muted-foreground mb-1">English</p>
+                        <Textarea 
+                          {...homepageContentForm.register("qualityRightText")}
+                          placeholder="We use only high-quality materials and furniture from trusted manufacturers."
+                          rows={3}
+                          data-testid="textarea-quality-right-text"
+                        />
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground mb-1">Tiếng Việt</p>
+                        <Textarea 
+                          {...homepageContentForm.register("qualityRightTextVi")}
+                          placeholder="Chúng tôi chỉ sử dụng vật liệu và nội thất chất lượng cao từ các nhà sản xuất đáng tin cậy."
+                          rows={3}
+                          data-testid="textarea-quality-right-text-vi"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -1365,22 +1401,50 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
 
                   <div>
                     <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Văn Bản Trái (Lớn)' : 'Left Text (Large)'}</label>
-                    <Textarea 
-                      {...homepageContentForm.register("quality2LeftText")}
-                      placeholder="e.g., Each detail is selected so that the interior will serve for a long time and look impeccable."
-                      rows={3}
-                      data-testid="textarea-quality2-left-text"
-                    />
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <p className="text-xs text-muted-foreground mb-1">English</p>
+                        <Textarea 
+                          {...homepageContentForm.register("quality2LeftText")}
+                          placeholder="Each detail is selected so that the interior will serve for a long time and look impeccable."
+                          rows={3}
+                          data-testid="textarea-quality2-left-text"
+                        />
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground mb-1">Tiếng Việt</p>
+                        <Textarea 
+                          {...homepageContentForm.register("quality2LeftTextVi")}
+                          placeholder="Mỗi chi tiết được lựa chọn để nội thất phục vụ lâu dài và trông hoàn hảo."
+                          rows={3}
+                          data-testid="textarea-quality2-left-text-vi"
+                        />
+                      </div>
+                    </div>
                   </div>
 
                   <div>
                     <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Văn Bản Phải (Nhỏ)' : 'Right Text (Small)'}</label>
-                    <Textarea 
-                      {...homepageContentForm.register("quality2RightText")}
-                      placeholder="e.g., We use only high-quality materials and furniture from trusted manufacturers."
-                      rows={3}
-                      data-testid="textarea-quality2-right-text"
-                    />
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <p className="text-xs text-muted-foreground mb-1">English</p>
+                        <Textarea 
+                          {...homepageContentForm.register("quality2RightText")}
+                          placeholder="We use only high-quality materials and furniture from trusted manufacturers."
+                          rows={3}
+                          data-testid="textarea-quality2-right-text"
+                        />
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground mb-1">Tiếng Việt</p>
+                        <Textarea 
+                          {...homepageContentForm.register("quality2RightTextVi")}
+                          placeholder="Chúng tôi chỉ sử dụng vật liệu và nội thất chất lượng cao từ các nhà sản xuất đáng tin cậy."
+                          rows={3}
+                          data-testid="textarea-quality2-right-text-vi"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
