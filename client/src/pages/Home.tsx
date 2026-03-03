@@ -1855,12 +1855,12 @@ export default function Home() {
                       }`}
                     />
                     <div className="flex items-center gap-3 sm:gap-8">
-                      <h3 className="text-xl md:text-2xl font-light text-white text-right">
-                        {faq.question}
-                      </h3>
                       <span className="text-white/40 font-light text-lg">
                         [{String(index + 1).padStart(2, "0")}]
                       </span>
+                      <h3 className="text-xl md:text-2xl font-light text-white text-right">
+                        {faq.question}
+                      </h3>
                     </div>
                   </div>
 
