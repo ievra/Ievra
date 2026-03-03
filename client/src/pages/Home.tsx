@@ -1526,7 +1526,7 @@ export default function Home() {
                     {language === 'vi' ? (stat.labelVi || stat.labelEn) : (stat.labelEn || stat.labelVi)}
                   </p>
                   {(stat.descEn || stat.descVi) && (
-                    <p className="text-sm font-light text-white/30 leading-relaxed">
+                    <p className="font-light text-white/30 text-[16px]">
                       {language === 'vi' ? (stat.descVi || stat.descEn) : (stat.descEn || stat.descVi)}
                     </p>
                   )}
