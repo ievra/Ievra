@@ -1389,9 +1389,9 @@ export default function Home() {
                 { value: (homepageContent as any).statsAwardsValue, labelEn: (homepageContent as any).statsAwardsLabelEn, labelVi: (homepageContent as any).statsAwardsLabelVi },
                 { value: (homepageContent as any).statsExperienceValue, labelEn: (homepageContent as any).statsExperienceLabelEn, labelVi: (homepageContent as any).statsExperienceLabelVi },
               ].filter(s => s.value).map((stat, i) => (
-                <div key={i} className="flex flex-col items-center text-center space-y-2 min-w-[140px]">
+                <div key={i} className="flex flex-col items-center text-center space-y-4 min-w-[160px]">
                   <p className="text-7xl md:text-8xl font-light text-white tracking-tight leading-none">{stat.value}</p>
-                  <p className="text-xs font-light text-white/50 uppercase tracking-widest">
+                  <p className="text-base font-light text-white/50 uppercase tracking-widest">
                     {language === 'vi' ? (stat.labelVi || stat.labelEn) : (stat.labelEn || stat.labelVi)}
                   </p>
                 </div>
