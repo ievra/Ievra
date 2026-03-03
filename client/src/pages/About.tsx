@@ -98,7 +98,7 @@ export default function About() {
           ) : (
             <div className="absolute inset-0 bg-black" />
           )}
-          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-black/70" />
           
           {/* Content */}
           {aboutContent && (
