@@ -131,26 +131,43 @@ function StatCounter({ value, className }: { value: string; className?: string }
   useEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
+
+    const runAnimation = () => {
+      started.current = true;
+      const duration = 4000;
+      const start = performance.now();
+      const tick = (now: number) => {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        setDisplay(Math.round(eased * parsed.num));
+        if (progress < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting && !started.current) {
-          started.current = true;
-          const duration = 4000;
-          const start = performance.now();
-          const tick = (now: number) => {
-            const elapsed = now - start;
-            const progress = Math.min(elapsed / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 3);
-            setDisplay(Math.round(eased * parsed.num));
-            if (progress < 1) requestAnimationFrame(tick);
-          };
-          requestAnimationFrame(tick);
+          runAnimation();
         }
       },
       { threshold: 0.3 }
     );
     observer.observe(el);
-    return () => observer.disconnect();
+
+    const handleScroll = () => {
+      if (window.scrollY < 50 && started.current) {
+        started.current = false;
+        setDisplay(0);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, [parsed.num]);
 
   const digits = parsed.num.toString().length;
