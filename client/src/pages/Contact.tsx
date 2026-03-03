@@ -408,22 +408,23 @@ export default function Contact() {
             </div>
           </div>
 
-          {/* Copyright bar */}
-          <div className="flex items-center justify-between mt-10 pt-6">
-            <p className="text-white/40 text-xs font-light">
-              Copyright © {new Date().getFullYear()} IEVRA. All rights reserved.
-            </p>
-            <div className="flex items-center gap-5">
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors">
-                <SiFacebook size={16} />
-              </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors">
-                <SiInstagram size={16} />
-              </a>
-              <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors">
-                <SiTiktok size={16} />
-              </a>
-            </div>
+        </div>
+
+        {/* Copyright bar - full width */}
+        <div className="flex items-center justify-between mt-10 pt-6 px-4 sm:px-6 lg:px-8">
+          <p className="text-white/40 text-xs font-light">
+            Copyright © {new Date().getFullYear()} IEVRA. All rights reserved.
+          </p>
+          <div className="flex items-center gap-5">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors">
+              <SiFacebook size={16} />
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors">
+              <SiInstagram size={16} />
+            </a>
+            <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors">
+              <SiTiktok size={16} />
+            </a>
           </div>
         </div>
       </section>
