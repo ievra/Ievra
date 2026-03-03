@@ -283,6 +283,9 @@ export default function Home() {
     {},
   );
   const [stepDescriptionTexts, setStepDescriptionTexts] = useState<Record<string, string>>({});
+  const [cardResetKey, setCardResetKey] = useState(0);
+  const resetCardsRef = useRef<() => void>(() => {});
+  resetCardsRef.current = () => setCardResetKey(k => k + 1);
 
   const measureContainers = useCallback(() => {
     if (projectsScrollRef.current) setProjectsContainerWidth(projectsScrollRef.current.offsetWidth);
@@ -358,6 +361,7 @@ export default function Home() {
             "animate-slide-in-from-right",
           );
         });
+        resetCardsRef.current();
         // Re-trigger animations after a brief delay
         setTimeout(() => {
           observeElements();
@@ -1497,7 +1501,7 @@ export default function Home() {
 
                   return (
                     <AdvantageCard
-                      key={advantage.id}
+                      key={`${advantage.id}-${cardResetKey}`}
                       id={advantage.id}
                       index={index}
                       title={title || ''}
