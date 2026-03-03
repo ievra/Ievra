@@ -416,13 +416,13 @@ export default function Contact() {
             Copyright © {new Date().getFullYear()} IEVRA. All rights reserved.
           </p>
           <div className="flex items-center gap-5">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors">
+            <a href="https://www.facebook.com/ievra.vn" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors">
               <SiFacebook size={16} />
             </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors">
+            <a href="https://www.instagram.com/ievra.vn" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors">
               <SiInstagram size={16} />
             </a>
-            <a href="https://tiktok.com" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors">
+            <a href="https://www.tiktok.com/@ievra.vn" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors">
               <SiTiktok size={16} />
             </a>
           </div>
