@@ -1873,7 +1873,7 @@ export default function Home() {
                   >
                     <div className="border-r-2 border-white/20 pr-8 text-right">
                       <TypewriterText
-                        text={faqAnswerTexts[faq.id] || ""}
+                        text={faq.answer || ""}
                         active={expandedFaqIndex === index}
                         className="text-white/70 font-light text-lg"
                       />
