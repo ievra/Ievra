@@ -311,7 +311,7 @@ export default function Contact() {
               faqs.map((faq, index) => (
                 <div
                   key={faq.id}
-                  className="border-t border-white/20 pt-8 pb-8 group transition-colors cursor-pointer"
+                  className={`pt-8 pb-8 group transition-colors cursor-pointer ${index !== 0 ? 'border-t border-white/20' : ''}`}
                   data-testid={`faq-item-${index + 1}`}
                 >
                   <div
