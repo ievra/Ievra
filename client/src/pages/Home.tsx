@@ -1474,7 +1474,7 @@ export default function Home() {
           </div>
 
           {/* Advantages Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 mb-20">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-0 mb-20 divide-y divide-white/10 md:divide-y-0 md:divide-x">
             {advantagesLoading ? (
               // Loading skeleton
               (Array.from({ length: 4 }).map((_, i) => (
