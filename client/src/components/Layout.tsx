@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { useLanguage, type Language } from "@/contexts/LanguageContext";
 import { useQuery } from "@tanstack/react-query";
+import Footer from "@/components/Footer";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -478,6 +479,7 @@ export default function Layout({ children }: LayoutProps) {
       )}
 
       <main>{children}</main>
+      {!location.startsWith('/admin') && <Footer />}
     </div>
   );
 }
