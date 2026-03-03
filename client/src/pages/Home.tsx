@@ -1629,6 +1629,9 @@ export default function Home() {
           onMouseEnter={handleContactMouseEnter}
           onMouseLeave={handleContactMouseLeave}
         >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+          {/* Left: Form */}
+          <div>
           <div className="mb-16">
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
               <div className="max-w-none">
@@ -1801,6 +1804,49 @@ export default function Home() {
                 </div>
               </div>
             </form>
+          </div>
+          </div>
+          {/* Right: Contact Info */}
+          <div className="space-y-10 pt-2">
+            <div>
+              <p className="text-white/40 text-xs tracking-widest uppercase mb-4">
+                {language === "vi" ? "Thông Tin Liên Hệ" : "Contact Information"}
+              </p>
+              <div className="space-y-3">
+                <p className="text-white font-light text-sm leading-relaxed">
+                  {language === "vi"
+                    ? "CÔNG TY TNHH THIẾT KẾ VÀ THI CÔNG NỘI THẤT IEVRA"
+                    : "IEVRA INTERIOR DESIGN AND CONSTRUCTION CO., LTD"}
+                </p>
+                <p className="text-white/60 font-light text-sm">
+                  {language === "vi" ? "Mã số thuế" : "Tax code"}: 0319384424
+                </p>
+                <p className="text-white/60 font-light text-sm">
+                  Email: contact@ievra.com
+                </p>
+                <p className="text-white/60 font-light text-sm">
+                  {language === "vi" ? "Điện thoại / Hotline" : "Phone / Hotline"}: 0767 5544 80 — 0969 8642 72
+                </p>
+              </div>
+            </div>
+            <div>
+              <p className="text-white/40 text-xs tracking-widest uppercase mb-4">
+                {language === "vi" ? "Địa Chỉ Văn Phòng" : "Office Addresses"}
+              </p>
+              <div className="space-y-4">
+                <p className="text-white/60 font-light text-sm leading-relaxed">
+                  {language === "vi"
+                    ? "422 Đào Trí, Phường Phú Thuận, Quận 7, Tp. Hồ Chí Minh."
+                    : "422 Dao Tri, Phu Thuan Ward, District 7, Ho Chi Minh City."}
+                </p>
+                <p className="text-white/60 font-light text-sm leading-relaxed">
+                  {language === "vi"
+                    ? "64 Nguyễn Khoái, Phường 2, Quận 4, Tp. Hồ Chí Minh."
+                    : "64 Nguyen Khoai, Ward 2, District 4, Ho Chi Minh City."}
+                </p>
+              </div>
+            </div>
+          </div>
           </div>
         </div>
       </section>
