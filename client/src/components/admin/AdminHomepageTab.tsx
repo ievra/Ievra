@@ -2126,6 +2126,7 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                     answerEn: "",
                     questionVi: "",
                     answerVi: "",
+                    page: "home",
                   });
                   setIsFaqDialogOpen(true);
                 }}
@@ -2212,8 +2213,8 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
 
                       <Button 
                         type="submit" 
-                        className={`w-full transition-all ${!faqForm.formState.isDirty ? 'opacity-50 cursor-not-allowed' : 'opacity-100 hover:opacity-90'}`}
-                        disabled={!faqForm.formState.isDirty || createFaqMutation.isPending || updateFaqMutation.isPending}
+                        className="w-full transition-all"
+                        disabled={createFaqMutation.isPending || updateFaqMutation.isPending}
                         data-testid="button-submit-faq"
                       >
                         {createFaqMutation.isPending || updateFaqMutation.isPending ? (language === 'vi' ? "Đang lưu..." : "Saving...") : (language === 'vi' ? "Lưu" : "Save")}
