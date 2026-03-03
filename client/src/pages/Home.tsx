@@ -1448,7 +1448,7 @@ export default function Home() {
                         }`}
                       >
                         <div className="border-l-2 border-white/20 pl-8">
-                          <p className="text-white/70 font-light text-xs">{description}</p>
+                          <p className="text-white/70 font-light text-lg">{description}</p>
                         </div>
                       </div>
                     </div>
