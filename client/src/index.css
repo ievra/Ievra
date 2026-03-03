@@ -684,6 +684,7 @@ img {
 
   /* Initial hidden state for animations */
   .scroll-animate:not(.animated),
+  .scroll-animate-right:not(.animated),
   .service-card:not(.animated),
   .advantage-card:not(.animated),
   .process-step:not(.animated),
