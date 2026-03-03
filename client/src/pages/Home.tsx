@@ -1106,9 +1106,9 @@ export default function Home() {
         >
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/60" />
         </div>
-        <div className="relative h-full w-full px-4 sm:px-6 lg:px-8 flex items-center">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 w-full items-center">
-            <div className="text-white space-y-6">
+        <div className="relative h-full w-full px-4 sm:px-6 lg:px-8 flex">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 w-full items-start">
+            <div className="text-white space-y-6 mt-[22vh]">
               <TypewriterText
                 text={language === "vi"
                   ? (homepageContent?.qualityLeftTextVi || homepageContent?.qualityLeftText || "Mỗi chi tiết được lựa chọn để nội thất phục vụ lâu dài và trông hoàn hảo.")
@@ -1116,7 +1116,7 @@ export default function Home() {
                 className="text-[36px] font-light"
               />
             </div>
-            <div className="text-white space-y-6 text-right">
+            <div className="text-white space-y-6 text-right mt-[48vh]">
               <TypewriterText
                 reverse
                 text={language === "vi"
@@ -1349,25 +1349,29 @@ export default function Home() {
           <div className="absolute inset-0 bg-black/40" />
         </div>
 
-        <div className="relative h-full flex items-center">
-          <div className="w-full px-4 sm:px-6 lg:px-8 w-full">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center h-full">
-              {/* Left side text */}
-              <TypewriterText
-                text={language === "vi"
-                  ? (homepageContent?.quality2LeftTextVi || homepageContent?.quality2LeftText || "Mỗi chi tiết được lựa chọn để nội thất phục vụ lâu dài và luôn hoàn hảo.")
-                  : (homepageContent?.quality2LeftText || "Each detail is selected so that the interior will serve for a long time and look impeccable.")}
-                className="text-2xl md:text-3xl lg:text-4xl font-light leading-relaxed text-white"
-              />
+        <div className="relative h-full flex">
+          <div className="w-full px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start w-full">
+              {/* Left side text — lower */}
+              <div className="mt-[48vh]">
+                <TypewriterText
+                  text={language === "vi"
+                    ? (homepageContent?.quality2LeftTextVi || homepageContent?.quality2LeftText || "Mỗi chi tiết được lựa chọn để nội thất phục vụ lâu dài và luôn hoàn hảo.")
+                    : (homepageContent?.quality2LeftText || "Each detail is selected so that the interior will serve for a long time and look impeccable.")}
+                  className="text-2xl md:text-3xl lg:text-4xl font-light leading-relaxed text-white"
+                />
+              </div>
 
-              {/* Right side content */}
-              <TypewriterText
-                reverse
-                text={language === "vi"
-                  ? (homepageContent?.quality2RightTextVi || homepageContent?.quality2RightText || "Chúng tôi chỉ sử dụng vật liệu chất lượng cao và đồ nội thất từ các nhà sản xuất uy tín.")
-                  : (homepageContent?.quality2RightText || "We use only high-quality materials and furniture from trusted manufacturers.")}
-                className="text-xl md:text-2xl font-light leading-relaxed text-white text-right"
-              />
+              {/* Right side content — higher */}
+              <div className="text-right mt-[22vh]">
+                <TypewriterText
+                  reverse
+                  text={language === "vi"
+                    ? (homepageContent?.quality2RightTextVi || homepageContent?.quality2RightText || "Chúng tôi chỉ sử dụng vật liệu chất lượng cao và đồ nội thất từ các nhà sản xuất uy tín.")
+                    : (homepageContent?.quality2RightText || "We use only high-quality materials and furniture from trusted manufacturers.")}
+                  className="text-xl md:text-2xl font-light leading-relaxed text-white text-right"
+                />
+              </div>
             </div>
           </div>
         </div>
