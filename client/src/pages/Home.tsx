@@ -62,11 +62,13 @@ function TypewriterText({
   className,
   as: Tag = 'p',
   reverse = false,
+  active,
 }: {
   text: string;
   className?: string;
   as?: TypewriterTextTag;
   reverse?: boolean;
+  active?: boolean;
 }) {
   const [displayed, setDisplayed] = useState('');
   const [hasStarted, setHasStarted] = useState(false);
@@ -75,7 +77,21 @@ function TypewriterText({
   const observerRef = useRef<IntersectionObserver | null>(null);
   const startObservingRef = useRef<() => void>(() => {});
 
+  // Hover-controlled mode
   useEffect(() => {
+    if (active === undefined) return;
+    if (active) {
+      setHasStarted(true);
+    } else {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      setHasStarted(false);
+      setDisplayed('');
+    }
+  }, [active]);
+
+  // Scroll/IntersectionObserver mode (only when active prop not provided)
+  useEffect(() => {
+    if (active !== undefined) return;
     startObservingRef.current = () => {
       const el = elRef.current;
       if (!el) return;
@@ -95,6 +111,7 @@ function TypewriterText({
   });
 
   useEffect(() => {
+    if (active !== undefined) return;
     startObservingRef.current();
     const handleScroll = () => {
       if (window.scrollY < 50) {
@@ -199,6 +216,40 @@ function StatCounter({ value, className }: { value: string; className?: string }
       <p className={className} style={{ fontVariantNumeric: 'tabular-nums' }}>
         {display}{parsed.suffix}
       </p>
+    </div>
+  );
+}
+
+function AdvantageCard({
+  title,
+  description,
+  index,
+  id,
+}: {
+  title: string;
+  description: string;
+  index: number;
+  id: number;
+}) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div
+      className="group advantage-card scroll-animate transition-all duration-500 ease-out hover:-translate-y-3 hover:scale-95 px-10 py-8 rounded-none h-full flex flex-col"
+      data-testid={`advantage-card-${index + 1}`}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <TypewriterText
+        as="h4"
+        text={title}
+        className="text-2xl font-light text-white/60 group-hover:text-white mb-6 uppercase tracking-wide transition-colors duration-300 flex-shrink-0"
+      />
+      <TypewriterText
+        as="p"
+        text={description}
+        active={hovered}
+        className="text-white/50 group-hover:text-white/90 font-light text-xl leading-relaxed transition-colors duration-300 flex-1"
+      />
     </div>
   );
 }
@@ -1441,22 +1492,13 @@ export default function Home() {
                   const description = language === "vi" ? advantage.descriptionVi : advantage.descriptionEn;
 
                   return (
-                    <div 
-                      key={advantage.id} 
-                      className="group advantage-card scroll-animate transition-all duration-500 ease-out hover:-translate-y-3 hover:scale-95 px-10 py-8 rounded-none h-full flex flex-col"
-                      data-testid={`advantage-card-${index + 1}`}
-                    >
-                      <TypewriterText
-                        as="h4"
-                        text={title || ''}
-                        className="text-lg font-light text-white/60 group-hover:text-white mb-4 uppercase tracking-wide transition-colors duration-300 flex-shrink-0 min-h-[3.5rem]"
-                      />
-                      <TypewriterText
-                        as="p"
-                        text={description || ''}
-                        className="text-white/50 group-hover:text-white/90 font-light text-xl leading-relaxed transition-colors duration-300 flex-1"
-                      />
-                    </div>
+                    <AdvantageCard
+                      key={advantage.id}
+                      id={advantage.id}
+                      index={index}
+                      title={title || ''}
+                      description={description || ''}
+                    />
                   );
                 }))
             ) : null}
