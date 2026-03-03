@@ -1513,14 +1513,14 @@ export default function Home() {
           </div>
           {/* Stats Row */}
           {homepageContent && [(homepageContent as any).statsProjectsValue, (homepageContent as any).statsClientsValue, (homepageContent as any).statsAwardsValue, (homepageContent as any).statsExperienceValue].some(Boolean) && (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-0 pt-6 mt-2">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-0">
               {[
                 { value: (homepageContent as any).statsProjectsValue, labelEn: (homepageContent as any).statsProjectsLabelEn, labelVi: (homepageContent as any).statsProjectsLabelVi, descEn: (homepageContent as any).statsProjectsDescEn, descVi: (homepageContent as any).statsProjectsDescVi },
                 { value: (homepageContent as any).statsClientsValue, labelEn: (homepageContent as any).statsClientsLabelEn, labelVi: (homepageContent as any).statsClientsLabelVi, descEn: (homepageContent as any).statsClientsDescEn, descVi: (homepageContent as any).statsClientsDescVi },
                 { value: (homepageContent as any).statsAwardsValue, labelEn: (homepageContent as any).statsAwardsLabelEn, labelVi: (homepageContent as any).statsAwardsLabelVi, descEn: (homepageContent as any).statsAwardsDescEn, descVi: (homepageContent as any).statsAwardsDescVi },
                 { value: (homepageContent as any).statsExperienceValue, labelEn: (homepageContent as any).statsExperienceLabelEn, labelVi: (homepageContent as any).statsExperienceLabelVi, descEn: (homepageContent as any).statsExperienceDescEn, descVi: (homepageContent as any).statsExperienceDescVi },
               ].filter(s => s.value).map((stat, i) => (
-                <div key={i} className="flex flex-col items-center text-center px-6 py-8 space-y-3">
+                <div key={i} className="flex flex-col items-center text-center px-6 py-4 space-y-3">
                   <StatCounter value={stat.value} className="text-6xl md:text-7xl font-light text-white tracking-tight leading-none" />
                   <p className="text-base font-light text-white/50 uppercase tracking-widest">
                     {language === 'vi' ? (stat.labelVi || stat.labelEn) : (stat.labelEn || stat.labelVi)}
