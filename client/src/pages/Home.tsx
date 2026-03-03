@@ -1446,12 +1446,16 @@ export default function Home() {
                       className="group advantage-card scroll-animate transition-all duration-500 ease-out hover:-translate-y-3 hover:scale-95 px-10 py-8 rounded-none h-full flex flex-col"
                       data-testid={`advantage-card-${index + 1}`}
                     >
-                      <h4 className="text-lg font-light text-white/60 group-hover:text-white mb-4 uppercase tracking-wide transition-colors duration-300 flex-shrink-0 min-h-[3.5rem]">
-                        {title}
-                      </h4>
-                      <p className="text-white/50 group-hover:text-white/90 font-light text-sm leading-relaxed transition-colors duration-300 flex-1">
-                        {description}
-                      </p>
+                      <TypewriterText
+                        as="h4"
+                        text={title || ''}
+                        className="text-lg font-light text-white/60 group-hover:text-white mb-4 uppercase tracking-wide transition-colors duration-300 flex-shrink-0 min-h-[3.5rem]"
+                      />
+                      <TypewriterText
+                        as="p"
+                        text={description || ''}
+                        className="text-white/50 group-hover:text-white/90 font-light text-xl leading-relaxed transition-colors duration-300 flex-1"
+                      />
                     </div>
                   );
                 }))
