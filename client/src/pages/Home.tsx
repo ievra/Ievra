@@ -119,7 +119,7 @@ function TypewriterText({
 
 function StatCounter({ value, className }: { value: string; className?: string }) {
   const [display, setDisplay] = useState(0);
-  const ref = useRef<HTMLParagraphElement>(null);
+  const wrapRef = useRef<HTMLDivElement>(null);
   const started = useRef(false);
 
   const parsed = (() => {
@@ -129,7 +129,7 @@ function StatCounter({ value, className }: { value: string; className?: string }
   })();
 
   useEffect(() => {
-    const el = ref.current;
+    const el = wrapRef.current;
     if (!el) return;
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -153,10 +153,14 @@ function StatCounter({ value, className }: { value: string; className?: string }
     return () => observer.disconnect();
   }, [parsed.num]);
 
+  const digits = parsed.num.toString().length;
+
   return (
-    <p ref={ref} className={className}>
-      {display}{parsed.suffix}
-    </p>
+    <div ref={wrapRef} style={{ minWidth: `${(digits + parsed.suffix.length) * 0.6}em` }}>
+      <p className={className} style={{ fontVariantNumeric: 'tabular-nums' }}>
+        {display}{parsed.suffix}
+      </p>
+    </div>
   );
 }
 
