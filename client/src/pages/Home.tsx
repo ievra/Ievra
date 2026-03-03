@@ -1403,11 +1403,6 @@ export default function Home() {
                       className="group advantage-card scroll-animate transition-all duration-500 ease-out hover:-translate-y-3 hover:scale-95 hover:shadow-2xl hover:shadow-white/10 p-6 rounded-none h-full flex flex-col"
                       data-testid={`advantage-card-${index + 1}`}
                     >
-                      <div className="mb-6 flex-shrink-0">
-                        <div className="w-16 h-16 flex items-center justify-center">
-                          <IconComponent className="w-8 h-8 text-white/40 group-hover:text-white transition-colors duration-300" />
-                        </div>
-                      </div>
                       <h4 className="text-lg font-light text-white/60 group-hover:text-white mb-4 uppercase tracking-wide transition-colors duration-300 flex-shrink-0 min-h-[3.5rem]">
                         {title}
                       </h4>
