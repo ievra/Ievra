@@ -251,7 +251,7 @@ function AdvantageCard({
           as="p"
           text={description}
           active={hovered}
-          className="text-white/50 group-hover:text-white/90 font-light text-xl leading-relaxed transition-colors duration-300"
+          className="text-white/50 group-hover:text-white/90 font-light text-base leading-relaxed transition-colors duration-300"
         />
       </div>
     </div>
