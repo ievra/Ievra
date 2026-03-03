@@ -1771,12 +1771,12 @@ export default function Home() {
               </form>
 
               {/* Right: Contact Info */}
-              <div className="space-y-10">
+              <div className="space-y-5">
                 <div>
-                  <p className="text-white/40 text-xs tracking-widest uppercase mb-4">
+                  <p className="text-white/40 text-xs tracking-widest uppercase mb-2">
                     {language === "vi" ? "Thông Tin Liên Hệ" : "Contact Information"}
                   </p>
-                  <div className="space-y-3">
+                  <div className="space-y-1">
                     <p className="text-white font-light text-base leading-relaxed">
                       {language === "vi"
                         ? "CÔNG TY TNHH THIẾT KẾ VÀ THI CÔNG NỘI THẤT IEVRA"
@@ -1794,10 +1794,10 @@ export default function Home() {
                   </div>
                 </div>
                 <div>
-                  <p className="text-white/40 text-xs tracking-widest uppercase mb-4">
+                  <p className="text-white/40 text-xs tracking-widest uppercase mb-2">
                     {language === "vi" ? "Địa Chỉ Văn Phòng" : "Office Addresses"}
                   </p>
-                  <div className="space-y-4">
+                  <div className="space-y-1">
                     <p className="text-white/60 font-light text-base leading-relaxed">
                       {language === "vi"
                         ? "422 Đào Trí, Phường Phú Thuận, Quận 7, Tp. Hồ Chí Minh."
