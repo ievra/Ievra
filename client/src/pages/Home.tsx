@@ -1851,7 +1851,7 @@ export default function Home() {
                   >
                     <ArrowRight
                       className={`w-5 h-5 text-white/40 group-hover:text-white transition-all ${
-                        expandedFaqIndex === index ? "rotate-90 text-white" : ""
+                        expandedFaqIndex === index ? "rotate-90 text-white" : "rotate-180"
                       }`}
                     />
                     <div className="flex items-center gap-3 sm:gap-8">
