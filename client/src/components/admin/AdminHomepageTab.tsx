@@ -1774,199 +1774,6 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
           </CardContent>
         </Card>
 
-        {/* FAQ Management Section */}
-        <Card className="bg-black border-white/10">
-          <CardHeader>
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-              <CardTitle className="text-white">{language === 'vi' ? 'Quản Lý FAQ' : 'FAQ Management'}</CardTitle>
-              <Button
-                onClick={() => {
-                  setEditingFaq(null);
-                  faqForm.reset({
-                    questionEn: "",
-                    answerEn: "",
-                    questionVi: "",
-                    answerVi: "",
-                  });
-                  setIsFaqDialogOpen(true);
-                }}
-                data-testid="button-add-faq"
-              >
-                <Plus className="mr-2 h-4 w-4" />
-                {language === 'vi' ? 'Thêm FAQ' : 'Add FAQ'}
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <Dialog open={isFaqDialogOpen} onOpenChange={setIsFaqDialogOpen}>
-                <DialogContent className="max-w-2xl">
-                  <DialogHeader>
-                    <DialogTitle>
-                      {editingFaq ? (language === 'vi' ? 'Chỉnh Sửa FAQ' : 'Edit FAQ') : (language === 'vi' ? 'Thêm FAQ Mới' : 'Add New FAQ')}
-                    </DialogTitle>
-                  </DialogHeader>
-                  <Form {...faqForm}>
-                    <form onSubmit={faqForm.handleSubmit(onFaqSubmit)} className="space-y-4">
-                      <div className="space-y-4">
-                        <div className="border p-4 space-y-4">
-                          <h3 className="font-medium text-sm text-muted-foreground">{language === 'vi' ? 'Phiên Bản Tiếng Anh' : 'English Version'}</h3>
-                          <FormField
-                            control={faqForm.control}
-                            name="questionEn"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Question (EN) *</FormLabel>
-                                <FormControl>
-                                  <Input {...field} data-testid="input-faq-question-en" />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-
-                          <FormField
-                            control={faqForm.control}
-                            name="answerEn"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Answer (EN) *</FormLabel>
-                                <FormControl>
-                                  <Textarea {...field} rows={4} data-testid="textarea-faq-answer-en" />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-
-                        <div className="border p-4 space-y-4">
-                          <h3 className="font-medium text-sm text-muted-foreground">{language === 'vi' ? 'Phiên Bản Tiếng Việt' : 'Vietnamese Version'}</h3>
-                          <FormField
-                            control={faqForm.control}
-                            name="questionVi"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Question (VI) *</FormLabel>
-                                <FormControl>
-                                  <Input {...field} data-testid="input-faq-question-vi" />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-
-                          <FormField
-                            control={faqForm.control}
-                            name="answerVi"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Answer (VI) *</FormLabel>
-                                <FormControl>
-                                  <Textarea {...field} rows={4} data-testid="textarea-faq-answer-vi" />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                        </div>
-                      </div>
-
-                      <Button 
-                        type="submit" 
-                        className={`w-full transition-all ${!faqForm.formState.isDirty ? 'opacity-50 cursor-not-allowed' : 'opacity-100 hover:opacity-90'}`}
-                        disabled={!faqForm.formState.isDirty || createFaqMutation.isPending || updateFaqMutation.isPending}
-                        data-testid="button-submit-faq"
-                      >
-                        {createFaqMutation.isPending || updateFaqMutation.isPending ? (language === 'vi' ? "Đang lưu..." : "Saving...") : (language === 'vi' ? "Lưu" : "Save")}
-                      </Button>
-                    </form>
-                  </Form>
-                </DialogContent>
-              </Dialog>
-
-            {faqsLoading ? (
-              <div className="text-white/70">{language === 'vi' ? 'Đang tải FAQ...' : 'Loading FAQs...'}</div>
-            ) : (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-white/70 w-20">{language === 'vi' ? 'Thứ Tự' : 'Order'}</TableHead>
-                    <TableHead className="text-white/70">{language === 'vi' ? 'Câu Hỏi (EN / VI)' : 'Question (EN / VI)'}</TableHead>
-                    <TableHead className="text-white/70 w-32">{language === 'vi' ? 'Thao Tác' : 'Actions'}</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {(() => {
-                    const groupedFaqs = faqs.reduce((acc, faq) => {
-                      const key = `${faq.order}`;
-                      if (!acc[key]) {
-                        acc[key] = { en: null, vi: null, order: faq.order };
-                      }
-                      if (faq.language === 'en') {
-                        acc[key].en = faq;
-                      } else {
-                        acc[key].vi = faq;
-                      }
-                      return acc;
-                    }, {} as Record<string, { en: Faq | null, vi: Faq | null, order: number }>);
-
-                    return Object.values(groupedFaqs)
-                      .sort((a, b) => a.order - b.order)
-                      .map((group, index) => {
-                        const enFaq = group.en;
-                        const viFaq = group.vi;
-                        const displayFaq = enFaq || viFaq;
-                        
-                        if (!displayFaq) return null;
-                        
-                        return (
-                          <TableRow key={`group-${index}`}>
-                            <TableCell className="text-white/70">{displayFaq.order}</TableCell>
-                            <TableCell className="text-white max-w-md" data-testid={`text-faq-group-${index}`}>
-                              <div className="space-y-2">
-                                {enFaq && (
-                                  <div className="truncate">
-                                    <span className="text-white/50 text-xs uppercase">EN:</span> {enFaq.question}
-                                  </div>
-                                )}
-                                {viFaq && (
-                                  <div className="truncate">
-                                    <span className="text-white/50 text-xs uppercase">VI:</span> {viFaq.question}
-                                  </div>
-                                )}
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex gap-2">
-                                <Button
-                                  variant="outline"
-                                  onClick={() => handleEditFaq(group)}
-                                  data-testid={`button-edit-faq-${index}`}
-                                >
-                                  <Pencil className="h-4 w-4" />
-                                </Button>
-                                <Button
-                                  variant="outline"
-                                  size="icon"
-                                  onClick={() => {
-                                    if (enFaq) deleteFaqMutation.mutate(enFaq.id);
-                                    if (viFaq) deleteFaqMutation.mutate(viFaq.id);
-                                  }}
-                                  data-testid={`button-delete-faq-${index}`}
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
-                              </div>
-                            </TableCell>
-                          </TableRow>
-                        );
-                      });
-                  })()}
-                </TableBody>
-              </Table>
-            )}
-          </CardContent>
-        </Card>
 
         {/* Advantages Management Section */}
         <Card>
@@ -2306,6 +2113,200 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
             )}
           </CardContent>
         </Card>
+        {/* FAQ Management Section */}
+        <Card className="bg-black border-white/10">
+          <CardHeader>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+              <CardTitle className="text-white">{language === 'vi' ? 'Quản Lý FAQ' : 'FAQ Management'}</CardTitle>
+              <Button
+                onClick={() => {
+                  setEditingFaq(null);
+                  faqForm.reset({
+                    questionEn: "",
+                    answerEn: "",
+                    questionVi: "",
+                    answerVi: "",
+                  });
+                  setIsFaqDialogOpen(true);
+                }}
+                data-testid="button-add-faq"
+              >
+                <Plus className="mr-2 h-4 w-4" />
+                {language === 'vi' ? 'Thêm FAQ' : 'Add FAQ'}
+              </Button>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Dialog open={isFaqDialogOpen} onOpenChange={setIsFaqDialogOpen}>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>
+                      {editingFaq ? (language === 'vi' ? 'Chỉnh Sửa FAQ' : 'Edit FAQ') : (language === 'vi' ? 'Thêm FAQ Mới' : 'Add New FAQ')}
+                    </DialogTitle>
+                  </DialogHeader>
+                  <Form {...faqForm}>
+                    <form onSubmit={faqForm.handleSubmit(onFaqSubmit)} className="space-y-4">
+                      <div className="space-y-4">
+                        <div className="border p-4 space-y-4">
+                          <h3 className="font-medium text-sm text-muted-foreground">{language === 'vi' ? 'Phiên Bản Tiếng Anh' : 'English Version'}</h3>
+                          <FormField
+                            control={faqForm.control}
+                            name="questionEn"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Question (EN) *</FormLabel>
+                                <FormControl>
+                                  <Input {...field} data-testid="input-faq-question-en" />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={faqForm.control}
+                            name="answerEn"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Answer (EN) *</FormLabel>
+                                <FormControl>
+                                  <Textarea {...field} rows={4} data-testid="textarea-faq-answer-en" />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+
+                        <div className="border p-4 space-y-4">
+                          <h3 className="font-medium text-sm text-muted-foreground">{language === 'vi' ? 'Phiên Bản Tiếng Việt' : 'Vietnamese Version'}</h3>
+                          <FormField
+                            control={faqForm.control}
+                            name="questionVi"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Question (VI) *</FormLabel>
+                                <FormControl>
+                                  <Input {...field} data-testid="input-faq-question-vi" />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+
+                          <FormField
+                            control={faqForm.control}
+                            name="answerVi"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Answer (VI) *</FormLabel>
+                                <FormControl>
+                                  <Textarea {...field} rows={4} data-testid="textarea-faq-answer-vi" />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                        </div>
+                      </div>
+
+                      <Button 
+                        type="submit" 
+                        className={`w-full transition-all ${!faqForm.formState.isDirty ? 'opacity-50 cursor-not-allowed' : 'opacity-100 hover:opacity-90'}`}
+                        disabled={!faqForm.formState.isDirty || createFaqMutation.isPending || updateFaqMutation.isPending}
+                        data-testid="button-submit-faq"
+                      >
+                        {createFaqMutation.isPending || updateFaqMutation.isPending ? (language === 'vi' ? "Đang lưu..." : "Saving...") : (language === 'vi' ? "Lưu" : "Save")}
+                      </Button>
+                    </form>
+                  </Form>
+                </DialogContent>
+              </Dialog>
+
+            {faqsLoading ? (
+              <div className="text-white/70">{language === 'vi' ? 'Đang tải FAQ...' : 'Loading FAQs...'}</div>
+            ) : (
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="text-white/70 w-20">{language === 'vi' ? 'Thứ Tự' : 'Order'}</TableHead>
+                    <TableHead className="text-white/70">{language === 'vi' ? 'Câu Hỏi (EN / VI)' : 'Question (EN / VI)'}</TableHead>
+                    <TableHead className="text-white/70 w-32">{language === 'vi' ? 'Thao Tác' : 'Actions'}</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {(() => {
+                    const groupedFaqs = faqs.reduce((acc, faq) => {
+                      const key = `${faq.order}`;
+                      if (!acc[key]) {
+                        acc[key] = { en: null, vi: null, order: faq.order };
+                      }
+                      if (faq.language === 'en') {
+                        acc[key].en = faq;
+                      } else {
+                        acc[key].vi = faq;
+                      }
+                      return acc;
+                    }, {} as Record<string, { en: Faq | null, vi: Faq | null, order: number }>);
+
+                    return Object.values(groupedFaqs)
+                      .sort((a, b) => a.order - b.order)
+                      .map((group, index) => {
+                        const enFaq = group.en;
+                        const viFaq = group.vi;
+                        const displayFaq = enFaq || viFaq;
+                        
+                        if (!displayFaq) return null;
+                        
+                        return (
+                          <TableRow key={`group-${index}`}>
+                            <TableCell className="text-white/70">{displayFaq.order}</TableCell>
+                            <TableCell className="text-white max-w-md" data-testid={`text-faq-group-${index}`}>
+                              <div className="space-y-2">
+                                {enFaq && (
+                                  <div className="truncate">
+                                    <span className="text-white/50 text-xs uppercase">EN:</span> {enFaq.question}
+                                  </div>
+                                )}
+                                {viFaq && (
+                                  <div className="truncate">
+                                    <span className="text-white/50 text-xs uppercase">VI:</span> {viFaq.question}
+                                  </div>
+                                )}
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex gap-2">
+                                <Button
+                                  variant="outline"
+                                  onClick={() => handleEditFaq(group)}
+                                  data-testid={`button-edit-faq-${index}`}
+                                >
+                                  <Pencil className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="icon"
+                                  onClick={() => {
+                                    if (enFaq) deleteFaqMutation.mutate(enFaq.id);
+                                    if (viFaq) deleteFaqMutation.mutate(viFaq.id);
+                                  }}
+                                  data-testid={`button-delete-faq-${index}`}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      });
+                  })()}
+                </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
+
       </div>
   );
 }
