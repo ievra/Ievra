@@ -1676,7 +1676,7 @@ export default function Home() {
                 : "max-h-0 opacity-0"
             }`}
           >
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+            <div className="grid grid-cols-1 lg:grid-cols-[3fr_2fr] gap-12 lg:gap-20">
               {/* Left: Form */}
               <form onSubmit={handleSubmit}>
                 <div className="space-y-4">
