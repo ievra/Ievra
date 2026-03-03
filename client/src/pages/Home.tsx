@@ -1852,7 +1852,7 @@ export default function Home() {
       </section>
       {/* FAQ Section */}
       <section
-        className="min-h-screen bg-black py-16"
+        className="bg-black py-16"
         onMouseEnter={handleFaqSectionMouseEnter}
         onMouseLeave={handleFaqSectionMouseLeave}
       >
@@ -1871,7 +1871,7 @@ export default function Home() {
           </div>
 
           {/* FAQ Items */}
-          <div className="space-y-8">
+          <div>
             {faqsLoading ? (
               <div className="text-white/50 text-center py-8">
                 Loading FAQs...
@@ -1884,7 +1884,7 @@ export default function Home() {
               faqs.map((faq, index) => (
                 <div
                   key={faq.id}
-                  className="pb-8 group transition-colors cursor-pointer scroll-animate-right"
+                  className="pb-8 pt-8 border-t border-white/10 group transition-colors cursor-pointer scroll-animate-right"
                   data-testid={`faq-item-${index + 1}`}
                 >
                   <div
