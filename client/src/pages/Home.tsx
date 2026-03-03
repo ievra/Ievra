@@ -1513,7 +1513,7 @@ export default function Home() {
           </div>
           {/* Stats Row */}
           {homepageContent && [(homepageContent as any).statsProjectsValue, (homepageContent as any).statsClientsValue, (homepageContent as any).statsAwardsValue, (homepageContent as any).statsExperienceValue].some(Boolean) && (
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-0 pt-12 mt-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-0 pt-6 mt-2">
               {[
                 { value: (homepageContent as any).statsProjectsValue, labelEn: (homepageContent as any).statsProjectsLabelEn, labelVi: (homepageContent as any).statsProjectsLabelVi, descEn: (homepageContent as any).statsProjectsDescEn, descVi: (homepageContent as any).statsProjectsDescVi },
                 { value: (homepageContent as any).statsClientsValue, labelEn: (homepageContent as any).statsClientsLabelEn, labelVi: (homepageContent as any).statsClientsLabelVi, descEn: (homepageContent as any).statsClientsDescEn, descVi: (homepageContent as any).statsClientsDescVi },
