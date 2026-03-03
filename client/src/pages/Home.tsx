@@ -1629,21 +1629,15 @@ export default function Home() {
           onMouseEnter={handleContactMouseEnter}
           onMouseLeave={handleContactMouseLeave}
         >
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
-          {/* Left: Form */}
-          <div>
+          {/* Title */}
           <div className="mb-16">
-            <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
-              <div className="max-w-none">
-                <TypewriterText
-                  text={language === "vi"
-                    ? (homepageContent?.ctaSubtitleVi || homepageContent?.ctaSubtitle || "Để lại yêu cầu tư vấn miễn phí và chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.")
-                    : (homepageContent?.ctaSubtitle || "Leave a request for a free consultation and we will contact you as soon as possible.")
-                  }
-                  className="text-2xl md:text-3xl font-light text-foreground leading-relaxed"
-                />
-              </div>
-            </div>
+            <TypewriterText
+              text={language === "vi"
+                ? (homepageContent?.ctaSubtitleVi || homepageContent?.ctaSubtitle || "Để lại yêu cầu tư vấn miễn phí và chúng tôi sẽ liên hệ với bạn trong thời gian sớm nhất.")
+                : (homepageContent?.ctaSubtitle || "Leave a request for a free consultation and we will contact you as soon as possible.")
+              }
+              className="text-2xl md:text-3xl font-light text-foreground leading-relaxed"
+            />
           </div>
 
           {/* Expand/Collapse Button */}
@@ -1674,181 +1668,150 @@ export default function Home() {
             </div>
           </button>
 
-          {/* Expandable Form */}
+          {/* Expandable 2-col grid: Form + Contact Info */}
           <div
             className={`overflow-hidden transition-all duration-1000 ease-in-out ${
               contactFormExpanded
-                ? "max-h-[800px] opacity-100 mt-8"
+                ? "max-h-[900px] opacity-100 mt-8"
                 : "max-h-0 opacity-0"
             }`}
           >
-            <form onSubmit={handleSubmit} className="max-w-3xl">
-              <div className="space-y-4">
-                {/* First row - Name and Email */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24">
+              {/* Left: Form */}
+              <form onSubmit={handleSubmit}>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Input
+                        type="text"
+                        placeholder={placeholders.name}
+                        value={formData.name}
+                        onChange={(e) =>
+                          setFormData((prev) => ({ ...prev, name: e.target.value }))
+                        }
+                        className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
+                        data-testid="input-name"
+                      />
+                    </div>
+                    <div>
+                      <Input
+                        type="email"
+                        placeholder={placeholders.email}
+                        value={formData.email}
+                        onChange={(e) =>
+                          setFormData((prev) => ({ ...prev, email: e.target.value }))
+                        }
+                        className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
+                        data-testid="input-email"
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Input
+                        type="tel"
+                        placeholder={placeholders.phone}
+                        value={formData.phone}
+                        onChange={(e) =>
+                          setFormData((prev) => ({ ...prev, phone: e.target.value }))
+                        }
+                        className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
+                        data-testid="input-phone"
+                      />
+                    </div>
+                    <div>
+                      <Input
+                        type="text"
+                        placeholder={placeholders.address}
+                        value={formData.address}
+                        onChange={(e) =>
+                          setFormData((prev) => ({ ...prev, address: e.target.value }))
+                        }
+                        className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
+                        data-testid="input-address"
+                      />
+                    </div>
+                  </div>
                   <div>
                     <Input
                       type="text"
-                      placeholder={placeholders.name}
-                      value={formData.name}
+                      placeholder={placeholders.projectType}
+                      value={formData.projectType}
                       onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          name: e.target.value,
-                        }))
+                        setFormData((prev) => ({ ...prev, projectType: e.target.value }))
                       }
                       className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
-                      data-testid="input-name"
+                      data-testid="input-project-type"
                     />
                   </div>
                   <div>
-                    <Input
-                      type="email"
-                      placeholder={placeholders.email}
-                      value={formData.email}
+                    <Textarea
+                      placeholder={placeholders.requirements}
+                      value={formData.requirements}
                       onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          email: e.target.value,
-                        }))
+                        setFormData((prev) => ({ ...prev, requirements: e.target.value }))
                       }
-                      className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
-                      data-testid="input-email"
+                      className="bg-transparent border border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0 min-h-[120px] resize-none"
+                      data-testid="textarea-requirements"
                     />
+                  </div>
+                  <div className="flex justify-start pt-6">
+                    <Button
+                      type="submit"
+                      disabled={mutation.isPending}
+                      className="bg-transparent border border-white/30 text-white hover:border-white hover:bg-white/10 px-8 py-3 font-light tracking-widest uppercase transition-all duration-300 ease-in-out rounded-none"
+                      data-testid="button-leave-request"
+                    >
+                      {mutation.isPending
+                        ? language === "vi" ? "ĐANG GỬI..." : "SENDING..."
+                        : language === "vi" ? "GỬI YÊU CẦU" : "LEAVE A REQUEST"}
+                    </Button>
                   </div>
                 </div>
+              </form>
 
-                {/* Second row - Phone and Address */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Input
-                      type="tel"
-                      placeholder={placeholders.phone}
-                      value={formData.phone}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          phone: e.target.value,
-                        }))
-                      }
-                      className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
-                      data-testid="input-phone"
-                    />
-                  </div>
-                  <div>
-                    <Input
-                      type="text"
-                      placeholder={placeholders.address}
-                      value={formData.address}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          address: e.target.value,
-                        }))
-                      }
-                      className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
-                      data-testid="input-address"
-                    />
-                  </div>
-                </div>
-
-                {/* Third row - Project Type */}
+              {/* Right: Contact Info */}
+              <div className="space-y-10">
                 <div>
-                  <Input
-                    type="text"
-                    placeholder={placeholders.projectType}
-                    value={formData.projectType}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        projectType: e.target.value,
-                      }))
-                    }
-                    className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
-                    data-testid="input-project-type"
-                  />
+                  <p className="text-white/40 text-xs tracking-widest uppercase mb-4">
+                    {language === "vi" ? "Thông Tin Liên Hệ" : "Contact Information"}
+                  </p>
+                  <div className="space-y-3">
+                    <p className="text-white font-light text-sm leading-relaxed">
+                      {language === "vi"
+                        ? "CÔNG TY TNHH THIẾT KẾ VÀ THI CÔNG NỘI THẤT IEVRA"
+                        : "IEVRA INTERIOR DESIGN AND CONSTRUCTION CO., LTD"}
+                    </p>
+                    <p className="text-white/60 font-light text-sm">
+                      {language === "vi" ? "Mã số thuế" : "Tax code"}: 0319384424
+                    </p>
+                    <p className="text-white/60 font-light text-sm">
+                      Email: contact@ievra.com
+                    </p>
+                    <p className="text-white/60 font-light text-sm">
+                      {language === "vi" ? "Điện thoại / Hotline" : "Phone / Hotline"}: 0767 5544 80 — 0969 8642 72
+                    </p>
+                  </div>
                 </div>
-
-                {/* Fourth row - Requirements */}
                 <div>
-                  <Textarea
-                    placeholder={placeholders.requirements}
-                    value={formData.requirements}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        requirements: e.target.value,
-                      }))
-                    }
-                    className="bg-transparent border border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0 min-h-[120px] resize-none"
-                    data-testid="textarea-requirements"
-                  />
+                  <p className="text-white/40 text-xs tracking-widest uppercase mb-4">
+                    {language === "vi" ? "Địa Chỉ Văn Phòng" : "Office Addresses"}
+                  </p>
+                  <div className="space-y-4">
+                    <p className="text-white/60 font-light text-sm leading-relaxed">
+                      {language === "vi"
+                        ? "422 Đào Trí, Phường Phú Thuận, Quận 7, Tp. Hồ Chí Minh."
+                        : "422 Dao Tri, Phu Thuan Ward, District 7, Ho Chi Minh City."}
+                    </p>
+                    <p className="text-white/60 font-light text-sm leading-relaxed">
+                      {language === "vi"
+                        ? "64 Nguyễn Khoái, Phường 2, Quận 4, Tp. Hồ Chí Minh."
+                        : "64 Nguyen Khoai, Ward 2, District 4, Ho Chi Minh City."}
+                    </p>
+                  </div>
                 </div>
-
-                {/* Submit button */}
-                <div className="flex justify-start pt-6">
-                  <Button
-                    type="submit"
-                    disabled={mutation.isPending}
-                    className="bg-transparent border border-white/30 text-white hover:border-white hover:bg-white/10 px-8 py-3 font-light tracking-widest uppercase transition-all duration-300 ease-in-out rounded-none"
-                    data-testid="button-leave-request"
-                  >
-                    {mutation.isPending
-                      ? language === "vi"
-                        ? "ĐANG GỬI..."
-                        : "SENDING..."
-                      : language === "vi"
-                        ? "GỬI YÊU CẦU"
-                        : "LEAVE A REQUEST"}
-                  </Button>
-                </div>
-              </div>
-            </form>
-          </div>
-          </div>
-          {/* Right: Contact Info */}
-          <div className={`overflow-hidden transition-all duration-1000 ease-in-out ${contactFormExpanded ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"}`}>
-          <div className="space-y-10 pt-2">
-            <div>
-              <p className="text-white/40 text-xs tracking-widest uppercase mb-4">
-                {language === "vi" ? "Thông Tin Liên Hệ" : "Contact Information"}
-              </p>
-              <div className="space-y-3">
-                <p className="text-white font-light text-sm leading-relaxed">
-                  {language === "vi"
-                    ? "CÔNG TY TNHH THIẾT KẾ VÀ THI CÔNG NỘI THẤT IEVRA"
-                    : "IEVRA INTERIOR DESIGN AND CONSTRUCTION CO., LTD"}
-                </p>
-                <p className="text-white/60 font-light text-sm">
-                  {language === "vi" ? "Mã số thuế" : "Tax code"}: 0319384424
-                </p>
-                <p className="text-white/60 font-light text-sm">
-                  Email: contact@ievra.com
-                </p>
-                <p className="text-white/60 font-light text-sm">
-                  {language === "vi" ? "Điện thoại / Hotline" : "Phone / Hotline"}: 0767 5544 80 — 0969 8642 72
-                </p>
               </div>
             </div>
-            <div>
-              <p className="text-white/40 text-xs tracking-widest uppercase mb-4">
-                {language === "vi" ? "Địa Chỉ Văn Phòng" : "Office Addresses"}
-              </p>
-              <div className="space-y-4">
-                <p className="text-white/60 font-light text-sm leading-relaxed">
-                  {language === "vi"
-                    ? "422 Đào Trí, Phường Phú Thuận, Quận 7, Tp. Hồ Chí Minh."
-                    : "422 Dao Tri, Phu Thuan Ward, District 7, Ho Chi Minh City."}
-                </p>
-                <p className="text-white/60 font-light text-sm leading-relaxed">
-                  {language === "vi"
-                    ? "64 Nguyễn Khoái, Phường 2, Quận 4, Tp. Hồ Chí Minh."
-                    : "64 Nguyen Khoai, Ward 2, District 4, Ho Chi Minh City."}
-                </p>
-              </div>
-            </div>
-          </div>
-          </div>
           </div>
         </div>
       </section>
