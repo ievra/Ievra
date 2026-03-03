@@ -22,15 +22,10 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
   const [heroContentVisible, setHeroContentVisible] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      if (window.scrollY > 300) {
-        setHeroContentVisible(true);
-        window.removeEventListener('scroll', handleScroll);
-      }
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener('scroll', handleScroll);
+    const timer = setTimeout(() => {
+      setHeroContentVisible(true);
+    }, 300);
+    return () => clearTimeout(timer);
   }, []);
 
   const { data: categories = [] } = useQuery<Category[]>({
