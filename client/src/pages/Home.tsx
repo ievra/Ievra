@@ -1875,6 +1875,7 @@ export default function Home() {
                       <TypewriterText
                         text={faq.answer || ""}
                         active={expandedFaqIndex === index}
+                        reverse
                         className="text-white/70 font-light text-lg"
                       />
                     </div>
