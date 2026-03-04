@@ -1135,6 +1135,7 @@ export default function AboutAdminTab({
                         <Button
                           variant="outline"
                           size="sm"
+                          className="bg-black text-white border-black hover:bg-black/80 hover:text-white"
                           onClick={() => {
                             setEditingPrinciple(principle);
                             principleForm.reset(principle);
@@ -1321,6 +1322,7 @@ export default function AboutAdminTab({
                         <Button
                           variant="outline"
                           size="sm"
+                          className="bg-black text-white border-black hover:bg-black/80 hover:text-white"
                           onClick={() => {
                             setEditingShowcaseService(service);
                             showcaseServiceForm.reset(service);
@@ -1507,6 +1509,7 @@ export default function AboutAdminTab({
                         <Button
                           variant="outline"
                           size="sm"
+                          className="bg-black text-white border-black hover:bg-black/80 hover:text-white"
                           onClick={() => {
                             setEditingProcessStep(step);
                             processStepForm.reset(step);
@@ -1859,6 +1862,7 @@ export default function AboutAdminTab({
                       <Button
                         variant="outline"
                         size="sm"
+                        className="bg-black text-white border-black hover:bg-black/80 hover:text-white"
                         onClick={() => {
                           setEditingTeamMember(member);
                           teamMemberForm.reset(member);
