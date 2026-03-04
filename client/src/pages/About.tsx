@@ -628,33 +628,38 @@ export default function About() {
                 const numRows = rows.length;
                 const svgH = LINE_Y + (numRows - 1) * ROW_H + LINE_Y + 80; // extra bottom for text
 
-                // Build SVG path — single connected snake
+                // Build SVG path — single connected snake, bleeding off both ends
                 const buildPath = (W: number) => {
                   if (W <= 0) return '';
-                  const xL = PAD_L;       // left horizontal endpoint (150px from left edge)
-                  const xR = W - PAD_R;   // right horizontal endpoint (170px from right edge)
-                  let d = `M ${xL},${LINE_Y}`;
+                  const xL = PAD_L;
+                  const xR = W - PAD_R;
+                  // Start: bleed in from far left → item 01 at xL
+                  let d = `M -9999,${LINE_Y} L ${xL},${LINE_Y}`;
                   for (let r = 0; r < numRows; r++) {
                     const y = LINE_Y + r * ROW_H;
                     if (r === 0) {
                       d += ` L ${xR},${y}`;
                     } else if (r % 2 === 1) {
-                      // came from right U-turn, now going left
                       d += ` L ${xL},${y}`;
                     } else {
-                      // came from left U-turn, now going right
                       d += ` L ${xR},${y}`;
                     }
                     if (r < numRows - 1) {
                       const nextY = y + ROW_H;
                       if (r % 2 === 0) {
-                        // right U-turn: from (xR, y) clockwise to (xR, nextY)
                         d += ` A ${R},${R} 0 0,1 ${xR},${nextY}`;
                       } else {
-                        // left U-turn: from (xL, y) counter-clockwise to (xL, nextY)
                         d += ` A ${R},${R} 0 0,0 ${xL},${nextY}`;
                       }
                     }
+                  }
+                  // End: bleed out from last item to far right (last row is even → L→R → ends at xR)
+                  const lastY = LINE_Y + (numRows - 1) * ROW_H;
+                  const lastIsReversed = (numRows - 1) % 2 === 1;
+                  if (lastIsReversed) {
+                    d += ` L -9999,${lastY}`;
+                  } else {
+                    d += ` L ${W + 9999},${lastY}`;
                   }
                   return d;
                 };
