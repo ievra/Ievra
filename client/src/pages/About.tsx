@@ -590,23 +590,87 @@ export default function About() {
         <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-16">
-              <h3 className="md:text-4xl font-light text-white uppercase tracking-wide text-[24px] text-right">
+              <h3 className="md:text-4xl font-light text-white uppercase tracking-wide text-[24px]">
                 {language === "vi" ? aboutContent.processTitleVi : aboutContent.processTitleEn}
               </h3>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-              {processSteps.map((step) => (
-                <div key={step.id} className="space-y-4">
-                  <div className="text-6xl font-light text-white/20 text-right">{step.stepNumber}</div>
-                  <h4 className="text-xl font-light text-white uppercase text-right">
-                    {language === "vi" ? step.titleVi : step.titleEn}
-                  </h4>
-                  <p className="text-white/70 font-light text-sm leading-relaxed">
-                    {language === "vi" ? step.descriptionVi : step.descriptionEn}
-                  </p>
-                </div>
-              ))}
+            {/* Desktop snake layout */}
+            <div className="hidden md:block">
+              {(() => {
+                const PER_ROW = 4;
+                const rows: typeof processSteps[] = [];
+                for (let i = 0; i < processSteps.length; i += PER_ROW) {
+                  rows.push(processSteps.slice(i, i + PER_ROW));
+                }
+                return (
+                  <div className="relative">
+                    {rows.map((row, rowIdx) => {
+                      const isReversed = rowIdx % 2 === 1;
+                      const displayRow = isReversed ? [...row].reverse() : row;
+                      const isLastRow = rowIdx === rows.length - 1;
+                      return (
+                        <div key={rowIdx} className="relative" style={{ paddingBottom: isLastRow ? 0 : '72px' }}>
+                          {/* Horizontal dashed line */}
+                          <div className="absolute left-[15px] right-[15px] border-t border-dashed border-white/25" style={{ top: '15px' }} />
+
+                          {/* Step items */}
+                          <div className="flex justify-between items-start relative z-10">
+                            {displayRow.map((step) => {
+                              const title = language === "vi" ? step.titleVi : step.titleEn;
+                              const desc = language === "vi" ? step.descriptionVi : step.descriptionEn;
+                              return (
+                                <div key={step.id} className="flex flex-col items-center" style={{ width: `${100 / PER_ROW}%` }}>
+                                  <div className="w-[30px] h-[30px] rounded-full bg-black border border-white/50 text-white text-xs flex items-center justify-center font-light flex-shrink-0">
+                                    {step.stepNumber}
+                                  </div>
+                                  <div className="mt-4 text-center px-2">
+                                    <h4 className="text-sm font-light text-white uppercase tracking-wide leading-tight">
+                                      {title}
+                                    </h4>
+                                    {desc && (
+                                      <p className="text-white/50 text-xs font-light leading-relaxed mt-2">
+                                        {desc}
+                                      </p>
+                                    )}
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+
+                          {/* Vertical connector to next row */}
+                          {!isLastRow && (
+                            <div
+                              className={`absolute border-l border-dashed border-white/25 ${isReversed ? 'left-[15px]' : 'right-[15px]'}`}
+                              style={{ top: '15px', bottom: 0 }}
+                            />
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })()}
+            </div>
+
+            {/* Mobile vertical list */}
+            <div className="md:hidden space-y-8">
+              {processSteps.map((step) => {
+                const title = language === "vi" ? step.titleVi : step.titleEn;
+                const desc = language === "vi" ? step.descriptionVi : step.descriptionEn;
+                return (
+                  <div key={step.id} className="flex gap-4">
+                    <div className="w-8 h-8 rounded-full border border-white/50 text-white text-xs flex items-center justify-center font-light flex-shrink-0 mt-0.5">
+                      {step.stepNumber}
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-light text-white uppercase tracking-wide leading-tight">{title}</h4>
+                      {desc && <p className="text-white/50 text-xs font-light leading-relaxed mt-1">{desc}</p>}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
