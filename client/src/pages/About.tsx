@@ -703,13 +703,20 @@ export default function About() {
                         // x position: evenly spaced from xL to xR based on actual row item count
                         const xMid = (xL + xR) / 2;
                         let xPos: number;
-                        if (isSingleItem) {
+                        let markerY = lineY; // default: line center y for this row
+
+                        // Special: item 03 sits at the apex of the right U-turn
+                        const isItem3AtApex = rowIdx === 1 && ci === displayRow.length - 1;
+
+                        if (isItem3AtApex) {
+                          // Apex of right U-turn: x = xR + R, y = midpoint between row1 and row2
+                          xPos = xR + R;
+                          markerY = LINE_Y + ROW_H / 2;
+                        } else if (isSingleItem) {
                           xPos = isReversed ? xL : xR;
                         } else if (rowIdx === 0 && !isReversed) {
-                          // Row 1 (2 items): 01 at left, 02 at center (gives distance without going to edge)
                           xPos = ci === 0 ? xL : xMid;
                         } else if (rowIdx === 2 && !isReversed) {
-                          // Row 3 (2 items): 06 at center, 07 at right
                           xPos = ci === 0 ? xMid : xR;
                         } else {
                           xPos = xL + ci * (xR - xL) / (row.length - 1);
@@ -719,7 +726,12 @@ export default function About() {
                           <div
                             key={step.id}
                             className="absolute flex flex-col items-center"
-                            style={{ left: `${xPos}px`, transform: 'translateX(-50%)', width: '155px', top: 0 }}
+                            style={{
+                              left: `${xPos}px`,
+                              transform: 'translateX(-50%)',
+                              width: isItem3AtApex ? '130px' : '155px',
+                              top: 0,
+                            }}
                           >
                             {/* Circle marker with number */}
                             <div
@@ -728,7 +740,7 @@ export default function About() {
                                 width: '30px',
                                 height: '30px',
                                 fontSize: '11px',
-                                marginTop: `${lineY - 15}px`,
+                                marginTop: `${markerY - 15}px`,
                               }}
                             >
                               {step.stepNumber}
