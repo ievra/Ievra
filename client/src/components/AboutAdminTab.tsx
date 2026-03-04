@@ -755,7 +755,7 @@ export default function AboutAdminTab({
                             <img 
                               src={missionVisionImagePreview || aboutContent?.missionVisionImageData || aboutContent?.missionVisionImage || ''} 
                               alt="Mission & Vision Preview" 
-                              className="w-full aspect-[3/4] object-cover" 
+                              className="w-full aspect-[4/3] object-cover" 
                             />
                           </div>
                           <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -1972,7 +1972,7 @@ export default function AboutAdminTab({
           cropType === 'showcase' ? 16 / 7 
           : cropType === 'history' ? 4 / 3
           : cropType === 'mission' ? 4 / 3
-          : cropType === 'missionVision' ? 3 / 4
+          : cropType === 'missionVision' ? 4 / 3
           : 9 / 16
         }
       />
