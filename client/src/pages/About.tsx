@@ -195,32 +195,32 @@ export default function About() {
             {aboutContent && (
               <div className="relative w-full">
                 <div className="grid grid-cols-2 md:grid-cols-4">
-                  <div className="text-center py-8 px-4 border-r border-white/20">
-                    <div className="text-4xl md:text-5xl font-light text-white mb-1" data-testid="stats-projects">
+                  <div className="text-center py-6 px-4 border-r border-white/20">
+                    <div className="text-2xl md:text-3xl font-light text-white mb-1" data-testid="stats-projects">
                       {aboutContent.statsProjectsValue}
                     </div>
                     <div className="text-xs text-white/50 uppercase tracking-wider">
                       {language === "vi" ? aboutContent.statsProjectsLabelVi : aboutContent.statsProjectsLabelEn}
                     </div>
                   </div>
-                  <div className="text-center py-8 px-4 md:border-r border-white/20">
-                    <div className="text-4xl md:text-5xl font-light text-white mb-1" data-testid="stats-awards">
+                  <div className="text-center py-6 px-4 md:border-r border-white/20">
+                    <div className="text-2xl md:text-3xl font-light text-white mb-1" data-testid="stats-awards">
                       {aboutContent.statsAwardsValue}
                     </div>
                     <div className="text-xs text-white/50 uppercase tracking-wider">
                       {language === "vi" ? aboutContent.statsAwardsLabelVi : aboutContent.statsAwardsLabelEn}
                     </div>
                   </div>
-                  <div className="text-center py-8 px-4 border-r border-white/20">
-                    <div className="text-4xl md:text-5xl font-light text-white mb-1" data-testid="stats-clients">
+                  <div className="text-center py-6 px-4 border-r border-white/20">
+                    <div className="text-2xl md:text-3xl font-light text-white mb-1" data-testid="stats-clients">
                       {aboutContent.statsClientsValue}
                     </div>
                     <div className="text-xs text-white/50 uppercase tracking-wider">
                       {language === "vi" ? aboutContent.statsClientsLabelVi : aboutContent.statsClientsLabelEn}
                     </div>
                   </div>
-                  <div className="text-center py-8 px-4">
-                    <div className="text-4xl md:text-5xl font-light text-white mb-1" data-testid="stats-countries">
+                  <div className="text-center py-6 px-4">
+                    <div className="text-2xl md:text-3xl font-light text-white mb-1" data-testid="stats-countries">
                       {aboutContent.statsCountriesValue}
                     </div>
                     <div className="text-xs text-white/50 uppercase tracking-wider">
