@@ -721,20 +721,19 @@ export default function About() {
                             className="absolute flex flex-col items-center"
                             style={{ left: `${xPos}px`, transform: 'translateX(-50%)', width: '155px', top: 0 }}
                           >
-                            {/* Diamond on the line */}
+                            {/* Circle marker with number */}
                             <div
-                              className="bg-white/85 flex-shrink-0"
+                              className="rounded-full bg-[#2d2d2d] border border-white/20 text-white flex items-center justify-center flex-shrink-0 font-light"
                               style={{
-                                width: '10px',
-                                height: '10px',
-                                transform: 'rotate(45deg)',
-                                marginTop: `${lineY - 5}px`,
+                                width: '30px',
+                                height: '30px',
+                                fontSize: '11px',
+                                marginTop: `${lineY - 15}px`,
                               }}
-                            />
-                            <div className="mt-4 text-center px-1">
-                              <div className="text-white/35 text-[10px] font-light tracking-widest mb-1">
-                                {step.stepNumber}
-                              </div>
+                            >
+                              {step.stepNumber}
+                            </div>
+                            <div className="mt-3 text-center px-1">
                               <h4 className="text-sm font-light text-white uppercase tracking-wide leading-tight">
                                 {title}
                               </h4>
