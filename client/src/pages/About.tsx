@@ -48,6 +48,7 @@ export default function About() {
 
   const showcaseSectionRef = useRef<HTMLDivElement>(null);
   const [showcaseAnimStarted, setShowcaseAnimStarted] = useState(false);
+  const [showcaseAnimDone, setShowcaseAnimDone] = useState(false);
   const [typedTexts, setTypedTexts] = useState<{ title: string; desc: string }[]>([]);
 
   useEffect(() => {
@@ -66,6 +67,7 @@ export default function About() {
     const handleScroll = () => {
       if (window.scrollY < 50) {
         setShowcaseAnimStarted(false);
+        setShowcaseAnimDone(false);
         setTypedTexts([]);
         observer.observe(showcaseSectionRef.current!);
       }
@@ -110,7 +112,12 @@ export default function About() {
                 if (next[idx] !== undefined) next[idx] = { ...next[idx], desc: desc.slice(0, di) };
                 return next;
               });
-              if (di >= desc.length) clearInterval(descTimer);
+              if (di >= desc.length) {
+                clearInterval(descTimer);
+                if (idx === showcaseServices.length - 1) {
+                  setShowcaseAnimDone(true);
+                }
+              }
               timers.push(descTimer);
             }, CHAR_SPEED);
             timers.push(titleTimer);
@@ -249,8 +256,8 @@ export default function About() {
                   const fullTitle = language === "vi" ? service.titleVi : service.titleEn;
                   const fullDesc = language === "vi" ? service.descriptionVi : service.descriptionEn;
                   const typed = typedTexts[index];
-                  const displayTitle = typed ? typed.title : (showcaseAnimStarted ? '' : fullTitle);
-                  const displayDesc = typed ? typed.desc : (showcaseAnimStarted ? '' : fullDesc);
+                  const displayTitle = showcaseAnimDone ? fullTitle : (typed ? typed.title : '');
+                  const displayDesc = showcaseAnimDone ? fullDesc : (typed ? typed.desc : '');
                   const isTitleTyping = typed && typed.title.length > 0 && typed.title.length < fullTitle.length;
                   const isDescTyping = typed && typed.title.length >= fullTitle.length && typed.desc.length < fullDesc.length;
                   return (
