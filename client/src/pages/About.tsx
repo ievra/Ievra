@@ -419,18 +419,16 @@ export default function About() {
                         </div>
                       )}
                     </div>
-
                     {/* Center dot + connector */}
                     <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center" style={{ top: '6px' }}>
                       <div className="w-3 h-3 rounded-full bg-white border-2 border-white flex-shrink-0" />
                       <div className={`h-px w-8 bg-white/40 absolute ${isLeft ? 'right-3' : 'left-3'}`} />
                     </div>
-
                     {/* Desktop RIGHT column */}
                     <div className="hidden lg:block lg:pl-20">
                       {!isLeft && (
                         <div className="space-y-3">
-                          <h4 className="text-2xl font-semibold text-white uppercase tracking-wide leading-tight">
+                          <h4 className="text-2xl text-white uppercase tracking-wide leading-tight font-light">
                             {title}
                           </h4>
                           <p className="text-white/60 font-light text-base leading-relaxed">
@@ -439,7 +437,6 @@ export default function About() {
                         </div>
                       )}
                     </div>
-
                     {/* Mobile: stacked with left border */}
                     <div className="lg:hidden space-y-3 pl-6 border-l border-white/20">
                       <h4 className="text-xl font-semibold text-white uppercase tracking-wide">
