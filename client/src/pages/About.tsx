@@ -647,23 +647,30 @@ export default function About() {
 
                 const ANIM_DURATION = 4; // seconds for full line draw
 
-                // Visible path (no bleed) — used for the animated drawing stroke
+                // Visible path — bleeds to screen edges (x=0 → x=W), used for animated stroke
                 const buildVisiblePath = (W: number) => {
                   if (W <= 0) return '';
                   const xL = PAD_L;
                   const xR = W - PAD_R;
-                  let d = `M ${xL},${LINE_Y}`;
+                  // Start from left screen edge
+                  let d = `M 0,${LINE_Y} L ${xR},${LINE_Y}`;
                   for (let r = 0; r < numRows; r++) {
                     const y = LINE_Y + r * ROW_H;
-                    if (r === 0) d += ` L ${xR},${y}`;
-                    else if (r % 2 === 1) d += ` L ${xL},${y}`;
-                    else d += ` L ${xR},${y}`;
+                    if (r > 0) {
+                      if (r % 2 === 1) d += ` L ${xL},${y}`;
+                      else d += ` L ${xR},${y}`;
+                    }
                     if (r < numRows - 1) {
                       const nextY = y + ROW_H;
                       if (r % 2 === 0) d += ` A ${R},${R} 0 0,1 ${xR},${nextY}`;
                       else d += ` A ${R},${R} 0 0,0 ${xL},${nextY}`;
                     }
                   }
+                  // End at right screen edge
+                  const lastY = LINE_Y + (numRows - 1) * ROW_H;
+                  const lastIsReversed = (numRows - 1) % 2 === 1;
+                  if (lastIsReversed) d += ` L 0,${lastY}`;
+                  else d += ` L ${W},${lastY}`;
                   return d;
                 };
 
@@ -709,16 +716,19 @@ export default function About() {
                 const rowLen0 = xR0 - xL0;
                 const fullTurn0 = Math.PI * R;
                 const halfTurn0 = fullTurn0 / 2;
-                const totalPathLen0 = numRows * rowLen0 + (numRows - 1) * fullTurn0;
-                // Path-length position for each step number along the visible path
+                // Path now starts at x=0, first segment = 0→xR (length = xR)
+                const seg0 = xR0;
+                // Total path: 0→xR + U-turn + xR→xL + U-turn + xL→W
+                const totalPathLen0 = seg0 + 2 * fullTurn0 + rowLen0 + (W0 - xL0);
+                // Path-length position for each step number along the new path
                 const stepPathPos: Record<string, number> = {
-                  '01': 0,
-                  '02': rowLen0 / 2,
-                  '03': rowLen0 + halfTurn0,
-                  '04': rowLen0 + fullTurn0 + rowLen0 / 2,
-                  '05': rowLen0 + fullTurn0 + rowLen0 + halfTurn0,
-                  '06': rowLen0 + fullTurn0 + rowLen0 + fullTurn0 + rowLen0 / 2,
-                  '07': totalPathLen0,
+                  '01': xL0,                                              // xL from x=0
+                  '02': xL0 + rowLen0 / 2,                               // xMid in row1
+                  '03': seg0 + halfTurn0,                                 // right U-turn apex
+                  '04': seg0 + fullTurn0 + rowLen0 / 2,                   // xMid in row2 (from xR going left)
+                  '05': seg0 + fullTurn0 + rowLen0 + halfTurn0,           // left U-turn apex
+                  '06': seg0 + fullTurn0 + rowLen0 + fullTurn0 + rowLen0 / 2, // xMid in row3
+                  '07': seg0 + fullTurn0 + rowLen0 + fullTurn0 + rowLen0, // xR in row3
                 };
                 const getItemDelay = (stepNum: string) =>
                   ((stepPathPos[stepNum] ?? 0) / totalPathLen0) * ANIM_DURATION;
