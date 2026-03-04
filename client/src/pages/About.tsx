@@ -56,15 +56,26 @@ export default function About() {
       (entries) => {
         if (entries[0].isIntersecting) {
           setShowcaseAnimStarted(true);
-        } else {
-          setShowcaseAnimStarted(false);
-          setTypedTexts([]);
+          observer.disconnect();
         }
       },
       { threshold: 0.2 }
     );
     observer.observe(showcaseSectionRef.current);
-    return () => observer.disconnect();
+
+    const handleScroll = () => {
+      if (window.scrollY < 50) {
+        setShowcaseAnimStarted(false);
+        setTypedTexts([]);
+        observer.observe(showcaseSectionRef.current!);
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, [showcaseSectionRef.current, showcaseServices.length]);
 
   useEffect(() => {
