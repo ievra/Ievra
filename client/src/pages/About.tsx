@@ -410,7 +410,7 @@ export default function About() {
                     <div className="hidden lg:block lg:pr-20 lg:text-right">
                       {isLeft && (
                         <div className="space-y-3">
-                          <h4 className="text-2xl font-semibold text-white uppercase tracking-wide leading-tight">
+                          <h4 className="text-2xl text-white uppercase tracking-wide leading-tight font-light">
                             {title}
                           </h4>
                           <p className="text-white/60 font-light text-base leading-relaxed">
