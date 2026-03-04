@@ -590,7 +590,7 @@ export default function About() {
         <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-16">
-              <h3 className="md:text-4xl font-light text-white uppercase tracking-wide text-[24px]">
+              <h3 className="md:text-4xl font-light text-white uppercase tracking-wide text-[24px] text-right">
                 {language === "vi" ? aboutContent.processTitleVi : aboutContent.processTitleEn}
               </h3>
             </div>
