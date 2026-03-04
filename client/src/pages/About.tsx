@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectFade } from 'swiper/modules';
 import type { Project, AboutPageContent, AboutShowcaseService, AboutProcessStep, AboutCoreValue, AboutTeamMember } from '@shared/schema';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import * as LucideIcons from 'lucide-react';
 
 import 'swiper/css';
@@ -12,6 +12,66 @@ import 'swiper/css/effect-fade';
 export default function About() {
   const { language } = useLanguage();
   const [selectedMember, setSelectedMember] = useState<number | null>(0);
+
+  const showcaseSectionRef = useRef<HTMLDivElement>(null);
+  const [showcaseAnimStarted, setShowcaseAnimStarted] = useState(false);
+  const [typedTexts, setTypedTexts] = useState<{ title: string; desc: string }[]>([]);
+
+  useEffect(() => {
+    if (!showcaseSectionRef.current || showcaseAnimStarted || showcaseServices.length === 0) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setShowcaseAnimStarted(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.2 }
+    );
+    observer.observe(showcaseSectionRef.current);
+    return () => observer.disconnect();
+  }, [showcaseSectionRef.current, showcaseAnimStarted, showcaseServices.length]);
+
+  useEffect(() => {
+    if (!showcaseAnimStarted || showcaseServices.length === 0) return;
+    const CHAR_SPEED = 28;
+    const STAGGER = 550;
+    const timers: ReturnType<typeof setTimeout>[] = [];
+    setTypedTexts(showcaseServices.map(() => ({ title: '', desc: '' })));
+
+    showcaseServices.forEach((service, idx) => {
+      const title = language === 'vi' ? service.titleVi : service.titleEn;
+      const desc = language === 'vi' ? service.descriptionVi : service.descriptionEn;
+
+      const t = setTimeout(() => {
+        let ti = 0;
+        const titleTimer = setInterval(() => {
+          ti++;
+          setTypedTexts(prev => {
+            const next = [...prev];
+            if (next[idx] !== undefined) next[idx] = { ...next[idx], title: title.slice(0, ti) };
+            return next;
+          });
+          if (ti >= title.length) {
+            clearInterval(titleTimer);
+            let di = 0;
+            const descTimer = setInterval(() => {
+              di++;
+              setTypedTexts(prev => {
+                const next = [...prev];
+                if (next[idx] !== undefined) next[idx] = { ...next[idx], desc: desc.slice(0, di) };
+                return next;
+              });
+              if (di >= desc.length) clearInterval(descTimer);
+            }, CHAR_SPEED);
+          }
+        }, CHAR_SPEED);
+      }, idx * STAGGER);
+      timers.push(t);
+    });
+
+    return () => timers.forEach(clearTimeout);
+  }, [showcaseAnimStarted, showcaseServices, language]);
 
   const { data: projects = [] } = useQuery<Project[]>({
     queryKey: ["/api/projects"],
@@ -164,12 +224,17 @@ export default function About() {
           <div className="relative h-full flex flex-col justify-end">
             {/* Showcase Services */}
             {showcaseServices.length > 0 && (
-              <div className="relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-end">
+              <div ref={showcaseSectionRef} className="relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-end">
                 {showcaseServices.map((service, index) => {
                   const stepHeights = ['h-[480px]', 'h-[320px]', 'h-[180px]', 'h-[60px]'];
                   const stepH = stepHeights[index % 4];
-                  const heightPx = [480, 320, 180, 60][index % 4];
-                  const isLast = index === showcaseServices.length - 1;
+                  const fullTitle = language === "vi" ? service.titleVi : service.titleEn;
+                  const fullDesc = language === "vi" ? service.descriptionVi : service.descriptionEn;
+                  const typed = typedTexts[index];
+                  const displayTitle = typed ? typed.title : (showcaseAnimStarted ? '' : fullTitle);
+                  const displayDesc = typed ? typed.desc : (showcaseAnimStarted ? '' : fullDesc);
+                  const isTitleTyping = typed && typed.title.length > 0 && typed.title.length < fullTitle.length;
+                  const isDescTyping = typed && typed.title.length >= fullTitle.length && typed.desc.length < fullDesc.length;
                   return (
                   <div key={service.id} className="px-6 py-8 md:px-8 md:py-12">
                     <div className={`${stepH} flex flex-col justify-start`}>
@@ -184,10 +249,12 @@ export default function About() {
                           />
                         )}
                         <h4 className="text-xl font-light text-white uppercase tracking-wide">
-                          {language === "vi" ? service.titleVi : service.titleEn}
+                          {displayTitle}
+                          {isTitleTyping && <span className="inline-block w-0.5 h-5 bg-white ml-0.5 align-middle animate-pulse" />}
                         </h4>
                         <p className="text-white/70 font-light text-lg leading-relaxed">
-                          {language === "vi" ? service.descriptionVi : service.descriptionEn}
+                          {displayDesc}
+                          {isDescTyping && <span className="inline-block w-0.5 h-4 bg-white/70 ml-0.5 align-middle animate-pulse" />}
                         </p>
                       </div>
                     </div>
