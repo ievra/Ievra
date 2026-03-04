@@ -781,7 +781,7 @@ img {
     transform: translateX(-50px);
   }
   .slide-from-left.in-view {
-    animation: slideFromLeft 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: slideFromLeft 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   @keyframes slideFromRight {
@@ -794,7 +794,7 @@ img {
     transform: translateX(50px);
   }
   .slide-from-right.in-view {
-    animation: slideFromRight 1.6s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation: slideFromRight 2.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
   @keyframes drawSnakePath {
