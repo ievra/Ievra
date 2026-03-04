@@ -1075,19 +1075,6 @@ export default function AboutAdminTab({
               </DialogHeader>
                 <Form {...principleForm}>
                   <form onSubmit={principleForm.handleSubmit(handlePrincipleSubmit)} className="space-y-4">
-                    <FormField
-                      control={principleForm.control}
-                      name="icon"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Tên Icon Lucide *' : 'Lucide Icon Name *'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} placeholder="e.g. Shield, Heart, Star, Target" data-testid="input-principle-icon" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
                     <div className="grid grid-cols-2 gap-4">
                       <FormField
                         control={principleForm.control}

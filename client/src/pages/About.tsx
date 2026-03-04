@@ -4,8 +4,6 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectFade } from 'swiper/modules';
 import type { Project, AboutPageContent, AboutShowcaseService, AboutProcessStep, AboutCoreValue, AboutTeamMember } from '@shared/schema';
 import { useState, useEffect, useRef } from 'react';
-import * as LucideIcons from 'lucide-react';
-
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 
@@ -142,11 +140,6 @@ export default function About() {
       default:
         return 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&h=1080';
     }
-  };
-
-  const getIconComponent = (iconName: string) => {
-    const Icon = (LucideIcons as any)[iconName];
-    return Icon || LucideIcons.Circle;
   };
 
   return (
