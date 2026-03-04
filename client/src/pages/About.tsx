@@ -127,9 +127,6 @@ export default function About() {
         <section className="py-20 bg-black lg:-ml-16">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-16">
-              <h2 className="text-sm font-light tracking-widest text-white/60 uppercase mb-4">
-                {language === "vi" ? aboutContent.principlesSubtitleVi : aboutContent.principlesSubtitleEn}
-              </h2>
               <h3 className="text-3xl md:text-4xl font-light text-white uppercase tracking-wide">
                 {language === "vi" ? aboutContent.principlesTitleVi : aboutContent.principlesTitleEn}
               </h3>
@@ -238,9 +235,6 @@ export default function About() {
         <section className="py-20 bg-black lg:-ml-16">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-12">
-              <h2 className="text-sm font-light tracking-widest text-white/60 uppercase mb-4">
-                {language === "vi" ? aboutContent.historySubtitleVi : aboutContent.historySubtitleEn}
-              </h2>
               <h3 className="text-3xl md:text-4xl font-light text-white uppercase tracking-wide">
                 {language === "vi" ? aboutContent.historyTitleVi : aboutContent.historyTitleEn}
               </h3>
@@ -321,9 +315,6 @@ export default function About() {
         <section className="py-20 bg-black lg:-ml-16">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-16">
-              <h2 className="text-sm font-light tracking-widest text-white/60 uppercase mb-4">
-                {language === "vi" ? aboutContent.coreValuesSubtitleVi : aboutContent.coreValuesSubtitleEn}
-              </h2>
               <h3 className="text-3xl md:text-4xl font-light text-white uppercase tracking-wide">
                 {language === "vi" ? aboutContent.coreValuesTitleVi : aboutContent.coreValuesTitleEn}
               </h3>
@@ -349,9 +340,6 @@ export default function About() {
         <section className="py-20 bg-black lg:-ml-16 overflow-hidden">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-16">
-              <h2 className="text-sm font-light tracking-widest text-white/60 uppercase mb-4">
-                {language === "vi" ? aboutContent.teamSubtitleVi : aboutContent.teamSubtitleEn}
-              </h2>
               <h3 className="text-3xl md:text-4xl font-light text-white uppercase tracking-wide mb-4">
                 {language === "vi" ? aboutContent.teamTitleVi : aboutContent.teamTitleEn}
               </h3>
@@ -484,9 +472,6 @@ export default function About() {
         <section className="py-20 bg-black lg:-ml-16">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-16">
-              <h2 className="text-sm font-light tracking-widest text-white/60 uppercase mb-4">
-                {language === "vi" ? aboutContent.processSubtitleVi : aboutContent.processSubtitleEn}
-              </h2>
               <h3 className="text-3xl md:text-4xl font-light text-white uppercase tracking-wide">
                 {language === "vi" ? aboutContent.processTitleVi : aboutContent.processTitleEn}
               </h3>

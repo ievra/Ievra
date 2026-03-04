@@ -499,16 +499,6 @@ export default function AboutAdminTab({
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề H2 (English)' : 'Section Subtitle H2 (English)'}</label>
-                        <Input {...aboutContentForm.register("principlesSubtitleEn")} placeholder="OUR PRINCIPLES" data-testid="input-principles-subtitle-en" />
-                      </div>
-                      <div>
-                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề H2 (Tiếng Việt)' : 'Section Subtitle H2 (Tiếng Việt)'}</label>
-                        <Input {...aboutContentForm.register("principlesSubtitleVi")} placeholder="NGUYÊN TẮC LÀM VIỆC" data-testid="input-principles-subtitle-vi" />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
                         <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Chính H3 (English)' : 'Main Title H3 (English)'}</label>
                         <Input {...aboutContentForm.register("principlesTitleEn")} placeholder="THE FOUNDATION OF OUR WORK" data-testid="input-principles-title-en" />
                       </div>
@@ -526,16 +516,6 @@ export default function AboutAdminTab({
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề H2 (English)' : 'Section Subtitle H2 (English)'}</label>
-                        <Input {...aboutContentForm.register("processSubtitleEn")} placeholder="OUR PROCESS" data-testid="input-process-subtitle-en" />
-                      </div>
-                      <div>
-                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề H2 (Tiếng Việt)' : 'Section Subtitle H2 (Tiếng Việt)'}</label>
-                        <Input {...aboutContentForm.register("processSubtitleVi")} placeholder="QUY TRÌNH LÀM VIỆC" data-testid="input-process-subtitle-vi" />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
                         <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Chính H3 (English)' : 'Main Title H3 (English)'}</label>
                         <Input {...aboutContentForm.register("processTitleEn")} placeholder="FROM CONCEPT TO REALITY" data-testid="input-process-title-en" />
                       </div>
@@ -551,16 +531,6 @@ export default function AboutAdminTab({
                 <div className="p-4 border-t">
                   <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Lịch Sử Công Ty (Lịch sử hình thành)' : 'Company History (Lịch sử hình thành)'}</h3>
                   <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề H2 (English)' : 'Section Subtitle H2 (English)'}</label>
-                        <Input {...aboutContentForm.register("historySubtitleEn")} placeholder="COMPANY HISTORY" data-testid="input-history-subtitle-en" />
-                      </div>
-                      <div>
-                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề H2 (Tiếng Việt)' : 'Section Subtitle H2 (Tiếng Việt)'}</label>
-                        <Input {...aboutContentForm.register("historySubtitleVi")} placeholder="LỊCH SỬ HÌNH THÀNH" data-testid="input-history-subtitle-vi" />
-                      </div>
-                    </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Chính H3 (English)' : 'Main Title H3 (English)'}</label>
@@ -805,16 +775,6 @@ export default function AboutAdminTab({
                   <div className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề H2 (English)' : 'Section Subtitle H2 (English)'}</label>
-                        <Input {...aboutContentForm.register("coreValuesSubtitleEn")} placeholder="CORE VALUES" data-testid="input-core-values-subtitle-en" />
-                      </div>
-                      <div>
-                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề H2 (Tiếng Việt)' : 'Section Subtitle H2 (Tiếng Việt)'}</label>
-                        <Input {...aboutContentForm.register("coreValuesSubtitleVi")} placeholder="GIÁ TRỊ CỐT LÕI" data-testid="input-core-values-subtitle-vi" />
-                      </div>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
                         <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Chính H3 (English)' : 'Main Title H3 (English)'}</label>
                         <Input {...aboutContentForm.register("coreValuesTitleEn")} placeholder="CORE VALUES" data-testid="input-core-values-title-en" />
                       </div>
@@ -830,16 +790,6 @@ export default function AboutAdminTab({
                 <div className="p-4 border-t">
                   <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Tiêu Đề Phần Đội Ngũ' : 'Team Section Title'}</h3>
                   <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề H2 (English)' : 'Section Subtitle H2 (English)'}</label>
-                        <Input {...aboutContentForm.register("teamSubtitleEn")} placeholder="OUR TEAM" data-testid="input-team-subtitle-en" />
-                      </div>
-                      <div>
-                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề H2 (Tiếng Việt)' : 'Section Subtitle H2 (Tiếng Việt)'}</label>
-                        <Input {...aboutContentForm.register("teamSubtitleVi")} placeholder="ĐỘI NGŨ" data-testid="input-team-subtitle-vi" />
-                      </div>
-                    </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Chính H3 (English)' : 'Main Title H3 (English)'}</label>
