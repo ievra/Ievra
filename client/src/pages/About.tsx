@@ -19,11 +19,6 @@ export default function About() {
     queryKey: ["/api/about-page-content"],
   });
 
-  const { data: principles = [] } = useQuery<AboutCoreValue[]>({
-    queryKey: ["/api/about-core-values"],
-    select: (data) => data.filter(p => p.active).sort((a, b) => a.order - b.order),
-  });
-
   const { data: showcaseServices = [] } = useQuery<AboutShowcaseService[]>({
     queryKey: ["/api/about-showcase-services"],
     select: (data) => data.filter(s => s.active).sort((a, b) => a.order - b.order),
@@ -200,27 +195,94 @@ export default function About() {
           )}
         </div>
       </section>
-      {/* Principles Section */}
-      {principles.length > 0 && aboutContent && (
-        <section className="py-20 bg-black lg:-ml-16">
+      {/* Company History Section */}
+      {aboutContent?.historyContentEn && aboutContent?.historyContentVi && (
+        <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mb-16">
-              <h3 className="md:text-4xl font-light text-white uppercase tracking-wide text-[24px]">
-                {language === "vi" ? aboutContent.principlesTitleVi : aboutContent.principlesTitleEn}
-              </h3>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {principles.map((principle) => (
-                <div key={principle.id} className="space-y-4">
-                  <h4 className="text-xl font-light text-white uppercase tracking-wide">
-                    {language === "vi" ? principle.titleVi : principle.titleEn}
-                  </h4>
-                  <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed">
-                    {language === "vi" ? principle.descriptionVi : principle.descriptionEn}
-                  </p>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+              <div className="space-y-8">
+                <h3 className="md:text-4xl font-light text-white uppercase tracking-wide text-[24px]">
+                  {language === "vi" ? aboutContent.historyTitleVi : aboutContent.historyTitleEn}
+                </h3>
+                <p className="text-white/70 font-light text-lg leading-relaxed whitespace-pre-line">
+                  {language === "vi" ? aboutContent.historyContentVi : aboutContent.historyContentEn}
+                </p>
+              </div>
+              {aboutContent.historyImage && (
+                <div className="relative aspect-[4/3] overflow-hidden bg-white/5">
+                  <img 
+                    src={aboutContent.historyImage} 
+                    alt={language === "vi" ? "Lịch sử công ty" : "Company History"}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = 'https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600';
+                    }}
+                  />
                 </div>
-              ))}
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+      {/* Mission & Vision Section - 2 columns: Mission (small img) | Vision (large img) */}
+      {(aboutContent?.missionContentEn || aboutContent?.visionContentEn) && (
+        <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
+          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-20 items-start">
+              {/* LEFT: Small image + Mission */}
+              {aboutContent?.missionContentEn && aboutContent?.missionContentVi && (
+                <div className="space-y-8">
+                  {(aboutContent.missionImageData || aboutContent.missionImage) && (
+                    <div className="relative overflow-hidden bg-white/5 aspect-[4/3]">
+                      <img
+                        src={aboutContent.missionImageData || aboutContent.missionImage || undefined}
+                        alt={language === "vi" ? "Sứ mệnh" : "Mission"}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = 'https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600';
+                        }}
+                      />
+                    </div>
+                  )}
+                  <div className="space-y-6">
+                    <h3 className="text-2xl font-light text-white uppercase tracking-wide">
+                      {language === "vi" ? aboutContent.missionTitleVi : aboutContent.missionTitleEn}
+                    </h3>
+                    <p className="text-lg text-white/70 font-light leading-relaxed whitespace-pre-line">
+                      {language === "vi" ? aboutContent.missionContentVi : aboutContent.missionContentEn}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* RIGHT: Large image + Vision */}
+              {aboutContent?.visionContentEn && aboutContent?.visionContentVi && (
+                <div className="space-y-8">
+                  {(aboutContent.missionVisionImageData || aboutContent.missionVisionImage) && (
+                    <div className="relative overflow-hidden bg-white/5 aspect-[4/3]">
+                      <img
+                        src={aboutContent.missionVisionImageData || aboutContent.missionVisionImage || undefined}
+                        alt={language === "vi" ? "Tầm nhìn" : "Vision"}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.src = 'https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=1600';
+                        }}
+                      />
+                    </div>
+                  )}
+                  <div className="space-y-6">
+                    <h3 className="text-2xl font-light text-white uppercase tracking-wide">
+                      {language === "vi" ? aboutContent.visionTitleVi : aboutContent.visionTitleEn}
+                    </h3>
+                    <p className="text-lg text-white/70 font-light leading-relaxed whitespace-pre-line">
+                      {language === "vi" ? aboutContent.visionContentVi : aboutContent.visionContentEn}
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </section>
@@ -321,98 +383,6 @@ export default function About() {
                 </div>
               </div>
             )}
-          </div>
-        </section>
-      )}
-      {/* Company History Section */}
-      {aboutContent?.historyContentEn && aboutContent?.historyContentVi && (
-        <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-              <div className="space-y-8">
-                <h3 className="md:text-4xl font-light text-white uppercase tracking-wide text-[24px]">
-                  {language === "vi" ? aboutContent.historyTitleVi : aboutContent.historyTitleEn}
-                </h3>
-                <p className="text-white/70 font-light text-lg leading-relaxed whitespace-pre-line">
-                  {language === "vi" ? aboutContent.historyContentVi : aboutContent.historyContentEn}
-                </p>
-              </div>
-              {aboutContent.historyImage && (
-                <div className="relative aspect-[4/3] overflow-hidden bg-white/5">
-                  <img 
-                    src={aboutContent.historyImage} 
-                    alt={language === "vi" ? "Lịch sử công ty" : "Company History"}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = 'https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600';
-                    }}
-                  />
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
-      )}
-      {/* Mission & Vision Section - 2 columns: Mission (small img) | Vision (large img) */}
-      {(aboutContent?.missionContentEn || aboutContent?.visionContentEn) && (
-        <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-20 items-start">
-              {/* LEFT: Small image + Mission */}
-              {aboutContent?.missionContentEn && aboutContent?.missionContentVi && (
-                <div className="space-y-8">
-                  {(aboutContent.missionImageData || aboutContent.missionImage) && (
-                    <div className="relative overflow-hidden bg-white/5 aspect-[4/3]">
-                      <img
-                        src={aboutContent.missionImageData || aboutContent.missionImage || undefined}
-                        alt={language === "vi" ? "Sứ mệnh" : "Mission"}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.src = 'https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600';
-                        }}
-                      />
-                    </div>
-                  )}
-                  <div className="space-y-6">
-                    <h3 className="text-2xl font-light text-white uppercase tracking-wide">
-                      {language === "vi" ? aboutContent.missionTitleVi : aboutContent.missionTitleEn}
-                    </h3>
-                    <p className="text-lg text-white/70 font-light leading-relaxed whitespace-pre-line">
-                      {language === "vi" ? aboutContent.missionContentVi : aboutContent.missionContentEn}
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* RIGHT: Large image + Vision */}
-              {aboutContent?.visionContentEn && aboutContent?.visionContentVi && (
-                <div className="space-y-8">
-                  {(aboutContent.missionVisionImageData || aboutContent.missionVisionImage) && (
-                    <div className="relative overflow-hidden bg-white/5 aspect-[4/3]">
-                      <img
-                        src={aboutContent.missionVisionImageData || aboutContent.missionVisionImage || undefined}
-                        alt={language === "vi" ? "Tầm nhìn" : "Vision"}
-                        className="w-full h-full object-cover"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.src = 'https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=1600';
-                        }}
-                      />
-                    </div>
-                  )}
-                  <div className="space-y-6">
-                    <h3 className="text-2xl font-light text-white uppercase tracking-wide">
-                      {language === "vi" ? aboutContent.visionTitleVi : aboutContent.visionTitleEn}
-                    </h3>
-                    <p className="text-lg text-white/70 font-light leading-relaxed whitespace-pre-line">
-                      {language === "vi" ? aboutContent.visionContentVi : aboutContent.visionContentEn}
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
           </div>
         </section>
       )}
