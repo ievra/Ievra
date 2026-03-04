@@ -615,10 +615,10 @@ export default function About() {
                       const displayRow = isReversed ? [...row].reverse() : row;
                       return (
                         <div key={rowIdx} className="relative" style={{ paddingBottom: isLastRow ? 0 : `${GAP}px` }}>
-                          {/* Horizontal solid line */}
+                          {/* Horizontal solid line — thin 1px */}
                           <div
-                            className="absolute bg-white/40"
-                            style={{ top: `${LINE_CENTER - 1}px`, left: 0, right: 0, height: '2px' }}
+                            className="absolute bg-white/30"
+                            style={{ top: `${LINE_CENTER - 1}px`, left: 0, right: 0, height: '1px' }}
                           />
 
                           {/* Step items */}
@@ -635,19 +635,18 @@ export default function About() {
                                   className="flex flex-col items-center"
                                   style={{ width: isSingleLastItem ? 'auto' : `${100 / PER_ROW}%` }}
                                 >
-                                  {/* Circle marker with step number */}
+                                  {/* Diamond marker */}
                                   <div
-                                    className="rounded-full bg-black border-2 border-white/60 text-white flex items-center justify-center font-light flex-shrink-0"
+                                    className="bg-white/80 flex-shrink-0"
                                     style={{
-                                      width: '36px',
-                                      height: '36px',
-                                      fontSize: '11px',
-                                      marginTop: `${LINE_CENTER - 18}px`,
+                                      width: '11px',
+                                      height: '11px',
+                                      transform: 'rotate(45deg)',
+                                      marginTop: `${LINE_CENTER - 6}px`,
                                     }}
-                                  >
-                                    {step.stepNumber}
-                                  </div>
-                                  <div className="mt-4 text-center px-2" style={{ maxWidth: '160px' }}>
+                                  />
+                                  <div className="mt-5 text-center px-2" style={{ maxWidth: '160px' }}>
+                                    <div className="text-white/35 text-[10px] font-light tracking-wider mb-1">{step.stepNumber}</div>
                                     <h4 className="text-sm font-light text-white uppercase tracking-wide leading-tight">
                                       {title}
                                     </h4>
@@ -662,18 +661,18 @@ export default function About() {
                             })}
                           </div>
 
-                          {/* Rounded U-turn connector to next row */}
+                          {/* Rounded U-turn connector — thin 1px */}
                           {!isLastRow && (
                             <div
                               style={{
                                 position: 'absolute',
                                 [isReversed ? 'left' : 'right']: '0px',
                                 top: `${LINE_CENTER - 1}px`,
-                                width: '40px',
-                                bottom: `-${LINE_CENTER + 1}px`,
-                                borderTop: '2px solid rgba(255,255,255,0.4)',
-                                borderBottom: '2px solid rgba(255,255,255,0.4)',
-                                [isReversed ? 'borderLeft' : 'borderRight']: '2px solid rgba(255,255,255,0.4)',
+                                width: '44px',
+                                bottom: `-${LINE_CENTER}px`,
+                                borderTop: '1px solid rgba(255,255,255,0.3)',
+                                borderBottom: '1px solid rgba(255,255,255,0.3)',
+                                [isReversed ? 'borderLeft' : 'borderRight']: '1px solid rgba(255,255,255,0.3)',
                                 [isReversed ? 'borderTopLeftRadius' : 'borderTopRightRadius']: '100px',
                                 [isReversed ? 'borderBottomLeftRadius' : 'borderBottomRightRadius']: '100px',
                               }}
