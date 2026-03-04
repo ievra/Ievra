@@ -330,11 +330,11 @@ export default function About() {
                           )}
                           <h4 className="text-xl font-light text-white uppercase tracking-wide">
                             {displayTitle}
-                            {isTitleTyping && <span className="inline-block w-0.5 h-5 bg-white ml-0.5 align-middle animate-pulse" />}
+                            <span className={`inline-block w-0.5 h-5 bg-white ml-0.5 align-middle animate-pulse ${isTitleTyping ? '' : 'invisible'}`} />
                           </h4>
                           <p className="text-white/70 font-light text-lg leading-relaxed text-justify">
                             {displayDesc}
-                            {isDescTyping && <span className="inline-block w-0.5 h-4 bg-white/70 ml-0.5 align-middle animate-pulse" />}
+                            <span className={`inline-block w-0.5 h-4 bg-white/70 ml-0.5 align-middle animate-pulse ${isDescTyping ? '' : 'invisible'}`} />
                           </p>
                         </div>
                       </div>
