@@ -618,7 +618,8 @@ export default function About() {
                 const R = 80;           // U-turn radius (px) — ROW_H must = 2*R for perfect semicircle
                 const ROW_H = 160;      // = 2*R → perfect semicircle U-turns
                 const LINE_Y = 28;      // y of line within each row block
-                const PAD = 130;        // inset: pulls U-turns inward toward center
+                const PAD_L = 150;      // left endpoint distance from left edge (U-turn peak at PAD_L - R)
+                const PAD_R = 170;      // right endpoint distance from right edge (U-turn peak at PAD_R - R)
 
                 const rows: typeof processSteps[] = [];
                 for (let i = 0; i < processSteps.length; i += PER_ROW) {
@@ -630,8 +631,8 @@ export default function About() {
                 // Build SVG path — single connected snake
                 const buildPath = (W: number) => {
                   if (W <= 0) return '';
-                  const xL = R + PAD;   // left endpoint: inset by PAD, U-turn extends left to PAD
-                  const xR = W - R - PAD; // right endpoint: inset by PAD, U-turn extends right to W-PAD
+                  const xL = PAD_L;       // left horizontal endpoint (150px from left edge)
+                  const xR = W - PAD_R;   // right horizontal endpoint (170px from right edge)
                   let d = `M ${xL},${LINE_Y}`;
                   for (let r = 0; r < numRows; r++) {
                     const y = LINE_Y + r * ROW_H;
@@ -682,8 +683,8 @@ export default function About() {
                       const displayRow = isReversed ? [...row].reverse() : row;
                       const lineY = LINE_Y + rowIdx * ROW_H;
                       const W = snakeW || 900;
-                      const xL = R + PAD;
-                      const xR = W - R - PAD;
+                      const xL = PAD_L;
+                      const xR = W - PAD_R;
                       const isSingleItem = row.length === 1;
 
                       return displayRow.map((step, ci) => {
