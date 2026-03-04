@@ -788,23 +788,11 @@ img {
     from { clip-path: inset(0 100% 0 0); }
     to   { clip-path: inset(0 0% 0 0); }
   }
-  @keyframes cursorFade {
-    0%, 70% { opacity: 1; }
-    100%     { opacity: 0; }
-  }
-
   .typewriter-heading {
     clip-path: inset(0 100% 0 0);
   }
   .typewriter-heading.in-view {
     animation: typeReveal 2s linear forwards;
-  }
-  .typewriter-heading.in-view::after {
-    content: '|';
-    margin-left: 2px;
-    display: inline-block;
-    color: inherit;
-    animation: cursorFade 1.5s ease 2s forwards;
   }
 
   @keyframes slideFromRight {
