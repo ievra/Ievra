@@ -173,9 +173,9 @@ export default function About() {
                   return (
                   <div key={service.id} className="px-6 py-8 md:px-8 md:py-12">
                     <div className={`relative space-y-3 ${stepH} flex flex-col justify-start`}>
-                    {!isLast && (
+                    {index > 0 && (
                       <div
-                        className="absolute -right-6 md:-right-8 top-0 bottom-0"
+                        className="absolute -left-6 md:-left-8 top-0 bottom-0"
                         style={{
                           width: '2px',
                           background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.3) 12%, rgba(255,255,255,0.3) 88%, transparent 100%)'
