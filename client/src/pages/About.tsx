@@ -157,7 +157,7 @@ export default function About() {
                 backgroundImage: `url(${aboutContent.showcaseBannerImageData || aboutContent.showcaseBannerImage})`,
               }}
             >
-              <div className="absolute inset-0 bg-gradient-to-t from-black from-0% to-transparent to-[80%]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black from-0% to-transparent to-[90%]" />
             </div>
           )}
 
