@@ -365,7 +365,7 @@ export default function About() {
       {(aboutContent?.missionContentEn || aboutContent?.visionContentEn) && (
         <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-20 items-start">
               {/* LEFT: Small image + Mission */}
               {aboutContent?.missionContentEn && aboutContent?.missionContentVi && (
                 <div className="space-y-8">
