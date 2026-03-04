@@ -162,21 +162,14 @@ export default function About() {
           )}
 
           <div className="relative h-full flex flex-col justify-end">
-            {/* Vertical column dividers */}
-            <div className="absolute inset-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 pointer-events-none">
-              <div className="border-r-2 border-white/20" style={{ borderImage: 'linear-gradient(to top, rgba(255,255,255,0.2), rgba(255,255,255,0)) 1' }} />
-              <div className="border-r-2 border-white/20" style={{ borderImage: 'linear-gradient(to top, rgba(255,255,255,0.2), rgba(255,255,255,0)) 1' }} />
-              <div className="border-r-2 border-white/20" style={{ borderImage: 'linear-gradient(to top, rgba(255,255,255,0.2), rgba(255,255,255,0)) 1' }} />
-              <div />
-            </div>
-
             {/* Showcase Services */}
             {showcaseServices.length > 0 && (
               <div className="relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-end">
                 {showcaseServices.map((service, index) => {
                   const stepH = ['h-[480px]', 'h-[320px]', 'h-[180px]', 'h-[60px]'][index % 4];
+                  const isLast = index === showcaseServices.length - 1;
                   return (
-                  <div key={service.id} className="px-6 py-8 md:px-8 md:py-12">
+                  <div key={service.id} className={`px-6 py-8 md:px-8 md:py-12 ${!isLast ? 'border-r border-white/20' : ''}`}>
                     <div className={`space-y-3 ${stepH} flex flex-col justify-start`}>
                       <h4 className="text-xl font-light text-white uppercase tracking-wide">
                         {language === "vi" ? service.titleVi : service.titleEn}
