@@ -431,7 +431,7 @@ export default function About() {
                           <h4 className="text-2xl text-white uppercase tracking-wide leading-tight font-light">
                             {title}
                           </h4>
-                          <p className="text-white/60 font-light text-base leading-relaxed">
+                          <p className="text-white/60 font-light text-[18px]">
                             {desc}
                           </p>
                         </div>
