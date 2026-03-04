@@ -174,8 +174,12 @@ export default function About() {
                   <div key={service.id} className="relative px-6 py-8 md:px-8 md:py-12">
                     {!isLast && (
                       <div
-                        className="absolute right-0 top-8 md:top-12 bg-white/35"
-                        style={{ width: '2px', height: heightPx }}
+                        className="absolute right-0 top-12 md:top-16"
+                        style={{
+                          width: '2px',
+                          height: Math.max(0, heightPx - 32),
+                          background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.3) 15%, rgba(255,255,255,0.3) 85%, transparent 100%)'
+                        }}
                       />
                     )}
                     <div className={`space-y-3 ${stepH} flex flex-col justify-start`}>
@@ -196,7 +200,7 @@ export default function About() {
             {aboutContent && (
               <div className="relative w-full">
                 <div className="grid grid-cols-2 md:grid-cols-4">
-                  <div className="text-center py-6 px-4 border-r border-white/20">
+                  <div className="text-center py-6 px-4">
                     <div className="text-2xl md:text-3xl font-light text-white mb-1" data-testid="stats-projects">
                       {aboutContent.statsProjectsValue}
                     </div>
@@ -204,7 +208,7 @@ export default function About() {
                       {language === "vi" ? aboutContent.statsProjectsLabelVi : aboutContent.statsProjectsLabelEn}
                     </div>
                   </div>
-                  <div className="text-center py-6 px-4 md:border-r border-white/20">
+                  <div className="text-center py-6 px-4">
                     <div className="text-2xl md:text-3xl font-light text-white mb-1" data-testid="stats-awards">
                       {aboutContent.statsAwardsValue}
                     </div>
@@ -212,7 +216,7 @@ export default function About() {
                       {language === "vi" ? aboutContent.statsAwardsLabelVi : aboutContent.statsAwardsLabelEn}
                     </div>
                   </div>
-                  <div className="text-center py-6 px-4 border-r border-white/20">
+                  <div className="text-center py-6 px-4">
                     <div className="text-2xl md:text-3xl font-light text-white mb-1" data-testid="stats-clients">
                       {aboutContent.statsClientsValue}
                     </div>
