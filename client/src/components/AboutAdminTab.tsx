@@ -1144,14 +1144,31 @@ export default function AboutAdminTab({
                         >
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => deletePrincipleMutation.mutate(principle.id)}
-                          data-testid={`button-delete-principle-${principle.id}`}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              data-testid={`button-delete-principle-${principle.id}`}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>{language === 'vi' ? 'Xóa Nguyên Tắc' : 'Delete Principle'}</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                {language === 'vi' ? 'Bạn có chắc muốn xóa nguyên tắc này không? Hành động này không thể hoàn tác.' : 'Are you sure you want to delete this principle? This action cannot be undone.'}
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>{language === 'vi' ? 'Hủy' : 'Cancel'}</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => deletePrincipleMutation.mutate(principle.id)}>
+                                {language === 'vi' ? 'Xóa' : 'Delete'}
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -1312,14 +1329,31 @@ export default function AboutAdminTab({
                         >
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => deleteShowcaseServiceMutation.mutate(service.id)}
-                          data-testid={`button-delete-showcase-${service.id}`}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              data-testid={`button-delete-showcase-${service.id}`}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>{language === 'vi' ? 'Xóa Dịch Vụ' : 'Delete Service'}</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                {language === 'vi' ? 'Bạn có chắc muốn xóa dịch vụ này không? Hành động này không thể hoàn tác.' : 'Are you sure you want to delete this service? This action cannot be undone.'}
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>{language === 'vi' ? 'Hủy' : 'Cancel'}</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => deleteShowcaseServiceMutation.mutate(service.id)}>
+                                {language === 'vi' ? 'Xóa' : 'Delete'}
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                     </TableCell>
                   </TableRow>
@@ -1480,14 +1514,31 @@ export default function AboutAdminTab({
                         >
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button
-                          variant="destructive"
-                          size="sm"
-                          onClick={() => deleteProcessStepMutation.mutate(step.id)}
-                          data-testid={`button-delete-step-${step.id}`}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="destructive"
+                              size="sm"
+                              data-testid={`button-delete-step-${step.id}`}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>{language === 'vi' ? 'Xóa Bước Quy Trình' : 'Delete Process Step'}</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                {language === 'vi' ? 'Bạn có chắc muốn xóa bước quy trình này không? Hành động này không thể hoàn tác.' : 'Are you sure you want to delete this process step? This action cannot be undone.'}
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>{language === 'vi' ? 'Hủy' : 'Cancel'}</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => deleteProcessStepMutation.mutate(step.id)}>
+                                {language === 'vi' ? 'Xóa' : 'Delete'}
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                     </TableCell>
                   </TableRow>
