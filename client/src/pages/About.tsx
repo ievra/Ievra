@@ -226,7 +226,7 @@ export default function About() {
             {showcaseServices.length > 0 && (
               <div ref={showcaseSectionRef} className="relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-end">
                 {showcaseServices.map((service, index) => {
-                  const stepHeights = ['h-[480px]', 'h-[320px]', 'h-[180px]', 'h-[60px]'];
+                  const stepHeights = ['h-[560px]', 'h-[400px]', 'h-[260px]', 'h-[160px]'];
                   const stepH = stepHeights[index % 4];
                   const fullTitle = language === "vi" ? service.titleVi : service.titleEn;
                   const fullDesc = language === "vi" ? service.descriptionVi : service.descriptionEn;
