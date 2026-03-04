@@ -757,7 +757,7 @@ export default function About() {
                           strokeDasharray: 1,
                           strokeDashoffset: 1,
                           animation: pathAnimated
-                            ? `drawSnakePath ${ANIM_DURATION}s ease forwards`
+                            ? `drawSnakePath ${ANIM_DURATION}s linear forwards`
                             : 'none',
                         }}
                       />
