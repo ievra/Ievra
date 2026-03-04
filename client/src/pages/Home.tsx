@@ -294,6 +294,7 @@ export default function Home() {
   const [cardResetKey, setCardResetKey] = useState(0);
   const resetCardsRef = useRef<() => void>(() => {});
   resetCardsRef.current = () => setCardResetKey(k => k + 1);
+  const faqSectionRef = useRef<HTMLElement>(null);
 
   const measureContainers = useCallback(() => {
     if (projectsScrollRef.current) setProjectsContainerWidth(projectsScrollRef.current.offsetWidth);
@@ -370,7 +371,8 @@ export default function Home() {
           );
         });
         resetCardsRef.current();
-        // Re-trigger animations after a brief delay
+        setExpandedFaqIndex(null);
+        setExpandedStepNumber(null);
         setTimeout(() => {
           observeElements();
         }, 100);
@@ -535,6 +537,22 @@ export default function Home() {
     setExpandedFaqIndex(null);
     setFaqAnswerTexts({});
   }, [language]);
+
+  // Close FAQ when section leaves viewport
+  useEffect(() => {
+    const el = faqSectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          setExpandedFaqIndex(null);
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   // Typing animation for FAQ answers
   useEffect(() => {
@@ -1809,6 +1827,7 @@ export default function Home() {
       </section>
       {/* FAQ Section */}
       <section
+        ref={faqSectionRef}
         className="bg-black py-16"
       >
         <div className="w-full px-4 sm:px-6 lg:px-8">
