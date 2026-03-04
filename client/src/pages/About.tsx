@@ -631,8 +631,8 @@ export default function About() {
                 // Build SVG path — single connected snake
                 const buildPath = (W: number) => {
                   if (W <= 0) return '';
-                  const xL = W * 0.10;    // left endpoint: 10% from left (U-turn slightly inward)
-                  const xR = W * 0.55;    // right endpoint: 55% from left = near center (U-turn far inward)
+                  const xL = PAD_L;       // left horizontal endpoint (150px from left edge)
+                  const xR = W - PAD_R;   // right horizontal endpoint (170px from right edge)
                   let d = `M ${xL},${LINE_Y}`;
                   for (let r = 0; r < numRows; r++) {
                     const y = LINE_Y + r * ROW_H;
@@ -683,8 +683,8 @@ export default function About() {
                       const displayRow = isReversed ? [...row].reverse() : row;
                       const lineY = LINE_Y + rowIdx * ROW_H;
                       const W = snakeW || 900;
-                      const xL = W * 0.10;
-                      const xR = W * 0.55;
+                      const xL = PAD_L;
+                      const xR = W - PAD_R;
                       const isSingleItem = row.length === 1;
 
                       return displayRow.map((step, ci) => {
