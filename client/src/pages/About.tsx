@@ -316,29 +316,29 @@ export default function About() {
                   const isTitleTyping = typed && typed.title.length > 0 && typed.title.length < fullTitle.length;
                   const isDescTyping = typed && typed.title.length >= fullTitle.length && typed.desc.length < fullDesc.length;
                   return (
-                  <div key={service.id} className="px-6 py-8 md:px-8 md:py-12">
-                    <div className={`${stepH} flex flex-col justify-start`}>
-                      <div className="relative space-y-3">
-                        {index > 0 && (
-                          <div
-                            className="absolute -left-6 md:-left-8 top-0 bottom-0"
-                            style={{
-                              width: '2px',
-                              background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.3) 10%, rgba(255,255,255,0.3) 90%, transparent 100%)'
-                            }}
-                          />
-                        )}
-                        <h4 className="text-xl font-light text-white uppercase tracking-wide">
-                          {displayTitle}
-                          {isTitleTyping && <span className="inline-block w-0.5 h-5 bg-white ml-0.5 align-middle animate-pulse" />}
-                        </h4>
-                        <p className="text-white/70 font-light text-lg leading-relaxed">
-                          {displayDesc}
-                          {isDescTyping && <span className="inline-block w-0.5 h-4 bg-white/70 ml-0.5 align-middle animate-pulse" />}
-                        </p>
+                    <div key={service.id} className="px-6 py-8 md:px-8 md:py-12">
+                      <div className={`${stepH} flex flex-col justify-start`}>
+                        <div className="relative space-y-3">
+                          {index > 0 && (
+                            <div
+                              className="absolute -left-6 md:-left-8 top-0 bottom-0"
+                              style={{
+                                width: '2px',
+                                background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.3) 10%, rgba(255,255,255,0.3) 90%, transparent 100%)'
+                              }}
+                            />
+                          )}
+                          <h4 className="text-xl font-light text-white uppercase tracking-wide">
+                            {displayTitle}
+                            {isTitleTyping && <span className="inline-block w-0.5 h-5 bg-white ml-0.5 align-middle animate-pulse" />}
+                          </h4>
+                          <p className="text-white/70 font-light text-lg leading-relaxed text-justify">
+                            {displayDesc}
+                            {isDescTyping && <span className="inline-block w-0.5 h-4 bg-white/70 ml-0.5 align-middle animate-pulse" />}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
                   );
                 })}
               </div>
