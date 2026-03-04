@@ -677,22 +677,12 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
     const submitData = { ...data };
     
     try {
-      if (qualityBgFile) {
-        const reader = new FileReader();
-        const base64 = await new Promise<string>((resolve) => {
-          reader.onloadend = () => resolve(reader.result as string);
-          reader.readAsDataURL(qualityBgFile);
-        });
-        submitData.qualityBackgroundImage = base64;
+      if (qualityBgFile && qualityBgPreview) {
+        submitData.qualityBackgroundImage = qualityBgPreview;
       }
       
-      if (quality2BgFile) {
-        const reader = new FileReader();
-        const base64 = await new Promise<string>((resolve) => {
-          reader.onloadend = () => resolve(reader.result as string);
-          reader.readAsDataURL(quality2BgFile);
-        });
-        submitData.quality2BackgroundImage = base64;
+      if (quality2BgFile && quality2BgPreview) {
+        submitData.quality2BackgroundImage = quality2BgPreview;
       }
       
       await updateHomepageContentMutation.mutateAsync(submitData);
