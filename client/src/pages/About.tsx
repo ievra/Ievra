@@ -335,13 +335,11 @@ export default function About() {
       {aboutContent?.historyContentEn && aboutContent?.historyContentVi && (
         <section className="py-20 bg-black lg:-ml-16">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mb-12">
-              <h3 className="text-3xl md:text-4xl font-light text-white uppercase tracking-wide">
-                {language === "vi" ? aboutContent.historyTitleVi : aboutContent.historyTitleEn}
-              </h3>
-            </div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-              <div>
+              <div className="space-y-8">
+                <h3 className="text-3xl md:text-4xl font-light text-white uppercase tracking-wide">
+                  {language === "vi" ? aboutContent.historyTitleVi : aboutContent.historyTitleEn}
+                </h3>
                 <p className="text-white/70 font-light text-lg leading-relaxed whitespace-pre-line">
                   {language === "vi" ? aboutContent.historyContentVi : aboutContent.historyContentEn}
                 </p>
