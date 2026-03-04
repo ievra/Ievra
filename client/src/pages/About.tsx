@@ -647,33 +647,6 @@ export default function About() {
 
                 const ANIM_DURATION = 4; // seconds for full line draw
 
-                // Visible path — bleeds to screen edges (x=0 → x=W), used for animated stroke
-                const buildVisiblePath = (W: number) => {
-                  if (W <= 0) return '';
-                  const xL = PAD_L;
-                  const xR = W - PAD_R;
-                  // Start from left screen edge
-                  let d = `M 0,${LINE_Y} L ${xR},${LINE_Y}`;
-                  for (let r = 0; r < numRows; r++) {
-                    const y = LINE_Y + r * ROW_H;
-                    if (r > 0) {
-                      if (r % 2 === 1) d += ` L ${xL},${y}`;
-                      else d += ` L ${xR},${y}`;
-                    }
-                    if (r < numRows - 1) {
-                      const nextY = y + ROW_H;
-                      if (r % 2 === 0) d += ` A ${R},${R} 0 0,1 ${xR},${nextY}`;
-                      else d += ` A ${R},${R} 0 0,0 ${xL},${nextY}`;
-                    }
-                  }
-                  // End at right screen edge
-                  const lastY = LINE_Y + (numRows - 1) * ROW_H;
-                  const lastIsReversed = (numRows - 1) % 2 === 1;
-                  if (lastIsReversed) d += ` L 0,${lastY}`;
-                  else d += ` L ${W},${lastY}`;
-                  return d;
-                };
-
                 // Build SVG path — single connected snake, bleeding off both ends
                 const buildPath = (W: number) => {
                   if (W <= 0) return '';
@@ -716,22 +689,25 @@ export default function About() {
                 const rowLen0 = xR0 - xL0;
                 const fullTurn0 = Math.PI * R;
                 const halfTurn0 = fullTurn0 / 2;
-                // Path now starts at x=0, first segment = 0→xR (length = xR)
-                const seg0 = xR0;
-                // Total path: 0→xR + U-turn + xR→xL + U-turn + xL→W
-                const totalPathLen0 = seg0 + 2 * fullTurn0 + rowLen0 + (W0 - xL0);
-                // Path-length position for each step number along the new path
+                // Path: M(-9999) → xL → xR → U-turn → xL → U-turn → xR → (W+9999)
+                const leftBleed0 = 9999 + xL0;  // distance from -9999 to xL
+                const rightBleed0 = 9999 + PAD_R; // distance from xR to W+9999
+                const totalPathLen0 = leftBleed0 + numRows * rowLen0 + (numRows - 1) * fullTurn0 + rightBleed0;
+                // Path-length position for each step number (path starts at -9999)
                 const stepPathPos: Record<string, number> = {
-                  '01': xL0,                                              // xL from x=0
-                  '02': xL0 + rowLen0 / 2,                               // xMid in row1
-                  '03': seg0 + halfTurn0,                                 // right U-turn apex
-                  '04': seg0 + fullTurn0 + rowLen0 / 2,                   // xMid in row2 (from xR going left)
-                  '05': seg0 + fullTurn0 + rowLen0 + halfTurn0,           // left U-turn apex
-                  '06': seg0 + fullTurn0 + rowLen0 + fullTurn0 + rowLen0 / 2, // xMid in row3
-                  '07': seg0 + fullTurn0 + rowLen0 + fullTurn0 + rowLen0, // xR in row3
+                  '01': leftBleed0,                                              // at xL (row1 start)
+                  '02': leftBleed0 + rowLen0 / 2,                               // xMid in row1
+                  '03': leftBleed0 + rowLen0 + halfTurn0,                       // right U-turn apex
+                  '04': leftBleed0 + rowLen0 + fullTurn0 + rowLen0 / 2,         // xMid in row2 (from xR)
+                  '05': leftBleed0 + rowLen0 + fullTurn0 + rowLen0 + halfTurn0, // left U-turn apex
+                  '06': leftBleed0 + 2 * rowLen0 + 2 * fullTurn0 + rowLen0 / 2,// xMid in row3
+                  '07': leftBleed0 + 3 * rowLen0 + 2 * fullTurn0,              // xR in row3
                 };
                 const getItemDelay = (stepNum: string) =>
                   ((stepPathPos[stepNum] ?? 0) / totalPathLen0) * ANIM_DURATION;
+
+                // Animated path = same full-bleed path (SVG overflow:visible renders beyond container)
+                const buildVisiblePath = buildPath;
 
                 return (
                   <div className="relative" style={{ height: `${svgH}px` }}>
