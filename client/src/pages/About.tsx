@@ -149,7 +149,7 @@ export default function About() {
       )}
       {/* Architecture Showcase + Stats Section */}
       {((aboutContent?.showcaseBannerImageData || aboutContent?.showcaseBannerImage) || showcaseServices.length > 0 || aboutContent) && (
-        <section className="relative bg-black overflow-hidden lg:-ml-16 h-[90vh] lg:h-[200vh] min-h-[700px]">
+        <section className="relative bg-black overflow-hidden lg:-ml-16 h-[90vh] lg:h-screen min-h-[700px]">
           {(aboutContent?.showcaseBannerImageData || aboutContent?.showcaseBannerImage) && (
             <div
               className="absolute inset-0 bg-cover bg-center"
