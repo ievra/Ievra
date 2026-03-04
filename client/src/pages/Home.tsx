@@ -133,7 +133,7 @@ function TypewriterText({
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
     let i = 0;
     setDisplayed('');
-    const charSpeed = Math.max(20, Math.round(3200 / text.length));
+    const charSpeed = 30;
     let lastTime = 0;
     const tick = (time: number) => {
       if (time - lastTime >= charSpeed) {
