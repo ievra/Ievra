@@ -375,8 +375,8 @@ export default function AboutAdminTab({
                           <Button
                             type="button"
                             size="icon"
-                            variant="destructive"
-                            className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                            variant="outline"
+                            className="absolute top-1 right-1 h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity bg-black text-white border-black hover:bg-black/80 hover:text-white"
                             onClick={() => {
                               const currentImages = aboutContentForm.getValues("heroImages") || [];
                               const newImages = currentImages.filter((_: string, i: number) => i !== index);
@@ -1147,8 +1147,9 @@ export default function AboutAdminTab({
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button
-                              variant="destructive"
+                              variant="outline"
                               size="sm"
+                              className="bg-black text-white border-black hover:bg-black/80 hover:text-white"
                               data-testid={`button-delete-principle-${principle.id}`}
                             >
                               <Trash2 className="h-4 w-4" />
@@ -1332,8 +1333,9 @@ export default function AboutAdminTab({
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button
-                              variant="destructive"
+                              variant="outline"
                               size="sm"
+                              className="bg-black text-white border-black hover:bg-black/80 hover:text-white"
                               data-testid={`button-delete-showcase-${service.id}`}
                             >
                               <Trash2 className="h-4 w-4" />
@@ -1517,8 +1519,9 @@ export default function AboutAdminTab({
                         <AlertDialog>
                           <AlertDialogTrigger asChild>
                             <Button
-                              variant="destructive"
+                              variant="outline"
                               size="sm"
+                              className="bg-black text-white border-black hover:bg-black/80 hover:text-white"
                               data-testid={`button-delete-step-${step.id}`}
                             >
                               <Trash2 className="h-4 w-4" />
@@ -1871,7 +1874,7 @@ export default function AboutAdminTab({
                       </Button>
                       <AlertDialog>
                         <AlertDialogTrigger asChild>
-                          <Button variant="outline" size="sm" data-testid={`button-delete-team-member-${member.id}`}>
+                          <Button variant="outline" size="sm" className="bg-black text-white border-black hover:bg-black/80 hover:text-white" data-testid={`button-delete-team-member-${member.id}`}>
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </AlertDialogTrigger>
