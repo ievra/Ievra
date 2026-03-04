@@ -154,7 +154,7 @@ function TypewriterText({
       <span className="invisible select-none pointer-events-none block" aria-hidden="true">
         {text || '\u00A0'}
       </span>
-      <span className="absolute inset-0 block text-justify">
+      <span className="absolute inset-0 block text-right">
         {displayed || '\u00A0'}
       </span>
     </Tag>
