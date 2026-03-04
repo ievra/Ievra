@@ -44,6 +44,16 @@ export default function About() {
   const [showcaseAnimDone, setShowcaseAnimDone] = useState(false);
   const [typedTexts, setTypedTexts] = useState<{ title: string; desc: string }[]>([]);
 
+  const snakeRef = useRef<HTMLDivElement>(null);
+  const [snakeW, setSnakeW] = useState(0);
+  useEffect(() => {
+    if (!snakeRef.current) return;
+    const ro = new ResizeObserver(() => setSnakeW(snakeRef.current?.offsetWidth ?? 0));
+    ro.observe(snakeRef.current);
+    setSnakeW(snakeRef.current.offsetWidth);
+    return () => ro.disconnect();
+  }, []);
+
   useEffect(() => {
     if (!showcaseSectionRef.current || showcaseServices.length === 0) return;
     const observer = new IntersectionObserver(
@@ -595,89 +605,128 @@ export default function About() {
               </h3>
             </div>
 
-            {/* Desktop snake layout */}
-            <div className="hidden md:block">
+            {/* Desktop snake layout — SVG single path */}
+            <div className="hidden md:block" ref={snakeRef}>
               {(() => {
                 const PER_ROW = 3;
-                const GAP = 72;
-                const LINE_CENTER = 18;
+                const R = 80;           // U-turn radius (px) — ROW_H must = 2*R for perfect semicircle
+                const ROW_H = 160;      // = 2*R → perfect semicircle U-turns
+                const LINE_Y = 28;      // y of line within each row block
+
                 const rows: typeof processSteps[] = [];
                 for (let i = 0; i < processSteps.length; i += PER_ROW) {
                   rows.push(processSteps.slice(i, i + PER_ROW));
                 }
+                const numRows = rows.length;
+                const svgH = LINE_Y + (numRows - 1) * ROW_H + LINE_Y + 80; // extra bottom for text
+
+                // Build SVG path — single connected snake
+                const buildPath = (W: number) => {
+                  if (W <= 0) return '';
+                  const xL = R;       // left endpoint of each horizontal line
+                  const xR = W - R;   // right endpoint of each horizontal line
+                  let d = `M ${xL},${LINE_Y}`;
+                  for (let r = 0; r < numRows; r++) {
+                    const y = LINE_Y + r * ROW_H;
+                    if (r === 0) {
+                      d += ` L ${xR},${y}`;
+                    } else if (r % 2 === 1) {
+                      // came from right U-turn, now going left
+                      d += ` L ${xL},${y}`;
+                    } else {
+                      // came from left U-turn, now going right
+                      d += ` L ${xR},${y}`;
+                    }
+                    if (r < numRows - 1) {
+                      const nextY = y + ROW_H;
+                      if (r % 2 === 0) {
+                        // right U-turn: from (xR, y) clockwise to (xR, nextY)
+                        d += ` A ${R},${R} 0 0,1 ${xR},${nextY}`;
+                      } else {
+                        // left U-turn: from (xL, y) counter-clockwise to (xL, nextY)
+                        d += ` A ${R},${R} 0 0,0 ${xL},${nextY}`;
+                      }
+                    }
+                  }
+                  return d;
+                };
+
                 return (
-                  <div className="relative">
+                  <div className="relative" style={{ height: `${svgH}px` }}>
+                    {/* SVG snake path */}
+                    {snakeW > 0 && (
+                      <svg
+                        className="absolute top-0 left-0 overflow-visible pointer-events-none"
+                        width={snakeW}
+                        height={svgH}
+                      >
+                        <path
+                          d={buildPath(snakeW)}
+                          fill="none"
+                          stroke="rgba(255,255,255,0.28)"
+                          strokeWidth="1"
+                        />
+                      </svg>
+                    )}
+
+                    {/* Items — absolutely positioned over SVG */}
                     {rows.map((row, rowIdx) => {
                       const isReversed = rowIdx % 2 === 1;
-                      const isLastRow = rowIdx === rows.length - 1;
-                      const isSingleLastItem = isLastRow && row.length === 1;
-                      // For a single item on the last row: place it at the far right (path ends right)
+                      const isLastRow = rowIdx === numRows - 1;
+                      const isSingleItem = row.length === 1;
                       const displayRow = isReversed ? [...row].reverse() : row;
+                      const lineY = LINE_Y + rowIdx * ROW_H;
+                      // Columns are evenly distributed between xL and xR
+                      // For PER_ROW=3: positions at 0%, 50%, 100% of (xR - xL)
                       return (
-                        <div key={rowIdx} className="relative" style={{ paddingBottom: isLastRow ? 0 : `${GAP}px` }}>
-                          {/* Horizontal solid line — thin 1px */}
-                          <div
-                            className="absolute bg-white/30"
-                            style={{ top: `${LINE_CENTER - 1}px`, left: 0, right: 0, height: '1px' }}
-                          />
-
-                          {/* Step items */}
-                          <div
-                            className="flex items-start relative z-10"
-                            style={{ justifyContent: isSingleLastItem ? 'flex-end' : 'space-between' }}
-                          >
-                            {displayRow.map((step) => {
-                              const title = language === "vi" ? step.titleVi : step.titleEn;
-                              const desc = language === "vi" ? step.descriptionVi : step.descriptionEn;
-                              return (
+                        <div
+                          key={rowIdx}
+                          className="absolute"
+                          style={{
+                            top: 0,
+                            left: `${R}px`,
+                            right: `${R}px`,
+                            display: 'flex',
+                            justifyContent: isSingleItem
+                              ? (isLastRow && rowIdx % 2 === 0 ? 'flex-end' : 'flex-start')
+                              : 'space-between',
+                          }}
+                        >
+                          {displayRow.map((step) => {
+                            const title = language === "vi" ? step.titleVi : step.titleEn;
+                            const desc = language === "vi" ? step.descriptionVi : step.descriptionEn;
+                            return (
+                              <div
+                                key={step.id}
+                                className="flex flex-col items-center"
+                                style={{ width: isSingleItem ? 'auto' : `${100 / PER_ROW}%` }}
+                              >
+                                {/* Diamond on the line */}
                                 <div
-                                  key={step.id}
-                                  className="flex flex-col items-center"
-                                  style={{ width: isSingleLastItem ? 'auto' : `${100 / PER_ROW}%` }}
-                                >
-                                  {/* Diamond marker */}
-                                  <div
-                                    className="bg-white/80 flex-shrink-0"
-                                    style={{
-                                      width: '11px',
-                                      height: '11px',
-                                      transform: 'rotate(45deg)',
-                                      marginTop: `${LINE_CENTER - 6}px`,
-                                    }}
-                                  />
-                                  <div className="mt-5 text-center px-2" style={{ maxWidth: '160px' }}>
-                                    <div className="text-white/35 text-[10px] font-light tracking-wider mb-1">{step.stepNumber}</div>
-                                    <h4 className="text-sm font-light text-white uppercase tracking-wide leading-tight">
-                                      {title}
-                                    </h4>
-                                    {desc && (
-                                      <p className="text-white/50 text-xs font-light leading-relaxed mt-1">
-                                        {desc}
-                                      </p>
-                                    )}
+                                  className="bg-white/85 flex-shrink-0"
+                                  style={{
+                                    width: '10px',
+                                    height: '10px',
+                                    transform: 'rotate(45deg)',
+                                    marginTop: `${lineY - 5}px`,
+                                  }}
+                                />
+                                <div className="mt-4 text-center px-1" style={{ maxWidth: '155px' }}>
+                                  <div className="text-white/35 text-[10px] font-light tracking-widest mb-1">
+                                    {step.stepNumber}
                                   </div>
+                                  <h4 className="text-sm font-light text-white uppercase tracking-wide leading-tight">
+                                    {title}
+                                  </h4>
+                                  {desc && (
+                                    <p className="text-white/50 text-xs font-light leading-relaxed mt-1">
+                                      {desc}
+                                    </p>
+                                  )}
                                 </div>
-                              );
-                            })}
-                          </div>
-
-                          {/* Rounded U-turn connector — thin 1px */}
-                          {!isLastRow && (
-                            <div
-                              style={{
-                                position: 'absolute',
-                                [isReversed ? 'left' : 'right']: '0px',
-                                top: `${LINE_CENTER - 1}px`,
-                                width: '44px',
-                                bottom: `-${LINE_CENTER}px`,
-                                borderTop: '1px solid rgba(255,255,255,0.3)',
-                                borderBottom: '1px solid rgba(255,255,255,0.3)',
-                                [isReversed ? 'borderLeft' : 'borderRight']: '1px solid rgba(255,255,255,0.3)',
-                                [isReversed ? 'borderTopLeftRadius' : 'borderTopRightRadius']: '100px',
-                                [isReversed ? 'borderBottomLeftRadius' : 'borderBottomRightRadius']: '100px',
-                              }}
-                            />
-                          )}
+                              </div>
+                            );
+                          })}
                         </div>
                       );
                     })}
