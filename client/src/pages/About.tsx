@@ -342,7 +342,7 @@ export default function About() {
                     </div>
                   )}
                   <div className="space-y-6">
-                    <h3 className="slide-from-right text-2xl font-light text-white uppercase tracking-wide">
+                    <h3 className="typewriter-heading text-2xl font-light text-white uppercase tracking-wide">
                       {language === "vi" ? aboutContent.visionTitleVi : aboutContent.visionTitleEn}
                     </h3>
                     <p className="slide-from-right text-lg text-white/70 font-light leading-relaxed whitespace-pre-line text-justify">
