@@ -46,6 +46,8 @@ export default function About() {
 
   const snakeRef = useRef<HTMLDivElement>(null);
   const [snakeW, setSnakeW] = useState(0);
+  const [pathAnimated, setPathAnimated] = useState(false);
+
   useEffect(() => {
     const el = snakeRef.current;
     if (!el) return;
@@ -59,6 +61,17 @@ export default function About() {
     ro.observe(el);
     return () => { cancelAnimationFrame(rafId); ro.disconnect(); };
   }, []);
+
+  useEffect(() => {
+    const el = snakeRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setPathAnimated(true); observer.disconnect(); } },
+      { threshold: 0.2 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [processSteps.length]);
 
   useEffect(() => {
     if (!showcaseSectionRef.current || showcaseServices.length === 0) return;
@@ -632,6 +645,28 @@ export default function About() {
                 const numRows = rows.length;
                 const svgH = LINE_Y + (numRows - 1) * ROW_H + LINE_Y + 80; // extra bottom for text
 
+                const ANIM_DURATION = 4; // seconds for full line draw
+
+                // Visible path (no bleed) — used for the animated drawing stroke
+                const buildVisiblePath = (W: number) => {
+                  if (W <= 0) return '';
+                  const xL = PAD_L;
+                  const xR = W - PAD_R;
+                  let d = `M ${xL},${LINE_Y}`;
+                  for (let r = 0; r < numRows; r++) {
+                    const y = LINE_Y + r * ROW_H;
+                    if (r === 0) d += ` L ${xR},${y}`;
+                    else if (r % 2 === 1) d += ` L ${xL},${y}`;
+                    else d += ` L ${xR},${y}`;
+                    if (r < numRows - 1) {
+                      const nextY = y + ROW_H;
+                      if (r % 2 === 0) d += ` A ${R},${R} 0 0,1 ${xR},${nextY}`;
+                      else d += ` A ${R},${R} 0 0,0 ${xL},${nextY}`;
+                    }
+                  }
+                  return d;
+                };
+
                 // Build SVG path — single connected snake, bleeding off both ends
                 const buildPath = (W: number) => {
                   if (W <= 0) return '';
@@ -668,21 +703,58 @@ export default function About() {
                   return d;
                 };
 
+                const W0 = snakeW || 900;
+                const xL0 = PAD_L;
+                const xR0 = W0 - PAD_R;
+                const rowLen0 = xR0 - xL0;
+                const fullTurn0 = Math.PI * R;
+                const halfTurn0 = fullTurn0 / 2;
+                const totalPathLen0 = numRows * rowLen0 + (numRows - 1) * fullTurn0;
+                // Path-length position for each step number along the visible path
+                const stepPathPos: Record<string, number> = {
+                  '01': 0,
+                  '02': rowLen0 / 2,
+                  '03': rowLen0 + halfTurn0,
+                  '04': rowLen0 + fullTurn0 + rowLen0 / 2,
+                  '05': rowLen0 + fullTurn0 + rowLen0 + halfTurn0,
+                  '06': rowLen0 + fullTurn0 + rowLen0 + fullTurn0 + rowLen0 / 2,
+                  '07': totalPathLen0,
+                };
+                const getItemDelay = (stepNum: string) =>
+                  ((stepPathPos[stepNum] ?? 0) / totalPathLen0) * ANIM_DURATION;
+
                 return (
                   <div className="relative" style={{ height: `${svgH}px` }}>
-                    {/* SVG snake path — always render, width measured or fallback */}
+                    {/* SVG snake path */}
                     <svg
                       className="absolute top-0 left-0 pointer-events-none"
                       style={{ width: '100%', height: svgH, overflow: 'visible' }}
-                      viewBox={`0 0 ${snakeW || 900} ${svgH}`}
+                      viewBox={`0 0 ${W0} ${svgH}`}
                       preserveAspectRatio="none"
                     >
+                      {/* Faint static background (with bleed) */}
                       <path
-                        d={buildPath(snakeW || 900)}
+                        d={buildPath(W0)}
                         fill="none"
-                        stroke="rgba(255,255,255,0.28)"
+                        stroke="rgba(255,255,255,0.12)"
                         strokeWidth="1"
                         vectorEffect="non-scaling-stroke"
+                      />
+                      {/* Animated drawing line (visible path, no bleed) */}
+                      <path
+                        d={buildVisiblePath(W0)}
+                        fill="none"
+                        stroke="rgba(255,255,255,0.75)"
+                        strokeWidth="1.5"
+                        pathLength="1"
+                        vectorEffect="non-scaling-stroke"
+                        style={{
+                          strokeDasharray: 1,
+                          strokeDashoffset: 1,
+                          animation: pathAnimated
+                            ? `drawSnakePath ${ANIM_DURATION}s ease forwards`
+                            : 'none',
+                        }}
                       />
                     </svg>
                     {/* Items — each absolutely positioned to match SVG path coordinates */}
@@ -698,6 +770,9 @@ export default function About() {
                       return displayRow.map((step, ci) => {
                         const title = language === "vi" ? step.titleVi : step.titleEn;
                         const desc = language === "vi" ? step.descriptionVi : step.descriptionEn;
+                        const itemDelay = getItemDelay(step.stepNumber);
+                        const titleChars = (title || '').split('');
+                        const descDelay = itemDelay + 0.15 + titleChars.length * 0.055;
 
                         // x position: evenly spaced from xL to xR based on actual row item count
                         const xMid = (xL + xR) / 2;
@@ -746,16 +821,40 @@ export default function About() {
                                 height: '50px',
                                 fontSize: '20px',
                                 marginTop: `${markerY - 25}px`,
+                                opacity: 0,
+                                animation: pathAnimated
+                                  ? `snakeItemFadeIn 0.5s ease ${itemDelay}s forwards`
+                                  : 'none',
                               }}
                             >
                               {step.stepNumber}
                             </div>
                             <div className="mt-3 text-center px-1">
                               <h4 className="font-light text-white uppercase tracking-wide text-[16px]">
-                                {title}
+                                {titleChars.map((char, charIdx) => (
+                                  <span
+                                    key={charIdx}
+                                    style={{
+                                      opacity: 0,
+                                      animation: pathAnimated
+                                        ? `revealChar 0.01s ${itemDelay + 0.12 + charIdx * 0.055}s forwards`
+                                        : 'none',
+                                    }}
+                                  >
+                                    {char === ' ' ? '\u00a0' : char}
+                                  </span>
+                                ))}
                               </h4>
                               {desc && (
-                                <p className="text-white/50 text-xs font-light leading-relaxed mt-1">
+                                <p
+                                  className="text-white/50 text-xs font-light leading-relaxed mt-1"
+                                  style={{
+                                    opacity: 0,
+                                    animation: pathAnimated
+                                      ? `snakeItemFadeIn 0.6s ease ${descDelay}s forwards`
+                                      : 'none',
+                                  }}
+                                >
                                   {desc}
                                 </p>
                               )}
