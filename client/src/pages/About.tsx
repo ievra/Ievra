@@ -172,22 +172,24 @@ export default function About() {
                   const isLast = index === showcaseServices.length - 1;
                   return (
                   <div key={service.id} className="px-6 py-8 md:px-8 md:py-12">
-                    <div className={`relative space-y-3 ${stepH} flex flex-col justify-start`}>
-                    {index > 0 && (
-                      <div
-                        className="absolute -left-6 md:-left-8 top-0 bottom-0"
-                        style={{
-                          width: '2px',
-                          background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.3) 12%, rgba(255,255,255,0.3) 88%, transparent 100%)'
-                        }}
-                      />
-                    )}
-                      <h4 className="text-xl font-light text-white uppercase tracking-wide">
-                        {language === "vi" ? service.titleVi : service.titleEn}
-                      </h4>
-                      <p className="text-white/70 font-light text-lg leading-relaxed">
-                        {language === "vi" ? service.descriptionVi : service.descriptionEn}
-                      </p>
+                    <div className={`${stepH} flex flex-col justify-start`}>
+                      <div className="relative space-y-3">
+                        {index > 0 && (
+                          <div
+                            className="absolute -left-6 md:-left-8 top-0 bottom-0"
+                            style={{
+                              width: '2px',
+                              background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.3) 10%, rgba(255,255,255,0.3) 90%, transparent 100%)'
+                            }}
+                          />
+                        )}
+                        <h4 className="text-xl font-light text-white uppercase tracking-wide">
+                          {language === "vi" ? service.titleVi : service.titleEn}
+                        </h4>
+                        <p className="text-white/70 font-light text-lg leading-relaxed">
+                          {language === "vi" ? service.descriptionVi : service.descriptionEn}
+                        </p>
+                      </div>
                     </div>
                   </div>
                   );
