@@ -473,7 +473,7 @@ export default function About() {
                 const title = language === "vi" ? value.titleVi : value.titleEn;
                 const desc = language === "vi" ? value.descriptionVi : value.descriptionEn;
                 return (
-                  <div key={value.id} className="relative lg:grid lg:grid-cols-2 mb-14 lg:mb-20">
+                  <div key={value.id} className="relative lg:grid lg:grid-cols-2 mb-20 lg:mb-32">
                     {/* Desktop LEFT column */}
                     <div className="hidden lg:block lg:pr-20 lg:text-right">
                       {isLeft && (
