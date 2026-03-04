@@ -435,47 +435,32 @@ export default function Home() {
           : "Requirements / Project Description",
     };
 
-    const delays = {
-      name: 0,
-      email: 200,
-      phone: 400,
-      address: 600,
-      projectType: 800,
-      requirements: 1000,
-    };
+    const CHAR_SPEED = 40;
+    const fields: (keyof typeof texts)[] = ["name", "email", "phone", "address", "projectType", "requirements"];
 
     const timeouts: NodeJS.Timeout[] = [];
     const intervals: NodeJS.Timeout[] = [];
 
-    const typeText = (
-      field: keyof typeof texts,
-      text: string,
-      delay: number,
-    ) => {
+    let startAt = 0;
+    fields.forEach((field) => {
+      const text = texts[field];
+      const delay = startAt;
+      startAt += text.length * CHAR_SPEED;
+
       const timeout = setTimeout(() => {
         let index = 0;
         const interval = setInterval(() => {
           if (index <= text.length) {
-            setPlaceholders((prev) => ({
-              ...prev,
-              [field]: text.slice(0, index),
-            }));
+            setPlaceholders((prev) => ({ ...prev, [field]: text.slice(0, index) }));
             index++;
           } else {
             clearInterval(interval);
           }
-        }, 50);
+        }, CHAR_SPEED);
         intervals.push(interval);
       }, delay);
       timeouts.push(timeout);
-    };
-
-    typeText("name", texts.name, delays.name);
-    typeText("email", texts.email, delays.email);
-    typeText("phone", texts.phone, delays.phone);
-    typeText("address", texts.address, delays.address);
-    typeText("projectType", texts.projectType, delays.projectType);
-    typeText("requirements", texts.requirements, delays.requirements);
+    });
 
     return () => {
       timeouts.forEach((timeout) => clearTimeout(timeout));
