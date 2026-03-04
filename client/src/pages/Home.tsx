@@ -295,6 +295,7 @@ export default function Home() {
   const resetCardsRef = useRef<() => void>(() => {});
   resetCardsRef.current = () => setCardResetKey(k => k + 1);
   const faqSectionRef = useRef<HTMLElement>(null);
+  const processSectionRef = useRef<HTMLElement>(null);
 
   const measureContainers = useCallback(() => {
     if (projectsScrollRef.current) setProjectsContainerWidth(projectsScrollRef.current.offsetWidth);
@@ -546,6 +547,22 @@ export default function Home() {
       ([entry]) => {
         if (!entry.isIntersecting) {
           setExpandedFaqIndex(null);
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  // Close journey step when section leaves viewport
+  useEffect(() => {
+    const el = processSectionRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          setExpandedStepNumber(null);
         }
       },
       { threshold: 0 }
@@ -1386,6 +1403,7 @@ export default function Home() {
       </section>
       {/* Process Section */}
       <section
+        ref={processSectionRef}
         className="min-h-screen bg-black py-16"
       >
         <div className="w-full px-4 sm:px-6 lg:px-8">
