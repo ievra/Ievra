@@ -51,19 +51,21 @@ export default function About() {
   const [typedTexts, setTypedTexts] = useState<{ title: string; desc: string }[]>([]);
 
   useEffect(() => {
-    if (!showcaseSectionRef.current || showcaseAnimStarted || showcaseServices.length === 0) return;
+    if (!showcaseSectionRef.current || showcaseServices.length === 0) return;
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
           setShowcaseAnimStarted(true);
-          observer.disconnect();
+        } else {
+          setShowcaseAnimStarted(false);
+          setTypedTexts([]);
         }
       },
       { threshold: 0.2 }
     );
     observer.observe(showcaseSectionRef.current);
     return () => observer.disconnect();
-  }, [showcaseSectionRef.current, showcaseAnimStarted, showcaseServices.length]);
+  }, [showcaseSectionRef.current, showcaseServices.length]);
 
   useEffect(() => {
     if (!showcaseAnimStarted || showcaseServices.length === 0) return;
