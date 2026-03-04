@@ -277,7 +277,7 @@ export default function About() {
                     <h3 className="text-2xl font-light text-white uppercase tracking-wide">
                       {language === "vi" ? aboutContent.visionTitleVi : aboutContent.visionTitleEn}
                     </h3>
-                    <p className="text-lg text-white/70 font-light leading-relaxed whitespace-pre-line">
+                    <p className="text-lg text-white/70 font-light leading-relaxed whitespace-pre-line text-justify">
                       {language === "vi" ? aboutContent.visionContentVi : aboutContent.visionContentEn}
                     </p>
                   </div>
