@@ -618,7 +618,7 @@ export default function About() {
                 const R = 80;           // U-turn radius (px) — ROW_H must = 2*R for perfect semicircle
                 const ROW_H = 160;      // = 2*R → perfect semicircle U-turns
                 const LINE_Y = 28;      // y of line within each row block
-                const PAD = 48;         // inset: pulls U-turns away from container edges
+                const PAD = 130;        // inset: pulls U-turns inward toward center
 
                 const rows: typeof processSteps[] = [];
                 for (let i = 0; i < processSteps.length; i += PER_ROW) {
