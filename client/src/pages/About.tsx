@@ -272,7 +272,7 @@ export default function About() {
                 <h3 className="typewriter-heading md:text-4xl font-light text-white uppercase tracking-wide text-[24px]">
                   {language === "vi" ? aboutContent.historyTitleVi : aboutContent.historyTitleEn}
                 </h3>
-                <p className="text-white/70 font-light text-lg leading-relaxed whitespace-pre-line text-justify">
+                <p className="slide-from-left text-white/70 font-light text-lg leading-relaxed whitespace-pre-line text-justify">
                   {language === "vi" ? aboutContent.historyContentVi : aboutContent.historyContentEn}
                 </p>
               </div>
@@ -318,7 +318,7 @@ export default function About() {
                     <h3 className="typewriter-heading text-2xl font-light text-white uppercase tracking-wide">
                       {language === "vi" ? aboutContent.missionTitleVi : aboutContent.missionTitleEn}
                     </h3>
-                    <p className="text-lg text-white/70 font-light leading-relaxed whitespace-pre-line text-justify">
+                    <p className="slide-from-left text-lg text-white/70 font-light leading-relaxed whitespace-pre-line text-justify">
                       {language === "vi" ? aboutContent.missionContentVi : aboutContent.missionContentEn}
                     </p>
                   </div>
@@ -342,10 +342,10 @@ export default function About() {
                     </div>
                   )}
                   <div className="space-y-6">
-                    <h3 className="typewriter-heading text-2xl font-light text-white uppercase tracking-wide">
+                    <h3 className="slide-from-right text-2xl font-light text-white uppercase tracking-wide">
                       {language === "vi" ? aboutContent.visionTitleVi : aboutContent.visionTitleEn}
                     </h3>
-                    <p className="text-lg text-white/70 font-light leading-relaxed whitespace-pre-line text-justify">
+                    <p className="slide-from-right text-lg text-white/70 font-light leading-relaxed whitespace-pre-line text-justify">
                       {language === "vi" ? aboutContent.visionContentVi : aboutContent.visionContentEn}
                     </p>
                   </div>
