@@ -175,7 +175,7 @@ export default function About() {
               <div className="relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-end">
                 {showcaseServices.map((service) => (
                   <div key={service.id} className="px-6 py-8 md:px-8 md:py-12">
-                    <div className="space-y-3 h-[180px] flex flex-col">
+                    <div className="space-y-3 h-[180px] flex flex-col justify-end">
                       <h4 className="text-xl font-light text-white uppercase tracking-wide">
                         {language === "vi" ? service.titleVi : service.titleEn}
                       </h4>
