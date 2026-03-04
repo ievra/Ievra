@@ -621,9 +621,13 @@ export default function About() {
                 const PAD_L = 150;      // left endpoint distance from left edge (U-turn peak at PAD_L - R)
                 const PAD_R = 170;      // right endpoint distance from right edge (U-turn peak at PAD_R - R)
 
+                const rowSizes = [3, 2, 2]; // row 1: 3 items, row 2: 2 items, row 3: 2 items
                 const rows: typeof processSteps[] = [];
-                for (let i = 0; i < processSteps.length; i += PER_ROW) {
-                  rows.push(processSteps.slice(i, i + PER_ROW));
+                let sliceIdx = 0;
+                for (const size of rowSizes) {
+                  const chunk = processSteps.slice(sliceIdx, sliceIdx + size);
+                  if (chunk.length > 0) rows.push(chunk);
+                  sliceIdx += size;
                 }
                 const numRows = rows.length;
                 const svgH = LINE_Y + (numRows - 1) * ROW_H + LINE_Y + 80; // extra bottom for text
@@ -696,14 +700,12 @@ export default function About() {
                         const title = language === "vi" ? step.titleVi : step.titleEn;
                         const desc = language === "vi" ? step.descriptionVi : step.descriptionEn;
 
-                        // x position: evenly spaced from xL to xR across PER_ROW columns
+                        // x position: evenly spaced from xL to xR based on actual row item count
                         let xPos: number;
                         if (isSingleItem) {
-                          // Last single item: end of path = xR (L→R row ends at right)
                           xPos = isReversed ? xL : xR;
                         } else {
-                          const totalCols = PER_ROW;
-                          xPos = xL + ci * (xR - xL) / (totalCols - 1);
+                          xPos = xL + ci * (xR - xL) / (row.length - 1);
                         }
 
                         return (
