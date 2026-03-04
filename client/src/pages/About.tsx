@@ -598,9 +598,9 @@ export default function About() {
             {/* Desktop snake layout */}
             <div className="hidden md:block">
               {(() => {
-                const PER_ROW = 4;
-                const GAP = 64;
-                const LINE_CENTER = 14;
+                const PER_ROW = 3;
+                const GAP = 72;
+                const LINE_CENTER = 18;
                 const rows: typeof processSteps[] = [];
                 for (let i = 0; i < processSteps.length; i += PER_ROW) {
                   rows.push(processSteps.slice(i, i + PER_ROW));
@@ -609,8 +609,10 @@ export default function About() {
                   <div className="relative">
                     {rows.map((row, rowIdx) => {
                       const isReversed = rowIdx % 2 === 1;
-                      const displayRow = isReversed ? [...row].reverse() : row;
                       const isLastRow = rowIdx === rows.length - 1;
+                      const isSingleLastItem = isLastRow && row.length === 1;
+                      // For a single item on the last row: place it at the far right (path ends right)
+                      const displayRow = isReversed ? [...row].reverse() : row;
                       return (
                         <div key={rowIdx} className="relative" style={{ paddingBottom: isLastRow ? 0 : `${GAP}px` }}>
                           {/* Horizontal solid line */}
@@ -620,7 +622,10 @@ export default function About() {
                           />
 
                           {/* Step items */}
-                          <div className="flex justify-between items-start relative z-10">
+                          <div
+                            className="flex items-start relative z-10"
+                            style={{ justifyContent: isSingleLastItem ? 'flex-end' : 'space-between' }}
+                          >
                             {displayRow.map((step) => {
                               const title = language === "vi" ? step.titleVi : step.titleEn;
                               const desc = language === "vi" ? step.descriptionVi : step.descriptionEn;
@@ -628,20 +633,21 @@ export default function About() {
                                 <div
                                   key={step.id}
                                   className="flex flex-col items-center"
-                                  style={{ width: `${100 / PER_ROW}%` }}
+                                  style={{ width: isSingleLastItem ? 'auto' : `${100 / PER_ROW}%` }}
                                 >
-                                  {/* Diamond marker */}
+                                  {/* Circle marker with step number */}
                                   <div
-                                    className="bg-white flex-shrink-0"
+                                    className="rounded-full bg-black border-2 border-white/60 text-white flex items-center justify-center font-light flex-shrink-0"
                                     style={{
-                                      width: '14px',
-                                      height: '14px',
-                                      transform: 'rotate(45deg)',
-                                      marginTop: `${LINE_CENTER - 7}px`,
+                                      width: '36px',
+                                      height: '36px',
+                                      fontSize: '11px',
+                                      marginTop: `${LINE_CENTER - 18}px`,
                                     }}
-                                  />
-                                  <div className="mt-4 text-center px-2">
-                                    <div className="text-white/30 text-xs font-light mb-1">{step.stepNumber}</div>
+                                  >
+                                    {step.stepNumber}
+                                  </div>
+                                  <div className="mt-4 text-center px-2" style={{ maxWidth: '160px' }}>
                                     <h4 className="text-sm font-light text-white uppercase tracking-wide leading-tight">
                                       {title}
                                     </h4>
@@ -663,7 +669,7 @@ export default function About() {
                                 position: 'absolute',
                                 [isReversed ? 'left' : 'right']: '0px',
                                 top: `${LINE_CENTER - 1}px`,
-                                width: '32px',
+                                width: '40px',
                                 bottom: `-${LINE_CENTER + 1}px`,
                                 borderTop: '2px solid rgba(255,255,255,0.4)',
                                 borderBottom: '2px solid rgba(255,255,255,0.4)',
