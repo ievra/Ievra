@@ -171,18 +171,17 @@ export default function About() {
                   const heightPx = [480, 320, 180, 60][index % 4];
                   const isLast = index === showcaseServices.length - 1;
                   return (
-                  <div key={service.id} className="relative px-6 py-8 md:px-8 md:py-12">
+                  <div key={service.id} className="px-6 py-8 md:px-8 md:py-12">
+                    <div className={`relative space-y-3 ${stepH} flex flex-col justify-start`}>
                     {!isLast && (
                       <div
-                        className="absolute right-0 top-12 md:top-16"
+                        className="absolute -right-6 md:-right-8 top-0 bottom-0"
                         style={{
                           width: '2px',
-                          height: Math.max(0, heightPx - 32),
-                          background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.3) 15%, rgba(255,255,255,0.3) 85%, transparent 100%)'
+                          background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.3) 12%, rgba(255,255,255,0.3) 88%, transparent 100%)'
                         }}
                       />
                     )}
-                    <div className={`space-y-3 ${stepH} flex flex-col justify-start`}>
                       <h4 className="text-xl font-light text-white uppercase tracking-wide">
                         {language === "vi" ? service.titleVi : service.titleEn}
                       </h4>
