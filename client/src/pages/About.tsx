@@ -409,7 +409,7 @@ export default function About() {
                     {/* Desktop LEFT column */}
                     <div className="hidden lg:block lg:pr-20 lg:text-right">
                       {isLeft && (
-                        <div className="space-y-3">
+                        <div className="space-y-3 max-w-sm ml-auto">
                           <h4 className="text-2xl text-white uppercase tracking-wide leading-tight font-light">
                             {title}
                           </h4>
@@ -427,7 +427,7 @@ export default function About() {
                     {/* Desktop RIGHT column */}
                     <div className="hidden lg:block lg:pl-20">
                       {!isLeft && (
-                        <div className="space-y-3">
+                        <div className="space-y-3 max-w-sm">
                           <h4 className="text-2xl text-white uppercase tracking-wide leading-tight font-light">
                             {title}
                           </h4>
