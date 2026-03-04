@@ -48,6 +48,9 @@ interface AboutAdminTabProps {
   historyImageFile: File | null;
   historyImagePreview: string;
   handleHistoryImageFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  missionImageFile: File | null;
+  missionImagePreview: string;
+  handleMissionImageFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   missionVisionImageFile: File | null;
   missionVisionImagePreview: string;
   handleMissionVisionImageFileChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
@@ -93,6 +96,9 @@ export default function AboutAdminTab({
   historyImageFile,
   historyImagePreview,
   handleHistoryImageFileChange,
+  missionImageFile,
+  missionImagePreview,
+  handleMissionImageFileChange,
   missionVisionImageFile,
   missionVisionImagePreview,
   handleMissionVisionImageFileChange,
@@ -117,7 +123,7 @@ export default function AboutAdminTab({
   const [isCropDialogOpen, setIsCropDialogOpen] = useState(false);
   const [imageToCrop, setImageToCrop] = useState<string>("");
   const [croppedImageFile, setCroppedImageFile] = useState<File | null>(null);
-  const [cropType, setCropType] = useState<'showcase' | 'history' | 'missionVision' | 'teamMember'>('showcase');
+  const [cropType, setCropType] = useState<'showcase' | 'history' | 'mission' | 'missionVision' | 'teamMember'>('showcase');
 
   const aboutContentForm = useForm<InsertAboutPageContent>({
     resolver: zodResolver(insertAboutPageContentSchema),
@@ -252,13 +258,14 @@ export default function AboutAdminTab({
     setEditingTeamMember(null);
   };
 
-  const handleEditImage = (type: 'showcase' | 'history' | 'missionVision' | 'teamMember' = 'showcase') => {
+  const handleEditImage = (type: 'showcase' | 'history' | 'mission' | 'missionVision' | 'teamMember' = 'showcase') => {
     setCropType(type);
-    // Use preview, base64 data, or URL
     const currentImage = type === 'showcase' 
       ? (showcaseBannerPreview || aboutContent?.showcaseBannerImageData || aboutContent?.showcaseBannerImage)
       : type === 'history'
       ? (historyImagePreview || aboutContent?.historyImage)
+      : type === 'mission'
+      ? (missionImagePreview || aboutContent?.missionImageData || aboutContent?.missionImage)
       : type === 'missionVision'
       ? (missionVisionImagePreview || aboutContent?.missionVisionImageData || aboutContent?.missionVisionImage)
       : (teamMemberImagePreview || editingTeamMember?.imageData || editingTeamMember?.image);
@@ -275,6 +282,8 @@ export default function AboutAdminTab({
       ? `banner-${Date.now()}.jpg` 
       : cropType === 'history'
       ? `history-${Date.now()}.jpg`
+      : cropType === 'mission'
+      ? `mission-${Date.now()}.jpg`
       : cropType === 'missionVision'
       ? `mission-vision-${Date.now()}.jpg`
       : `team-member-${Date.now()}.jpg`;
@@ -291,6 +300,8 @@ export default function AboutAdminTab({
       handleShowcaseBannerFileChange(syntheticEvent);
     } else if (cropType === 'history') {
       handleHistoryImageFileChange(syntheticEvent);
+    } else if (cropType === 'mission') {
+      handleMissionImageFileChange(syntheticEvent);
     } else if (cropType === 'missionVision') {
       handleMissionVisionImageFileChange(syntheticEvent);
     } else {
@@ -298,7 +309,7 @@ export default function AboutAdminTab({
     }
   };
 
-  const handleNewImageUpload = (e: React.ChangeEvent<HTMLInputElement>, type: 'showcase' | 'history' | 'missionVision' | 'teamMember' = 'showcase') => {
+  const handleNewImageUpload = (e: React.ChangeEvent<HTMLInputElement>, type: 'showcase' | 'history' | 'mission' | 'missionVision' | 'teamMember' = 'showcase') => {
     setCropType(type);
     const file = e.target.files?.[0];
     if (file) {
@@ -688,9 +699,54 @@ export default function AboutAdminTab({
                   </div>
                 </div>
 
-                {/* Mission & Vision Image */}
+                {/* Mission Image (small) */}
                 <div className="p-4 border-t">
-                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Ảnh Sứ Mệnh & Tầm Nhìn' : 'Mission & Vision Image'}</h3>
+                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Ảnh Sứ Mệnh (nhỏ)' : 'Mission Image (small)'}</h3>
+                  <div>
+                    <div className="relative">
+                      {(missionImagePreview || aboutContent?.missionImageData || aboutContent?.missionImage) ? (
+                        <div className="relative group">
+                          <div className="border bg-muted overflow-hidden">
+                            <img
+                              src={missionImagePreview || aboutContent?.missionImageData || aboutContent?.missionImage || ''}
+                              alt="Mission Preview"
+                              className="w-full aspect-[4/3] object-cover"
+                            />
+                          </div>
+                          <div className="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Button type="button" onClick={() => handleEditImage('mission')} className="bg-black/80 backdrop-blur-sm text-white border border-white/20 hover:bg-black/90 hover:border-[#D4AF37]/50 shadow-xl transition-all">
+                              <Edit className="h-4 w-4 mr-2" />
+                              <span className="text-sm font-light">{language === 'vi' ? 'Sửa' : 'Edit'}</span>
+                            </Button>
+                            <Button type="button" onClick={() => document.getElementById('mission-image-upload')?.click()} disabled={!hasPermission('about')} className="bg-black/80 backdrop-blur-sm text-white border border-white/20 hover:bg-black/90 hover:border-[#D4AF37]/50 shadow-xl transition-all">
+                              <Pencil className="h-4 w-4 mr-2" />
+                              <span className="text-sm font-light">{language === 'vi' ? 'Thay Đổi' : 'Change'}</span>
+                            </Button>
+                          </div>
+                          <input id="mission-image-upload" type="file" disabled={!hasPermission('about')} accept=".jpg,.jpeg,.png,.webp" onChange={(e) => handleNewImageUpload(e, 'mission')} className="hidden" />
+                        </div>
+                      ) : (
+                        <div className="border-2 border-dashed p-8 text-center bg-muted/50">
+                          <div className="flex flex-col items-center gap-4">
+                            <Upload className="h-12 w-12 text-muted-foreground" />
+                            <div>
+                              <p className="text-sm font-medium mb-1">{language === 'vi' ? 'Tải Ảnh Sứ Mệnh (nhỏ)' : 'Upload Mission Image (small)'}</p>
+                              <p className="text-xs text-muted-foreground">PNG, JPG • Max 10MB • 4:3</p>
+                            </div>
+                            <Button type="button" variant="outline" className="bg-white text-black hover:bg-white/90" onClick={() => document.getElementById('mission-image-upload-initial')?.click()}>
+                              {language === 'vi' ? 'Chọn Tệp' : 'Choose File'}
+                            </Button>
+                          </div>
+                          <input id="mission-image-upload-initial" type="file" disabled={!hasPermission('about')} accept=".jpg,.jpeg,.png" onChange={(e) => handleNewImageUpload(e, 'mission')} className="hidden" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Vision Image (large) */}
+                <div className="p-4 border-t">
+                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Ảnh Tầm Nhìn (lớn)' : 'Vision Image (large)'}</h3>
                   <div>
                     <div className="relative">
                       {(missionVisionImagePreview || aboutContent?.missionVisionImageData || aboutContent?.missionVisionImage) ? (
@@ -971,8 +1027,8 @@ export default function AboutAdminTab({
           <div className="flex justify-end">
             <Button 
               type="submit" 
-              className={`px-8 transition-all ${!aboutContentForm.formState.isDirty && !showcaseBannerFile && !historyImageFile && !missionVisionImageFile ? 'opacity-50 cursor-not-allowed' : 'opacity-100 hover:opacity-90'}`}
-              disabled={(!aboutContentForm.formState.isDirty && !showcaseBannerFile && !historyImageFile && !missionVisionImageFile) || updateAboutContentMutation.isPending}
+              className={`px-8 transition-all ${!aboutContentForm.formState.isDirty && !showcaseBannerFile && !historyImageFile && !missionImageFile && !missionVisionImageFile ? 'opacity-50 cursor-not-allowed' : 'opacity-100 hover:opacity-90'}`}
+              disabled={(!aboutContentForm.formState.isDirty && !showcaseBannerFile && !historyImageFile && !missionImageFile && !missionVisionImageFile) || updateAboutContentMutation.isPending}
               data-testid="button-save-about-content"
             >
               {updateAboutContentMutation.isPending ? (language === 'vi' ? "Đang lưu..." : "Saving...") : (language === 'vi' ? "Lưu Nội Dung" : "Save About Content")}
@@ -1914,7 +1970,8 @@ export default function AboutAdminTab({
         onCropComplete={handleCropComplete}
         aspectRatio={
           cropType === 'showcase' ? 16 / 7 
-          : cropType === 'history' ? 4 / 3 
+          : cropType === 'history' ? 4 / 3
+          : cropType === 'mission' ? 4 / 3
           : cropType === 'missionVision' ? 3 / 4
           : 9 / 16
         }

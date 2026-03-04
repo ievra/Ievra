@@ -756,7 +756,10 @@ export const aboutPageContent = pgTable("about_page_content", {
   visionTitleVi: text("vision_title_vi").notNull().default("TẦM NHÌN"),
   visionContentEn: text("vision_content_en").notNull().default(""),
   visionContentVi: text("vision_content_vi").notNull().default(""),
-  // Mission & Vision Image
+  // Mission Image (small)
+  missionImage: text("mission_image"),
+  missionImageData: text("mission_image_data"),
+  // Vision Image (large)
   missionVisionImage: text("mission_vision_image"),
   missionVisionImageData: text("mission_vision_image_data"),
   // Core Values Section Title

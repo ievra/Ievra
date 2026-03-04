@@ -100,6 +100,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   const [showcaseBannerPreview, setShowcaseBannerPreview] = useState<string>('');
   const [historyImageFile, setHistoryImageFile] = useState<File | null>(null);
   const [historyImagePreview, setHistoryImagePreview] = useState<string>('');
+  const [missionImageFile, setMissionImageFile] = useState<File | null>(null);
+  const [missionImagePreview, setMissionImagePreview] = useState<string>('');
   const [missionVisionImageFile, setMissionVisionImageFile] = useState<File | null>(null);
   const [missionVisionImagePreview, setMissionVisionImagePreview] = useState<string>('');
   const [teamMemberImageFile, setTeamMemberImageFile] = useState<File | null>(null);
@@ -699,6 +701,31 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     }
   };
 
+  const handleMissionImageFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const maxSizeBytes = 10 * 1024 * 1024;
+      if (file.size > maxSizeBytes) {
+        toast({ title: "File too large", description: `File size: ${(file.size / (1024 * 1024)).toFixed(2)}MB. Maximum: 10MB.`, variant: "destructive" });
+        e.target.value = '';
+        return;
+      }
+      setMissionImageFile(file);
+      const formData = new FormData();
+      formData.append('file', file);
+      try {
+        const response = await fetch('/api/upload', { method: 'POST', body: formData });
+        if (!response.ok) throw new Error('Upload failed');
+        const data = await response.json();
+        setMissionImagePreview(data.path);
+        toast({ title: "Upload successful", description: "Mission image uploaded" });
+      } catch (error) {
+        toast({ title: "Lỗi upload", description: "Failed to upload image", variant: "destructive" });
+        e.target.value = '';
+      }
+    }
+  };
+
   const handleMissionVisionImageFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -758,6 +785,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       }
       if (historyImagePreview) {
         submitData.historyImage = historyImagePreview;
+      }
+      if (missionImagePreview) {
+        submitData.missionImage = missionImagePreview;
+        submitData.missionImageData = null;
       }
       if (missionVisionImagePreview) {
         submitData.missionVisionImage = missionVisionImagePreview;
@@ -1215,6 +1246,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           historyImageFile={historyImageFile}
           historyImagePreview={historyImagePreview}
           handleHistoryImageFileChange={handleHistoryImageFileChange}
+          missionImageFile={missionImageFile}
+          missionImagePreview={missionImagePreview}
+          handleMissionImageFileChange={handleMissionImageFileChange}
           missionVisionImageFile={missionVisionImageFile}
           missionVisionImagePreview={missionVisionImagePreview}
           handleMissionVisionImageFileChange={handleMissionVisionImageFileChange}
