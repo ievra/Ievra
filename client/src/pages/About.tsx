@@ -704,6 +704,10 @@ export default function About() {
                         let xPos: number;
                         if (isSingleItem) {
                           xPos = isReversed ? xL : xR;
+                        } else if (rowIdx === 2 && !isReversed) {
+                          // Row 3 (L→R, 2 items): 06 at center, 07 at right
+                          const xMid = (xL + xR) / 2;
+                          xPos = ci === 0 ? xMid : xR;
                         } else {
                           xPos = xL + ci * (xR - xL) / (row.length - 1);
                         }
