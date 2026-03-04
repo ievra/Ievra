@@ -396,17 +396,62 @@ export default function About() {
               </h3>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {coreValues.map((value) => (
-                <div key={value.id} className="space-y-4">
-                  <h4 className="text-xl font-light text-white uppercase tracking-wide">
-                    {language === "vi" ? value.titleVi : value.titleEn}
-                  </h4>
-                  <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed">
-                    {language === "vi" ? value.descriptionVi : value.descriptionEn}
-                  </p>
-                </div>
-              ))}
+            <div className="relative">
+              {/* Vertical center line */}
+              <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/20 -translate-x-1/2 hidden lg:block" />
+
+              {coreValues.map((value, index) => {
+                const isLeft = index % 2 === 0;
+                const title = language === "vi" ? value.titleVi : value.titleEn;
+                const desc = language === "vi" ? value.descriptionVi : value.descriptionEn;
+                return (
+                  <div key={value.id} className="relative lg:grid lg:grid-cols-2 mb-16 lg:mb-24">
+                    {/* Desktop LEFT column */}
+                    <div className="hidden lg:block lg:pr-20 lg:text-right">
+                      {isLeft && (
+                        <div className="space-y-3">
+                          <h4 className="text-2xl font-semibold text-white uppercase tracking-wide leading-tight">
+                            {title}
+                          </h4>
+                          <p className="text-white/60 font-light text-base leading-relaxed">
+                            {desc}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Center dot + connector */}
+                    <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center" style={{ top: '6px' }}>
+                      <div className="w-3 h-3 rounded-full bg-white border-2 border-white flex-shrink-0" />
+                      <div className={`h-px w-8 bg-white/40 absolute ${isLeft ? 'right-3' : 'left-3'}`} />
+                    </div>
+
+                    {/* Desktop RIGHT column */}
+                    <div className="hidden lg:block lg:pl-20">
+                      {!isLeft && (
+                        <div className="space-y-3">
+                          <h4 className="text-2xl font-semibold text-white uppercase tracking-wide leading-tight">
+                            {title}
+                          </h4>
+                          <p className="text-white/60 font-light text-base leading-relaxed">
+                            {desc}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Mobile: stacked with left border */}
+                    <div className="lg:hidden space-y-3 pl-6 border-l border-white/20">
+                      <h4 className="text-xl font-semibold text-white uppercase tracking-wide">
+                        {title}
+                      </h4>
+                      <p className="text-white/60 font-light text-base leading-relaxed">
+                        {desc}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </section>
