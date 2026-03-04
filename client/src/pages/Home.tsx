@@ -561,7 +561,7 @@ export default function Home() {
       } else {
         clearInterval(interval);
       }
-    }, 20); // Typing speed: 20ms per character
+    }, 30);
 
     return () => clearInterval(interval);
   }, [expandedFaqIndex]);
@@ -719,7 +719,7 @@ export default function Home() {
       } else {
         clearInterval(interval);
       }
-    }, 20);
+    }, 30);
 
     return () => {
       clearInterval(interval);
@@ -1369,8 +1369,6 @@ export default function Home() {
       {/* Process Section */}
       <section
         className="min-h-screen bg-black py-16"
-        onMouseEnter={handleProcessSectionMouseEnter}
-        onMouseLeave={handleProcessSectionMouseLeave}
       >
         <div className="w-full px-4 sm:px-6 lg:px-8">
           {/* Section Title */}
@@ -1812,8 +1810,6 @@ export default function Home() {
       {/* FAQ Section */}
       <section
         className="bg-black py-16"
-        onMouseEnter={handleFaqSectionMouseEnter}
-        onMouseLeave={handleFaqSectionMouseLeave}
       >
         <div className="w-full px-4 sm:px-6 lg:px-8">
           {/* Section Title */}
