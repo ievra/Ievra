@@ -47,11 +47,17 @@ export default function About() {
   const snakeRef = useRef<HTMLDivElement>(null);
   const [snakeW, setSnakeW] = useState(0);
   useEffect(() => {
-    if (!snakeRef.current) return;
-    const ro = new ResizeObserver(() => setSnakeW(snakeRef.current?.offsetWidth ?? 0));
-    ro.observe(snakeRef.current);
-    setSnakeW(snakeRef.current.offsetWidth);
-    return () => ro.disconnect();
+    const el = snakeRef.current;
+    if (!el) return;
+    const measure = () => {
+      const w = el.getBoundingClientRect().width || el.offsetWidth;
+      if (w > 0) setSnakeW(w);
+    };
+    measure();
+    const rafId = requestAnimationFrame(measure);
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => { cancelAnimationFrame(rafId); ro.disconnect(); };
   }, []);
 
   useEffect(() => {
@@ -653,82 +659,78 @@ export default function About() {
 
                 return (
                   <div className="relative" style={{ height: `${svgH}px` }}>
-                    {/* SVG snake path */}
-                    {snakeW > 0 && (
-                      <svg
-                        className="absolute top-0 left-0 overflow-visible pointer-events-none"
-                        width={snakeW}
-                        height={svgH}
-                      >
-                        <path
-                          d={buildPath(snakeW)}
-                          fill="none"
-                          stroke="rgba(255,255,255,0.28)"
-                          strokeWidth="1"
-                        />
-                      </svg>
-                    )}
+                    {/* SVG snake path — always render, width measured or fallback */}
+                    <svg
+                      className="absolute top-0 left-0 pointer-events-none"
+                      style={{ width: '100%', height: svgH, overflow: 'visible' }}
+                      viewBox={`0 0 ${snakeW || 900} ${svgH}`}
+                      preserveAspectRatio="none"
+                    >
+                      <path
+                        d={buildPath(snakeW || 900)}
+                        fill="none"
+                        stroke="rgba(255,255,255,0.28)"
+                        strokeWidth="1"
+                        vectorEffect="non-scaling-stroke"
+                      />
+                    </svg>
 
-                    {/* Items — absolutely positioned over SVG */}
-                    {rows.map((row, rowIdx) => {
+                    {/* Items — each absolutely positioned to match SVG path coordinates */}
+                    {rows.flatMap((row, rowIdx) => {
                       const isReversed = rowIdx % 2 === 1;
-                      const isLastRow = rowIdx === numRows - 1;
-                      const isSingleItem = row.length === 1;
                       const displayRow = isReversed ? [...row].reverse() : row;
                       const lineY = LINE_Y + rowIdx * ROW_H;
-                      // Columns are evenly distributed between xL and xR
-                      // For PER_ROW=3: positions at 0%, 50%, 100% of (xR - xL)
-                      return (
-                        <div
-                          key={rowIdx}
-                          className="absolute"
-                          style={{
-                            top: 0,
-                            left: `${R}px`,
-                            right: `${R}px`,
-                            display: 'flex',
-                            justifyContent: isSingleItem
-                              ? (isLastRow && rowIdx % 2 === 0 ? 'flex-end' : 'flex-start')
-                              : 'space-between',
-                          }}
-                        >
-                          {displayRow.map((step) => {
-                            const title = language === "vi" ? step.titleVi : step.titleEn;
-                            const desc = language === "vi" ? step.descriptionVi : step.descriptionEn;
-                            return (
-                              <div
-                                key={step.id}
-                                className="flex flex-col items-center"
-                                style={{ width: isSingleItem ? 'auto' : `${100 / PER_ROW}%` }}
-                              >
-                                {/* Diamond on the line */}
-                                <div
-                                  className="bg-white/85 flex-shrink-0"
-                                  style={{
-                                    width: '10px',
-                                    height: '10px',
-                                    transform: 'rotate(45deg)',
-                                    marginTop: `${lineY - 5}px`,
-                                  }}
-                                />
-                                <div className="mt-4 text-center px-1" style={{ maxWidth: '155px' }}>
-                                  <div className="text-white/35 text-[10px] font-light tracking-widest mb-1">
-                                    {step.stepNumber}
-                                  </div>
-                                  <h4 className="text-sm font-light text-white uppercase tracking-wide leading-tight">
-                                    {title}
-                                  </h4>
-                                  {desc && (
-                                    <p className="text-white/50 text-xs font-light leading-relaxed mt-1">
-                                      {desc}
-                                    </p>
-                                  )}
-                                </div>
+                      const W = snakeW || 900;
+                      const xL = R;
+                      const xR = W - R;
+                      const isSingleItem = row.length === 1;
+
+                      return displayRow.map((step, ci) => {
+                        const title = language === "vi" ? step.titleVi : step.titleEn;
+                        const desc = language === "vi" ? step.descriptionVi : step.descriptionEn;
+
+                        // x position: evenly spaced from xL to xR across PER_ROW columns
+                        let xPos: number;
+                        if (isSingleItem) {
+                          // Last single item: end of path = xR (L→R row ends at right)
+                          xPos = isReversed ? xL : xR;
+                        } else {
+                          const totalCols = PER_ROW;
+                          xPos = xL + ci * (xR - xL) / (totalCols - 1);
+                        }
+
+                        return (
+                          <div
+                            key={step.id}
+                            className="absolute flex flex-col items-center"
+                            style={{ left: `${xPos}px`, transform: 'translateX(-50%)', width: '155px', top: 0 }}
+                          >
+                            {/* Diamond on the line */}
+                            <div
+                              className="bg-white/85 flex-shrink-0"
+                              style={{
+                                width: '10px',
+                                height: '10px',
+                                transform: 'rotate(45deg)',
+                                marginTop: `${lineY - 5}px`,
+                              }}
+                            />
+                            <div className="mt-4 text-center px-1">
+                              <div className="text-white/35 text-[10px] font-light tracking-widest mb-1">
+                                {step.stepNumber}
                               </div>
-                            );
-                          })}
-                        </div>
-                      );
+                              <h4 className="text-sm font-light text-white uppercase tracking-wide leading-tight">
+                                {title}
+                              </h4>
+                              {desc && (
+                                <p className="text-white/50 text-xs font-light leading-relaxed mt-1">
+                                  {desc}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      });
                     })}
                   </div>
                 );
