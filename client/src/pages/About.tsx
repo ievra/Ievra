@@ -166,10 +166,18 @@ export default function About() {
             {showcaseServices.length > 0 && (
               <div className="relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-end">
                 {showcaseServices.map((service, index) => {
-                  const stepH = ['h-[480px]', 'h-[320px]', 'h-[180px]', 'h-[60px]'][index % 4];
+                  const stepHeights = ['h-[480px]', 'h-[320px]', 'h-[180px]', 'h-[60px]'];
+                  const stepH = stepHeights[index % 4];
+                  const heightPx = [480, 320, 180, 60][index % 4];
                   const isLast = index === showcaseServices.length - 1;
                   return (
-                  <div key={service.id} className={`px-6 py-8 md:px-8 md:py-12 ${!isLast ? 'border-r border-white/20' : ''}`}>
+                  <div key={service.id} className="relative px-6 py-8 md:px-8 md:py-12">
+                    {!isLast && (
+                      <div
+                        className="absolute right-0 top-8 md:top-12 bg-white/35"
+                        style={{ width: '2px', height: heightPx }}
+                      />
+                    )}
                     <div className={`space-y-3 ${stepH} flex flex-col justify-start`}>
                       <h4 className="text-xl font-light text-white uppercase tracking-wide">
                         {language === "vi" ? service.titleVi : service.titleEn}
