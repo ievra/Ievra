@@ -1417,11 +1417,11 @@ export default function AboutAdminTab({
           <div className="flex justify-between items-center">
             <div>
               <CardTitle>{language === 'vi' ? 'Quy Trình' : 'Process Steps'}</CardTitle>
-              <p className="text-sm text-muted-foreground mt-1">{aboutProcessSteps.length} / 4 {language === 'vi' ? 'mục' : 'items'}</p>
+              <p className="text-sm text-muted-foreground mt-1">{aboutProcessSteps.length} / 7 {language === 'vi' ? 'mục' : 'items'}</p>
             </div>
             <Button
               onClick={() => {
-                if (aboutProcessSteps.length >= 4) return;
+                if (aboutProcessSteps.length >= 7) return;
                 setEditingProcessStep(null);
                 processStepForm.reset({
                   stepNumber: String(aboutProcessSteps.length + 1).padStart(2, '0'),
@@ -1432,7 +1432,7 @@ export default function AboutAdminTab({
                 });
                 setIsProcessStepDialogOpen(true);
               }}
-              disabled={aboutProcessSteps.length >= 4}
+              disabled={aboutProcessSteps.length >= 7}
               data-testid="button-add-process-step"
             >
               <Plus className="mr-2 h-4 w-4" />
