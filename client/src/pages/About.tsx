@@ -150,9 +150,9 @@ export default function About() {
           </div>
         </section>
       )}
-      {/* Architecture Showcase Section */}
-      {((aboutContent?.showcaseBannerImageData || aboutContent?.showcaseBannerImage) || showcaseServices.length > 0) && (
-        <section className="relative h-[80vh] min-h-[600px] bg-black overflow-hidden lg:-ml-16">
+      {/* Architecture Showcase + Stats Section */}
+      {((aboutContent?.showcaseBannerImageData || aboutContent?.showcaseBannerImage) || showcaseServices.length > 0 || aboutContent) && (
+        <section className="relative bg-black overflow-hidden lg:-ml-16" style={{ minHeight: '700px' }}>
           {(aboutContent?.showcaseBannerImageData || aboutContent?.showcaseBannerImage) && (
             <div
               className="absolute inset-0 bg-cover bg-center"
@@ -160,79 +160,76 @@ export default function About() {
                 backgroundImage: `url(${aboutContent.showcaseBannerImageData || aboutContent.showcaseBannerImage})`,
               }}
             >
-              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent" />
             </div>
           )}
 
-          <div className="relative h-full flex items-end">
-            <div className="absolute inset-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-              <div className="border-r-2 border-white/20" style={{ 
-                borderImage: 'linear-gradient(to top, rgba(255,255,255,0.2), rgba(255,255,255,0)) 1' 
-              }} />
-              <div className="border-r-2 border-white/20" style={{ 
-                borderImage: 'linear-gradient(to top, rgba(255,255,255,0.2), rgba(255,255,255,0)) 1' 
-              }} />
-              <div className="border-r-2 border-white/20" style={{ 
-                borderImage: 'linear-gradient(to top, rgba(255,255,255,0.2), rgba(255,255,255,0)) 1' 
-              }} />
+          <div className="relative h-full flex flex-col justify-end">
+            {/* Vertical column dividers */}
+            <div className="absolute inset-0 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 pointer-events-none">
+              <div className="border-r-2 border-white/20" style={{ borderImage: 'linear-gradient(to top, rgba(255,255,255,0.2), rgba(255,255,255,0)) 1' }} />
+              <div className="border-r-2 border-white/20" style={{ borderImage: 'linear-gradient(to top, rgba(255,255,255,0.2), rgba(255,255,255,0)) 1' }} />
+              <div className="border-r-2 border-white/20" style={{ borderImage: 'linear-gradient(to top, rgba(255,255,255,0.2), rgba(255,255,255,0)) 1' }} />
               <div />
             </div>
 
-            <div className="relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-end">
-              {showcaseServices.map((service, index) => (
-                <div key={service.id} className="px-6 py-8 md:px-8 md:py-12">
-                  <div className="space-y-3 h-[180px] flex flex-col">
-                    <h4 className="text-base md:text-lg font-light text-white uppercase tracking-wide">
-                      {language === "vi" ? service.titleVi : service.titleEn}
-                    </h4>
-                    <p className="text-white/70 font-light text-xs md:text-sm leading-relaxed">
-                      {language === "vi" ? service.descriptionVi : service.descriptionEn}
-                    </p>
+            {/* Showcase Services */}
+            {showcaseServices.length > 0 && (
+              <div className="relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-end">
+                {showcaseServices.map((service) => (
+                  <div key={service.id} className="px-6 py-8 md:px-8 md:py-12">
+                    <div className="space-y-3 h-[180px] flex flex-col">
+                      <h4 className="text-base md:text-lg font-light text-white uppercase tracking-wide">
+                        {language === "vi" ? service.titleVi : service.titleEn}
+                      </h4>
+                      <p className="text-white/70 font-light text-xs md:text-sm leading-relaxed">
+                        {language === "vi" ? service.descriptionVi : service.descriptionEn}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Stats Row — inside banner at the bottom */}
+            {aboutContent && (
+              <div className="relative w-full border-t border-white/20">
+                <div className="grid grid-cols-2 md:grid-cols-4">
+                  <div className="text-center py-8 px-4 border-r border-white/20">
+                    <div className="text-4xl md:text-5xl font-light text-white mb-1" data-testid="stats-projects">
+                      {aboutContent.statsProjectsValue}
+                    </div>
+                    <div className="text-xs text-white/50 uppercase tracking-wider">
+                      {language === "vi" ? aboutContent.statsProjectsLabelVi : aboutContent.statsProjectsLabelEn}
+                    </div>
+                  </div>
+                  <div className="text-center py-8 px-4 md:border-r border-white/20">
+                    <div className="text-4xl md:text-5xl font-light text-white mb-1" data-testid="stats-awards">
+                      {aboutContent.statsAwardsValue}
+                    </div>
+                    <div className="text-xs text-white/50 uppercase tracking-wider">
+                      {language === "vi" ? aboutContent.statsAwardsLabelVi : aboutContent.statsAwardsLabelEn}
+                    </div>
+                  </div>
+                  <div className="text-center py-8 px-4 border-r border-white/20">
+                    <div className="text-4xl md:text-5xl font-light text-white mb-1" data-testid="stats-clients">
+                      {aboutContent.statsClientsValue}
+                    </div>
+                    <div className="text-xs text-white/50 uppercase tracking-wider">
+                      {language === "vi" ? aboutContent.statsClientsLabelVi : aboutContent.statsClientsLabelEn}
+                    </div>
+                  </div>
+                  <div className="text-center py-8 px-4">
+                    <div className="text-4xl md:text-5xl font-light text-white mb-1" data-testid="stats-countries">
+                      {aboutContent.statsCountriesValue}
+                    </div>
+                    <div className="text-xs text-white/50 uppercase tracking-wider">
+                      {language === "vi" ? aboutContent.statsCountriesLabelVi : aboutContent.statsCountriesLabelEn}
+                    </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-      {/* Stats Section */}
-      {aboutContent && (
-        <section className="py-20 bg-black lg:-ml-16">
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              <div className="text-center space-y-2">
-                <div className="text-4xl md:text-5xl font-light text-white" data-testid="stats-projects">
-                  {aboutContent.statsProjectsValue}
-                </div>
-                <div className="text-sm text-white/60 uppercase tracking-wider">
-                  {language === "vi" ? aboutContent.statsProjectsLabelVi : aboutContent.statsProjectsLabelEn}
-                </div>
               </div>
-              <div className="text-center space-y-2">
-                <div className="text-4xl md:text-5xl font-light text-white" data-testid="stats-awards">
-                  {aboutContent.statsAwardsValue}
-                </div>
-                <div className="text-sm text-white/60 uppercase tracking-wider">
-                  {language === "vi" ? aboutContent.statsAwardsLabelVi : aboutContent.statsAwardsLabelEn}
-                </div>
-              </div>
-              <div className="text-center space-y-2">
-                <div className="text-4xl md:text-5xl font-light text-white" data-testid="stats-clients">
-                  {aboutContent.statsClientsValue}
-                </div>
-                <div className="text-sm text-white/60 uppercase tracking-wider">
-                  {language === "vi" ? aboutContent.statsClientsLabelVi : aboutContent.statsClientsLabelEn}
-                </div>
-              </div>
-              <div className="text-center space-y-2">
-                <div className="text-4xl md:text-5xl font-light text-white" data-testid="stats-countries">
-                  {aboutContent.statsCountriesValue}
-                </div>
-                <div className="text-sm text-white/60 uppercase tracking-wider">
-                  {language === "vi" ? aboutContent.statsCountriesLabelVi : aboutContent.statsCountriesLabelEn}
-                </div>
-              </div>
-            </div>
+            )}
           </div>
         </section>
       )}
