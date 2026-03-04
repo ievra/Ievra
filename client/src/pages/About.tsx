@@ -204,7 +204,7 @@ export default function About() {
                 <h3 className="md:text-4xl font-light text-white uppercase tracking-wide text-[24px]">
                   {language === "vi" ? aboutContent.historyTitleVi : aboutContent.historyTitleEn}
                 </h3>
-                <p className="text-white/70 font-light text-lg leading-relaxed whitespace-pre-line">
+                <p className="text-white/70 font-light text-lg leading-relaxed whitespace-pre-line text-justify">
                   {language === "vi" ? aboutContent.historyContentVi : aboutContent.historyContentEn}
                 </p>
               </div>
