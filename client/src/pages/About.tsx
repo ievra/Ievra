@@ -685,7 +685,6 @@ export default function About() {
                         vectorEffect="non-scaling-stroke"
                       />
                     </svg>
-
                     {/* Items — each absolutely positioned to match SVG path coordinates */}
                     {rows.flatMap((row, rowIdx) => {
                       const isReversed = rowIdx % 2 === 1;
@@ -752,7 +751,7 @@ export default function About() {
                               {step.stepNumber}
                             </div>
                             <div className="mt-3 text-center px-1">
-                              <h4 className="text-sm font-light text-white uppercase tracking-wide leading-tight">
+                              <h4 className="font-light text-white uppercase tracking-wide text-[16px]">
                                 {title}
                               </h4>
                               {desc && (
