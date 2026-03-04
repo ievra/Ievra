@@ -621,7 +621,7 @@ export default function About() {
                 const PAD_L = 150;      // left endpoint distance from left edge (U-turn peak at PAD_L - R)
                 const PAD_R = 170;      // right endpoint distance from right edge (U-turn peak at PAD_R - R)
 
-                const rowSizes = [3, 2, 2]; // row 1: 3 items, row 2: 2 items, row 3: 2 items
+                const rowSizes = [2, 3, 2]; // row 1: 2 items, row 2: 3 items, row 3: 2 items
                 const rows: typeof processSteps[] = [];
                 let sliceIdx = 0;
                 for (const size of rowSizes) {
@@ -701,12 +701,15 @@ export default function About() {
                         const desc = language === "vi" ? step.descriptionVi : step.descriptionEn;
 
                         // x position: evenly spaced from xL to xR based on actual row item count
+                        const xMid = (xL + xR) / 2;
                         let xPos: number;
                         if (isSingleItem) {
                           xPos = isReversed ? xL : xR;
+                        } else if (rowIdx === 0 && !isReversed) {
+                          // Row 1 (2 items): 01 at left, 02 at center (gives distance without going to edge)
+                          xPos = ci === 0 ? xL : xMid;
                         } else if (rowIdx === 2 && !isReversed) {
-                          // Row 3 (L→R, 2 items): 06 at center, 07 at right
-                          const xMid = (xL + xR) / 2;
+                          // Row 3 (2 items): 06 at center, 07 at right
                           xPos = ci === 0 ? xMid : xR;
                         } else {
                           xPos = xL + ci * (xR - xL) / (row.length - 1);
