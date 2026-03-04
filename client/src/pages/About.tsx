@@ -333,7 +333,7 @@ export default function About() {
       )}
       {/* Company History Section */}
       {aboutContent?.historyContentEn && aboutContent?.historyContentVi && (
-        <section className="py-20 bg-black lg:-ml-16">
+        <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
               <div className="space-y-8">
@@ -363,7 +363,7 @@ export default function About() {
       )}
       {/* Mission & Vision Section - Image LEFT, Content RIGHT */}
       {(aboutContent?.missionContentEn || aboutContent?.visionContentEn) && (
-        <section className="py-20 bg-black lg:-ml-16">
+        <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
               {/* Image LEFT */}
@@ -411,7 +411,7 @@ export default function About() {
       )}
       {/* Core Values Section */}
       {coreValues.length > 0 && aboutContent && (
-        <section className="py-20 bg-black lg:-ml-16">
+        <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-16">
               <h3 className="text-3xl md:text-4xl font-light text-white uppercase tracking-wide">
@@ -436,7 +436,7 @@ export default function About() {
       )}
       {/* Team Members Section */}
       {teamMembers.length > 0 && aboutContent && (
-        <section className="py-20 bg-black lg:-ml-16 overflow-hidden">
+        <section className="py-20 bg-black lg:-ml-16 overflow-hidden border-t border-white/10">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-16">
               <h3 className="text-3xl md:text-4xl font-light text-white uppercase tracking-wide mb-4">
@@ -568,7 +568,7 @@ export default function About() {
       )}
       {/* Process Section */}
       {processSteps.length > 0 && aboutContent && (
-        <section className="py-20 bg-black lg:-ml-16">
+        <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-16">
               <h3 className="text-3xl md:text-4xl font-light text-white uppercase tracking-wide">
