@@ -157,7 +157,7 @@ export default function About() {
                 backgroundImage: `url(${aboutContent.showcaseBannerImageData || aboutContent.showcaseBannerImage})`,
               }}
             >
-              <div className="absolute inset-0 bg-gradient-to-t from-black from-0% to-transparent to-[60%]" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black from-0% to-transparent to-[80%]" />
             </div>
           )}
 
@@ -173,9 +173,11 @@ export default function About() {
             {/* Showcase Services */}
             {showcaseServices.length > 0 && (
               <div className="relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-end">
-                {showcaseServices.map((service) => (
+                {showcaseServices.map((service, index) => {
+                  const stepH = ['h-[320px]', 'h-[240px]', 'h-[160px]', 'h-[80px]'][index % 4];
+                  return (
                   <div key={service.id} className="px-6 py-8 md:px-8 md:py-12">
-                    <div className="space-y-3 h-[180px] flex flex-col justify-end">
+                    <div className={`space-y-3 ${stepH} flex flex-col justify-end`}>
                       <h4 className="text-xl font-light text-white uppercase tracking-wide">
                         {language === "vi" ? service.titleVi : service.titleEn}
                       </h4>
@@ -184,7 +186,8 @@ export default function About() {
                       </p>
                     </div>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             )}
 
