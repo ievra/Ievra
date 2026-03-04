@@ -705,13 +705,19 @@ export default function About() {
                         let xPos: number;
                         let markerY = lineY; // default: line center y for this row
 
-                        // Special: item 03 sits at the apex of the right U-turn
+                        // Special: item 03 at apex of right U-turn (between row1 & row2)
                         const isItem3AtApex = rowIdx === 1 && ci === displayRow.length - 1;
+                        // Special: item 05 at apex of left U-turn (between row2 & row3)
+                        const isItem5AtApex = rowIdx === 1 && ci === 0;
 
                         if (isItem3AtApex) {
                           // Apex of right U-turn: x = xR + R, y = midpoint between row1 and row2
                           xPos = xR + R;
                           markerY = LINE_Y + ROW_H / 2;
+                        } else if (isItem5AtApex) {
+                          // Apex of left U-turn: x = xL - R, y = midpoint between row2 and row3
+                          xPos = xL - R;
+                          markerY = LINE_Y + ROW_H + ROW_H / 2;
                         } else if (isSingleItem) {
                           xPos = isReversed ? xL : xR;
                         } else if (rowIdx === 0 && !isReversed) {
@@ -729,7 +735,7 @@ export default function About() {
                             style={{
                               left: `${xPos}px`,
                               transform: 'translateX(-50%)',
-                              width: isItem3AtApex ? '130px' : '155px',
+                              width: (isItem3AtApex || isItem5AtApex) ? '130px' : '155px',
                               top: 0,
                             }}
                           >
