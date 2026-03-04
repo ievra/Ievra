@@ -663,15 +663,16 @@ export default function About() {
                 const numRows = rows.length;
                 const svgH = LINE_Y + (numRows - 1) * ROW_H + LINE_Y + 80; // extra bottom for text
 
-                const ANIM_DURATION = 12; // seconds for full line draw
+                const ANIM_DURATION = 20; // seconds for full line draw
+                const BLEED = 400; // px beyond container to bleed (enough to exit screen)
 
                 // Build SVG path — single connected snake, bleeding off both ends
                 const buildPath = (W: number) => {
                   if (W <= 0) return '';
                   const xL = PAD_L;
                   const xR = W - PAD_R;
-                  // Start: bleed in from far left → item 01 at xL
-                  let d = `M -9999,${LINE_Y} L ${xL},${LINE_Y}`;
+                  // Start: bleed in from left → item 01 at xL
+                  let d = `M ${-BLEED},${LINE_Y} L ${xL},${LINE_Y}`;
                   for (let r = 0; r < numRows; r++) {
                     const y = LINE_Y + r * ROW_H;
                     if (r === 0) {
@@ -694,9 +695,9 @@ export default function About() {
                   const lastY = LINE_Y + (numRows - 1) * ROW_H;
                   const lastIsReversed = (numRows - 1) % 2 === 1;
                   if (lastIsReversed) {
-                    d += ` L -9999,${lastY}`;
+                    d += ` L ${-BLEED},${lastY}`;
                   } else {
-                    d += ` L ${W + 9999},${lastY}`;
+                    d += ` L ${W + BLEED},${lastY}`;
                   }
                   return d;
                 };
@@ -707,9 +708,9 @@ export default function About() {
                 const rowLen0 = xR0 - xL0;
                 const fullTurn0 = Math.PI * R;
                 const halfTurn0 = fullTurn0 / 2;
-                // Path: M(-9999) → xL → xR → U-turn → xL → U-turn → xR → (W+9999)
-                const leftBleed0 = 9999 + xL0;  // distance from -9999 to xL
-                const rightBleed0 = 9999 + PAD_R; // distance from xR to W+9999
+                // Path: M(-BLEED) → xL → xR → U-turn → xL → U-turn → xR → (W+BLEED)
+                const leftBleed0 = BLEED + xL0;  // distance from -BLEED to xL
+                const rightBleed0 = BLEED + PAD_R; // distance from xR to W+BLEED
                 const totalPathLen0 = leftBleed0 + numRows * rowLen0 + (numRows - 1) * fullTurn0 + rightBleed0;
                 // Path-length position for each step number (path starts at -9999)
                 const stepPathPos: Record<string, number> = {
