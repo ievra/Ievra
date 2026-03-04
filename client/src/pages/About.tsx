@@ -13,6 +13,39 @@ export default function About() {
   const { language } = useLanguage();
   const [selectedMember, setSelectedMember] = useState<number | null>(0);
 
+  const { data: projects = [] } = useQuery<Project[]>({
+    queryKey: ["/api/projects"],
+  });
+
+  const { data: aboutContent, isLoading: aboutContentLoading } = useQuery<AboutPageContent>({
+    queryKey: ["/api/about-page-content"],
+  });
+
+  const { data: principles = [] } = useQuery<AboutCoreValue[]>({
+    queryKey: ["/api/about-core-values"],
+    select: (data) => data.filter(p => p.active).sort((a, b) => a.order - b.order),
+  });
+
+  const { data: showcaseServices = [] } = useQuery<AboutShowcaseService[]>({
+    queryKey: ["/api/about-showcase-services"],
+    select: (data) => data.filter(s => s.active).sort((a, b) => a.order - b.order),
+  });
+
+  const { data: processSteps = [] } = useQuery<AboutProcessStep[]>({
+    queryKey: ["/api/about-process-steps"],
+    select: (data) => data.filter(s => s.active).sort((a, b) => a.order - b.order),
+  });
+
+  const { data: coreValues = [] } = useQuery<AboutCoreValue[]>({
+    queryKey: ["/api/about-core-values"],
+    select: (data) => data.filter(v => v.active).sort((a, b) => a.order - b.order),
+  });
+
+  const { data: teamMembers = [] } = useQuery<AboutTeamMember[]>({
+    queryKey: ["/api/about-team-members"],
+    select: (data) => data.filter(m => m.active).sort((a, b) => a.order - b.order),
+  });
+
   const showcaseSectionRef = useRef<HTMLDivElement>(null);
   const [showcaseAnimStarted, setShowcaseAnimStarted] = useState(false);
   const [typedTexts, setTypedTexts] = useState<{ title: string; desc: string }[]>([]);
@@ -72,39 +105,6 @@ export default function About() {
 
     return () => timers.forEach(clearTimeout);
   }, [showcaseAnimStarted, showcaseServices, language]);
-
-  const { data: projects = [] } = useQuery<Project[]>({
-    queryKey: ["/api/projects"],
-  });
-
-  const { data: aboutContent, isLoading: aboutContentLoading } = useQuery<AboutPageContent>({
-    queryKey: ["/api/about-page-content"],
-  });
-
-  const { data: principles = [] } = useQuery<AboutCoreValue[]>({
-    queryKey: ["/api/about-core-values"],
-    select: (data) => data.filter(p => p.active).sort((a, b) => a.order - b.order),
-  });
-
-  const { data: showcaseServices = [] } = useQuery<AboutShowcaseService[]>({
-    queryKey: ["/api/about-showcase-services"],
-    select: (data) => data.filter(s => s.active).sort((a, b) => a.order - b.order),
-  });
-
-  const { data: processSteps = [] } = useQuery<AboutProcessStep[]>({
-    queryKey: ["/api/about-process-steps"],
-    select: (data) => data.filter(s => s.active).sort((a, b) => a.order - b.order),
-  });
-
-  const { data: coreValues = [] } = useQuery<AboutCoreValue[]>({
-    queryKey: ["/api/about-core-values"],
-    select: (data) => data.filter(v => v.active).sort((a, b) => a.order - b.order),
-  });
-
-  const { data: teamMembers = [] } = useQuery<AboutTeamMember[]>({
-    queryKey: ["/api/about-team-members"],
-    select: (data) => data.filter(m => m.active).sort((a, b) => a.order - b.order),
-  });
 
   const getFallbackImage = (category: string) => {
     switch (category) {
