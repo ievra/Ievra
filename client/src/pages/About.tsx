@@ -615,8 +615,8 @@ export default function About() {
             <div className="hidden md:block" ref={snakeRef}>
               {(() => {
                 const PER_ROW = 3;
-                const R = 80;           // U-turn radius (px) — ROW_H must = 2*R for perfect semicircle
-                const ROW_H = 160;      // = 2*R → perfect semicircle U-turns
+                const R = 110;          // U-turn radius (px) — ROW_H must = 2*R for perfect semicircle
+                const ROW_H = 220;      // = 2*R → perfect semicircle U-turns
                 const LINE_Y = 28;      // y of line within each row block
                 const PAD_L = 150;      // left endpoint distance from left edge (U-turn peak at PAD_L - R)
                 const PAD_R = 170;      // right endpoint distance from right edge (U-turn peak at PAD_R - R)
@@ -742,10 +742,10 @@ export default function About() {
                             <div
                               className="rounded-full bg-[#2d2d2d] border border-white/20 text-white flex items-center justify-center flex-shrink-0 font-light"
                               style={{
-                                width: '30px',
-                                height: '30px',
-                                fontSize: '11px',
-                                marginTop: `${markerY - 15}px`,
+                                width: '50px',
+                                height: '50px',
+                                fontSize: '20px',
+                                marginTop: `${markerY - 25}px`,
                               }}
                             >
                               {step.stepNumber}
