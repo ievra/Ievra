@@ -193,7 +193,7 @@ export default function About() {
 
             {/* Stats Row — inside banner at the bottom */}
             {aboutContent && (
-              <div className="relative w-full border-t border-white/20">
+              <div className="relative w-full">
                 <div className="grid grid-cols-2 md:grid-cols-4">
                   <div className="text-center py-8 px-4 border-r border-white/20">
                     <div className="text-4xl md:text-5xl font-light text-white mb-1" data-testid="stats-projects">
