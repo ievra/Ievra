@@ -176,10 +176,10 @@ export default function About() {
                 {showcaseServices.map((service) => (
                   <div key={service.id} className="px-6 py-8 md:px-8 md:py-12">
                     <div className="space-y-3 h-[180px] flex flex-col">
-                      <h4 className="text-base md:text-lg font-light text-white uppercase tracking-wide">
+                      <h4 className="text-xl font-light text-white uppercase tracking-wide">
                         {language === "vi" ? service.titleVi : service.titleEn}
                       </h4>
-                      <p className="text-white/70 font-light text-xs md:text-sm leading-relaxed">
+                      <p className="text-white/70 font-light text-lg leading-relaxed">
                         {language === "vi" ? service.descriptionVi : service.descriptionEn}
                       </p>
                     </div>
