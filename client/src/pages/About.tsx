@@ -70,7 +70,7 @@ export default function About() {
       if (obs) obs.disconnect();
       obs = new IntersectionObserver(
         ([entry]) => { if (entry.isIntersecting) { setPathAnimated(true); obs.disconnect(); } },
-        { threshold: 0.2 }
+        { threshold: 0 }
       );
       obs.observe(el);
     };
