@@ -65,30 +65,51 @@ export default function About() {
   useEffect(() => {
     const el = snakeRef.current;
     if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setPathAnimated(true); observer.disconnect(); } },
-      { threshold: 0.2 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
+    let obs: IntersectionObserver;
+    const setup = () => {
+      if (obs) obs.disconnect();
+      obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) { setPathAnimated(true); obs.disconnect(); } },
+        { threshold: 0.2 }
+      );
+      obs.observe(el);
+    };
+    setup();
+    const onScroll = () => {
+      if (window.scrollY < 50) { setPathAnimated(false); setup(); }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => { obs?.disconnect(); window.removeEventListener('scroll', onScroll); };
   }, [processSteps.length]);
 
   useEffect(() => {
     if (!aboutContent) return;
-    const els = document.querySelectorAll('.slide-from-left, .slide-from-right');
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in-view');
-            observer.unobserve(entry.target);
-          }
-        });
-      },
-      { threshold: 0.3 }
-    );
-    els.forEach(el => observer.observe(el));
-    return () => observer.disconnect();
+    const getEls = () => document.querySelectorAll<Element>('.slide-from-left, .slide-from-right');
+    let obs: IntersectionObserver;
+    const setup = () => {
+      if (obs) obs.disconnect();
+      obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+              obs.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.3 }
+      );
+      getEls().forEach(el => obs.observe(el));
+    };
+    setup();
+    const onScroll = () => {
+      if (window.scrollY < 50) {
+        getEls().forEach(el => el.classList.remove('in-view'));
+        setup();
+      }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => { obs?.disconnect(); window.removeEventListener('scroll', onScroll); };
   }, [aboutContent, coreValues.length]);
 
   useEffect(() => {
