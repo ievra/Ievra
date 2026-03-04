@@ -75,7 +75,7 @@ export default function About() {
 
   useEffect(() => {
     if (!aboutContent) return;
-    const els = document.querySelectorAll('.slide-from-left');
+    const els = document.querySelectorAll('.slide-from-left, .slide-from-right');
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(entry => {
@@ -89,7 +89,7 @@ export default function About() {
     );
     els.forEach(el => observer.observe(el));
     return () => observer.disconnect();
-  }, [aboutContent]);
+  }, [aboutContent, coreValues.length]);
 
   useEffect(() => {
     if (!showcaseSectionRef.current || showcaseServices.length === 0) return;
@@ -321,7 +321,7 @@ export default function About() {
                     </div>
                   )}
                   <div className="space-y-6">
-                    <h3 className="slide-from-left text-2xl font-light text-white uppercase tracking-wide">
+                    <h3 className="slide-from-right text-2xl font-light text-white uppercase tracking-wide">
                       {language === "vi" ? aboutContent.visionTitleVi : aboutContent.visionTitleEn}
                     </h3>
                     <p className="text-lg text-white/70 font-light leading-relaxed whitespace-pre-line text-justify">
@@ -456,7 +456,7 @@ export default function About() {
                     {/* Desktop LEFT column */}
                     <div className="hidden lg:block lg:pr-20 lg:text-right">
                       {isLeft && (
-                        <div className="space-y-3 max-w-sm ml-auto">
+                        <div className="slide-from-left space-y-3 max-w-sm ml-auto">
                           <h4 className="text-2xl text-white uppercase tracking-wide leading-tight font-light">
                             {title}
                           </h4>
@@ -474,7 +474,7 @@ export default function About() {
                     {/* Desktop RIGHT column */}
                     <div className="hidden lg:block lg:pl-20">
                       {!isLeft && (
-                        <div className="space-y-3 max-w-sm">
+                        <div className="slide-from-right space-y-3 max-w-sm">
                           <h4 className="text-2xl text-white uppercase tracking-wide leading-tight font-light">
                             {title}
                           </h4>
