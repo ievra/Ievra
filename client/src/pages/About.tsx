@@ -645,7 +645,7 @@ export default function About() {
                 const numRows = rows.length;
                 const svgH = LINE_Y + (numRows - 1) * ROW_H + LINE_Y + 80; // extra bottom for text
 
-                const ANIM_DURATION = 4; // seconds for full line draw
+                const ANIM_DURATION = 12; // seconds for full line draw
 
                 // Build SVG path — single connected snake, bleeding off both ends
                 const buildPath = (W: number) => {
