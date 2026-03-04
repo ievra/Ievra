@@ -68,13 +68,15 @@ export default function About() {
   useEffect(() => {
     if (!showcaseAnimStarted || showcaseServices.length === 0) return;
     const CHAR_SPEED = 28;
-    const STAGGER = 550;
-    const timers: ReturnType<typeof setTimeout>[] = [];
+    const timers: ReturnType<typeof setTimeout | typeof setInterval>[] = [];
     setTypedTexts(showcaseServices.map(() => ({ title: '', desc: '' })));
 
+    let startAt = 0;
     showcaseServices.forEach((service, idx) => {
       const title = language === 'vi' ? service.titleVi : service.titleEn;
       const desc = language === 'vi' ? service.descriptionVi : service.descriptionEn;
+      const cardDelay = startAt;
+      startAt += (title.length + desc.length) * CHAR_SPEED;
 
       const t = setTimeout(() => {
         let ti = 0;
@@ -96,14 +98,17 @@ export default function About() {
                 return next;
               });
               if (di >= desc.length) clearInterval(descTimer);
+              timers.push(descTimer);
             }, CHAR_SPEED);
+            timers.push(titleTimer);
           }
         }, CHAR_SPEED);
-      }, idx * STAGGER);
+        timers.push(titleTimer);
+      }, cardDelay);
       timers.push(t);
     });
 
-    return () => timers.forEach(clearTimeout);
+    return () => timers.forEach(id => { clearTimeout(id as any); clearInterval(id as any); });
   }, [showcaseAnimStarted, showcaseServices, language]);
 
   const getFallbackImage = (category: string) => {
