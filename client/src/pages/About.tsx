@@ -599,6 +599,8 @@ export default function About() {
             <div className="hidden md:block">
               {(() => {
                 const PER_ROW = 4;
+                const GAP = 64;
+                const LINE_CENTER = 14;
                 const rows: typeof processSteps[] = [];
                 for (let i = 0; i < processSteps.length; i += PER_ROW) {
                   rows.push(processSteps.slice(i, i + PER_ROW));
@@ -610,9 +612,12 @@ export default function About() {
                       const displayRow = isReversed ? [...row].reverse() : row;
                       const isLastRow = rowIdx === rows.length - 1;
                       return (
-                        <div key={rowIdx} className="relative" style={{ paddingBottom: isLastRow ? 0 : '72px' }}>
-                          {/* Horizontal dashed line */}
-                          <div className="absolute left-[15px] right-[15px] border-t border-dashed border-white/25" style={{ top: '15px' }} />
+                        <div key={rowIdx} className="relative" style={{ paddingBottom: isLastRow ? 0 : `${GAP}px` }}>
+                          {/* Horizontal solid line */}
+                          <div
+                            className="absolute bg-white/40"
+                            style={{ top: `${LINE_CENTER - 1}px`, left: 0, right: 0, height: '2px' }}
+                          />
 
                           {/* Step items */}
                           <div className="flex justify-between items-start relative z-10">
@@ -620,16 +625,28 @@ export default function About() {
                               const title = language === "vi" ? step.titleVi : step.titleEn;
                               const desc = language === "vi" ? step.descriptionVi : step.descriptionEn;
                               return (
-                                <div key={step.id} className="flex flex-col items-center" style={{ width: `${100 / PER_ROW}%` }}>
-                                  <div className="w-[30px] h-[30px] rounded-full bg-black border border-white/50 text-white text-xs flex items-center justify-center font-light flex-shrink-0">
-                                    {step.stepNumber}
-                                  </div>
+                                <div
+                                  key={step.id}
+                                  className="flex flex-col items-center"
+                                  style={{ width: `${100 / PER_ROW}%` }}
+                                >
+                                  {/* Diamond marker */}
+                                  <div
+                                    className="bg-white flex-shrink-0"
+                                    style={{
+                                      width: '14px',
+                                      height: '14px',
+                                      transform: 'rotate(45deg)',
+                                      marginTop: `${LINE_CENTER - 7}px`,
+                                    }}
+                                  />
                                   <div className="mt-4 text-center px-2">
+                                    <div className="text-white/30 text-xs font-light mb-1">{step.stepNumber}</div>
                                     <h4 className="text-sm font-light text-white uppercase tracking-wide leading-tight">
                                       {title}
                                     </h4>
                                     {desc && (
-                                      <p className="text-white/50 text-xs font-light leading-relaxed mt-2">
+                                      <p className="text-white/50 text-xs font-light leading-relaxed mt-1">
                                         {desc}
                                       </p>
                                     )}
@@ -639,11 +656,21 @@ export default function About() {
                             })}
                           </div>
 
-                          {/* Vertical connector to next row */}
+                          {/* Rounded U-turn connector to next row */}
                           {!isLastRow && (
                             <div
-                              className={`absolute border-l border-dashed border-white/25 ${isReversed ? 'left-[15px]' : 'right-[15px]'}`}
-                              style={{ top: '15px', bottom: 0 }}
+                              style={{
+                                position: 'absolute',
+                                [isReversed ? 'left' : 'right']: '0px',
+                                top: `${LINE_CENTER - 1}px`,
+                                width: '32px',
+                                bottom: `-${LINE_CENTER + 1}px`,
+                                borderTop: '2px solid rgba(255,255,255,0.4)',
+                                borderBottom: '2px solid rgba(255,255,255,0.4)',
+                                [isReversed ? 'borderLeft' : 'borderRight']: '2px solid rgba(255,255,255,0.4)',
+                                [isReversed ? 'borderTopLeftRadius' : 'borderTopRightRadius']: '100px',
+                                [isReversed ? 'borderBottomLeftRadius' : 'borderBottomRightRadius']: '100px',
+                              }}
                             />
                           )}
                         </div>
