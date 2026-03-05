@@ -228,6 +228,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       statsCountriesLabelVi: "",
       processTitleEn: "",
       processTitleVi: "",
+      ctaBannerTitleEn: "",
+      ctaBannerTitleVi: "",
     },
   });
 

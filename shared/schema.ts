@@ -781,6 +781,11 @@ export const aboutPageContent = pgTable("about_page_content", {
   teamSubtitleVi: text("team_subtitle_vi").notNull().default("ĐỘI NGŨ"),
   teamTitleEn: text("team_title_en").notNull().default("OUR TEAM"),
   teamTitleVi: text("team_title_vi").notNull().default("ĐỘI NGŨ"),
+  // CTA Banner (Pre-footer)
+  ctaBannerTitleEn: text("cta_banner_title_en").notNull().default(""),
+  ctaBannerTitleVi: text("cta_banner_title_vi").notNull().default(""),
+  ctaBannerImage: text("cta_banner_image"),
+  ctaBannerImageData: text("cta_banner_image_data"),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 

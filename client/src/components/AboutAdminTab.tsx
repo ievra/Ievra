@@ -212,8 +212,12 @@ export default function AboutAdminTab({
       teamTitleVi: "",
       awardsSectionTitleEn: "",
       awardsSectionTitleVi: "",
+      ctaBannerTitleEn: "",
+      ctaBannerTitleVi: "",
     },
   });
+
+  const [ctaBannerPreview, setCtaBannerPreview] = useState<string>('');
 
   const principleForm = useForm<InsertAboutCoreValue>({
     resolver: zodResolver(insertAboutCoreValueSchema),
@@ -342,6 +346,29 @@ export default function AboutAdminTab({
       handleMissionVisionImageFileChange(syntheticEvent);
     } else {
       handleTeamMemberImageChange(syntheticEvent);
+    }
+  };
+
+  const handleCtaBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+      toast({ title: language === 'vi' ? 'File quá lớn' : 'File too large', description: 'Maximum: 10MB.', variant: 'destructive' });
+      e.target.value = '';
+      return;
+    }
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const response = await fetch('/api/upload', { method: 'POST', body: formData });
+      if (!response.ok) throw new Error('Upload failed');
+      const data = await response.json();
+      setCtaBannerPreview(data.path);
+      aboutContentForm.setValue('ctaBannerImage', data.path);
+      toast({ title: language === 'vi' ? 'Tải lên thành công' : 'Upload successful' });
+    } catch {
+      toast({ title: language === 'vi' ? 'Lỗi tải lên' : 'Upload failed', variant: 'destructive' });
+      e.target.value = '';
     }
   };
 
@@ -1092,6 +1119,115 @@ export default function AboutAdminTab({
                 <p className="text-xs text-muted-foreground mt-2">
                   {language === 'vi' ? 'Định dạng: PNG, JPG • Tối đa: 10MB • Khuyến nghị: 1920x800px • Tự động cắt' : 'Format: PNG, JPG • Max: 10MB • Recommended: 1920x800px • Auto-crop enabled'}
                 </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* CTA Banner (Pre-footer) */}
+          <Card>
+            <CardHeader>
+              <CardTitle>{language === 'vi' ? 'Banner CTA (Trước Footer)' : 'CTA Banner (Pre-footer)'}</CardTitle>
+              <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Banner toàn màn hình với hiệu ứng parallax hiển thị phía trên footer' : 'Full-screen parallax banner displayed above the footer'}</p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={aboutContentForm.control}
+                  name="ctaBannerTitleVi"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{language === 'vi' ? 'Tiêu Đề (Tiếng Việt)' : 'Title (Vietnamese)'}</FormLabel>
+                      <FormControl>
+                        <textarea
+                          {...field}
+                          value={field.value ?? ''}
+                          rows={3}
+                          className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-none"
+                          placeholder={language === 'vi' ? 'Nhập tiêu đề tiếng Việt...' : 'Enter Vietnamese title...'}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={aboutContentForm.control}
+                  name="ctaBannerTitleEn"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{language === 'vi' ? 'Tiêu Đề (Tiếng Anh)' : 'Title (English)'}</FormLabel>
+                      <FormControl>
+                        <textarea
+                          {...field}
+                          value={field.value ?? ''}
+                          rows={3}
+                          className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 resize-none"
+                          placeholder={language === 'vi' ? 'Nhập tiêu đề tiếng Anh...' : 'Enter English title...'}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
+              <div>
+                <p className="text-sm font-medium mb-2">{language === 'vi' ? 'Hình Ảnh Banner' : 'Banner Image'}</p>
+                <div className="relative">
+                  {(ctaBannerPreview || aboutContent?.ctaBannerImageData || aboutContent?.ctaBannerImage) ? (
+                    <div className="relative group">
+                      <div className="border bg-muted overflow-hidden">
+                        <img
+                          src={ctaBannerPreview || aboutContent?.ctaBannerImageData || aboutContent?.ctaBannerImage || ''}
+                          alt="CTA Banner Preview"
+                          className="w-full aspect-[16/7] object-cover"
+                        />
+                      </div>
+                      <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <Button
+                          type="button"
+                          disabled={!hasPermission('about')}
+                          onClick={() => document.getElementById('cta-banner-upload')?.click()}
+                          className="bg-black/80 backdrop-blur-sm text-white border border-white/20 hover:bg-black/90 shadow-xl transition-all"
+                        >
+                          <Pencil className="h-4 w-4 mr-2" />
+                          <span className="text-sm font-light">{language === 'vi' ? 'Thay Đổi' : 'Change'}</span>
+                        </Button>
+                        <input
+                          id="cta-banner-upload"
+                          type="file"
+                          disabled={!hasPermission('about')}
+                          accept=".jpg,.jpeg,.png,.webp"
+                          onChange={handleCtaBannerUpload}
+                          className="hidden"
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="border-2 border-dashed border-muted-foreground/25 p-12 text-center">
+                      <div className="flex flex-col items-center gap-4">
+                        <div>
+                          <p className="text-sm font-medium mb-1">{language === 'vi' ? 'Tải Ảnh Banner' : 'Upload Banner Image'}</p>
+                          <p className="text-xs text-muted-foreground">PNG, JPG • {language === 'vi' ? 'Tối đa 10MB • Khuyến nghị: 1920x800px' : 'Max 10MB • Recommended: 1920x800px'}</p>
+                        </div>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="bg-white text-black hover:bg-white/90"
+                          onClick={() => document.getElementById('cta-banner-upload-initial')?.click()}
+                          disabled={!hasPermission('about')}
+                        >
+                          {language === 'vi' ? 'Chọn Tệp' : 'Choose File'}
+                        </Button>
+                      </div>
+                      <input
+                        id="cta-banner-upload-initial"
+                        type="file"
+                        disabled={!hasPermission('about')}
+                        accept=".jpg,.jpeg,.png,.webp"
+                        onChange={handleCtaBannerUpload}
+                        className="hidden"
+                      />
+                    </div>
+                  )}
+                </div>
               </div>
             </CardContent>
           </Card>
