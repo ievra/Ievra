@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { AboutPageContent } from "@shared/schema";
@@ -7,6 +7,7 @@ import type { AboutPageContent } from "@shared/schema";
 export default function PreFooterBanner() {
   const { language } = useLanguage();
   const isVi = language === "vi";
+  const [location] = useLocation();
 
   const { data: aboutContent } = useQuery<AboutPageContent>({
     queryKey: ["/api/about-content"],
@@ -17,6 +18,7 @@ export default function PreFooterBanner() {
     ? (aboutContent?.ctaBannerTitleVi || "")
     : (aboutContent?.ctaBannerTitleEn || "");
 
+  if (location === '/contact') return null;
   if (!bgImage && !title) return null;
 
   return (
