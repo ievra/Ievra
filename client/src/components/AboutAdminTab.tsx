@@ -210,6 +210,8 @@ export default function AboutAdminTab({
       teamSubtitleVi: "",
       teamTitleEn: "",
       teamTitleVi: "",
+      awardsSectionTitleEn: "",
+      awardsSectionTitleVi: "",
     },
   });
 
@@ -984,6 +986,25 @@ export default function AboutAdminTab({
                       </div>
                     </div>
                   </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Awards Section Title */}
+          <Card>
+            <CardHeader>
+              <CardTitle>{language === 'vi' ? 'Tiêu Đề Phần Giải Thưởng' : 'Awards Section Title'}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề H3 (English)' : 'H3 Title (English)'}</label>
+                  <Input {...aboutContentForm.register("awardsSectionTitleEn")} placeholder="AWARDS & RECOGNITION" data-testid="input-awards-title-en" />
+                </div>
+                <div>
+                  <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề H3 (Tiếng Việt)' : 'H3 Title (Tiếng Việt)'}</label>
+                  <Input {...aboutContentForm.register("awardsSectionTitleVi")} placeholder="GIẢI THƯỞNG & CÔNG NHẬN" data-testid="input-awards-title-vi" />
                 </div>
               </div>
             </CardContent>
