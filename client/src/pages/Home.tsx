@@ -239,7 +239,7 @@ function AdvantageCard({
   return (
     <div
       className="group advantage-card scroll-animate px-10 py-8 rounded-none flex flex-col relative"
-      style={{ minHeight: '380px' }}
+      style={{ minHeight: '380px', animationDelay: `${index * 0.18}s` }}
       data-testid={`advantage-card-${index + 1}`}
     >
       {index > 0 && (
