@@ -554,138 +554,6 @@ export default function About() {
           </div>
         </section>
       )}
-      {/* Team Members Section */}
-      {teamMembers.length > 0 && aboutContent && (
-        <section className="py-20 bg-black lg:-ml-16 overflow-hidden border-t border-white/10">
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mb-16">
-              <h3 className="typewriter-heading text-3xl md:text-4xl font-light text-white uppercase tracking-wide mb-4">
-                {language === "vi" ? aboutContent.teamTitleVi : aboutContent.teamTitleEn}
-              </h3>
-            </div>
-
-            <div className="flex gap-0 items-stretch justify-center">
-              {teamMembers.map((member, index) => {
-                const isExpanded = selectedMember === index;
-                const nameChars = member.name.toUpperCase().split('');
-                
-                return (
-                  <div key={member.id} className="flex items-stretch self-stretch">
-                    <button
-                      onClick={() => setSelectedMember(index)}
-                      className={`relative flex-shrink-0 h-full border-r border-white/10 transition-all duration-500 overflow-hidden group ${
-                        isExpanded ? 'w-0 opacity-0' : 'w-24 opacity-100'
-                      }`}
-                      data-testid={`button-team-member-${member.id}`}
-                    >
-                      {/* Background Image */}
-                      {(member.imageData || member.image) && (
-                        <div 
-                          className="absolute inset-0 bg-cover bg-center transition-all duration-300"
-                          style={{
-                            backgroundImage: `url(${member.imageData || member.image})`,
-                            filter: 'grayscale(100%) brightness(0.3)',
-                          }}
-                        />
-                      )}
-                      
-                      {/* Overlay */}
-                      <div className={`absolute inset-0 transition-all duration-300 ${
-                        isExpanded ? 'bg-black/30' : 'bg-black/60'
-                      } group-hover:bg-black/40`} />
-                      
-                      {/* Content */}
-                      <div className="relative h-full flex flex-col items-center pt-8">
-                        {/* Plus Icon */}
-                        <div className={`text-4xl font-light mb-8 transition-all duration-300 ${
-                          isExpanded ? 'text-white' : 'text-white/60'
-                        }`}>
-                          +
-                        </div>
-                        
-                        {/* Name Vertical */}
-                        <div className="flex flex-col items-center">
-                          {nameChars.map((char, charIndex) => (
-                            <span 
-                              key={charIndex} 
-                              className={`text-2xl font-light transition-all duration-300 ${
-                                isExpanded ? 'text-white' : 'text-white/70'
-                              }`}
-                            >
-                              {char}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </button>
-
-                    <div 
-                      className={`h-full overflow-hidden transition-all duration-1000 ease-in-out border-r border-white/10 ${
-                        isExpanded ? 'max-w-[800px] opacity-100' : 'max-w-0 opacity-0'
-                      }`}
-                    >
-                      <div className="w-[800px] max-w-[calc(100vw-120px)] flex items-stretch">
-                        <div className="flex gap-4 md:gap-8 items-stretch w-full">
-                          {(member.imageData || member.image) && (
-                            <div className="flex-shrink-0 w-40 md:w-64 self-stretch">
-                              <div className="h-full overflow-hidden bg-white/10">
-                                <img 
-                                  src={member.imageData || member.image} 
-                                  alt={member.name}
-                                  className="w-full h-full object-cover"
-                                />
-                              </div>
-                            </div>
-                          )}
-
-                          <div className="flex-1 space-y-6 py-8 pr-4 md:pr-8">
-                            <div>
-                              <h4 className="text-2xl font-light text-white mb-2 uppercase tracking-wide">
-                                {member.name}
-                              </h4>
-                              <p className="text-sm text-white/60 uppercase tracking-wider">
-                                {language === "vi" ? member.positionVi : member.positionEn}
-                              </p>
-                            </div>
-                            
-                            {member.bioEn && member.bioVi && (
-                              <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed text-justify">
-                                {language === "vi" ? member.bioVi : member.bioEn}
-                              </p>
-                            )}
-
-                            {member.achievementsEn && member.achievementsVi && (
-                              <div className="space-y-2">
-                                <h5 className="text-sm font-light text-white/80 uppercase tracking-wider">
-                                  {language === "vi" ? "Thông điệp" : "Message"}
-                                </h5>
-                                <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed text-justify">
-                                  {language === "vi" ? member.achievementsVi : member.achievementsEn}
-                                </p>
-                              </div>
-                            )}
-
-                            {member.philosophyEn && member.philosophyVi && (
-                              <div className="space-y-2">
-                                <h5 className="text-sm font-light text-white/80 uppercase tracking-wider">
-                                  {language === "vi" ? "Triết lý" : "Philosophy"}
-                                </h5>
-                                <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed text-justify">
-                                  {language === "vi" ? member.philosophyVi : member.philosophyEn}
-                                </p>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-      )}
       {/* Process Section */}
       {processSteps.length > 0 && aboutContent && (
         <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
@@ -941,6 +809,138 @@ export default function About() {
                     <div>
                       <h4 className="text-sm font-light text-white uppercase tracking-wide leading-tight">{title}</h4>
                       {desc && <p className="text-white/50 text-xs font-light leading-relaxed mt-1">{desc}</p>}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+      )}
+      {/* Team Members Section */}
+      {teamMembers.length > 0 && aboutContent && (
+        <section className="py-20 bg-black lg:-ml-16 overflow-hidden border-t border-white/10">
+          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mb-16">
+              <h3 className="typewriter-heading text-3xl md:text-4xl font-light text-white uppercase tracking-wide mb-4">
+                {language === "vi" ? aboutContent.teamTitleVi : aboutContent.teamTitleEn}
+              </h3>
+            </div>
+
+            <div className="flex gap-0 items-stretch justify-center">
+              {teamMembers.map((member, index) => {
+                const isExpanded = selectedMember === index;
+                const nameChars = member.name.toUpperCase().split('');
+                
+                return (
+                  <div key={member.id} className="flex items-stretch self-stretch">
+                    <button
+                      onClick={() => setSelectedMember(index)}
+                      className={`relative flex-shrink-0 h-full border-r border-white/10 transition-all duration-500 overflow-hidden group ${
+                        isExpanded ? 'w-0 opacity-0' : 'w-24 opacity-100'
+                      }`}
+                      data-testid={`button-team-member-${member.id}`}
+                    >
+                      {/* Background Image */}
+                      {(member.imageData || member.image) && (
+                        <div 
+                          className="absolute inset-0 bg-cover bg-center transition-all duration-300"
+                          style={{
+                            backgroundImage: `url(${member.imageData || member.image})`,
+                            filter: 'grayscale(100%) brightness(0.3)',
+                          }}
+                        />
+                      )}
+                      
+                      {/* Overlay */}
+                      <div className={`absolute inset-0 transition-all duration-300 ${
+                        isExpanded ? 'bg-black/30' : 'bg-black/60'
+                      } group-hover:bg-black/40`} />
+                      
+                      {/* Content */}
+                      <div className="relative h-full flex flex-col items-center pt-8">
+                        {/* Plus Icon */}
+                        <div className={`text-4xl font-light mb-8 transition-all duration-300 ${
+                          isExpanded ? 'text-white' : 'text-white/60'
+                        }`}>
+                          +
+                        </div>
+                        
+                        {/* Name Vertical */}
+                        <div className="flex flex-col items-center">
+                          {nameChars.map((char, charIndex) => (
+                            <span 
+                              key={charIndex} 
+                              className={`text-2xl font-light transition-all duration-300 ${
+                                isExpanded ? 'text-white' : 'text-white/70'
+                              }`}
+                            >
+                              {char}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </button>
+
+                    <div 
+                      className={`h-full overflow-hidden transition-all duration-1000 ease-in-out border-r border-white/10 ${
+                        isExpanded ? 'max-w-[800px] opacity-100' : 'max-w-0 opacity-0'
+                      }`}
+                    >
+                      <div className="w-[800px] max-w-[calc(100vw-120px)] flex items-stretch">
+                        <div className="flex gap-4 md:gap-8 items-stretch w-full">
+                          {(member.imageData || member.image) && (
+                            <div className="flex-shrink-0 w-40 md:w-64 self-stretch">
+                              <div className="h-full overflow-hidden bg-white/10">
+                                <img 
+                                  src={member.imageData || member.image} 
+                                  alt={member.name}
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                            </div>
+                          )}
+
+                          <div className="flex-1 space-y-6 py-8 pr-4 md:pr-8">
+                            <div>
+                              <h4 className="text-2xl font-light text-white mb-2 uppercase tracking-wide">
+                                {member.name}
+                              </h4>
+                              <p className="text-sm text-white/60 uppercase tracking-wider">
+                                {language === "vi" ? member.positionVi : member.positionEn}
+                              </p>
+                            </div>
+                            
+                            {member.bioEn && member.bioVi && (
+                              <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed text-justify">
+                                {language === "vi" ? member.bioVi : member.bioEn}
+                              </p>
+                            )}
+
+                            {member.achievementsEn && member.achievementsVi && (
+                              <div className="space-y-2">
+                                <h5 className="text-sm font-light text-white/80 uppercase tracking-wider">
+                                  {language === "vi" ? "Thông điệp" : "Message"}
+                                </h5>
+                                <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed text-justify">
+                                  {language === "vi" ? member.achievementsVi : member.achievementsEn}
+                                </p>
+                              </div>
+                            )}
+
+                            {member.philosophyEn && member.philosophyVi && (
+                              <div className="space-y-2">
+                                <h5 className="text-sm font-light text-white/80 uppercase tracking-wider">
+                                  {language === "vi" ? "Triết lý" : "Philosophy"}
+                                </h5>
+                                <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed text-justify">
+                                  {language === "vi" ? member.philosophyVi : member.philosophyEn}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 );
