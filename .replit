@@ -46,3 +46,8 @@ waitForPort = 5000
 
 [objectStorage]
 defaultBucketID = "replit-objstore-7c00264e-8183-4c9c-8156-a5432394b28c"
+
+[userenv]
+
+[userenv.shared]
+CUSTOM_DATABASE_URL = "postgresql://iev18274_ievra_user:TN3n2lu%268nan*uFw@103.138.88.63:5432/iev18274_ievra"
