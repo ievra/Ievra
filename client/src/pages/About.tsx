@@ -51,7 +51,7 @@ function TypewriterParagraph({ text, className }: { text: string; className: str
 
 export default function About() {
   const { language } = useLanguage();
-  const [selectedMember, setSelectedMember] = useState<number | null>(0);
+  const [selectedMember, setSelectedMember] = useState<number | null>(null);
 
   const { data: projects = [] } = useQuery<Project[]>({
     queryKey: ["/api/projects"],
