@@ -906,9 +906,9 @@ export default function About() {
                       }`}
                     >
                       <div className="w-[800px] max-w-[calc(100vw-120px)] flex items-stretch h-full">
-                        <div className="flex gap-4 md:gap-8 items-stretch w-full h-full">
+                        <div className="flex gap-3 md:gap-5 items-stretch w-full h-full">
                           {(member.imageData || member.image) && (
-                            <div className="flex-shrink-0 w-40 md:w-64 self-stretch flex flex-col overflow-hidden bg-white/10">
+                            <div className="flex-shrink-0 w-52 md:w-80 self-stretch flex flex-col overflow-hidden bg-white/10">
                               <img 
                                 src={member.imageData || member.image} 
                                 alt={member.name}
@@ -917,7 +917,7 @@ export default function About() {
                             </div>
                           )}
 
-                          <div className="flex-1 space-y-6 py-4 pr-4 md:pr-8">
+                          <div className="flex-1 space-y-5 py-5 pr-4 md:pr-6">
                             <div>
                               <h4 className="text-2xl font-light text-white mb-2 uppercase tracking-wide">
                                 {member.name}
