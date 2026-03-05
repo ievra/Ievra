@@ -133,8 +133,9 @@ export default function About() {
   }, [coreValues]);
 
   const snakeRef = useRef<HTMLDivElement>(null);
+  const processSectionRef = useRef<HTMLElement>(null);
   const [snakeW, setSnakeW] = useState(0);
-  const [pathAnimated, setPathAnimated] = useState(false);
+  const [processProgress, setProcessProgress] = useState(0);
 
   useEffect(() => {
     const el = snakeRef.current;
@@ -151,23 +152,18 @@ export default function About() {
   }, []);
 
   useEffect(() => {
-    const el = snakeRef.current;
-    if (!el) return;
-    let obs: IntersectionObserver;
-    const setup = () => {
-      if (obs) obs.disconnect();
-      obs = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) { setPathAnimated(true); obs.disconnect(); } },
-        { threshold: 0.05 }
-      );
-      obs.observe(el);
-    };
-    setup();
+    const section = processSectionRef.current;
+    if (!section) return;
     const onScroll = () => {
-      if (window.scrollY < 50) { setPathAnimated(false); setup(); }
+      const rect = section.getBoundingClientRect();
+      const animStart = window.innerHeight * 0.85;
+      const animEnd = -rect.height * 0.6;
+      const raw = (animStart - rect.top) / (animStart - animEnd);
+      setProcessProgress(Math.max(0, Math.min(1, raw)));
     };
+    onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => { obs?.disconnect(); window.removeEventListener('scroll', onScroll); };
+    return () => window.removeEventListener('scroll', onScroll);
   }, [processSteps.length]);
 
   useEffect(() => {
@@ -639,7 +635,7 @@ export default function About() {
       )}
       {/* Process Section */}
       {processSteps.length > 0 && aboutContent && (
-        <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
+        <section ref={processSectionRef} className="py-20 bg-black lg:-ml-16 border-t border-white/10">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-16">
               <h3 className="typewriter-heading md:text-4xl font-light text-white uppercase tracking-wide text-[24px]">
@@ -750,9 +746,8 @@ export default function About() {
                         strokeWidth="1"
                         vectorEffect="non-scaling-stroke"
                       />
-                      {/* Animated drawing line (visible path, no bleed) */}
+                      {/* Animated drawing line — scroll-driven via processProgress */}
                       <path
-                        key={pathAnimated ? 'on' : 'off'}
                         d={buildVisiblePath(W0)}
                         fill="none"
                         stroke="rgba(255,255,255,0.75)"
@@ -761,10 +756,8 @@ export default function About() {
                         vectorEffect="non-scaling-stroke"
                         style={{
                           strokeDasharray: 1,
-                          strokeDashoffset: 1,
-                          animation: pathAnimated
-                            ? `drawSnakePath ${ANIM_DURATION}s linear forwards`
-                            : 'none',
+                          strokeDashoffset: 1 - processProgress,
+                          transition: 'stroke-dashoffset 0.05s linear',
                         }}
                       />
                     </svg>
@@ -782,8 +775,6 @@ export default function About() {
                         const title = language === "vi" ? step.titleVi : step.titleEn;
                         const desc = language === "vi" ? step.descriptionVi : step.descriptionEn;
                         const itemDelay = getItemDelay(step.stepNumber);
-                        const titleChars = (title || '').split('');
-                        const descDelay = itemDelay + 0.15 + titleChars.length * 0.055;
 
                         // x position: evenly spaced from xL to xR based on actual row item count
                         const xMid = (xL + xR) / 2;
@@ -813,6 +804,9 @@ export default function About() {
                           xPos = xL + ci * (xR - xL) / (row.length - 1);
                         }
 
+                        const itemFraction = itemDelay / ANIM_DURATION;
+                        const isItemVisible = processProgress >= itemFraction;
+
                         return (
                           <div
                             key={step.id}
@@ -832,40 +826,26 @@ export default function About() {
                                 height: '50px',
                                 fontSize: '20px',
                                 marginTop: `${markerY - 25}px`,
-                                opacity: 0,
-                                animation: pathAnimated
-                                  ? `snakeItemFadeIn 0.5s ease ${itemDelay}s forwards`
-                                  : 'none',
+                                opacity: isItemVisible ? 1 : 0,
+                                transform: isItemVisible ? 'translateY(0)' : 'translateY(8px)',
+                                transition: 'opacity 0.4s ease, transform 0.4s ease',
                               }}
                             >
                               {step.stepNumber}
                             </div>
-                            <div className="mt-3 text-center px-1">
+                            <div
+                              className="mt-3 text-center px-1"
+                              style={{
+                                opacity: isItemVisible ? 1 : 0,
+                                transform: isItemVisible ? 'translateY(0)' : 'translateY(8px)',
+                                transition: 'opacity 0.4s ease 0.1s, transform 0.4s ease 0.1s',
+                              }}
+                            >
                               <h4 className="font-light text-white uppercase tracking-wide text-[16px]">
-                                {titleChars.map((char, charIdx) => (
-                                  <span
-                                    key={charIdx}
-                                    style={{
-                                      opacity: 0,
-                                      animation: pathAnimated
-                                        ? `revealChar 0.01s ${itemDelay + 0.12 + charIdx * 0.055}s forwards`
-                                        : 'none',
-                                    }}
-                                  >
-                                    {char === ' ' ? '\u00a0' : char}
-                                  </span>
-                                ))}
+                                {title}
                               </h4>
                               {desc && (
-                                <p
-                                  className="text-white/50 text-xs font-light leading-relaxed mt-1"
-                                  style={{
-                                    opacity: 0,
-                                    animation: pathAnimated
-                                      ? `snakeItemFadeIn 0.6s ease ${descDelay}s forwards`
-                                      : 'none',
-                                  }}
-                                >
+                                <p className="text-white/50 text-xs font-light leading-relaxed mt-1">
                                   {desc}
                                 </p>
                               )}
