@@ -336,7 +336,7 @@ export default function About() {
       {(aboutContent?.missionContentEn || aboutContent?.visionContentEn) && (
         <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-20 items-start">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-10 lg:gap-20 items-start">
               {/* LEFT: Small image + Mission */}
               {aboutContent?.missionContentEn && aboutContent?.missionContentVi && (
                 <div className="space-y-8">
@@ -524,7 +524,7 @@ export default function About() {
                 const title = language === "vi" ? value.titleVi : value.titleEn;
                 const desc = language === "vi" ? value.descriptionVi : value.descriptionEn;
                 return (
-                  <div key={value.id} className="relative lg:grid lg:grid-cols-2 mb-28 lg:mb-44">
+                  <div key={value.id} className="relative lg:grid lg:grid-cols-2 mb-12 lg:mb-44">
                     {/* Desktop LEFT column */}
                     <div className="hidden lg:block lg:pr-20 lg:text-right">
                       {isLeft && (
@@ -814,19 +814,27 @@ export default function About() {
               })()}
             </div>
 
-            {/* Mobile vertical list */}
-            <div className="md:hidden space-y-8">
-              {processSteps.map((step) => {
+            {/* Mobile vertical timeline */}
+            <div className="md:hidden">
+              {processSteps.map((step, idx) => {
                 const title = language === "vi" ? step.titleVi : step.titleEn;
                 const desc = language === "vi" ? step.descriptionVi : step.descriptionEn;
+                const isLast = idx === processSteps.length - 1;
                 return (
-                  <div key={step.id} className="flex gap-4">
-                    <div className="w-8 h-8 rounded-full border border-white/50 text-white text-xs flex items-center justify-center font-light flex-shrink-0 mt-0.5">
-                      {step.stepNumber}
+                  <div key={step.id} className="flex gap-5">
+                    {/* Left: circle + connector line */}
+                    <div className="flex flex-col items-center flex-shrink-0">
+                      <div className="w-10 h-10 rounded-full border border-white/40 text-white text-sm flex items-center justify-center font-light bg-black z-10">
+                        {step.stepNumber}
+                      </div>
+                      {!isLast && (
+                        <div className="w-px flex-1 bg-white/15 my-2" style={{ minHeight: '40px' }} />
+                      )}
                     </div>
-                    <div>
-                      <h4 className="text-sm font-light text-white uppercase tracking-wide leading-tight">{title}</h4>
-                      {desc && <p className="text-white/50 text-xs font-light leading-relaxed mt-1">{desc}</p>}
+                    {/* Right: content */}
+                    <div className="pb-8">
+                      <h4 className="text-base font-light text-white uppercase tracking-wide leading-tight pt-2">{title}</h4>
+                      {desc && <p className="text-white/50 text-sm font-light leading-relaxed mt-2">{desc}</p>}
                     </div>
                   </div>
                 );
