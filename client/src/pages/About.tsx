@@ -58,8 +58,6 @@ export default function About() {
 
   const showcaseSectionRef = useRef<HTMLDivElement>(null);
   const [showcaseAnimStarted, setShowcaseAnimStarted] = useState(false);
-  const [showcaseAnimDone, setShowcaseAnimDone] = useState(false);
-  const [typedTexts, setTypedTexts] = useState<{ title: string; desc: string }[]>([]);
 
   const [heroAnimStarted, setHeroAnimStarted] = useState(false);
 
@@ -206,52 +204,6 @@ export default function About() {
     };
   }, [showcaseSectionRef.current, showcaseServices.length]);
 
-  useEffect(() => {
-    if (!showcaseAnimStarted || showcaseServices.length === 0) return;
-    const TICK = 4;
-    const CHARS_PER_TICK = 1;
-    const timers: ReturnType<typeof setInterval>[] = [];
-    setTypedTexts(showcaseServices.map(() => ({ title: '', desc: '' })));
-
-    const animateService = (idx: number) => {
-      if (idx >= showcaseServices.length) { setShowcaseAnimDone(true); return; }
-      const service = showcaseServices[idx];
-      const title = language === 'vi' ? service.titleVi : service.titleEn;
-      const desc = language === 'vi' ? service.descriptionVi : service.descriptionEn;
-
-      let ti = 0;
-      const titleTimer = setInterval(() => {
-        ti = Math.min(ti + CHARS_PER_TICK, title.length);
-        setTypedTexts(prev => {
-          const next = [...prev];
-          if (next[idx] !== undefined) next[idx] = { ...next[idx], title: title.slice(0, ti) };
-          return next;
-        });
-        if (ti >= title.length) {
-          clearInterval(titleTimer);
-          let di = 0;
-          const descTimer = setInterval(() => {
-            di = Math.min(di + CHARS_PER_TICK, desc.length);
-            setTypedTexts(prev => {
-              const next = [...prev];
-              if (next[idx] !== undefined) next[idx] = { ...next[idx], desc: desc.slice(0, di) };
-              return next;
-            });
-            if (di >= desc.length) {
-              clearInterval(descTimer);
-              animateService(idx + 1);
-            }
-          }, TICK);
-          timers.push(descTimer);
-        }
-      }, TICK);
-      timers.push(titleTimer);
-    };
-
-    animateService(0);
-
-    return () => timers.forEach(id => clearInterval(id));
-  }, [showcaseAnimStarted, showcaseServices, language]);
 
   const getFallbackImage = (category: string) => {
     switch (category) {
@@ -490,11 +442,6 @@ export default function About() {
                   const stepH = stepHeights[index % 4];
                   const fullTitle = language === "vi" ? service.titleVi : service.titleEn;
                   const fullDesc = language === "vi" ? service.descriptionVi : service.descriptionEn;
-                  const typed = typedTexts[index];
-                  const displayTitle = showcaseAnimDone ? fullTitle : (typed ? typed.title : '');
-                  const displayDesc = showcaseAnimDone ? fullDesc : (typed ? typed.desc : '');
-                  const isTitleTyping = typed && typed.title.length > 0 && typed.title.length < fullTitle.length;
-                  const isDescTyping = typed && typed.title.length >= fullTitle.length && typed.desc.length < fullDesc.length;
                   return (
                     <div
                       key={service.id}
@@ -518,12 +465,10 @@ export default function About() {
                             />
                           )}
                           <h4 className="text-xl font-light text-white uppercase tracking-wide">
-                            {displayTitle}
-                            <span className={`inline-block w-0.5 h-5 bg-white ml-0.5 align-middle animate-pulse ${isTitleTyping ? '' : 'invisible'}`} />
+                            {fullTitle}
                           </h4>
                           <p className="text-white/70 font-light text-lg leading-relaxed text-justify">
-                            {displayDesc}
-                            <span className={`inline-block w-0.5 h-4 bg-white/70 ml-0.5 align-middle animate-pulse ${isDescTyping ? '' : 'invisible'}`} />
+                            {fullDesc}
                           </p>
                         </div>
                       </div>
