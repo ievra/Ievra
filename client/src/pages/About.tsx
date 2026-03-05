@@ -81,6 +81,11 @@ export default function About() {
     select: (data) => data.filter(m => m.active).sort((a, b) => a.order - b.order),
   });
 
+  const { data: awards = [] } = useQuery<AboutAward[]>({
+    queryKey: ["/api/about-awards"],
+    select: (data) => data.filter(a => a.active).sort((a, b) => a.order - b.order),
+  });
+
   const showcaseSectionRef = useRef<HTMLDivElement>(null);
   const [showcaseAnimStarted, setShowcaseAnimStarted] = useState(false);
   const [showcaseAnimDone, setShowcaseAnimDone] = useState(false);
@@ -962,43 +967,49 @@ export default function About() {
           </div>
         </section>
       )}
-      {/* Stats Row */}
-      {aboutContent && (
-        <section className="bg-black lg:-ml-16 border-t border-white/10">
-          <div className="max-w-[1600px] mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-4">
-              <div className="text-center py-6 px-4">
-                <div className="text-2xl md:text-3xl font-light text-white mb-1" data-testid="stats-projects">
-                  {aboutContent.statsProjectsValue}
+      {/* Awards Section */}
+      {aboutContent && (awards.length > 0) && (
+        <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
+          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mb-12">
+              <h3 className="typewriter-heading md:text-4xl font-light text-white uppercase tracking-wide text-[24px]">
+                {language === "vi" ? aboutContent.awardsSectionTitleVi : aboutContent.awardsSectionTitleEn}
+              </h3>
+            </div>
+            <div
+              className="flex gap-6 overflow-x-auto pb-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-white/20"
+              style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}
+            >
+              {awards.map((award) => (
+                <div
+                  key={award.id}
+                  className="flex-shrink-0 w-[280px] md:w-[320px] border border-white/10 bg-white/5 flex flex-col"
+                  style={{ scrollSnapAlign: 'start' }}
+                >
+                  {(award.imageData || award.image) && (
+                    <div className="aspect-[4/3] overflow-hidden">
+                      <img
+                        src={award.imageData || award.image}
+                        alt={language === "vi" ? award.titleVi : award.titleEn}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                  <div className="p-6 flex flex-col gap-2 flex-1">
+                    <div className="text-xs text-white/40 uppercase tracking-widest">
+                      {award.year}
+                    </div>
+                    <h4 className="text-white font-light text-lg uppercase tracking-wide leading-snug">
+                      {language === "vi" ? award.titleVi : award.titleEn}
+                    </h4>
+                    {(award.organizationEn || award.organizationVi) && (
+                      <p className="text-white/50 text-sm font-light">
+                        {language === "vi" ? award.organizationVi : award.organizationEn}
+                      </p>
+                    )}
+                  </div>
                 </div>
-                <div className="text-xs text-white/50 uppercase tracking-wider">
-                  {language === "vi" ? aboutContent.statsProjectsLabelVi : aboutContent.statsProjectsLabelEn}
-                </div>
-              </div>
-              <div className="text-center py-6 px-4">
-                <div className="text-2xl md:text-3xl font-light text-white mb-1" data-testid="stats-awards">
-                  {aboutContent.statsAwardsValue}
-                </div>
-                <div className="text-xs text-white/50 uppercase tracking-wider">
-                  {language === "vi" ? aboutContent.statsAwardsLabelVi : aboutContent.statsAwardsLabelEn}
-                </div>
-              </div>
-              <div className="text-center py-6 px-4">
-                <div className="text-2xl md:text-3xl font-light text-white mb-1" data-testid="stats-clients">
-                  {aboutContent.statsClientsValue}
-                </div>
-                <div className="text-xs text-white/50 uppercase tracking-wider">
-                  {language === "vi" ? aboutContent.statsClientsLabelVi : aboutContent.statsClientsLabelEn}
-                </div>
-              </div>
-              <div className="text-center py-6 px-4">
-                <div className="text-2xl md:text-3xl font-light text-white mb-1" data-testid="stats-countries">
-                  {aboutContent.statsCountriesValue}
-                </div>
-                <div className="text-xs text-white/50 uppercase tracking-wider">
-                  {language === "vi" ? aboutContent.statsCountriesLabelVi : aboutContent.statsCountriesLabelEn}
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </section>

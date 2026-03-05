@@ -15,8 +15,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Pencil, Trash2, Eye, Plus, Lock, Search } from "lucide-react";
-import type { Inquiry, HomepageContent, Partner, AboutPageContent, AboutCoreValue, AboutShowcaseService, AboutProcessStep, AboutTeamMember, InsertAboutPageContent, InsertAboutCoreValue, InsertAboutShowcaseService, InsertAboutProcessStep, InsertAboutTeamMember, Settings as SettingsType } from "@shared/schema";
-import { insertAboutPageContentSchema, insertAboutCoreValueSchema, insertAboutShowcaseServiceSchema, insertAboutProcessStepSchema, insertAboutTeamMemberSchema } from "@shared/schema";
+import type { Inquiry, HomepageContent, Partner, AboutPageContent, AboutCoreValue, AboutShowcaseService, AboutProcessStep, AboutTeamMember, AboutAward, InsertAboutPageContent, InsertAboutCoreValue, InsertAboutShowcaseService, InsertAboutProcessStep, InsertAboutTeamMember, InsertAboutAward, Settings as SettingsType } from "@shared/schema";
+import { insertAboutPageContentSchema, insertAboutCoreValueSchema, insertAboutShowcaseServiceSchema, insertAboutProcessStepSchema, insertAboutTeamMemberSchema, insertAboutAwardSchema } from "@shared/schema";
 import { useLanguage } from "@/contexts/LanguageContext";
 import AboutAdminTab from "@/components/AboutAdminTab";
 import LookupAdminTab from "@/components/LookupAdminTab";
@@ -114,6 +114,9 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   const [editingProcessStep, setEditingProcessStep] = useState<AboutProcessStep | null>(null);
   const [isTeamMemberDialogOpen, setIsTeamMemberDialogOpen] = useState(false);
   const [editingTeamMember, setEditingTeamMember] = useState<AboutTeamMember | null>(null);
+  const [isAwardDialogOpen, setIsAwardDialogOpen] = useState(false);
+  const [editingAward, setEditingAward] = useState<AboutAward | null>(null);
+  const [awardImagePreview, setAwardImagePreview] = useState<string>('');
 
   const { data: stats, isLoading: statsLoading } = useQuery<{
     totalProjects: number;
@@ -154,6 +157,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
 
   const { data: aboutTeamMembers = [], isLoading: aboutTeamMembersLoading } = useQuery<AboutTeamMember[]>({
     queryKey: ['/api/about-team-members'],
+  });
+
+  const { data: aboutAwards = [], isLoading: aboutAwardsLoading } = useQuery<AboutAward[]>({
+    queryKey: ['/api/about-awards'],
   });
 
   const { data: clients = [], isLoading: clientsLoading } = useQuery<any[]>({
@@ -271,6 +278,19 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       achievementsVi: "",
       philosophyEn: "",
       philosophyVi: "",
+      image: "",
+      order: 0,
+    },
+  });
+
+  const awardForm = useForm<InsertAboutAward>({
+    resolver: zodResolver(insertAboutAwardSchema),
+    defaultValues: {
+      titleEn: "",
+      titleVi: "",
+      year: "",
+      organizationEn: "",
+      organizationVi: "",
       image: "",
       order: 0,
     },
@@ -578,6 +598,51 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     },
   });
 
+  const createAwardMutation = useMutation({
+    mutationFn: async (data: InsertAboutAward) => {
+      const response = await apiRequest('POST', '/api/about-awards', data);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/about-awards'] });
+      toast({ title: "Đã tạo giải thưởng thành công" });
+      setIsAwardDialogOpen(false);
+      awardForm.reset();
+    },
+    onError: (error: any) => {
+      toast({ title: "Lỗi khi tạo giải thưởng", description: error.message, variant: "destructive" });
+    },
+  });
+
+  const updateAwardMutation = useMutation({
+    mutationFn: async ({ id, data }: { id: string; data: Partial<InsertAboutAward> }) => {
+      const response = await apiRequest('PUT', `/api/about-awards/${id}`, data);
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/about-awards'] });
+      toast({ title: "Đã cập nhật giải thưởng thành công" });
+      setIsAwardDialogOpen(false);
+      setEditingAward(null);
+    },
+    onError: (error: any) => {
+      toast({ title: "Lỗi khi cập nhật giải thưởng", description: error.message, variant: "destructive" });
+    },
+  });
+
+  const deleteAwardMutation = useMutation({
+    mutationFn: async (id: string) => {
+      await apiRequest('DELETE', `/api/about-awards/${id}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/about-awards'] });
+      toast({ title: "Đã xóa giải thưởng thành công" });
+    },
+    onError: (error: any) => {
+      toast({ title: "Lỗi khi xóa giải thưởng", description: error.message, variant: "destructive" });
+    },
+  });
+
   const handlePartnerLogoFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -842,6 +907,46 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       }
       setTeamMemberImagePreview('');
       setTeamMemberImageFile(null);
+    } catch (error) {}
+  };
+
+  const handleAwardImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const maxSizeBytes = 10 * 1024 * 1024;
+      if (file.size > maxSizeBytes) {
+        toast({ title: "File too large", description: `File size: ${(file.size / (1024 * 1024)).toFixed(2)}MB. Maximum: 10MB.`, variant: "destructive" });
+        e.target.value = '';
+        return;
+      }
+      const formData = new FormData();
+      formData.append('file', file);
+      try {
+        const response = await fetch('/api/upload', { method: 'POST', body: formData });
+        if (!response.ok) throw new Error('Upload failed');
+        const data = await response.json();
+        setAwardImagePreview(data.path);
+        toast({ title: "Upload successful", description: "Award image uploaded" });
+      } catch (error) {
+        toast({ title: "Lỗi upload", description: "Failed to upload image", variant: "destructive" });
+        e.target.value = '';
+      }
+    }
+  };
+
+  const onAwardSubmit = async (data: InsertAboutAward) => {
+    try {
+      const submitData = { ...data };
+      if (awardImagePreview) {
+        submitData.image = awardImagePreview;
+        submitData.imageData = null;
+      }
+      if (editingAward) {
+        await updateAwardMutation.mutateAsync({ id: editingAward.id, data: submitData });
+      } else {
+        await createAwardMutation.mutateAsync(submitData);
+      }
+      setAwardImagePreview('');
     } catch (error) {}
   };
 
@@ -1260,6 +1365,19 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           editingTeamMember={editingTeamMember}
           setEditingTeamMember={setEditingTeamMember}
           teamMemberForm={teamMemberForm}
+          aboutAwards={aboutAwards}
+          aboutAwardsLoading={aboutAwardsLoading}
+          onAwardSubmit={onAwardSubmit}
+          updateAwardMutation={updateAwardMutation}
+          deleteAwardMutation={deleteAwardMutation}
+          awardImagePreview={awardImagePreview}
+          setAwardImagePreview={setAwardImagePreview}
+          handleAwardImageChange={handleAwardImageChange}
+          isAwardDialogOpen={isAwardDialogOpen}
+          setIsAwardDialogOpen={setIsAwardDialogOpen}
+          editingAward={editingAward}
+          setEditingAward={setEditingAward}
+          awardForm={awardForm}
           hasPermission={(perm) => hasPermission(user, perm)}
         />
       </div>

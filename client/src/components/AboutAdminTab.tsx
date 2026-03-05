@@ -12,7 +12,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Pencil, Plus, Trash2, Upload, Edit, X } from "lucide-react";
-import type { AboutPageContent, AboutCoreValue, AboutShowcaseService, AboutProcessStep, AboutTeamMember, InsertAboutPageContent, InsertAboutCoreValue, InsertAboutShowcaseService, InsertAboutProcessStep, InsertAboutTeamMember } from "@shared/schema";
+import type { AboutPageContent, AboutCoreValue, AboutShowcaseService, AboutProcessStep, AboutTeamMember, AboutAward, InsertAboutPageContent, InsertAboutCoreValue, InsertAboutShowcaseService, InsertAboutProcessStep, InsertAboutTeamMember, InsertAboutAward } from "@shared/schema";
 import { insertAboutPageContentSchema, insertAboutCoreValueSchema, insertAboutShowcaseServiceSchema, insertAboutProcessStepSchema, insertAboutTeamMemberSchema } from "@shared/schema";
 import ImageUpload from "@/components/ImageUpload";
 import ImageCropDialog from "@/components/ImageCropDialog";
@@ -63,6 +63,19 @@ interface AboutAdminTabProps {
   editingTeamMember: AboutTeamMember | null;
   setEditingTeamMember: (member: AboutTeamMember | null) => void;
   teamMemberForm: any;
+  aboutAwards: AboutAward[];
+  aboutAwardsLoading: boolean;
+  onAwardSubmit: (data: InsertAboutAward) => Promise<void>;
+  updateAwardMutation: any;
+  deleteAwardMutation: any;
+  awardImagePreview: string;
+  setAwardImagePreview: (preview: string) => void;
+  handleAwardImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  isAwardDialogOpen: boolean;
+  setIsAwardDialogOpen: (open: boolean) => void;
+  editingAward: AboutAward | null;
+  setEditingAward: (award: AboutAward | null) => void;
+  awardForm: any;
   hasPermission: (permission: string) => boolean;
 }
 
@@ -111,6 +124,19 @@ export default function AboutAdminTab({
   editingTeamMember,
   setEditingTeamMember,
   teamMemberForm,
+  aboutAwards,
+  aboutAwardsLoading,
+  onAwardSubmit,
+  updateAwardMutation,
+  deleteAwardMutation,
+  awardImagePreview,
+  setAwardImagePreview,
+  handleAwardImageChange,
+  isAwardDialogOpen,
+  setIsAwardDialogOpen,
+  editingAward,
+  setEditingAward,
+  awardForm,
   hasPermission,
 }: AboutAdminTabProps) {
   const { language } = useLanguage();
@@ -2041,6 +2067,224 @@ export default function AboutAdminTab({
                           </AlertDialogFooter>
                         </AlertDialogContent>
                       </AlertDialog>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Awards Management */}
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>{language === 'vi' ? 'Giải Thưởng' : 'Awards'}</CardTitle>
+          <Button
+            variant="outline"
+            className="bg-black text-white border-black hover:bg-black/80 hover:text-white"
+            onClick={() => {
+              setEditingAward(null);
+              awardForm.reset({ titleEn: "", titleVi: "", year: "", organizationEn: "", organizationVi: "", image: "", order: 0 });
+              setAwardImagePreview('');
+              setIsAwardDialogOpen(true);
+            }}
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            {language === 'vi' ? 'Thêm Giải Thưởng' : 'Add Award'}
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <Dialog open={isAwardDialogOpen} onOpenChange={setIsAwardDialogOpen}>
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>
+                  {editingAward
+                    ? (language === 'vi' ? 'Sửa Giải Thưởng' : 'Edit Award')
+                    : (language === 'vi' ? 'Thêm Giải Thưởng' : 'Add Award')}
+                </DialogTitle>
+              </DialogHeader>
+              <Form {...awardForm}>
+                <form onSubmit={awardForm.handleSubmit(async (data: InsertAboutAward) => { await onAwardSubmit(data); })} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={awardForm.control}
+                      name="titleEn"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Tiêu Đề (English)' : 'Title (English)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} placeholder="Best Interior Design Award" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={awardForm.control}
+                      name="titleVi"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Tiêu Đề (Tiếng Việt)' : 'Title (Tiếng Việt)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} placeholder="Giải Thưởng Thiết Kế Nội Thất Xuất Sắc" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={awardForm.control}
+                      name="year"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Năm' : 'Year'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} placeholder="2024" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={awardForm.control}
+                      name="order"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Thứ Tự' : 'Order'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} type="number" onChange={(e) => field.onChange(parseInt(e.target.value) || 0)} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <FormField
+                      control={awardForm.control}
+                      name="organizationEn"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Tổ Chức (English)' : 'Organization (English)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} placeholder="Vietnam Design Awards" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={awardForm.control}
+                      name="organizationVi"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>{language === 'vi' ? 'Tổ Chức (Tiếng Việt)' : 'Organization (Tiếng Việt)'}</FormLabel>
+                          <FormControl>
+                            <Input {...field} placeholder="Giải Thưởng Thiết Kế Việt Nam" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <FormLabel>{language === 'vi' ? 'Hình Ảnh' : 'Image'}</FormLabel>
+                    {(awardImagePreview || editingAward?.image) && (
+                      <div className="relative w-40 aspect-[4/3] overflow-hidden border border-border">
+                        <img src={awardImagePreview || editingAward?.image} alt="Award" className="w-full h-full object-cover" />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="absolute top-1 right-1 h-6 w-6 p-0 bg-black/70 border-0 text-white hover:bg-black"
+                          onClick={() => setAwardImagePreview('')}
+                        >
+                          <X className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    )}
+                    <Input type="file" accept="image/*" onChange={handleAwardImageChange} />
+                  </div>
+                  <Button type="submit" className="w-full">
+                    {editingAward ? (language === 'vi' ? 'Cập Nhật' : 'Update') : (language === 'vi' ? 'Tạo' : 'Create')} {language === 'vi' ? 'Giải Thưởng' : 'Award'}
+                  </Button>
+                </form>
+              </Form>
+            </DialogContent>
+          </Dialog>
+
+          {aboutAwardsLoading ? (
+            <div className="space-y-2">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="h-16 bg-muted rounded animate-pulse" />
+              ))}
+            </div>
+          ) : (
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>{language === 'vi' ? 'Hình' : 'Image'}</TableHead>
+                  <TableHead>{language === 'vi' ? 'Tiêu Đề (EN)' : 'Title (EN)'}</TableHead>
+                  <TableHead>{language === 'vi' ? 'Năm' : 'Year'}</TableHead>
+                  <TableHead>{language === 'vi' ? 'Tổ Chức' : 'Organization'}</TableHead>
+                  <TableHead>{language === 'vi' ? 'Thứ Tự' : 'Order'}</TableHead>
+                  <TableHead className="text-right">{language === 'vi' ? 'Hành Động' : 'Actions'}</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {aboutAwards.map((award) => (
+                  <TableRow key={award.id}>
+                    <TableCell>
+                      {(award.imageData || award.image) && (
+                        <img src={award.imageData || award.image} alt={award.titleEn} className="w-12 h-10 object-cover" />
+                      )}
+                    </TableCell>
+                    <TableCell className="max-w-[180px] truncate">{award.titleEn}</TableCell>
+                    <TableCell>{award.year}</TableCell>
+                    <TableCell className="max-w-[160px] truncate">{award.organizationEn}</TableCell>
+                    <TableCell>{award.order}</TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex gap-2 justify-end">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="bg-black text-white border-black hover:bg-black/80 hover:text-white"
+                          onClick={() => {
+                            setEditingAward(award);
+                            awardForm.reset(award);
+                            setAwardImagePreview(award.imageData || award.image || '');
+                            setIsAwardDialogOpen(true);
+                          }}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button variant="outline" size="sm" className="bg-black text-white border-black hover:bg-black/80 hover:text-white">
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>{language === 'vi' ? 'Xóa Giải Thưởng' : 'Delete Award'}</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                {language === 'vi'
+                                  ? 'Bạn có chắc chắn muốn xóa giải thưởng này? Hành động này không thể hoàn tác.'
+                                  : 'Are you sure you want to delete this award? This action cannot be undone.'}
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>{language === 'vi' ? 'Hủy' : 'Cancel'}</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => deleteAwardMutation.mutate(award.id)}>
+                                {language === 'vi' ? 'Xóa' : 'Delete'}
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
