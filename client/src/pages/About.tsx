@@ -684,7 +684,7 @@ export default function About() {
                 const numRows = rows.length;
                 const svgH = LINE_Y + (numRows - 1) * ROW_H + LINE_Y + 80; // extra bottom for text
 
-                const ANIM_DURATION = 20; // seconds for full line draw
+                const ANIM_DURATION = 14; // seconds for full line draw
                 const BLEED = 400; // px beyond container to bleed (enough to exit screen)
 
                 // Build SVG path — single connected snake, bleeding off both ends
