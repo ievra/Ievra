@@ -888,11 +888,11 @@ export default function About() {
                     <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}>
                       <div className="px-4 pb-6 space-y-4">
                         {(member.imageData || member.image) && (
-                          <div className="w-full aspect-[4/3] overflow-hidden">
+                          <div className="w-full aspect-[3/4] overflow-hidden">
                             <img
                               src={member.imageData || member.image}
                               alt={member.name}
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-cover object-top"
                             />
                           </div>
                         )}
