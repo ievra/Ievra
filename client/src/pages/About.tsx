@@ -70,7 +70,7 @@ export default function About() {
       if (obs) obs.disconnect();
       obs = new IntersectionObserver(
         ([entry]) => { if (entry.isIntersecting) { setPathAnimated(true); obs.disconnect(); } },
-        { threshold: 0 }
+        { threshold: 0.05 }
       );
       obs.observe(el);
     };
@@ -768,6 +768,7 @@ export default function About() {
                       />
                       {/* Animated drawing line (visible path, no bleed) */}
                       <path
+                        key={pathAnimated ? 'on' : 'off'}
                         d={buildVisiblePath(W0)}
                         fill="none"
                         stroke="rgba(255,255,255,0.75)"
