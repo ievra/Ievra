@@ -1211,11 +1211,11 @@ export default function LookupAdminTab() {
                                       <TableCell className="text-white">{interaction.title}</TableCell>
                                       <TableCell className="text-white/60 w-[80px]">{interaction.assignedTo || "—"}</TableCell>
                                       <TableCell className="text-white/50 w-[100px] truncate">{interaction.nextAction || "—"}</TableCell>
-                                      <TableCell className="w-[150px]">
+                                      <TableCell className="w-[150px] overflow-hidden">
                                         {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
-                                          <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>
-                                            {(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (
-                                              <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />
+                                          <div className="flex gap-1 cursor-pointer overflow-hidden" onClick={() => openLightbox(interaction.attachments as string[], 0)}>
+                                            {(interaction.attachments as string[]).slice(0, 3).map((url, idx) => (
+                                              <img key={idx} src={url} alt="" className="w-8 h-8 flex-shrink-0 object-cover border border-white/10 hover:border-white/40 transition-colors" />
                                             ))}
                                           </div>
                                         ) : (
@@ -1258,9 +1258,9 @@ export default function LookupAdminTab() {
                                     <TableCell className="text-white">{interaction.title}</TableCell>
                                     <TableCell className="text-white/60 w-[80px]">{interaction.assignedTo || "—"}</TableCell>
                                     <TableCell className="text-white/50 w-[100px] truncate">{interaction.nextAction || "—"}</TableCell>
-                                    <TableCell className="w-[150px]">
+                                    <TableCell className="w-[150px] overflow-hidden">
                                       {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
-                                        <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>{(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (<img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />))}</div>
+                                        <div className="flex gap-1 cursor-pointer overflow-hidden" onClick={() => openLightbox(interaction.attachments as string[], 0)}>{(interaction.attachments as string[]).slice(0, 3).map((url, idx) => (<img key={idx} src={url} alt="" className="w-8 h-8 flex-shrink-0 object-cover border border-white/10 hover:border-white/40 transition-colors" />))}</div>
                                       ) : (<span className="text-white/30">—</span>)}
                                     </TableCell>
                                     <TableCell className="w-[80px]">
@@ -1466,11 +1466,11 @@ export default function LookupAdminTab() {
                                       <TableCell className="text-white">{interaction.title}</TableCell>
                                       <TableCell className="text-white/60 w-[80px]">{interaction.assignedTo || "—"}</TableCell>
                                       <TableCell className="text-white/50 w-[100px] truncate">{interaction.nextAction || "—"}</TableCell>
-                                      <TableCell className="w-[150px]">
+                                      <TableCell className="w-[150px] overflow-hidden">
                                         {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
-                                          <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>
-                                            {(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (
-                                              <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />
+                                          <div className="flex gap-1 cursor-pointer overflow-hidden" onClick={() => openLightbox(interaction.attachments as string[], 0)}>
+                                            {(interaction.attachments as string[]).slice(0, 3).map((url, idx) => (
+                                              <img key={idx} src={url} alt="" className="w-8 h-8 flex-shrink-0 object-cover border border-white/10 hover:border-white/40 transition-colors" />
                                             ))}
                                           </div>
                                         ) : (
@@ -1513,9 +1513,9 @@ export default function LookupAdminTab() {
                                     <TableCell className="text-white">{interaction.title}</TableCell>
                                     <TableCell className="text-white/60 w-[80px]">{interaction.assignedTo || "—"}</TableCell>
                                     <TableCell className="text-white/50 w-[100px] truncate">{interaction.nextAction || "—"}</TableCell>
-                                    <TableCell className="w-[150px]">
+                                    <TableCell className="w-[150px] overflow-hidden">
                                       {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
-                                        <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>{(interaction.attachments as string[]).slice(0, 5).map((url, idx) => (<img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />))}</div>
+                                        <div className="flex gap-1 cursor-pointer overflow-hidden" onClick={() => openLightbox(interaction.attachments as string[], 0)}>{(interaction.attachments as string[]).slice(0, 3).map((url, idx) => (<img key={idx} src={url} alt="" className="w-8 h-8 flex-shrink-0 object-cover border border-white/10 hover:border-white/40 transition-colors" />))}</div>
                                       ) : (<span className="text-white/30">—</span>)}
                                     </TableCell>
                                     <TableCell className="w-[80px]">
@@ -1668,11 +1668,11 @@ export default function LookupAdminTab() {
                             <TableCell className="text-white">{log.title}</TableCell>
                             <TableCell className="text-white/60 text-sm">{log.description ? (log.description.length > 50 ? log.description.slice(0, 50) + "…" : log.description) : "—"}</TableCell>
                             <TableCell className="text-white/60">{log.assignedTo || "—"}</TableCell>
-                            <TableCell>
+                            <TableCell className="w-[100px] overflow-hidden">
                               {Array.isArray(log.attachments) && log.attachments.length > 0 ? (
-                                <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(log.attachments as string[], 0)}>
-                                  {(log.attachments as string[]).slice(0, 5).map((url, idx) => (
-                                    <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />
+                                <div className="flex gap-1 cursor-pointer overflow-hidden" onClick={() => openLightbox(log.attachments as string[], 0)}>
+                                  {(log.attachments as string[]).slice(0, 3).map((url, idx) => (
+                                    <img key={idx} src={url} alt="" className="w-8 h-8 flex-shrink-0 object-cover border border-white/10 hover:border-white/40 transition-colors" />
                                   ))}
                                 </div>
                               ) : (
