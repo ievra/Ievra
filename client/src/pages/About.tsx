@@ -191,8 +191,6 @@ export default function About() {
     const handleScroll = () => {
       if (window.scrollY < 50) {
         setShowcaseAnimStarted(false);
-        setShowcaseAnimDone(false);
-        setTypedTexts([]);
         observer.observe(showcaseSectionRef.current!);
       }
     };
