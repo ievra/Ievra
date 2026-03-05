@@ -908,14 +908,12 @@ export default function About() {
                       <div className="w-[800px] max-w-[calc(100vw-120px)] flex items-stretch">
                         <div className="flex gap-4 md:gap-8 items-stretch w-full">
                           {(member.imageData || member.image) && (
-                            <div className="flex-shrink-0 w-40 md:w-64 self-stretch">
-                              <div className="h-full overflow-hidden bg-white/10">
-                                <img 
-                                  src={member.imageData || member.image} 
-                                  alt={member.name}
-                                  className="w-full h-full object-cover"
-                                />
-                              </div>
+                            <div className="flex-shrink-0 w-40 md:w-64 self-stretch overflow-hidden bg-white/10">
+                              <img 
+                                src={member.imageData || member.image} 
+                                alt={member.name}
+                                className="w-full h-full object-cover block"
+                              />
                             </div>
                           )}
 
