@@ -185,7 +185,7 @@ export default function About() {
 
   useEffect(() => {
     if (!showcaseAnimStarted || showcaseServices.length === 0) return;
-    const CHAR_SPEED = 28;
+    const CHAR_SPEED = 8;
     const timers: ReturnType<typeof setTimeout | typeof setInterval>[] = [];
     setTypedTexts(showcaseServices.map(() => ({ title: '', desc: '' })));
 
