@@ -20,7 +20,7 @@ export default function PreFooterBanner() {
   if (!bgImage && !title) return null;
 
   return (
-    <section className="relative h-[70vh] min-h-[420px] bg-black" style={{ clipPath: "inset(0)" }}>
+    <section className="relative h-screen bg-black" style={{ clipPath: "inset(0)" }}>
       <div
         className="fixed inset-0"
         style={{
