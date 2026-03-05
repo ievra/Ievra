@@ -186,52 +186,47 @@ export default function About() {
   useEffect(() => {
     if (!showcaseAnimStarted || showcaseServices.length === 0) return;
     const CHAR_SPEED = 8;
-    const timers: ReturnType<typeof setTimeout | typeof setInterval>[] = [];
+    const timers: ReturnType<typeof setInterval>[] = [];
     setTypedTexts(showcaseServices.map(() => ({ title: '', desc: '' })));
 
-    let startAt = 0;
-    showcaseServices.forEach((service, idx) => {
+    const animateService = (idx: number) => {
+      if (idx >= showcaseServices.length) { setShowcaseAnimDone(true); return; }
+      const service = showcaseServices[idx];
       const title = language === 'vi' ? service.titleVi : service.titleEn;
       const desc = language === 'vi' ? service.descriptionVi : service.descriptionEn;
-      const cardDelay = startAt;
-      startAt += (title.length + desc.length) * CHAR_SPEED;
 
-      const t = setTimeout(() => {
-        let ti = 0;
-        const titleTimer = setInterval(() => {
-          ti++;
-          setTypedTexts(prev => {
-            const next = [...prev];
-            if (next[idx] !== undefined) next[idx] = { ...next[idx], title: title.slice(0, ti) };
-            return next;
-          });
-          if (ti >= title.length) {
-            clearInterval(titleTimer);
-            let di = 0;
-            const descTimer = setInterval(() => {
-              di++;
-              setTypedTexts(prev => {
-                const next = [...prev];
-                if (next[idx] !== undefined) next[idx] = { ...next[idx], desc: desc.slice(0, di) };
-                return next;
-              });
-              if (di >= desc.length) {
-                clearInterval(descTimer);
-                if (idx === showcaseServices.length - 1) {
-                  setShowcaseAnimDone(true);
-                }
-              }
-              timers.push(descTimer);
-            }, CHAR_SPEED);
-            timers.push(titleTimer);
-          }
-        }, CHAR_SPEED);
-        timers.push(titleTimer);
-      }, cardDelay);
-      timers.push(t);
-    });
+      let ti = 0;
+      const titleTimer = setInterval(() => {
+        ti++;
+        setTypedTexts(prev => {
+          const next = [...prev];
+          if (next[idx] !== undefined) next[idx] = { ...next[idx], title: title.slice(0, ti) };
+          return next;
+        });
+        if (ti >= title.length) {
+          clearInterval(titleTimer);
+          let di = 0;
+          const descTimer = setInterval(() => {
+            di++;
+            setTypedTexts(prev => {
+              const next = [...prev];
+              if (next[idx] !== undefined) next[idx] = { ...next[idx], desc: desc.slice(0, di) };
+              return next;
+            });
+            if (di >= desc.length) {
+              clearInterval(descTimer);
+              animateService(idx + 1);
+            }
+          }, CHAR_SPEED);
+          timers.push(descTimer);
+        }
+      }, CHAR_SPEED);
+      timers.push(titleTimer);
+    };
 
-    return () => timers.forEach(id => { clearTimeout(id as any); clearInterval(id as any); });
+    animateService(0);
+
+    return () => timers.forEach(id => clearInterval(id));
   }, [showcaseAnimStarted, showcaseServices, language]);
 
   const getFallbackImage = (category: string) => {
