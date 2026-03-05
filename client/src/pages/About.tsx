@@ -447,7 +447,7 @@ export default function About() {
                       style={{
                         opacity: 0,
                         animation: showcaseAnimStarted
-                          ? `slideUpFade 0.7s cubic-bezier(0.22,0.61,0.36,1) ${index * 0.18}s forwards`
+                          ? `slideUpFade 1.4s cubic-bezier(0.22,0.61,0.36,1) ${index * 0.25}s forwards`
                           : 'none',
                       }}
                     >
