@@ -52,6 +52,9 @@ function TypewriterParagraph({ text, className }: { text: string; className: str
 export default function About() {
   const { language } = useLanguage();
   const [selectedMember, setSelectedMember] = useState<number | null>(null);
+  const awardsScrollRef = useRef<HTMLDivElement>(null);
+  const [awardsCanScrollLeft, setAwardsCanScrollLeft] = useState(false);
+  const [awardsCanScrollRight, setAwardsCanScrollRight] = useState(true);
 
   const { data: projects = [] } = useQuery<Project[]>({
     queryKey: ["/api/projects"],
@@ -85,6 +88,15 @@ export default function About() {
     queryKey: ["/api/about-awards"],
     select: (data) => data.filter(a => a.active).sort((a, b) => a.order - b.order),
   });
+
+  useEffect(() => {
+    const el = awardsScrollRef.current;
+    if (!el) return;
+    const check = () => setAwardsCanScrollRight(el.scrollWidth > el.clientWidth + 8);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, [awards]);
 
   const showcaseSectionRef = useRef<HTMLDivElement>(null);
   const [showcaseAnimStarted, setShowcaseAnimStarted] = useState(false);
@@ -1041,19 +1053,58 @@ export default function About() {
       {aboutContent && (awards.length > 0) && (
         <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mb-12">
+            <div className="mb-12 flex items-end justify-between gap-4">
               <h3 className="typewriter-heading md:text-4xl font-light text-white uppercase tracking-wide text-[24px]">
                 {language === "vi" ? aboutContent.awardsSectionTitleVi : aboutContent.awardsSectionTitleEn}
               </h3>
+              {/* Subtle nav arrows */}
+              <div className="flex gap-3 flex-shrink-0">
+                <button
+                  onClick={() => {
+                    awardsScrollRef.current?.scrollBy({ left: -340, behavior: 'smooth' });
+                  }}
+                  className={`w-9 h-9 border flex items-center justify-center transition-all duration-300 ${
+                    awardsCanScrollLeft
+                      ? 'border-white/30 text-white/70 hover:border-white hover:text-white'
+                      : 'border-white/10 text-white/20 cursor-default'
+                  }`}
+                  aria-label="Previous"
+                >
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M9 2L4 7L9 12" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+                <button
+                  onClick={() => {
+                    awardsScrollRef.current?.scrollBy({ left: 340, behavior: 'smooth' });
+                  }}
+                  className={`w-9 h-9 border flex items-center justify-center transition-all duration-300 ${
+                    awardsCanScrollRight
+                      ? 'border-white/30 text-white/70 hover:border-white hover:text-white'
+                      : 'border-white/10 text-white/20 cursor-default'
+                  }`}
+                  aria-label="Next"
+                >
+                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                    <path d="M5 2L10 7L5 12" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              </div>
             </div>
             <div
+              ref={awardsScrollRef}
+              onScroll={(e) => {
+                const el = e.currentTarget;
+                setAwardsCanScrollLeft(el.scrollLeft > 8);
+                setAwardsCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 8);
+              }}
               className="flex gap-6 overflow-x-auto pb-4 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-white/20"
               style={{ scrollSnapType: 'x mandatory', WebkitOverflowScrolling: 'touch' }}
             >
               {awards.map((award) => (
                 <div
                   key={award.id}
-                  className="flex-shrink-0 w-[280px] md:w-[320px] border border-white/10 bg-white/5 flex flex-col"
+                  className="flex-shrink-0 w-[280px] md:w-[320px] border border-white/10 bg-white/5 hover:bg-white/10 flex flex-col transition-colors duration-300 group"
                   style={{ scrollSnapAlign: 'start' }}
                 >
                   {(award.imageData || award.image) && (
@@ -1061,7 +1112,7 @@ export default function About() {
                       <img
                         src={award.imageData || award.image}
                         alt={language === "vi" ? award.titleVi : award.titleEn}
-                        className="w-full h-full object-cover"
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                       />
                     </div>
                   )}
