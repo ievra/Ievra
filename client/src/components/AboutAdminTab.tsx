@@ -405,11 +405,13 @@ export default function AboutAdminTab({
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Hero (English)' : 'Hero Title (English)'}</label>
-                      <Input {...aboutContentForm.register("heroTitleEn")} placeholder="ARCHITECTURAL & INTERIOR DESIGN" data-testid="input-hero-title-en" />
+                      <Textarea {...aboutContentForm.register("heroTitleEn")} rows={3} placeholder={"ARCHITECTURAL\n& INTERIOR DESIGN"} data-testid="input-hero-title-en" />
+                      <p className="text-xs text-muted-foreground mt-1">{language === 'vi' ? 'Nhấn Enter để xuống hàng' : 'Press Enter to add a new line'}</p>
                     </div>
                     <div>
                       <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Hero (Tiếng Việt)' : 'Hero Title (Tiếng Việt)'}</label>
-                      <Input {...aboutContentForm.register("heroTitleVi")} placeholder="THIẾT KẾ KIẾN TRÚC VÀ NỘI THẤT" data-testid="input-hero-title-vi" />
+                      <Textarea {...aboutContentForm.register("heroTitleVi")} rows={3} placeholder={"THIẾT KẾ KIẾN TRÚC\nVÀ NỘI THẤT"} data-testid="input-hero-title-vi" />
+                      <p className="text-xs text-muted-foreground mt-1">{language === 'vi' ? 'Nhấn Enter để xuống hàng' : 'Press Enter to add a new line'}</p>
                     </div>
                   </div>
                   

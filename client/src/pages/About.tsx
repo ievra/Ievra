@@ -302,7 +302,7 @@ export default function About() {
             <div className="relative h-full flex items-center" style={{ zIndex: 2 }}>
               <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
                 <div className="flex justify-center">
-                  <h1 className="font-light text-white uppercase tracking-wide text-center text-[48px]">
+                  <h1 className="font-light text-white uppercase tracking-wide text-center text-[48px] whitespace-pre-line">
                     {language === "vi" ? aboutContent.heroTitleVi : aboutContent.heroTitleEn}
                   </h1>
                 </div>
