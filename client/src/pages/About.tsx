@@ -529,7 +529,7 @@ export default function About() {
                           style={{
                             opacity: 0,
                             animation: coreValuesAnimStarted
-                              ? `snakeItemFadeIn 0.6s ease ${itemDelay + 0.1}s forwards`
+                              ? `snakeItemFadeIn 1.2s ease ${itemDelay + 0.1}s forwards`
                               : 'none',
                           }}
                         >
@@ -549,7 +549,7 @@ export default function About() {
                         style={{
                           opacity: 0,
                           animation: coreValuesAnimStarted
-                            ? `snakeItemFadeIn 0.3s ease ${itemDelay}s forwards`
+                            ? `snakeItemFadeIn 0.8s ease ${itemDelay}s forwards`
                             : 'none',
                         }}
                       />
@@ -558,7 +558,7 @@ export default function About() {
                         style={{
                           opacity: 0,
                           animation: coreValuesAnimStarted
-                            ? `snakeItemFadeIn 0.3s ease ${itemDelay}s forwards`
+                            ? `snakeItemFadeIn 0.8s ease ${itemDelay}s forwards`
                             : 'none',
                         }}
                       />
@@ -571,7 +571,7 @@ export default function About() {
                           style={{
                             opacity: 0,
                             animation: coreValuesAnimStarted
-                              ? `snakeItemFadeIn 0.6s ease ${itemDelay + 0.1}s forwards`
+                              ? `snakeItemFadeIn 1.2s ease ${itemDelay + 0.1}s forwards`
                               : 'none',
                           }}
                         >
