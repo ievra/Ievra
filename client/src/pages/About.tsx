@@ -1104,7 +1104,7 @@ export default function About() {
               {awards.map((award) => (
                 <div
                   key={award.id}
-                  className="flex-shrink-0 w-[280px] md:w-[320px] border border-white/10 bg-white/5 hover:bg-white/10 flex flex-col transition-colors duration-300 group"
+                  className="flex-shrink-0 w-[280px] md:w-[320px] flex flex-col transition-colors duration-300 group"
                   style={{ scrollSnapAlign: 'start' }}
                 >
                   {(award.imageData || award.image) && (
