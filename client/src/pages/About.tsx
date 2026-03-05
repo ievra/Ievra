@@ -103,6 +103,15 @@ export default function About() {
   const [showcaseAnimDone, setShowcaseAnimDone] = useState(false);
   const [typedTexts, setTypedTexts] = useState<{ title: string; desc: string }[]>([]);
 
+  const [heroAnimStarted, setHeroAnimStarted] = useState(false);
+
+  useEffect(() => {
+    if (aboutContent) {
+      const t = setTimeout(() => setHeroAnimStarted(true), 100);
+      return () => clearTimeout(t);
+    }
+  }, [aboutContent]);
+
   const snakeRef = useRef<HTMLDivElement>(null);
   const [snakeW, setSnakeW] = useState(0);
   const [pathAnimated, setPathAnimated] = useState(false);
@@ -303,7 +312,15 @@ export default function About() {
               <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
                 <div className="flex justify-center">
                   <h1 className="font-light text-white uppercase tracking-[0.06em] text-center whitespace-pre-line text-[42px]">
-                    {language === "vi" ? aboutContent.heroTitleVi : aboutContent.heroTitleEn}
+                    {(language === "vi" ? aboutContent.heroTitleVi : aboutContent.heroTitleEn).split('').map((char, i) => (
+                      <span
+                        key={i}
+                        style={{
+                          opacity: 0,
+                          animation: heroAnimStarted ? `revealChar 0.01s ${i * 0.035}s forwards` : 'none',
+                        }}
+                      >{char}</span>
+                    ))}
                   </h1>
                 </div>
               </div>
