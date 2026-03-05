@@ -236,31 +236,24 @@ function AdvantageCard({
   index: number;
   id: number;
 }) {
-  const [hovered, setHovered] = useState(false);
   return (
     <div
       className="group advantage-card scroll-animate px-10 py-8 rounded-none flex flex-col relative"
       style={{ minHeight: '380px' }}
       data-testid={`advantage-card-${index + 1}`}
-      onMouseEnter={() => setHovered(true)}
     >
       {index > 0 && (
         <div className="hidden md:block absolute left-0 top-[20%] h-[60%] w-px bg-white/10" />
       )}
-      <div className="flex-shrink-0 mb-6" style={{ height: '5rem', overflow: 'hidden' }}>
-        <TypewriterText
-          as="h4"
-          text={title}
-          className="text-2xl font-light text-white/60 group-hover:text-white uppercase tracking-wide transition-colors duration-300"
-        />
+      <div className="flex-shrink-0 mb-6">
+        <h4 className="text-2xl font-light text-white/60 group-hover:text-white uppercase tracking-wide transition-colors duration-300">
+          {title}
+        </h4>
       </div>
-      <div className="flex-1 overflow-hidden">
-        <TypewriterText
-          as="p"
-          text={description}
-          active={hovered}
-          className="text-white/50 group-hover:text-white/90 font-light text-base leading-relaxed transition-colors duration-300"
-        />
+      <div className="flex-1">
+        <p className="text-white/50 group-hover:text-white/90 font-light text-base leading-relaxed transition-colors duration-300">
+          {description}
+        </p>
       </div>
     </div>
   );
