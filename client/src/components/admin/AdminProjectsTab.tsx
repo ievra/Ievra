@@ -1881,7 +1881,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel
-              className="bg-white/5 border-white/10 hover:bg-white/10 rounded-none"
+              className="bg-black border-white/20 hover:bg-black hover:border-white rounded-none transition-colors"
               onClick={() => setDeleteProjectData(null)}
             >
               {language === 'vi' ? 'Hủy' : 'Cancel'}
