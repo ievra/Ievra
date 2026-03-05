@@ -1933,7 +1933,7 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
             ) : (
               <>
                 <div className="overflow-x-auto">
-                  <Table className="w-full min-w-[900px]">
+                  <Table className="w-full min-w-[900px] table-fixed">
                     <TableHeader>
                       <TableRow>
                         <TableHead className="w-[40px] whitespace-nowrap text-center">{language === 'vi' ? 'STT' : 'NO'}</TableHead>
@@ -1971,21 +1971,21 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                               {clientTier ? (language === 'vi' ? clientTier.labelVi : clientTier.labelEn) : 'N/A'}
                             </span>
                           </TableCell>
-                          <TableCell className="align-middle">
-                            <div className="font-light whitespace-nowrap">
+                          <TableCell className="align-middle overflow-hidden">
+                            <div className="font-light truncate" title={`${client.firstName} ${client.lastName}`}>
                               {client.firstName} {client.lastName}
                             </div>
                             <div className="text-xs text-muted-foreground mt-1">
                               {client.intakeDate ? new Date(client.intakeDate).toLocaleDateString('vi-VN') : "—"}
                             </div>
                           </TableCell>
-                          <TableCell className="align-middle">
-                            <div className="text-sm truncate">{client.phone || "—"}</div>
+                          <TableCell className="align-middle overflow-hidden">
+                            <div className="text-sm truncate" title={client.phone || ""}>{client.phone || "—"}</div>
                             <div className="text-xs text-muted-foreground truncate mt-1" title={client.email}>
                               {client.email}
                             </div>
                           </TableCell>
-                          <TableCell className="align-middle">
+                          <TableCell className="align-middle overflow-hidden">
                             <div className="text-sm truncate" title={client.address || ""}>
                               {client.address || "—"}
                             </div>
