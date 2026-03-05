@@ -112,6 +112,26 @@ export default function About() {
     }
   }, [aboutContent]);
 
+  const coreValueLineRef = useRef<HTMLDivElement>(null);
+  const lastCoreValueDotRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const line = coreValueLineRef.current;
+    const dot = lastCoreValueDotRef.current;
+    if (!line || !dot) return;
+    const parent = line.parentElement;
+    if (!parent) return;
+    const update = () => {
+      const parentTop = parent.getBoundingClientRect().top;
+      const dotTop = dot.getBoundingClientRect().top;
+      const dotCenterY = dotTop - parentTop + 6;
+      line.style.height = `${dotCenterY}px`;
+    };
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, [coreValues]);
+
   const snakeRef = useRef<HTMLDivElement>(null);
   const [snakeW, setSnakeW] = useState(0);
   const [pathAnimated, setPathAnimated] = useState(false);
@@ -554,8 +574,11 @@ export default function About() {
             </div>
 
             <div className="relative">
-              {/* Vertical center line */}
-              <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/20 -translate-x-1/2 hidden lg:block" />
+              {/* Vertical center line — height controlled via ref to stop at last dot */}
+              <div
+                ref={coreValueLineRef}
+                className="absolute left-1/2 top-0 w-px bg-white/20 -translate-x-1/2 hidden lg:block"
+              />
 
               {coreValues.map((value, index) => {
                 const isLeft = index % 2 === 0;
@@ -577,7 +600,11 @@ export default function About() {
                       )}
                     </div>
                     {/* Center dot + connector */}
-                    <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center" style={{ top: '6px' }}>
+                    <div
+                      ref={index === coreValues.length - 1 ? lastCoreValueDotRef : undefined}
+                      className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center"
+                      style={{ top: '6px' }}
+                    >
                       <div className="w-3 h-3 rounded-full bg-white border-2 border-white flex-shrink-0" />
                       <div className={`h-px w-8 bg-white/40 absolute ${isLeft ? 'right-3' : 'left-3'}`} />
                     </div>
