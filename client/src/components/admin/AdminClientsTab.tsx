@@ -953,8 +953,8 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                                       <AlertDialogTitle>{language === 'vi' ? 'Xóa giao dịch' : 'Delete Transaction'}</AlertDialogTitle>
                                       <AlertDialogDescription className="text-white/70">
                                         {language === 'vi'
-                                          ? <>Bạn có chắc chắn muốn xóa giao dịch <strong className="text-white">"{transaction.title}"</strong>?<br /><span className="!text-red-400">Hành động này không thể hoàn tác.</span></>
-                                          : <>Are you sure you want to delete transaction <strong className="text-white">"{transaction.title}"</strong>?<br /><span className="!text-red-400">This action cannot be undone.</span></>
+                                          ? <>Bạn có chắc chắn muốn xóa giao dịch <strong className="text-white">"{transaction.title}"</strong>?</>
+                                          : <>Are you sure you want to delete transaction <strong className="text-white">"{transaction.title}"</strong>?</>
                                         }
                                       </AlertDialogDescription>
                                     </AlertDialogHeader>
@@ -1084,8 +1084,8 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                                       <AlertDialogTitle>{language === 'vi' ? 'Xóa giao dịch' : 'Delete Transaction'}</AlertDialogTitle>
                                       <AlertDialogDescription className="text-white/70">
                                         {language === 'vi'
-                                          ? <>Bạn có chắc chắn muốn xóa giao dịch <strong className="text-white">"{transaction.title}"</strong>?<br /><span className="!text-red-400">Hành động này không thể hoàn tác.</span></>
-                                          : <>Are you sure you want to delete transaction <strong className="text-white">"{transaction.title}"</strong>?<br /><span className="!text-red-400">This action cannot be undone.</span></>
+                                          ? <>Bạn có chắc chắn muốn xóa giao dịch <strong className="text-white">"{transaction.title}"</strong>?</>
+                                          : <>Are you sure you want to delete transaction <strong className="text-white">"{transaction.title}"</strong>?</>
                                         }
                                       </AlertDialogDescription>
                                     </AlertDialogHeader>
@@ -1215,8 +1215,8 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                                       <AlertDialogTitle>{language === 'vi' ? 'Xóa giao dịch' : 'Delete Transaction'}</AlertDialogTitle>
                                       <AlertDialogDescription className="text-white/70">
                                         {language === 'vi'
-                                          ? <>Bạn có chắc chắn muốn xóa giao dịch <strong className="text-white">"{transaction.title}"</strong>?<br /><span className="!text-red-400">Hành động này không thể hoàn tác.</span></>
-                                          : <>Are you sure you want to delete transaction <strong className="text-white">"{transaction.title}"</strong>?<br /><span className="!text-red-400">This action cannot be undone.</span></>
+                                          ? <>Bạn có chắc chắn muốn xóa giao dịch <strong className="text-white">"{transaction.title}"</strong>?</>
+                                          : <>Are you sure you want to delete transaction <strong className="text-white">"{transaction.title}"</strong>?</>
                                         }
                                       </AlertDialogDescription>
                                     </AlertDialogHeader>
@@ -1296,8 +1296,8 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                                 <AlertDialogTitle>{language === 'vi' ? 'Xác nhận xóa khách hàng' : 'Confirm Delete Client'}</AlertDialogTitle>
                                 <AlertDialogDescription className="text-white/70">
                                   {language === 'vi' 
-                                    ? <>Bạn có chắc chắn muốn xóa khách hàng <strong className="text-white">{editingClient.firstName} {editingClient.lastName}</strong>?<br /><span className="!text-red-400">Hành động này không thể hoàn tác và sẽ xóa toàn bộ dữ liệu liên quan.</span></>
-                                    : <>Are you sure you want to delete client <strong className="text-white">{editingClient.firstName} {editingClient.lastName}</strong>?<br /><span className="!text-red-400">This action cannot be undone and will delete all related data.</span></>
+                                    ? <>Bạn có chắc chắn muốn xóa khách hàng <strong className="text-white">{editingClient.firstName} {editingClient.lastName}</strong>?</>
+                                    : <>Are you sure you want to delete client <strong className="text-white">{editingClient.firstName} {editingClient.lastName}</strong>?</>
                                   }
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
