@@ -410,8 +410,8 @@ export default function Lookup() {
           </h1>
           <p className="text-white/60 font-light text-lg mb-10 text-center">
             {isVi
-              ? "Nhập số điện thoại để tra cứu tiến độ dự án, nhật ký hoạt động và thông tin bảo hành."
-              : "Enter your phone number to check project progress, activity log and warranty information."}
+              ? "Nhập số điện thoại để tra cứu tiến độ dự án, nhật ký công trình và thông tin bảo hành."
+              : "Enter your phone number to check project progress, construction log and warranty information."}
           </p>
 
           <form onSubmit={handleSearch}>
