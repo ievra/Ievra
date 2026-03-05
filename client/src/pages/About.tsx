@@ -405,7 +405,7 @@ export default function About() {
               ) : <div />}
 
               {/* Center: title + content */}
-              <div className="space-y-6">
+              <div className="space-y-6 self-center">
                 <h3 className="typewriter-heading text-2xl md:text-3xl font-light text-white uppercase tracking-wide leading-tight">
                   {language === "vi" ? aboutContent.principlesTitleVi : aboutContent.principlesTitleEn}
                 </h3>
