@@ -7,48 +7,6 @@ import { useState, useEffect, useRef } from 'react';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 
-function TypewriterParagraph({ text, className }: { text: string; className: string }) {
-  const ref = useRef<HTMLParagraphElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    let obs: IntersectionObserver;
-    const setup = () => {
-      if (obs) obs.disconnect();
-      obs = new IntersectionObserver(
-        ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
-        { threshold: 0.1 }
-      );
-      obs.observe(el);
-    };
-    setup();
-    const onScroll = () => {
-      if (window.scrollY < 50) { setVisible(false); setup(); }
-    };
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => { obs?.disconnect(); window.removeEventListener('scroll', onScroll); };
-  }, [text]);
-
-  const CHAR_DELAY = 0.008;
-  return (
-    <p ref={ref} className={className}>
-      {text.split('').map((char, i) => (
-        <span
-          key={i}
-          style={{
-            opacity: 0,
-            animation: visible ? `revealChar 0.01s ${i * CHAR_DELAY}s forwards` : 'none',
-          }}
-        >
-          {char === '\n' ? '\n' : char}
-        </span>
-      ))}
-    </p>
-  );
-}
-
 export default function About() {
   const { language } = useLanguage();
   const [selectedMember, setSelectedMember] = useState<number | null>(null);
@@ -485,13 +443,12 @@ export default function About() {
 
               {/* Center: title + content */}
               <div className="space-y-6 self-center">
-                <h3 className="typewriter-heading text-2xl md:text-3xl font-light text-white uppercase tracking-wide leading-tight">
+                <h3 className="text-2xl md:text-3xl font-light text-white uppercase tracking-wide leading-tight">
                   {language === "vi" ? aboutContent.principlesTitleVi : aboutContent.principlesTitleEn}
                 </h3>
-                <TypewriterParagraph
-                  text={language === "vi" ? aboutContent.principlesContentVi : aboutContent.principlesContentEn}
-                  className="text-lg text-white/70 font-light leading-relaxed whitespace-pre-line text-justify"
-                />
+                <p className="text-lg text-white/70 font-light leading-relaxed whitespace-pre-line text-justify">
+                  {language === "vi" ? aboutContent.principlesContentVi : aboutContent.principlesContentEn}
+                </p>
               </div>
 
               {/* Right image — small */}
