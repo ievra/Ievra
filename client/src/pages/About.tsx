@@ -503,7 +503,16 @@ export default function About() {
                   const isTitleTyping = typed && typed.title.length > 0 && typed.title.length < fullTitle.length;
                   const isDescTyping = typed && typed.title.length >= fullTitle.length && typed.desc.length < fullDesc.length;
                   return (
-                    <div key={service.id} className={`px-6 py-8 md:px-8 md:py-12 ${index > 0 ? 'border-t border-white/10 lg:border-t-0' : ''}`}>
+                    <div
+                      key={service.id}
+                      className={`px-6 py-8 md:px-8 md:py-12 ${index > 0 ? 'border-t border-white/10 lg:border-t-0' : ''}`}
+                      style={{
+                        opacity: 0,
+                        animation: showcaseAnimStarted
+                          ? `slideUpFade 0.7s cubic-bezier(0.22,0.61,0.36,1) ${index * 0.18}s forwards`
+                          : 'none',
+                      }}
+                    >
                       <div className={`${stepH} flex flex-col justify-start`}>
                         <div className="relative space-y-3">
                           {index > 0 && (
