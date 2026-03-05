@@ -186,7 +186,7 @@ export default function About() {
   useEffect(() => {
     if (!showcaseAnimStarted || showcaseServices.length === 0) return;
     const TICK = 4;
-    const CHARS_PER_TICK = 5;
+    const CHARS_PER_TICK = 3;
     const timers: ReturnType<typeof setInterval>[] = [];
     setTypedTexts(showcaseServices.map(() => ({ title: '', desc: '' })));
 
