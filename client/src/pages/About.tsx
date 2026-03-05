@@ -476,7 +476,7 @@ export default function About() {
       )}
       {/* Architecture Showcase + Stats Section */}
       {((aboutContent?.showcaseBannerImageData || aboutContent?.showcaseBannerImage) || showcaseServices.length > 0 || aboutContent) && (
-        <section className="relative bg-black overflow-hidden lg:-ml-16 min-h-[500px] lg:h-screen">
+        <section className="relative bg-black overflow-hidden lg:-ml-16 lg:h-screen">
           {(aboutContent?.showcaseBannerImageData || aboutContent?.showcaseBannerImage) && (
             <div
               className="absolute inset-0 bg-cover bg-center"
@@ -488,7 +488,7 @@ export default function About() {
             </div>
           )}
 
-          <div className="relative h-full flex flex-col justify-end">
+          <div className="relative flex flex-col lg:h-full lg:justify-end">
             {/* Showcase Services */}
             {showcaseServices.length > 0 && (
               <div ref={showcaseSectionRef} className="relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-end">
