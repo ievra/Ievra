@@ -16,6 +16,7 @@ import type { AboutPageContent, AboutCoreValue, AboutShowcaseService, AboutProce
 import { insertAboutPageContentSchema, insertAboutCoreValueSchema, insertAboutShowcaseServiceSchema, insertAboutProcessStepSchema, insertAboutTeamMemberSchema } from "@shared/schema";
 import ImageUpload from "@/components/ImageUpload";
 import ImageCropDialog from "@/components/ImageCropDialog";
+import { useToast } from "@/hooks/use-toast";
 
 interface AboutAdminTabProps {
   aboutContent?: AboutPageContent;
@@ -113,6 +114,7 @@ export default function AboutAdminTab({
   hasPermission,
 }: AboutAdminTabProps) {
   const { language } = useLanguage();
+  const { toast } = useToast();
   
   const [isPrincipleDialogOpen, setIsPrincipleDialogOpen] = useState(false);
   const [editingPrinciple, setEditingPrinciple] = useState<AboutCoreValue | null>(null);
@@ -124,6 +126,8 @@ export default function AboutAdminTab({
   const [imageToCrop, setImageToCrop] = useState<string>("");
   const [croppedImageFile, setCroppedImageFile] = useState<File | null>(null);
   const [cropType, setCropType] = useState<'showcase' | 'history' | 'mission' | 'missionVision' | 'teamMember'>('showcase');
+  const [principlesImageLeftPreview, setPrinciplesImageLeftPreview] = useState<string>('');
+  const [principlesImageRightPreview, setPrinciplesImageRightPreview] = useState<string>('');
 
   const aboutContentForm = useForm<InsertAboutPageContent>({
     resolver: zodResolver(insertAboutPageContentSchema),
@@ -138,6 +142,8 @@ export default function AboutAdminTab({
       principlesTitleVi: "",
       principlesContentEn: "",
       principlesContentVi: "",
+      principlesImageLeft: "",
+      principlesImageRight: "",
       showcaseBannerImage: "",
       statsProjectsValue: "150+",
       statsProjectsLabelEn: "Projects Completed",
@@ -321,6 +327,34 @@ export default function AboutAdminTab({
         setIsCropDialogOpen(true);
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handlePrinciplesImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, side: 'left' | 'right') => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+      toast({ title: "File too large", description: "Maximum: 10MB.", variant: "destructive" });
+      e.target.value = '';
+      return;
+    }
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const response = await fetch('/api/upload', { method: 'POST', body: formData });
+      if (!response.ok) throw new Error('Upload failed');
+      const data = await response.json();
+      if (side === 'left') {
+        setPrinciplesImageLeftPreview(data.path);
+        aboutContentForm.setValue('principlesImageLeft', data.path);
+      } else {
+        setPrinciplesImageRightPreview(data.path);
+        aboutContentForm.setValue('principlesImageRight', data.path);
+      }
+      toast({ title: language === 'vi' ? 'Tải lên thành công' : 'Upload successful' });
+    } catch {
+      toast({ title: language === 'vi' ? 'Lỗi tải lên' : 'Upload failed', variant: "destructive" });
+      e.target.value = '';
     }
   };
 
@@ -694,6 +728,73 @@ export default function AboutAdminTab({
                       <div>
                         <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Nội Dung (Tiếng Việt)' : 'Content (Tiếng Việt)'}</label>
                         <Textarea {...aboutContentForm.register("principlesContentVi")} rows={5} placeholder="Mô tả triết lý thiết kế của bạn..." data-testid="textarea-principles-content-vi" />
+                      </div>
+                    </div>
+                    {/* Side Images */}
+                    <div className="grid grid-cols-2 gap-4 pt-2">
+                      {/* Left Image */}
+                      <div>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Ảnh Bên Trái' : 'Left Image'}</label>
+                        {(principlesImageLeftPreview || aboutContent?.principlesImageLeftData || aboutContent?.principlesImageLeft) ? (
+                          <div className="relative group">
+                            <div className="border bg-muted overflow-hidden">
+                              <img
+                                src={principlesImageLeftPreview || aboutContent?.principlesImageLeftData || aboutContent?.principlesImageLeft || ''}
+                                alt="Principles Left"
+                                className="w-full aspect-[3/4] object-cover"
+                              />
+                            </div>
+                            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <Button type="button" onClick={() => document.getElementById('principles-image-left-upload')?.click()} disabled={!hasPermission('about')} className="bg-black/80 text-white border border-white/20 hover:bg-black/90 shadow-xl">
+                                <Pencil className="h-4 w-4 mr-1" />
+                                <span className="text-sm font-light">{language === 'vi' ? 'Thay' : 'Change'}</span>
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="border-2 border-dashed border-muted-foreground/25 p-8 text-center">
+                            <div className="flex flex-col items-center gap-3">
+                              <Upload className="h-8 w-8 text-muted-foreground" />
+                              <p className="text-xs text-muted-foreground">PNG, JPG • Max 10MB</p>
+                              <Button type="button" variant="outline" className="bg-white text-black hover:bg-white/90 text-sm" onClick={() => document.getElementById('principles-image-left-upload')?.click()}>
+                                {language === 'vi' ? 'Chọn Tệp' : 'Choose File'}
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                        <input id="principles-image-left-upload" type="file" disabled={!hasPermission('about')} accept=".jpg,.jpeg,.png,.webp" onChange={(e) => handlePrinciplesImageUpload(e, 'left')} className="hidden" />
+                      </div>
+                      {/* Right Image */}
+                      <div>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Ảnh Bên Phải' : 'Right Image'}</label>
+                        {(principlesImageRightPreview || aboutContent?.principlesImageRightData || aboutContent?.principlesImageRight) ? (
+                          <div className="relative group">
+                            <div className="border bg-muted overflow-hidden">
+                              <img
+                                src={principlesImageRightPreview || aboutContent?.principlesImageRightData || aboutContent?.principlesImageRight || ''}
+                                alt="Principles Right"
+                                className="w-full aspect-[3/4] object-cover"
+                              />
+                            </div>
+                            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <Button type="button" onClick={() => document.getElementById('principles-image-right-upload')?.click()} disabled={!hasPermission('about')} className="bg-black/80 text-white border border-white/20 hover:bg-black/90 shadow-xl">
+                                <Pencil className="h-4 w-4 mr-1" />
+                                <span className="text-sm font-light">{language === 'vi' ? 'Thay' : 'Change'}</span>
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="border-2 border-dashed border-muted-foreground/25 p-8 text-center">
+                            <div className="flex flex-col items-center gap-3">
+                              <Upload className="h-8 w-8 text-muted-foreground" />
+                              <p className="text-xs text-muted-foreground">PNG, JPG • Max 10MB</p>
+                              <Button type="button" variant="outline" className="bg-white text-black hover:bg-white/90 text-sm" onClick={() => document.getElementById('principles-image-right-upload')?.click()}>
+                                {language === 'vi' ? 'Chọn Tệp' : 'Choose File'}
+                              </Button>
+                            </div>
+                          </div>
+                        )}
+                        <input id="principles-image-right-upload" type="file" disabled={!hasPermission('about')} accept=".jpg,.jpeg,.png,.webp" onChange={(e) => handlePrinciplesImageUpload(e, 'right')} className="hidden" />
                       </div>
                     </div>
                   </div>
