@@ -536,7 +536,9 @@ export default function About() {
       )}
       {/* Core Values Section */}
       {coreValues.length > 0 && aboutContent && (
-        <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
+        <section className="relative py-20 bg-black lg:-ml-16 border-t border-white/10">
+          {/* Vertical center line — full section height */}
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/20 -translate-x-1/2 hidden lg:block" />
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-16">
               <h3 className="typewriter-heading md:text-4xl font-light text-white uppercase tracking-wide text-[24px]">
@@ -545,8 +547,6 @@ export default function About() {
             </div>
 
             <div className="relative">
-              {/* Vertical center line */}
-              <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/20 -translate-x-1/2 hidden lg:block" />
 
               {coreValues.map((value, index) => {
                 const isLeft = index % 2 === 0;
