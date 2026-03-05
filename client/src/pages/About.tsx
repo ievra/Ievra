@@ -117,7 +117,7 @@ export default function About() {
   const [coreValuesAnimStarted, setCoreValuesAnimStarted] = useState(false);
   const [coreValueDotYs, setCoreValueDotYs] = useState<number[]>([]);
   const [coreValueLineH, setCoreValueLineH] = useState(0);
-  const CORE_VALUES_ANIM_DURATION = 3;
+  const CORE_VALUES_ANIM_DURATION = 1.5;
 
   useEffect(() => {
     const container = coreValuesContainerRef.current;
@@ -723,7 +723,7 @@ export default function About() {
                 const numRows = rows.length;
                 const svgH = LINE_Y + (numRows - 1) * ROW_H + LINE_Y + 80; // extra bottom for text
 
-                const ANIM_DURATION = 14; // seconds for full line draw
+                const ANIM_DURATION = 5; // seconds for full line draw
                 const BLEED = 400; // px beyond container to bleed (enough to exit screen)
 
                 // Build SVG path — single connected snake, bleeding off both ends
@@ -837,8 +837,7 @@ export default function About() {
                         const title = language === "vi" ? step.titleVi : step.titleEn;
                         const desc = language === "vi" ? step.descriptionVi : step.descriptionEn;
                         const itemDelay = getItemDelay(step.stepNumber);
-                        const titleChars = (title || '').split('');
-                        const descDelay = itemDelay + 0.15 + titleChars.length * 0.055;
+                        const descDelay = itemDelay + 0.2;
 
                         // x position: evenly spaced from xL to xR based on actual row item count
                         const xMid = (xL + xR) / 2;
@@ -896,20 +895,16 @@ export default function About() {
                               {step.stepNumber}
                             </div>
                             <div className="mt-3 text-center px-1">
-                              <h4 className="font-light text-white uppercase tracking-wide text-[16px]">
-                                {titleChars.map((char, charIdx) => (
-                                  <span
-                                    key={charIdx}
-                                    style={{
-                                      opacity: 0,
-                                      animation: pathAnimated
-                                        ? `revealChar 0.01s ${itemDelay + 0.12 + charIdx * 0.055}s forwards`
-                                        : 'none',
-                                    }}
-                                  >
-                                    {char === ' ' ? '\u00a0' : char}
-                                  </span>
-                                ))}
+                              <h4
+                                className="font-light text-white uppercase tracking-wide text-[16px]"
+                                style={{
+                                  opacity: 0,
+                                  animation: pathAnimated
+                                    ? `snakeItemFadeIn 0.5s ease ${itemDelay + 0.1}s forwards`
+                                    : 'none',
+                                }}
+                              >
+                                {title}
                               </h4>
                               {desc && (
                                 <p
