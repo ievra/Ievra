@@ -1529,8 +1529,8 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                                   <AlertDialogTitle>{language === 'vi' ? 'Xóa Bài Viết?' : 'Delete Article?'}</AlertDialogTitle>
                                   <AlertDialogDescription className="text-white/70">
                                     {language === 'vi'
-                                      ? <>Thao tác này sẽ xóa vĩnh viễn <strong className="text-white">"{displayArticle.title}"</strong> (cả phiên bản EN và VI).<br /><span className="!text-red-400">Hành động này không thể hoàn tác.</span></>
-                                      : <>This will permanently delete <strong className="text-white">"{displayArticle.title}"</strong> (both EN and VI versions).<br /><span className="!text-red-400">This action cannot be undone.</span></>
+                                      ? <>Thao tác này sẽ xóa vĩnh viễn <strong className="text-white">"{displayArticle.title}"</strong> (cả phiên bản EN và VI).</>
+                                      : <>This will permanently delete <strong className="text-white">"{displayArticle.title}"</strong> (both EN and VI versions).</>
                                     }
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
