@@ -7,6 +7,48 @@ import { useState, useEffect, useRef } from 'react';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 
+function TypewriterParagraph({ text, className }: { text: string; className: string }) {
+  const ref = useRef<HTMLParagraphElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let obs: IntersectionObserver;
+    const setup = () => {
+      if (obs) obs.disconnect();
+      obs = new IntersectionObserver(
+        ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
+        { threshold: 0.1 }
+      );
+      obs.observe(el);
+    };
+    setup();
+    const onScroll = () => {
+      if (window.scrollY < 50) { setVisible(false); setup(); }
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => { obs?.disconnect(); window.removeEventListener('scroll', onScroll); };
+  }, [text]);
+
+  const CHAR_DELAY = 0.008;
+  return (
+    <p ref={ref} className={className}>
+      {text.split('').map((char, i) => (
+        <span
+          key={i}
+          style={{
+            opacity: 0,
+            animation: visible ? `revealChar 0.01s ${i * CHAR_DELAY}s forwards` : 'none',
+          }}
+        >
+          {char === '\n' ? '\n' : char}
+        </span>
+      ))}
+    </p>
+  );
+}
+
 export default function About() {
   const { language } = useLanguage();
   const [selectedMember, setSelectedMember] = useState<number | null>(0);
@@ -264,9 +306,10 @@ export default function About() {
                 <h3 className="typewriter-heading md:text-4xl font-light text-white uppercase tracking-wide text-[24px]">
                   {language === "vi" ? aboutContent.historyTitleVi : aboutContent.historyTitleEn}
                 </h3>
-                <p className="typewriter-heading text-white/70 font-light text-lg leading-relaxed whitespace-pre-line text-justify">
-                  {language === "vi" ? aboutContent.historyContentVi : aboutContent.historyContentEn}
-                </p>
+                <TypewriterParagraph
+                  text={language === "vi" ? aboutContent.historyContentVi : aboutContent.historyContentEn}
+                  className="text-white/70 font-light text-lg leading-relaxed whitespace-pre-line text-justify"
+                />
               </div>
               {aboutContent.historyImage && (
                 <div className="relative aspect-[4/3] overflow-hidden bg-white/5">
@@ -310,9 +353,10 @@ export default function About() {
                     <h3 className="typewriter-heading text-2xl font-light text-white uppercase tracking-wide">
                       {language === "vi" ? aboutContent.missionTitleVi : aboutContent.missionTitleEn}
                     </h3>
-                    <p className="typewriter-heading text-lg text-white/70 font-light leading-relaxed whitespace-pre-line text-justify">
-                      {language === "vi" ? aboutContent.missionContentVi : aboutContent.missionContentEn}
-                    </p>
+                    <TypewriterParagraph
+                      text={language === "vi" ? aboutContent.missionContentVi : aboutContent.missionContentEn}
+                      className="text-lg text-white/70 font-light leading-relaxed whitespace-pre-line text-justify"
+                    />
                   </div>
                 </div>
               )}
@@ -337,9 +381,10 @@ export default function About() {
                     <h3 className="typewriter-heading text-2xl font-light text-white uppercase tracking-wide">
                       {language === "vi" ? aboutContent.visionTitleVi : aboutContent.visionTitleEn}
                     </h3>
-                    <p className="typewriter-heading text-lg text-white/70 font-light leading-relaxed whitespace-pre-line text-justify">
-                      {language === "vi" ? aboutContent.visionContentVi : aboutContent.visionContentEn}
-                    </p>
+                    <TypewriterParagraph
+                      text={language === "vi" ? aboutContent.visionContentVi : aboutContent.visionContentEn}
+                      className="text-lg text-white/70 font-light leading-relaxed whitespace-pre-line text-justify"
+                    />
                   </div>
                 </div>
               )}
