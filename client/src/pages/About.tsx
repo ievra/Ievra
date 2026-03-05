@@ -112,24 +112,39 @@ export default function About() {
     }
   }, [aboutContent]);
 
-  const coreValueLineRef = useRef<HTMLDivElement>(null);
-  const lastCoreValueDotRef = useRef<HTMLDivElement>(null);
+  const coreValuesContainerRef = useRef<HTMLDivElement>(null);
+  const coreValueDotRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [coreValuesAnimStarted, setCoreValuesAnimStarted] = useState(false);
+  const [coreValueDotYs, setCoreValueDotYs] = useState<number[]>([]);
+  const [coreValueLineH, setCoreValueLineH] = useState(0);
+  const CORE_VALUES_ANIM_DURATION = 3;
 
   useEffect(() => {
-    const line = coreValueLineRef.current;
-    const dot = lastCoreValueDotRef.current;
-    if (!line || !dot) return;
-    const parent = line.parentElement;
-    if (!parent) return;
-    const update = () => {
-      const parentTop = parent.getBoundingClientRect().top;
-      const dotTop = dot.getBoundingClientRect().top;
-      const dotCenterY = dotTop - parentTop + 6;
-      line.style.height = `${dotCenterY}px`;
+    const container = coreValuesContainerRef.current;
+    if (!container || coreValues.length === 0) return;
+    const measure = () => {
+      const containerRect = container.getBoundingClientRect();
+      const ys = coreValueDotRefs.current.map(dot => {
+        if (!dot) return 0;
+        return dot.getBoundingClientRect().top - containerRect.top + 6;
+      });
+      setCoreValueDotYs(ys);
+      setCoreValueLineH(ys[ys.length - 1] ?? 0);
     };
-    update();
-    window.addEventListener('resize', update);
-    return () => window.removeEventListener('resize', update);
+    measure();
+    window.addEventListener('resize', measure);
+    return () => window.removeEventListener('resize', measure);
+  }, [coreValues]);
+
+  useEffect(() => {
+    const container = coreValuesContainerRef.current;
+    if (!container) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setCoreValuesAnimStarted(true); obs.disconnect(); } },
+      { threshold: 0.1 }
+    );
+    obs.observe(container);
+    return () => obs.disconnect();
   }, [coreValues]);
 
   const snakeRef = useRef<HTMLDivElement>(null);
@@ -573,62 +588,101 @@ export default function About() {
               </h3>
             </div>
 
-            <div className="relative">
-              {/* Vertical center line — height controlled via ref to stop at last dot */}
-              <div
-                ref={coreValueLineRef}
-                className="absolute left-1/2 top-0 w-px bg-white/20 -translate-x-1/2 hidden lg:block"
-              />
+            <div className="relative" ref={coreValuesContainerRef}>
+              {/* Animated SVG vertical center line */}
+              {coreValueLineH > 0 && (
+                <svg
+                  className="absolute left-1/2 top-0 -translate-x-1/2 pointer-events-none hidden lg:block"
+                  style={{ width: '2px', height: `${coreValueLineH}px`, overflow: 'visible' }}
+                >
+                  <line x1="1" y1="0" x2="1" y2={coreValueLineH} stroke="rgba(255,255,255,0.15)" strokeWidth="1" />
+                  <line
+                    key={coreValuesAnimStarted ? 'on' : 'off'}
+                    x1="1" y1="0" x2="1" y2={coreValueLineH}
+                    stroke="rgba(255,255,255,0.7)"
+                    strokeWidth="1.5"
+                    strokeDasharray={coreValueLineH}
+                    strokeDashoffset={coreValueLineH}
+                    style={{
+                      animation: coreValuesAnimStarted
+                        ? `drawCoreValuesLine ${CORE_VALUES_ANIM_DURATION}s linear forwards`
+                        : 'none',
+                    }}
+                  />
+                </svg>
+              )}
 
               {coreValues.map((value, index) => {
                 const isLeft = index % 2 === 0;
                 const title = language === "vi" ? value.titleVi : value.titleEn;
                 const desc = language === "vi" ? value.descriptionVi : value.descriptionEn;
+                const dotY = coreValueDotYs[index] ?? 0;
+                const itemDelay = coreValueLineH > 0 ? (dotY / coreValueLineH) * CORE_VALUES_ANIM_DURATION : 0;
                 return (
                   <div key={value.id} className={`relative lg:grid lg:grid-cols-2 ${index < coreValues.length - 1 ? 'mb-12 lg:mb-44' : ''}`}>
                     {/* Desktop LEFT column */}
                     <div className="hidden lg:block lg:pr-20 lg:text-right">
                       {isLeft && (
-                        <div className="slide-from-left space-y-3 max-w-sm ml-auto">
-                          <h4 className="text-2xl text-white uppercase tracking-wide leading-tight font-light">
-                            {title}
-                          </h4>
-                          <p className="text-white/60 font-light text-[18px]">
-                            {desc}
-                          </p>
+                        <div
+                          className="space-y-3 max-w-sm ml-auto"
+                          style={{
+                            opacity: 0,
+                            animation: coreValuesAnimStarted
+                              ? `snakeItemFadeIn 0.6s ease ${itemDelay + 0.1}s forwards`
+                              : 'none',
+                          }}
+                        >
+                          <h4 className="text-2xl text-white uppercase tracking-wide leading-tight font-light">{title}</h4>
+                          <p className="text-white/60 font-light text-[18px]">{desc}</p>
                         </div>
                       )}
                     </div>
                     {/* Center dot + connector */}
                     <div
-                      ref={index === coreValues.length - 1 ? lastCoreValueDotRef : undefined}
+                      ref={el => { coreValueDotRefs.current[index] = el; }}
                       className="hidden lg:flex absolute left-1/2 -translate-x-1/2 items-center"
                       style={{ top: '6px' }}
                     >
-                      <div className="w-3 h-3 rounded-full bg-white border-2 border-white flex-shrink-0" />
-                      <div className={`h-px w-8 bg-white/40 absolute ${isLeft ? 'right-3' : 'left-3'}`} />
+                      <div
+                        className="w-3 h-3 rounded-full bg-white border-2 border-white flex-shrink-0"
+                        style={{
+                          opacity: 0,
+                          animation: coreValuesAnimStarted
+                            ? `snakeItemFadeIn 0.3s ease ${itemDelay}s forwards`
+                            : 'none',
+                        }}
+                      />
+                      <div
+                        className={`h-px w-8 bg-white/40 absolute ${isLeft ? 'right-3' : 'left-3'}`}
+                        style={{
+                          opacity: 0,
+                          animation: coreValuesAnimStarted
+                            ? `snakeItemFadeIn 0.3s ease ${itemDelay}s forwards`
+                            : 'none',
+                        }}
+                      />
                     </div>
                     {/* Desktop RIGHT column */}
                     <div className="hidden lg:block lg:pl-20">
                       {!isLeft && (
-                        <div className="slide-from-right space-y-3 max-w-sm">
-                          <h4 className="text-2xl text-white uppercase tracking-wide leading-tight font-light">
-                            {title}
-                          </h4>
-                          <p className="text-white/60 font-light text-[18px]">
-                            {desc}
-                          </p>
+                        <div
+                          className="space-y-3 max-w-sm"
+                          style={{
+                            opacity: 0,
+                            animation: coreValuesAnimStarted
+                              ? `snakeItemFadeIn 0.6s ease ${itemDelay + 0.1}s forwards`
+                              : 'none',
+                          }}
+                        >
+                          <h4 className="text-2xl text-white uppercase tracking-wide leading-tight font-light">{title}</h4>
+                          <p className="text-white/60 font-light text-[18px]">{desc}</p>
                         </div>
                       )}
                     </div>
                     {/* Mobile: stacked with left border */}
                     <div className="lg:hidden space-y-3 pl-6 border-l border-white/20">
-                      <h4 className="text-xl font-semibold text-white uppercase tracking-wide">
-                        {title}
-                      </h4>
-                      <p className="text-white/60 font-light text-base leading-relaxed">
-                        {desc}
-                      </p>
+                      <h4 className="text-xl font-semibold text-white uppercase tracking-wide">{title}</h4>
+                      <p className="text-white/60 font-light text-base leading-relaxed">{desc}</p>
                     </div>
                   </div>
                 );
