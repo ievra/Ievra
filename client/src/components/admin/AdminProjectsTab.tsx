@@ -1887,7 +1887,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
               {language === 'vi' ? 'Hủy' : 'Cancel'}
             </AlertDialogCancel>
             <AlertDialogAction
-              className="rounded-none bg-black hover:bg-black/80 text-white border border-white/20"
+              className="rounded-none bg-black hover:bg-white hover:text-black text-white border border-white/20 transition-colors"
               onClick={() => {
                 deleteProjectData?.group.forEach(p => {
                   deleteProjectMutation.mutate(p.id);
