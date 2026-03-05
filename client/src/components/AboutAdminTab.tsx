@@ -339,25 +339,13 @@ export default function AboutAdminTab({
                 <div className="p-4">
                   <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Phần Hero' : 'Hero Section'}</h3>
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-4">
-                      <div>
-                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Hero (English)' : 'Hero Title (English)'}</label>
-                        <Input {...aboutContentForm.register("heroTitleEn")} placeholder="ARCHITECTURAL & INTERIOR DESIGN" data-testid="input-hero-title-en" />
-                      </div>
-                      <div>
-                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề Hero (English)' : 'Hero Subtitle (English)'}</label>
-                        <Input {...aboutContentForm.register("heroSubtitleEn")} placeholder="INNOVATION IN EVERY PROJECT" data-testid="input-hero-subtitle-en" />
-                      </div>
+                    <div>
+                      <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Hero (English)' : 'Hero Title (English)'}</label>
+                      <Input {...aboutContentForm.register("heroTitleEn")} placeholder="ARCHITECTURAL & INTERIOR DESIGN" data-testid="input-hero-title-en" />
                     </div>
-                    <div className="space-y-4">
-                      <div>
-                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Hero (Tiếng Việt)' : 'Hero Title (Tiếng Việt)'}</label>
-                        <Input {...aboutContentForm.register("heroTitleVi")} placeholder="THIẾT KẾ KIẾN TRÚC VÀ NỘI THẤT" data-testid="input-hero-title-vi" />
-                      </div>
-                      <div>
-                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Phụ Đề Hero (Tiếng Việt)' : 'Hero Subtitle (Tiếng Việt)'}</label>
-                        <Input {...aboutContentForm.register("heroSubtitleVi")} placeholder="ĐỔI MỚI TRONG MỌI DỰ ÁN" data-testid="input-hero-subtitle-vi" />
-                      </div>
+                    <div>
+                      <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Hero (Tiếng Việt)' : 'Hero Title (Tiếng Việt)'}</label>
+                      <Input {...aboutContentForm.register("heroTitleVi")} placeholder="THIẾT KẾ KIẾN TRÚC VÀ NỘI THẤT" data-testid="input-hero-title-vi" />
                     </div>
                   </div>
                   
