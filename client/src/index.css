@@ -779,6 +779,7 @@ img {
   .slide-from-left {
     opacity: 0;
     transform: translateX(-50px);
+    will-change: opacity, transform;
   }
   .slide-from-left.in-view {
     animation: slideFromLeft 3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -788,11 +789,27 @@ img {
     from { clip-path: inset(-30% 100% -30% 0); }
     to   { clip-path: inset(-30% 0% -30% 0); }
   }
+  @keyframes typeRevealMobile {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
   .typewriter-heading {
     clip-path: inset(-30% 100% -30% 0);
+    will-change: clip-path;
   }
   .typewriter-heading.in-view {
     animation: typeReveal 2s linear forwards;
+  }
+  @media (max-width: 1023px) {
+    .typewriter-heading {
+      clip-path: none;
+      opacity: 0;
+      transform: translateY(12px);
+      will-change: opacity, transform;
+    }
+    .typewriter-heading.in-view {
+      animation: typeRevealMobile 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
   }
 
   @keyframes slideFromRight {
@@ -803,6 +820,7 @@ img {
   .slide-from-right {
     opacity: 0;
     transform: translateX(50px);
+    will-change: opacity, transform;
   }
   .slide-from-right.in-view {
     animation: slideFromRight 3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
