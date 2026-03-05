@@ -1237,8 +1237,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 <AlertDialogTitle>{language === 'vi' ? 'Xóa Yêu Cầu' : 'Delete Inquiry'}</AlertDialogTitle>
                                 <AlertDialogDescription className="text-white/70">
                                   {language === 'vi' ? 'Bạn có chắc chắn muốn xóa yêu cầu từ' : 'Are you sure you want to delete this inquiry from'} <strong className="text-white">{inquiry.firstName} {inquiry.lastName}</strong>?
-                                  <br />
-                                  <span className="!text-red-400">{language === 'vi' ? 'Hành động này không thể hoàn tác.' : 'This action cannot be undone.'}</span>
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
