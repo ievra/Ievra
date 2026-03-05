@@ -140,7 +140,13 @@ export default function About() {
     const container = coreValuesContainerRef.current;
     if (!container) return;
     const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setCoreValuesAnimStarted(true); obs.disconnect(); } },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setCoreValuesAnimStarted(true);
+        } else {
+          setCoreValuesAnimStarted(false);
+        }
+      },
       { threshold: 0.1 }
     );
     obs.observe(container);
