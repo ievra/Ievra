@@ -278,7 +278,7 @@ export default function About() {
           ) : (
             <div className="absolute inset-0 bg-black" style={{ zIndex: 0 }} />
           )}
-          <div className="absolute inset-0 bg-black/60" style={{ zIndex: 1 }} />
+          <div className="absolute inset-0 bg-black/40" style={{ zIndex: 1 }} />
           
           {/* Content */}
           {aboutContent && (
