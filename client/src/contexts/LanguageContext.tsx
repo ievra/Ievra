@@ -140,7 +140,7 @@ const translations = {
     
     // Contact Page
     'contact.title': 'SEND CONSULTATION REQUEST',
-    'contact.subtitle': 'Ready to transform your space? Let\'s start the conversation.',
+    'contact.subtitle': 'Thank you for your trust. We are a high-end interior design and construction contractor, focusing on in-depth spatial execution. Total solutions from concept to turnkey construction, committed to an aesthetic mindset and professionalism.',
     'contact.getInTouch': 'Get In Touch',
     'contact.getInTouchDesc': 'We\'d love to hear about your project and discuss how we can help bring your vision to life.',
     'contact.office': 'Our Office',
@@ -373,7 +373,7 @@ const translations = {
     
     // Contact Page
     'contact.title': 'GỬI YÊU CẦU TƯ VẤN',
-    'contact.subtitle': 'Sẵn sàng biến đổi không gian của bạn? Hãy bắt đầu cuộc trò chuyện.',
+    'contact.subtitle': 'Cảm ơn quý khách đã tin tưởng. Chúng tôi là đơn vị thiết kế và thi công nội thất cao cấp, tập trung thực thi không gian sống chuyên sâu. Giải pháp toàn diện từ ý tưởng đến thi công trọn gói, cam kết đồng hành bằng tư duy thẩm mỹ và sự chuyên nghiệp.',
     'contact.getInTouch': 'Liên Lạc',
     'contact.getInTouchDesc': 'Chúng tôi rất muốn nghe về dự án của bạn và thảo luận cách chúng tôi có thể giúp biến tầm nhìn của bạn thành hiện thực.',
     'contact.office': 'Văn Phòng Của Chúng Tôi',
