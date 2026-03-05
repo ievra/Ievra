@@ -392,7 +392,7 @@ export default function About() {
       {aboutContent && (aboutContent.principlesContentEn || aboutContent.principlesContentVi) && (
         <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-[2fr_2fr_1fr] gap-10 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-[2fr_2fr_1fr] gap-10 items-start">
               {/* Left image — large */}
               {(aboutContent.principlesImageLeftData || aboutContent.principlesImageLeft) ? (
                 <div className="overflow-hidden aspect-[2/3] bg-white/5">
