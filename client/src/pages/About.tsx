@@ -1053,44 +1053,36 @@ export default function About() {
       {aboutContent && (awards.length > 0) && (
         <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mb-12 flex items-end justify-between gap-4">
+            <div className="mb-12">
               <h3 className="typewriter-heading md:text-4xl font-light text-white uppercase tracking-wide text-[24px]">
                 {language === "vi" ? aboutContent.awardsSectionTitleVi : aboutContent.awardsSectionTitleEn}
               </h3>
-              {/* Subtle nav arrows */}
-              <div className="flex gap-3 flex-shrink-0">
-                <button
-                  onClick={() => {
-                    awardsScrollRef.current?.scrollBy({ left: -340, behavior: 'smooth' });
-                  }}
-                  className={`w-9 h-9 border flex items-center justify-center transition-all duration-300 ${
-                    awardsCanScrollLeft
-                      ? 'border-white/30 text-white/70 hover:border-white hover:text-white'
-                      : 'border-white/10 text-white/20 cursor-default'
-                  }`}
-                  aria-label="Previous"
-                >
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <path d="M9 2L4 7L9 12" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
-                <button
-                  onClick={() => {
-                    awardsScrollRef.current?.scrollBy({ left: 340, behavior: 'smooth' });
-                  }}
-                  className={`w-9 h-9 border flex items-center justify-center transition-all duration-300 ${
-                    awardsCanScrollRight
-                      ? 'border-white/30 text-white/70 hover:border-white hover:text-white'
-                      : 'border-white/10 text-white/20 cursor-default'
-                  }`}
-                  aria-label="Next"
-                >
-                  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <path d="M5 2L10 7L5 12" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
-              </div>
             </div>
+            <div className="relative">
+              {/* Left arrow */}
+              <button
+                onClick={() => awardsScrollRef.current?.scrollBy({ left: -340, behavior: 'smooth' })}
+                className={`absolute left-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center transition-all duration-300 -translate-x-4 ${
+                  awardsCanScrollLeft ? 'text-white/60 hover:text-white' : 'text-white/15 cursor-default'
+                }`}
+                aria-label="Previous"
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
+              {/* Right arrow */}
+              <button
+                onClick={() => awardsScrollRef.current?.scrollBy({ left: 340, behavior: 'smooth' })}
+                className={`absolute right-0 top-1/2 -translate-y-1/2 z-10 w-10 h-10 flex items-center justify-center transition-all duration-300 translate-x-4 ${
+                  awardsCanScrollRight ? 'text-white/60 hover:text-white' : 'text-white/15 cursor-default'
+                }`}
+                aria-label="Next"
+              >
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                  <path d="M6 3L11 8L6 13" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </button>
             <div
               ref={awardsScrollRef}
               onScroll={(e) => {
