@@ -529,7 +529,7 @@ export default function About() {
                           : 'none',
                       }}
                     >
-                      <div className={`${stepH} flex flex-col justify-start`}>
+                      <div className={`${stepH} flex flex-col justify-center`}>
                         <div className="relative space-y-3">
                           {index > 0 && (
                             <div
