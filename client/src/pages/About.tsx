@@ -372,7 +372,7 @@ export default function About() {
         <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
           <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-              <div className="space-y-8">
+              <div className="slide-from-left space-y-8">
                 <h3 className="md:text-4xl font-light text-white uppercase tracking-wide text-[24px]">
                   {language === "vi" ? aboutContent.historyTitleVi : aboutContent.historyTitleEn}
                 </h3>
@@ -422,7 +422,7 @@ export default function About() {
                       </div>
                     </div>
                   )}
-                  <div className="space-y-6">
+                  <div className="slide-from-left space-y-6">
                     <h3 className="text-2xl font-light text-white uppercase tracking-wide">
                       {language === "vi" ? aboutContent.missionTitleVi : aboutContent.missionTitleEn}
                     </h3>
@@ -451,7 +451,7 @@ export default function About() {
                       </div>
                     </div>
                   )}
-                  <div className="space-y-6">
+                  <div className="slide-from-right space-y-6">
                     <h3 className="text-2xl font-light text-white uppercase tracking-wide">
                       {language === "vi" ? aboutContent.visionTitleVi : aboutContent.visionTitleEn}
                     </h3>
