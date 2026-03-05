@@ -624,11 +624,11 @@ export default function About() {
                         isExpanded ? 'max-w-[800px] opacity-100' : 'max-w-0 opacity-0'
                       }`}
                     >
-                      <div className="w-[800px] max-w-[calc(100vw-120px)] pl-6 md:pl-12 pr-4 md:pr-8 py-8">
-                        <div className="flex gap-4 md:gap-8 items-start">
+                      <div className="w-[800px] max-w-[calc(100vw-120px)] flex items-stretch">
+                        <div className="flex gap-4 md:gap-8 items-stretch w-full">
                           {(member.imageData || member.image) && (
-                            <div className="flex-shrink-0 w-40 md:w-64">
-                              <div className="aspect-[9/16] overflow-hidden bg-white/10">
+                            <div className="flex-shrink-0 w-40 md:w-64 self-stretch">
+                              <div className="h-full overflow-hidden bg-white/10">
                                 <img 
                                   src={member.imageData || member.image} 
                                   alt={member.name}
@@ -638,7 +638,7 @@ export default function About() {
                             </div>
                           )}
 
-                          <div className="flex-1 space-y-6">
+                          <div className="flex-1 space-y-6 py-8 pr-4 md:pr-8">
                             <div>
                               <h4 className="text-2xl font-light text-white mb-2 uppercase tracking-wide">
                                 {member.name}
