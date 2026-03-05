@@ -147,7 +147,7 @@ export default function About() {
 
   useEffect(() => {
     if (!aboutContent) return;
-    const getEls = () => document.querySelectorAll<Element>('.slide-from-left, .slide-from-right, .typewriter-heading');
+    const getEls = () => document.querySelectorAll<Element>('.slide-from-left, .slide-from-right, .slide-up, .typewriter-heading');
     let obs: IntersectionObserver;
     const setup = () => {
       if (obs) obs.disconnect();
@@ -392,7 +392,7 @@ export default function About() {
               ) : <div />}
 
               {/* Center: title + content */}
-              <div className="space-y-6 self-center">
+              <div className="slide-up space-y-6 self-center">
                 <h3 className="text-2xl md:text-3xl font-light text-white uppercase tracking-wide leading-tight">
                   {language === "vi" ? aboutContent.principlesTitleVi : aboutContent.principlesTitleEn}
                 </h3>
