@@ -447,7 +447,7 @@ export default function About() {
       )}
       {/* Architecture Showcase + Stats Section */}
       {((aboutContent?.showcaseBannerImageData || aboutContent?.showcaseBannerImage) || showcaseServices.length > 0 || aboutContent) && (
-        <section className="relative bg-black overflow-hidden lg:-ml-16 h-[90vh] lg:h-screen min-h-[700px]">
+        <section className="relative bg-black overflow-hidden lg:-ml-16 min-h-[500px] lg:h-screen">
           {(aboutContent?.showcaseBannerImageData || aboutContent?.showcaseBannerImage) && (
             <div
               className="absolute inset-0 bg-cover bg-center"
@@ -464,7 +464,7 @@ export default function About() {
             {showcaseServices.length > 0 && (
               <div ref={showcaseSectionRef} className="relative w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 items-end">
                 {showcaseServices.map((service, index) => {
-                  const stepHeights = ['h-[560px]', 'h-[400px]', 'h-[260px]', 'h-[160px]'];
+                  const stepHeights = ['lg:h-[560px]', 'lg:h-[400px]', 'lg:h-[260px]', 'lg:h-[160px]'];
                   const stepH = stepHeights[index % 4];
                   const fullTitle = language === "vi" ? service.titleVi : service.titleEn;
                   const fullDesc = language === "vi" ? service.descriptionVi : service.descriptionEn;
@@ -474,12 +474,12 @@ export default function About() {
                   const isTitleTyping = typed && typed.title.length > 0 && typed.title.length < fullTitle.length;
                   const isDescTyping = typed && typed.title.length >= fullTitle.length && typed.desc.length < fullDesc.length;
                   return (
-                    <div key={service.id} className="px-6 py-8 md:px-8 md:py-12">
+                    <div key={service.id} className={`px-6 py-8 md:px-8 md:py-12 ${index > 0 ? 'border-t border-white/10 lg:border-t-0' : ''}`}>
                       <div className={`${stepH} flex flex-col justify-start`}>
                         <div className="relative space-y-3">
                           {index > 0 && (
                             <div
-                              className="absolute -left-6 md:-left-8 top-0 bottom-0"
+                              className="hidden lg:block absolute -left-8 top-0 bottom-0"
                               style={{
                                 width: '2px',
                                 background: 'linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.3) 10%, rgba(255,255,255,0.3) 90%, transparent 100%)'
