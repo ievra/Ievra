@@ -2133,7 +2133,7 @@ export default function LookupAdminTab() {
                     <AlertDialogContent className="bg-black border border-white/20 rounded-none">
                       <AlertDialogHeader>
                         <AlertDialogTitle className="text-white">{isVi ? "Xác nhận xóa" : "Confirm Delete"}</AlertDialogTitle>
-                        <AlertDialogDescription className="text-white/70">{isVi ? <>Bạn có chắc muốn xóa nhật ký này?<br /><span className="!text-red-400">Hành động này không thể hoàn tác.</span></> : <>Are you sure you want to delete this log?<br /><span className="!text-red-400">This action cannot be undone.</span></>}</AlertDialogDescription>
+                        <AlertDialogDescription className="text-white/70">{isVi ? "Bạn có chắc muốn xóa nhật ký này?" : "Are you sure you want to delete this log?"}</AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
                         <AlertDialogCancel className="rounded-none">{isVi ? "Hủy" : "Cancel"}</AlertDialogCancel>
