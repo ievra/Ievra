@@ -388,6 +388,29 @@ export default function About() {
           </div>
         </section>
       )}
+      {/* Design Philosophy / Principles Section */}
+      {aboutContent && (aboutContent.principlesContentEn || aboutContent.principlesContentVi) && (
+        <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
+          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-16 items-start">
+              <div className="space-y-4">
+                <p className="text-xs text-white/40 uppercase tracking-[0.2em]">
+                  {language === "vi" ? aboutContent.principlesSubtitleVi : aboutContent.principlesSubtitleEn}
+                </p>
+                <h3 className="typewriter-heading text-2xl md:text-3xl font-light text-white uppercase tracking-wide leading-tight">
+                  {language === "vi" ? aboutContent.principlesTitleVi : aboutContent.principlesTitleEn}
+                </h3>
+              </div>
+              <div>
+                <TypewriterParagraph
+                  text={language === "vi" ? aboutContent.principlesContentVi : aboutContent.principlesContentEn}
+                  className="text-lg text-white/70 font-light leading-relaxed whitespace-pre-line text-justify"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
       {/* Architecture Showcase + Stats Section */}
       {((aboutContent?.showcaseBannerImageData || aboutContent?.showcaseBannerImage) || showcaseServices.length > 0 || aboutContent) && (
         <section className="relative bg-black overflow-hidden lg:-ml-16 h-[90vh] lg:h-screen min-h-[700px]">

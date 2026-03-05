@@ -136,6 +136,8 @@ export default function AboutAdminTab({
       principlesSubtitleVi: "",
       principlesTitleEn: "",
       principlesTitleVi: "",
+      principlesContentEn: "",
+      principlesContentVi: "",
       showcaseBannerImage: "",
       statsProjectsValue: "150+",
       statsProjectsLabelEn: "Projects Completed",
@@ -492,23 +494,6 @@ export default function AboutAdminTab({
                   </div>
                 </div>
 
-                {/* Principles Section Title */}
-                <div className="p-4">
-                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Phần Nguyên Tắc' : 'Principles Section'}</h3>
-                  <div className="space-y-4">
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Chính H3 (English)' : 'Main Title H3 (English)'}</label>
-                        <Input {...aboutContentForm.register("principlesTitleEn")} placeholder="THE FOUNDATION OF OUR WORK" data-testid="input-principles-title-en" />
-                      </div>
-                      <div>
-                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề Chính H3 (Tiếng Việt)' : 'Main Title H3 (Tiếng Việt)'}</label>
-                        <Input {...aboutContentForm.register("principlesTitleVi")} placeholder="NỀN TẢNG CỦA CÔNG VIỆC CHÚNG TÔI" data-testid="input-principles-title-vi" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
                 {/* Process Section Title */}
                 <div className="p-4">
                   <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Phần Quy Trình' : 'Process Section'}</h3>
@@ -682,6 +667,33 @@ export default function AboutAdminTab({
                       <div>
                         <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Nội Dung (Tiếng Việt)' : 'Content (Tiếng Việt)'}</label>
                         <Textarea {...aboutContentForm.register("visionContentVi")} rows={4} placeholder="Tầm nhìn của chúng tôi..." data-testid="textarea-vision-content-vi" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Design Philosophy / Principles Section */}
+                <div className="p-4 border-t">
+                  <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Triết Lý Thiết Kế' : 'Design Philosophy'}</h3>
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề (English)' : 'Title (English)'}</label>
+                        <Input {...aboutContentForm.register("principlesTitleEn")} placeholder="THE FOUNDATION OF OUR WORK" data-testid="input-principles-title-en" />
+                      </div>
+                      <div>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Tiêu Đề (Tiếng Việt)' : 'Title (Tiếng Việt)'}</label>
+                        <Input {...aboutContentForm.register("principlesTitleVi")} placeholder="NỀN TẢNG CỦA CÔNG VIỆC CHÚNG TÔI" data-testid="input-principles-title-vi" />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Nội Dung (English)' : 'Content (English)'}</label>
+                        <Textarea {...aboutContentForm.register("principlesContentEn")} rows={5} placeholder="Describe your design philosophy in English..." data-testid="textarea-principles-content-en" />
+                      </div>
+                      <div>
+                        <label className="text-sm font-light mb-2 block">{language === 'vi' ? 'Nội Dung (Tiếng Việt)' : 'Content (Tiếng Việt)'}</label>
+                        <Textarea {...aboutContentForm.register("principlesContentVi")} rows={5} placeholder="Mô tả triết lý thiết kế của bạn..." data-testid="textarea-principles-content-vi" />
                       </div>
                     </div>
                   </div>

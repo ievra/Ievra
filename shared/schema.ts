@@ -717,6 +717,8 @@ export const aboutPageContent = pgTable("about_page_content", {
   principlesSubtitleVi: text("principles_subtitle_vi").notNull().default("NGUYÊN TẮC LÀM VIỆC"),
   principlesTitleEn: text("principles_title_en").notNull().default("THE FOUNDATION OF OUR WORK"),
   principlesTitleVi: text("principles_title_vi").notNull().default("NỀN TẢNG CỦA CÔNG VIỆC CHÚNG TÔI"),
+  principlesContentEn: text("principles_content_en").notNull().default(""),
+  principlesContentVi: text("principles_content_vi").notNull().default(""),
   // Architecture Showcase Section
   showcaseBannerImage: text("showcase_banner_image").notNull().default(""),
   showcaseBannerImageData: text("showcase_banner_image_data"),
