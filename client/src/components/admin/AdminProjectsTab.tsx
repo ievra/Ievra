@@ -1794,7 +1794,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                           />
                         </span>
                         <Trash2
-                          className="h-4 w-4 cursor-pointer text-white/50 hover:text-red-400"
+                          className="h-4 w-4 cursor-pointer text-white/50 hover:text-white"
                           onClick={() => setDeleteProjectData({ title: primary.title, group })}
                           data-testid={`button-delete-project-${primary.id}`}
                         />
