@@ -1,7 +1,7 @@
 import { 
   users, clients, projects, inquiries, services, articles, homepageContent, partners, categories,
   interactions, deals, transactions, warrantyLogs, settings, faqs, advantages, journeySteps,
-  aboutPageContent, aboutShowcaseServices, aboutProcessSteps, aboutCoreValues, aboutTeamMembers,
+  aboutPageContent, aboutShowcaseServices, aboutProcessSteps, aboutCoreValues, aboutTeamMembers, aboutAwards,
   crmPipelineStages, crmCustomerTiers, crmStatuses,
   bpCategories, bpStatuses, bpTiers,
   businessPartners, bpTransactions,
@@ -31,6 +31,7 @@ import {
   type AboutProcessStep, type InsertAboutProcessStep,
   type AboutCoreValue, type InsertAboutCoreValue,
   type AboutTeamMember, type InsertAboutTeamMember,
+  type AboutAward, type InsertAboutAward,
   type CrmPipelineStage, type InsertCrmPipelineStage,
   type CrmCustomerTier, type InsertCrmCustomerTier,
   type CrmStatus, type InsertCrmStatus,
@@ -220,6 +221,13 @@ export interface IStorage {
   createAboutTeamMember(member: InsertAboutTeamMember): Promise<AboutTeamMember>;
   updateAboutTeamMember(id: string, member: Partial<InsertAboutTeamMember>): Promise<AboutTeamMember>;
   deleteAboutTeamMember(id: string): Promise<void>;
+
+  // About Page Awards
+  getAboutAwards(filters?: { active?: boolean }): Promise<AboutAward[]>;
+  getAboutAward(id: string): Promise<AboutAward | undefined>;
+  createAboutAward(award: InsertAboutAward): Promise<AboutAward>;
+  updateAboutAward(id: string, award: Partial<InsertAboutAward>): Promise<AboutAward>;
+  deleteAboutAward(id: string): Promise<void>;
 
   // CRM Pipeline Stages
   getCrmPipelineStages(filters?: { active?: boolean }): Promise<CrmPipelineStage[]>;
@@ -1583,6 +1591,38 @@ export class DatabaseStorage implements IStorage {
 
   async deleteDesignPhase(id: string): Promise<void> {
     await db.delete(designPhases).where(eq(designPhases.id, id));
+  }
+
+  async getAboutAwards(filters?: { active?: boolean }): Promise<AboutAward[]> {
+    const conditions = [];
+    if (filters?.active !== undefined) conditions.push(eq(aboutAwards.active, filters.active));
+    const query = conditions.length > 0
+      ? db.select().from(aboutAwards).where(and(...conditions))
+      : db.select().from(aboutAwards);
+    return await query.orderBy(aboutAwards.order);
+  }
+
+  async getAboutAward(id: string): Promise<AboutAward | undefined> {
+    const [award] = await db.select().from(aboutAwards).where(eq(aboutAwards.id, id));
+    return award;
+  }
+
+  async createAboutAward(award: InsertAboutAward): Promise<AboutAward> {
+    const [created] = await db.insert(aboutAwards).values(award).returning();
+    return created;
+  }
+
+  async updateAboutAward(id: string, award: Partial<InsertAboutAward>): Promise<AboutAward> {
+    const [updated] = await db
+      .update(aboutAwards)
+      .set({ ...award, updatedAt: new Date() })
+      .where(eq(aboutAwards.id, id))
+      .returning();
+    return updated;
+  }
+
+  async deleteAboutAward(id: string): Promise<void> {
+    await db.delete(aboutAwards).where(eq(aboutAwards.id, id));
   }
 }
 

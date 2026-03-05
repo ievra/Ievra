@@ -10,7 +10,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import { storage } from "./storage";
-import { insertProjectSchema, insertClientSchema, insertInquirySchema, insertServiceSchema, insertArticleSchema, insertHomepageContentSchema, insertPartnerSchema, insertCategorySchema, insertInteractionSchema, insertDealSchema, insertTransactionSchema, insertWarrantyLogSchema, insertSettingsSchema, insertFaqSchema, insertAdvantageSchema, insertJourneyStepSchema, insertAboutPageContentSchema, insertAboutShowcaseServiceSchema, insertAboutProcessStepSchema, insertAboutCoreValueSchema, insertAboutTeamMemberSchema, insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema, insertUserSchema, insertBusinessPartnerSchema, insertBpTransactionSchema, insertBpCategorySchema, insertBpStatusSchema, insertBpTierSchema, insertConstructionPhaseSchema, insertDesignPhaseSchema } from "@shared/schema";
+import { insertProjectSchema, insertClientSchema, insertInquirySchema, insertServiceSchema, insertArticleSchema, insertHomepageContentSchema, insertPartnerSchema, insertCategorySchema, insertInteractionSchema, insertDealSchema, insertTransactionSchema, insertWarrantyLogSchema, insertSettingsSchema, insertFaqSchema, insertAdvantageSchema, insertJourneyStepSchema, insertAboutPageContentSchema, insertAboutShowcaseServiceSchema, insertAboutProcessStepSchema, insertAboutCoreValueSchema, insertAboutTeamMemberSchema, insertAboutAwardSchema, insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema, insertUserSchema, insertBusinessPartnerSchema, insertBpTransactionSchema, insertBpCategorySchema, insertBpStatusSchema, insertBpTierSchema, insertConstructionPhaseSchema, insertDesignPhaseSchema } from "@shared/schema";
 import { z } from "zod";
 import { createHash } from "crypto";
 
@@ -1808,6 +1808,60 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete team member" });
+    }
+  });
+
+  // About Awards routes
+  app.get("/api/about-awards", async (req, res) => {
+    try {
+      const { active } = req.query;
+      const filters: any = {};
+      if (active !== undefined) filters.active = active === 'true';
+      const awards = await storage.getAboutAwards(filters);
+      res.json(awards);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch awards" });
+    }
+  });
+
+  app.get("/api/about-awards/:id", async (req, res) => {
+    try {
+      const award = await storage.getAboutAward(req.params.id);
+      if (!award) return res.status(404).json({ message: "Award not found" });
+      res.json(award);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch award" });
+    }
+  });
+
+  app.post("/api/about-awards", requirePermission('about'), async (req, res) => {
+    try {
+      const validatedData = insertAboutAwardSchema.parse(req.body);
+      const award = await storage.createAboutAward(validatedData);
+      res.status(201).json(award);
+    } catch (error) {
+      if (error instanceof z.ZodError) return res.status(400).json({ message: "Validation error", errors: error.errors });
+      res.status(500).json({ message: "Failed to create award" });
+    }
+  });
+
+  app.put("/api/about-awards/:id", requirePermission('about'), async (req, res) => {
+    try {
+      const validatedData = insertAboutAwardSchema.partial().parse(req.body);
+      const award = await storage.updateAboutAward(req.params.id, validatedData);
+      res.json(award);
+    } catch (error) {
+      if (error instanceof z.ZodError) return res.status(400).json({ message: "Validation error", errors: error.errors });
+      res.status(500).json({ message: "Failed to update award" });
+    }
+  });
+
+  app.delete("/api/about-awards/:id", requirePermission('about'), async (req, res) => {
+    try {
+      await storage.deleteAboutAward(req.params.id);
+      res.status(204).send();
+    } catch (error) {
+      res.status(500).json({ message: "Failed to delete award" });
     }
   });
 

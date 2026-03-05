@@ -739,6 +739,9 @@ export const aboutPageContent = pgTable("about_page_content", {
   statsCountriesValue: text("stats_countries_value").notNull().default("12+"),
   statsCountriesLabelEn: text("stats_countries_label_en").notNull().default("Countries"),
   statsCountriesLabelVi: text("stats_countries_label_vi").notNull().default("Quốc gia"),
+  // Awards Section
+  awardsSectionTitleEn: text("awards_section_title_en").notNull().default("AWARDS & RECOGNITION"),
+  awardsSectionTitleVi: text("awards_section_title_vi").notNull().default("GIẢI THƯỞNG & CÔNG NHẬN"),
   // Process Section
   processSubtitleEn: text("process_subtitle_en").notNull().default("OUR PROCESS"),
   processSubtitleVi: text("process_subtitle_vi").notNull().default("QUY TRÌNH LÀM VIỆC"),
@@ -891,6 +894,32 @@ export type AboutCoreValue = typeof aboutCoreValues.$inferSelect;
 
 export type InsertAboutTeamMember = z.infer<typeof insertAboutTeamMemberSchema>;
 export type AboutTeamMember = typeof aboutTeamMembers.$inferSelect;
+
+// About Page Awards
+export const aboutAwards = pgTable("about_awards", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  titleEn: text("title_en").notNull(),
+  titleVi: text("title_vi").notNull(),
+  year: text("year").notNull().default(""),
+  organizationEn: text("organization_en").notNull().default(""),
+  organizationVi: text("organization_vi").notNull().default(""),
+  image: text("image").notNull().default(""),
+  imageData: text("image_data"),
+  order: integer("order").notNull().default(0),
+  active: boolean("active").notNull().default(true),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+});
+
+export const insertAboutAwardSchema = createInsertSchema(aboutAwards).omit({
+  id: true,
+  active: true,
+  createdAt: true,
+  updatedAt: true,
+});
+
+export type InsertAboutAward = z.infer<typeof insertAboutAwardSchema>;
+export type AboutAward = typeof aboutAwards.$inferSelect;
 
 // CRM Dropdown Settings Tables
 export const crmPipelineStages = pgTable("crm_pipeline_stages", {
