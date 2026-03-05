@@ -185,7 +185,8 @@ export default function About() {
 
   useEffect(() => {
     if (!showcaseAnimStarted || showcaseServices.length === 0) return;
-    const CHAR_SPEED = 4;
+    const TICK = 4;
+    const CHARS_PER_TICK = 5;
     const timers: ReturnType<typeof setInterval>[] = [];
     setTypedTexts(showcaseServices.map(() => ({ title: '', desc: '' })));
 
@@ -197,7 +198,7 @@ export default function About() {
 
       let ti = 0;
       const titleTimer = setInterval(() => {
-        ti++;
+        ti = Math.min(ti + CHARS_PER_TICK, title.length);
         setTypedTexts(prev => {
           const next = [...prev];
           if (next[idx] !== undefined) next[idx] = { ...next[idx], title: title.slice(0, ti) };
@@ -207,7 +208,7 @@ export default function About() {
           clearInterval(titleTimer);
           let di = 0;
           const descTimer = setInterval(() => {
-            di++;
+            di = Math.min(di + CHARS_PER_TICK, desc.length);
             setTypedTexts(prev => {
               const next = [...prev];
               if (next[idx] !== undefined) next[idx] = { ...next[idx], desc: desc.slice(0, di) };
@@ -217,10 +218,10 @@ export default function About() {
               clearInterval(descTimer);
               animateService(idx + 1);
             }
-          }, CHAR_SPEED);
+          }, TICK);
           timers.push(descTimer);
         }
-      }, CHAR_SPEED);
+      }, TICK);
       timers.push(titleTimer);
     };
 
