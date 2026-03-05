@@ -245,18 +245,10 @@ export default function About() {
           {aboutContent && (
             <div className="relative h-full flex items-center z-10">
               <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                  <div>
-                    <h1 className="md:text-6xl lg:text-7xl font-light text-white uppercase tracking-wide text-[48px]">
-                      {language === "vi" ? aboutContent.heroTitleVi : aboutContent.heroTitleEn}
-                    </h1>
-                  </div>
-
-                  <div className="lg:text-right">
-                    <h2 className="md:text-4xl lg:text-5xl font-light text-white uppercase tracking-wider text-[36px]">
-                      {language === "vi" ? aboutContent.heroSubtitleVi : aboutContent.heroSubtitleEn}
-                    </h2>
-                  </div>
+                <div className="flex justify-center">
+                  <h1 className="md:text-6xl lg:text-7xl font-light text-white uppercase tracking-wide text-[48px] text-center">
+                    {language === "vi" ? aboutContent.heroTitleVi : aboutContent.heroTitleEn}
+                  </h1>
                 </div>
               </div>
             </div>
