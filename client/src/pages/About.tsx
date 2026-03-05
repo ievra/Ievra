@@ -589,8 +589,8 @@ export default function About() {
                 const R = 110;          // U-turn radius (px) — ROW_H must = 2*R for perfect semicircle
                 const ROW_H = 220;      // = 2*R → perfect semicircle U-turns
                 const LINE_Y = 28;      // y of line within each row block
-                const PAD_L = 150;      // left endpoint distance from left edge (U-turn peak at PAD_L - R)
-                const PAD_R = 170;      // right endpoint distance from right edge (U-turn peak at PAD_R - R)
+                const PAD_L = 200;      // left endpoint distance from left edge (U-turn peak at PAD_L - R)
+                const PAD_R = 220;      // right endpoint distance from right edge (U-turn peak at PAD_R - R)
 
                 const rowSizes = [2, 3, 2]; // row 1: 2 items, row 2: 3 items, row 3: 2 items
                 const rows: typeof processSteps[] = [];
