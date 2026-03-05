@@ -657,7 +657,7 @@ export default function About() {
                             {member.achievementsEn && member.achievementsVi && (
                               <div className="space-y-2">
                                 <h5 className="text-sm font-light text-white/80 uppercase tracking-wider">
-                                  {language === "vi" ? "Thành tựu" : "Achievements"}
+                                  {language === "vi" ? "Thông điệp" : "Message"}
                                 </h5>
                                 <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed text-justify">
                                   {language === "vi" ? member.achievementsVi : member.achievementsEn}
