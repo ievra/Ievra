@@ -257,6 +257,7 @@ export default function About() {
               loop={true}
               speed={800}
               className="absolute inset-0 w-full h-full"
+              style={{ zIndex: 0 }}
             >
               {aboutContent.heroImages.map((imageUrl, index) => (
                 <SwiperSlide key={index}>
@@ -275,13 +276,13 @@ export default function About() {
               ))}
             </Swiper>
           ) : (
-            <div className="absolute inset-0 bg-black" />
+            <div className="absolute inset-0 bg-black" style={{ zIndex: 0 }} />
           )}
-          <div className="absolute inset-0 bg-black/60" />
+          <div className="absolute inset-0 bg-black/60" style={{ zIndex: 1 }} />
           
           {/* Content */}
           {aboutContent && (
-            <div className="relative h-full flex items-center z-10">
+            <div className="relative h-full flex items-center" style={{ zIndex: 2 }}>
               <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
                 <div className="flex justify-center">
                   <h1 className="md:text-6xl lg:text-7xl font-light text-white uppercase tracking-wide text-center text-[48px]">
