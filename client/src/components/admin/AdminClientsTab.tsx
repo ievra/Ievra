@@ -959,12 +959,12 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                                       </AlertDialogDescription>
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
-                                      <AlertDialogCancel className="bg-black border-white/30 hover:border-white hover:bg-white/10 rounded-none h-10 px-4">
+                                      <AlertDialogCancel className="bg-black border-white/20 hover:border-white hover:bg-black rounded-none h-10 px-4 transition-colors">
                                         {language === 'vi' ? 'Hủy' : 'Cancel'}
                                       </AlertDialogCancel>
                                       <AlertDialogAction
                                         onClick={() => deleteTransactionMutation.mutate(transaction.id)}
-                                        className="rounded-none h-10 px-4"
+                                        className="rounded-none h-10 px-4 bg-black text-white border border-white/20 hover:border-white transition-colors"
                                         disabled={deleteTransactionMutation.isPending}
                                       >
                                         {deleteTransactionMutation.isPending ? (language === 'vi' ? "Đang xóa..." : "Deleting...") : (language === 'vi' ? "Xóa" : "Delete")}
@@ -1090,12 +1090,12 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                                       </AlertDialogDescription>
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
-                                      <AlertDialogCancel className="bg-black border-white/30 hover:border-white hover:bg-white/10 rounded-none h-10 px-4">
+                                      <AlertDialogCancel className="bg-black border-white/20 hover:border-white hover:bg-black rounded-none h-10 px-4 transition-colors">
                                         {language === 'vi' ? 'Hủy' : 'Cancel'}
                                       </AlertDialogCancel>
                                       <AlertDialogAction
                                         onClick={() => deleteTransactionMutation.mutate(transaction.id)}
-                                        className="rounded-none h-10 px-4"
+                                        className="rounded-none h-10 px-4 bg-black text-white border border-white/20 hover:border-white transition-colors"
                                         disabled={deleteTransactionMutation.isPending}
                                       >
                                         {deleteTransactionMutation.isPending ? (language === 'vi' ? "Đang xóa..." : "Deleting...") : (language === 'vi' ? "Xóa" : "Delete")}
@@ -1221,7 +1221,7 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                                       </AlertDialogDescription>
                                     </AlertDialogHeader>
                                     <AlertDialogFooter>
-                                      <AlertDialogCancel className="bg-black border-white/30 hover:border-white hover:bg-white/10 rounded-none h-10 px-4">
+                                      <AlertDialogCancel className="bg-black border-white/20 hover:border-white hover:bg-black rounded-none h-10 px-4 transition-colors">
                                         {language === 'vi' ? 'Hủy' : 'Cancel'}
                                       </AlertDialogCancel>
                                       <AlertDialogAction
@@ -1302,7 +1302,7 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
-                                <AlertDialogCancel className="bg-black border-white/30 hover:border-white hover:bg-white/10 rounded-none h-10 px-4">
+                                <AlertDialogCancel className="bg-black border-white/20 hover:border-white hover:bg-black rounded-none h-10 px-4 transition-colors">
                                   {language === 'vi' ? 'Hủy' : 'Cancel'}
                                 </AlertDialogCancel>
                                 <AlertDialogAction
