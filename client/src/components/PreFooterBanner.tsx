@@ -34,8 +34,8 @@ export default function PreFooterBanner() {
 
       <div className="relative h-full w-full px-4 sm:px-6 lg:px-8 flex flex-col justify-between py-12">
         {/* Title - top left */}
-        <div className="max-w-2xl">
-          <h2 className="text-3xl md:text-5xl lg:text-[52px] font-light text-white leading-relaxed tracking-wide uppercase">
+        <div className="max-w-4xl">
+          <h2 className="text-3xl md:text-5xl lg:text-[52px] font-light text-white leading-loose tracking-wide uppercase">
             {title}
           </h2>
         </div>
