@@ -140,17 +140,15 @@ export default function About() {
     const container = coreValuesContainerRef.current;
     if (!container) return;
     const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setCoreValuesAnimStarted(true);
-        } else {
-          setCoreValuesAnimStarted(false);
-        }
-      },
+      ([entry]) => { if (entry.isIntersecting) setCoreValuesAnimStarted(true); },
       { threshold: 0.1 }
     );
     obs.observe(container);
-    return () => obs.disconnect();
+    const onScroll = () => {
+      if (window.scrollY < 50) setCoreValuesAnimStarted(false);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => { obs.disconnect(); window.removeEventListener('scroll', onScroll); };
   }, [coreValues]);
 
   const snakeRef = useRef<HTMLDivElement>(null);
