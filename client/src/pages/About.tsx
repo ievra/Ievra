@@ -905,8 +905,8 @@ export default function About() {
                         isExpanded ? 'max-w-[800px] opacity-100' : 'max-w-0 opacity-0'
                       }`}
                     >
-                      <div className="w-[800px] max-w-[calc(100vw-120px)] flex items-stretch">
-                        <div className="flex gap-4 md:gap-8 items-stretch w-full">
+                      <div className="w-[800px] max-w-[calc(100vw-120px)] flex items-stretch h-full">
+                        <div className="flex gap-4 md:gap-8 items-stretch w-full h-full">
                           {(member.imageData || member.image) && (
                             <div className="flex-shrink-0 w-40 md:w-64 self-stretch flex flex-col overflow-hidden bg-white/10">
                               <img 
