@@ -42,11 +42,52 @@ export default function Layout({ children }: LayoutProps) {
   const { language, setLanguage, t } = useLanguage();
   const navigation = getNavigation(t);
 
-  const { data: settings } = useQuery<{ logoData?: string; logoUrl?: string }>({
+  const { data: settings } = useQuery<{
+    logoData?: string;
+    logoUrl?: string;
+    siteTitle?: string;
+    siteTitleVi?: string;
+    metaDescription?: string;
+    metaDescriptionVi?: string;
+    metaKeywords?: string;
+    metaKeywordsVi?: string;
+  }>({
     queryKey: ['/api/settings'],
   });
 
   const logoSrc = settings?.logoData || settings?.logoUrl || '/api/assets/logo.white.png';
+
+  useEffect(() => {
+    const isVi = language === 'vi';
+    const title = isVi
+      ? (settings?.siteTitleVi || settings?.siteTitle || 'IEVRA Design & Build')
+      : (settings?.siteTitle || 'IEVRA Design & Build');
+    const description = isVi
+      ? (settings?.metaDescriptionVi || settings?.metaDescription || '')
+      : (settings?.metaDescription || '');
+    const keywords = isVi
+      ? (settings?.metaKeywordsVi || settings?.metaKeywords || '')
+      : (settings?.metaKeywords || '');
+
+    document.title = title;
+
+    const setMeta = (name: string, content: string) => {
+      let el = document.querySelector(`meta[name="${name}"]`);
+      if (!el) { el = document.createElement('meta'); (el as HTMLMetaElement).name = name; document.head.appendChild(el); }
+      el.setAttribute('content', content);
+    };
+    const setOg = (prop: string, content: string) => {
+      let el = document.querySelector(`meta[property="${prop}"]`);
+      if (!el) { el = document.createElement('meta'); el.setAttribute('property', prop); document.head.appendChild(el); }
+      el.setAttribute('content', content);
+    };
+
+    if (description) setMeta('description', description);
+    if (keywords) setMeta('keywords', keywords);
+    setOg('og:title', title);
+    if (description) setOg('og:description', description);
+    setOg('og:type', 'website');
+  }, [settings, language, location]);
 
   const hasScrolledRef = useRef(false);
 
