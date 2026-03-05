@@ -445,45 +445,6 @@ export default function About() {
               </div>
             )}
 
-            {/* Stats Row — inside banner at the bottom */}
-            {aboutContent && (
-              <div className="relative w-full">
-                <div className="grid grid-cols-2 md:grid-cols-4">
-                  <div className="text-center py-6 px-4">
-                    <div className="text-2xl md:text-3xl font-light text-white mb-1" data-testid="stats-projects">
-                      {aboutContent.statsProjectsValue}
-                    </div>
-                    <div className="text-xs text-white/50 uppercase tracking-wider">
-                      {language === "vi" ? aboutContent.statsProjectsLabelVi : aboutContent.statsProjectsLabelEn}
-                    </div>
-                  </div>
-                  <div className="text-center py-6 px-4">
-                    <div className="text-2xl md:text-3xl font-light text-white mb-1" data-testid="stats-awards">
-                      {aboutContent.statsAwardsValue}
-                    </div>
-                    <div className="text-xs text-white/50 uppercase tracking-wider">
-                      {language === "vi" ? aboutContent.statsAwardsLabelVi : aboutContent.statsAwardsLabelEn}
-                    </div>
-                  </div>
-                  <div className="text-center py-6 px-4">
-                    <div className="text-2xl md:text-3xl font-light text-white mb-1" data-testid="stats-clients">
-                      {aboutContent.statsClientsValue}
-                    </div>
-                    <div className="text-xs text-white/50 uppercase tracking-wider">
-                      {language === "vi" ? aboutContent.statsClientsLabelVi : aboutContent.statsClientsLabelEn}
-                    </div>
-                  </div>
-                  <div className="text-center py-6 px-4">
-                    <div className="text-2xl md:text-3xl font-light text-white mb-1" data-testid="stats-countries">
-                      {aboutContent.statsCountriesValue}
-                    </div>
-                    <div className="text-xs text-white/50 uppercase tracking-wider">
-                      {language === "vi" ? aboutContent.statsCountriesLabelVi : aboutContent.statsCountriesLabelEn}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </section>
       )}
@@ -945,6 +906,47 @@ export default function About() {
                   </div>
                 );
               })}
+            </div>
+          </div>
+        </section>
+      )}
+      {/* Stats Row */}
+      {aboutContent && (
+        <section className="bg-black lg:-ml-16 border-t border-white/10">
+          <div className="max-w-[1600px] mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-4">
+              <div className="text-center py-6 px-4">
+                <div className="text-2xl md:text-3xl font-light text-white mb-1" data-testid="stats-projects">
+                  {aboutContent.statsProjectsValue}
+                </div>
+                <div className="text-xs text-white/50 uppercase tracking-wider">
+                  {language === "vi" ? aboutContent.statsProjectsLabelVi : aboutContent.statsProjectsLabelEn}
+                </div>
+              </div>
+              <div className="text-center py-6 px-4">
+                <div className="text-2xl md:text-3xl font-light text-white mb-1" data-testid="stats-awards">
+                  {aboutContent.statsAwardsValue}
+                </div>
+                <div className="text-xs text-white/50 uppercase tracking-wider">
+                  {language === "vi" ? aboutContent.statsAwardsLabelVi : aboutContent.statsAwardsLabelEn}
+                </div>
+              </div>
+              <div className="text-center py-6 px-4">
+                <div className="text-2xl md:text-3xl font-light text-white mb-1" data-testid="stats-clients">
+                  {aboutContent.statsClientsValue}
+                </div>
+                <div className="text-xs text-white/50 uppercase tracking-wider">
+                  {language === "vi" ? aboutContent.statsClientsLabelVi : aboutContent.statsClientsLabelEn}
+                </div>
+              </div>
+              <div className="text-center py-6 px-4">
+                <div className="text-2xl md:text-3xl font-light text-white mb-1" data-testid="stats-countries">
+                  {aboutContent.statsCountriesValue}
+                </div>
+                <div className="text-xs text-white/50 uppercase tracking-wider">
+                  {language === "vi" ? aboutContent.statsCountriesLabelVi : aboutContent.statsCountriesLabelEn}
+                </div>
+              </div>
             </div>
           </div>
         </section>
