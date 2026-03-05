@@ -1535,9 +1535,9 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                                   </AlertDialogDescription>
                                 </AlertDialogHeader>
                                 <AlertDialogFooter>
-                                  <AlertDialogCancel>{language === 'vi' ? 'Hủy' : 'Cancel'}</AlertDialogCancel>
+                                  <AlertDialogCancel className="bg-black border-white/20 hover:bg-black hover:border-white rounded-none transition-colors">{language === 'vi' ? 'Hủy' : 'Cancel'}</AlertDialogCancel>
                                   <AlertDialogAction
-                                    className="rounded-none"
+                                    className="rounded-none bg-black text-white border border-white/20 hover:border-white transition-colors"
                                     onClick={async () => {
                                       try {
                                         for (const article of articleGroup) {
