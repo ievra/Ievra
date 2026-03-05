@@ -10,12 +10,16 @@ if (!connectionString) {
   throw new Error("DB_URL must be set.");
 }
 
+const usingCustomDb = !!process.env.DB_URL;
+console.log(`[DB] Using: ${usingCustomDb ? 'DB_URL (custom server)' : 'DATABASE_URL (Replit)'}`);
+console.log(`[DB] Host: ${connectionString.match(/@([^:/]+)/)?.[1] ?? 'unknown'}`);
+
 export const pool = new Pool({
   connectionString,
   max: 5,
   idleTimeoutMillis: 1000,
   connectionTimeoutMillis: 10000,
-  ssl: false,
+  ssl: usingCustomDb ? false : { rejectUnauthorized: false },
 });
 
 pool.on('error', (err) => {
