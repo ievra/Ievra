@@ -908,7 +908,7 @@ export default function About() {
                       <div className="w-[800px] max-w-[calc(100vw-120px)] flex items-stretch h-full">
                         <div className="flex gap-3 md:gap-5 items-stretch w-full h-full">
                           {(member.imageData || member.image) && (
-                            <div className="flex-shrink-0 w-52 md:w-80 self-stretch flex flex-col overflow-hidden bg-white/10">
+                            <div className="flex-shrink-0 w-64 md:w-96 self-stretch flex flex-col overflow-hidden bg-white/10">
                               <img 
                                 src={member.imageData || member.image} 
                                 alt={member.name}
