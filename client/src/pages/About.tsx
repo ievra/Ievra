@@ -845,7 +845,83 @@ export default function About() {
               </h3>
             </div>
 
-            <div className="flex gap-0 items-stretch justify-center">
+            {/* Mobile layout: vertical cards */}
+            <div className="flex flex-col gap-4 md:hidden">
+              {teamMembers.map((member, index) => {
+                const isExpanded = selectedMember === index;
+                return (
+                  <div key={member.id} className="border border-white/10 bg-white/5">
+                    <button
+                      onClick={() => setSelectedMember(isExpanded ? null : index)}
+                      className="w-full flex items-center gap-4 p-4 text-left"
+                    >
+                      {(member.imageData || member.image) && (
+                        <div className="flex-shrink-0 w-16 h-16 overflow-hidden">
+                          <img
+                            src={member.imageData || member.image}
+                            alt={member.name}
+                            className="w-full h-full object-cover grayscale brightness-75"
+                          />
+                        </div>
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-base font-light text-white uppercase tracking-wide truncate">
+                          {member.name}
+                        </h4>
+                        <p className="text-xs text-white/50 uppercase tracking-wider mt-1">
+                          {language === "vi" ? member.positionVi : member.positionEn}
+                        </p>
+                      </div>
+                      <span className="text-white/50 text-2xl font-light flex-shrink-0">
+                        {isExpanded ? '−' : '+'}
+                      </span>
+                    </button>
+
+                    <div className={`overflow-hidden transition-all duration-500 ease-in-out ${isExpanded ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'}`}>
+                      <div className="px-4 pb-6 space-y-4">
+                        {(member.imageData || member.image) && (
+                          <div className="w-full aspect-[4/3] overflow-hidden">
+                            <img
+                              src={member.imageData || member.image}
+                              alt={member.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        )}
+                        {member.bioEn && member.bioVi && (
+                          <p className="text-base text-white/70 font-light leading-relaxed">
+                            {language === "vi" ? member.bioVi : member.bioEn}
+                          </p>
+                        )}
+                        {member.achievementsEn && member.achievementsVi && (
+                          <div className="space-y-1">
+                            <h5 className="text-xs font-light text-white/60 uppercase tracking-wider">
+                              {language === "vi" ? "Thông điệp" : "Message"}
+                            </h5>
+                            <p className="text-base text-white/70 font-light leading-relaxed">
+                              {language === "vi" ? member.achievementsVi : member.achievementsEn}
+                            </p>
+                          </div>
+                        )}
+                        {member.philosophyEn && member.philosophyVi && (
+                          <div className="space-y-1">
+                            <h5 className="text-xs font-light text-white/60 uppercase tracking-wider">
+                              {language === "vi" ? "Triết lý" : "Philosophy"}
+                            </h5>
+                            <p className="text-base text-white/70 font-light leading-relaxed">
+                              {language === "vi" ? member.philosophyVi : member.philosophyEn}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Desktop layout: horizontal accordion */}
+            <div className="hidden md:flex gap-0 items-stretch justify-center">
               {teamMembers.map((member, index) => {
                 const isExpanded = selectedMember === index;
                 const nameChars = member.name.toUpperCase().split('');
@@ -859,7 +935,6 @@ export default function About() {
                       }`}
                       data-testid={`button-team-member-${member.id}`}
                     >
-                      {/* Background Image */}
                       {(member.imageData || member.image) && (
                         <div 
                           className="absolute inset-0 bg-cover bg-center transition-all duration-300"
@@ -869,22 +944,15 @@ export default function About() {
                           }}
                         />
                       )}
-                      
-                      {/* Overlay */}
                       <div className={`absolute inset-0 transition-all duration-300 ${
                         isExpanded ? 'bg-black/30' : 'bg-black/60'
                       } group-hover:bg-black/40`} />
-                      
-                      {/* Content */}
                       <div className="relative h-full flex flex-col items-center pt-8">
-                        {/* Plus Icon */}
                         <div className={`text-4xl font-light mb-8 transition-all duration-300 ${
                           isExpanded ? 'text-white' : 'text-white/60'
                         }`}>
                           +
                         </div>
-                        
-                        {/* Name Vertical */}
                         <div className="flex flex-col items-center">
                           {nameChars.map((char, charIndex) => (
                             <span 
@@ -906,9 +974,9 @@ export default function About() {
                       }`}
                     >
                       <div className="w-[800px] max-w-[calc(100vw-120px)] flex items-stretch h-full">
-                        <div className="flex gap-3 md:gap-5 items-stretch w-full h-full">
+                        <div className="flex gap-5 items-stretch w-full h-full">
                           {(member.imageData || member.image) && (
-                            <div className="flex-shrink-0 w-56 md:w-72 self-stretch flex flex-col overflow-hidden bg-white/10">
+                            <div className="flex-shrink-0 w-72 self-stretch flex flex-col overflow-hidden bg-white/10">
                               <img 
                                 src={member.imageData || member.image} 
                                 alt={member.name}
@@ -916,8 +984,7 @@ export default function About() {
                               />
                             </div>
                           )}
-
-                          <div className="flex-1 space-y-5 py-5 pr-4 md:pr-6">
+                          <div className="flex-1 space-y-5 py-5 pr-6">
                             <div>
                               <h4 className="text-2xl font-light text-white mb-2 uppercase tracking-wide">
                                 {member.name}
@@ -926,30 +993,27 @@ export default function About() {
                                 {language === "vi" ? member.positionVi : member.positionEn}
                               </p>
                             </div>
-                            
                             {member.bioEn && member.bioVi && (
-                              <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed text-justify">
+                              <p className="text-xl text-white/70 font-light leading-relaxed text-justify">
                                 {language === "vi" ? member.bioVi : member.bioEn}
                               </p>
                             )}
-
                             {member.achievementsEn && member.achievementsVi && (
                               <div className="space-y-2">
                                 <h5 className="text-sm font-light text-white/80 uppercase tracking-wider">
                                   {language === "vi" ? "Thông điệp" : "Message"}
                                 </h5>
-                                <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed text-justify">
+                                <p className="text-xl text-white/70 font-light leading-relaxed text-justify">
                                   {language === "vi" ? member.achievementsVi : member.achievementsEn}
                                 </p>
                               </div>
                             )}
-
                             {member.philosophyEn && member.philosophyVi && (
                               <div className="space-y-2">
                                 <h5 className="text-sm font-light text-white/80 uppercase tracking-wider">
                                   {language === "vi" ? "Triết lý" : "Philosophy"}
                                 </h5>
-                                <p className="text-lg md:text-xl text-white/70 font-light leading-relaxed text-justify">
+                                <p className="text-xl text-white/70 font-light leading-relaxed text-justify">
                                   {language === "vi" ? member.philosophyVi : member.philosophyEn}
                                 </p>
                               </div>
