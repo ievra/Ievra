@@ -139,7 +139,7 @@ const translations = {
     'services.lightingFeatures': 'Ambient Lighting,Task Lighting,Accent Features,Smart Controls',
     
     // Contact Page
-    'contact.title': 'Contact Us',
+    'contact.title': 'SEND CONSULTATION REQUEST',
     'contact.subtitle': 'Ready to transform your space? Let\'s start the conversation.',
     'contact.getInTouch': 'Get In Touch',
     'contact.getInTouchDesc': 'We\'d love to hear about your project and discuss how we can help bring your vision to life.',
@@ -372,7 +372,7 @@ const translations = {
     'services.lightingFeatures': 'Ánh Sáng Xâm Quanh,Ánh Sáng Công Việc,Đặc Tính Nhấn Mạnh,Điều Khiển Thông Minh',
     
     // Contact Page
-    'contact.title': 'Liên Hệ',
+    'contact.title': 'GỬI YÊU CẦU TƯ VẤN',
     'contact.subtitle': 'Sẵn sàng biến đổi không gian của bạn? Hãy bắt đầu cuộc trò chuyện.',
     'contact.getInTouch': 'Liên Lạc',
     'contact.getInTouchDesc': 'Chúng tôi rất muốn nghe về dự án của bạn và thảo luận cách chúng tôi có thể giúp biến tầm nhìn của bạn thành hiện thực.',
