@@ -1,6 +1,8 @@
-import { Pool } from 'pg';
+import pg from 'pg';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import * as schema from "@shared/schema";
+
+const { Pool } = pg;
 
 const connectionString = process.env.CUSTOM_DATABASE_URL || process.env.DATABASE_URL;
 
@@ -13,7 +15,7 @@ export const pool = new Pool({
   max: 5,
   idleTimeoutMillis: 1000,
   connectionTimeoutMillis: 10000,
-  ssl: process.env.CUSTOM_DATABASE_URL ? false : { rejectUnauthorized: false },
+  ssl: false,
 });
 
 pool.on('error', (err) => {
