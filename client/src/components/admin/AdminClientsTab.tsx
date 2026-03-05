@@ -1226,7 +1226,7 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                                       </AlertDialogCancel>
                                       <AlertDialogAction
                                         onClick={() => deleteTransactionMutation.mutate(transaction.id)}
-                                        className="rounded-none h-10 px-4"
+                                        className="rounded-none h-10 px-4 bg-black text-white border border-white/20 hover:border-white transition-colors"
                                         disabled={deleteTransactionMutation.isPending}
                                       >
                                         {deleteTransactionMutation.isPending ? (language === 'vi' ? "Đang xóa..." : "Deleting...") : (language === 'vi' ? "Xóa" : "Delete")}
@@ -1285,7 +1285,7 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
                               <AlertDialogFooter>
-                                <AlertDialogCancel className="rounded-none h-10 px-4">
+                                <AlertDialogCancel className="bg-black border-white/20 hover:border-white hover:bg-black rounded-none h-10 px-4 transition-colors">
                                   {language === 'vi' ? 'Đã hiểu' : 'Understood'}
                                 </AlertDialogCancel>
                               </AlertDialogFooter>
@@ -1307,7 +1307,7 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                                 </AlertDialogCancel>
                                 <AlertDialogAction
                                   onClick={() => deleteClientMutation.mutate(editingClient.id)}
-                                  className="rounded-none h-10 px-4"
+                                  className="rounded-none h-10 px-4 bg-black text-white border border-white/20 hover:border-white transition-colors"
                                   disabled={deleteClientMutation.isPending}
                                 >
                                   {deleteClientMutation.isPending ? (language === 'vi' ? "Đang xóa..." : "Deleting...") : (language === 'vi' ? "Xóa" : "Delete")}
