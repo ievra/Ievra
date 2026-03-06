@@ -11,6 +11,7 @@ import { pool } from "./db";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { storage } from "./storage";
+import { ogMiddleware } from "./og-middleware";
 
 process.on('uncaughtException', (err) => {
   console.error('Uncaught exception:', err);
@@ -141,7 +142,14 @@ app.use((req, res, next) => {
     res.status(status).json({ message });
   });
 
-  if (app.get("env") === "development") {
+  const isDev = app.get("env") === "development";
+  const indexHtmlPath = isDev
+    ? path.resolve(import.meta.dirname, "..", "client", "index.html")
+    : path.resolve(import.meta.dirname, "public", "index.html");
+
+  app.use(ogMiddleware(indexHtmlPath));
+
+  if (isDev) {
     await setupVite(app, server);
   } else {
     serveStatic(app);
