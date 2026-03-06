@@ -997,6 +997,35 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
               />
             </div>
 
+            <div className="w-full max-w-xs">
+              <FormField
+                control={articleForm.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{language === 'vi' ? 'Danh Mục' : 'Category'}</FormLabel>
+                    <Select onValueChange={field.onChange} value={field.value}>
+                      <FormControl>
+                        <SelectTrigger data-testid="select-article-category">
+                          <SelectValue placeholder={language === 'vi' ? 'Chọn danh mục' : 'Select a category'} />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {categories
+                          .filter(cat => cat.type === 'article' && cat.active)
+                          .map((category) => (
+                            <SelectItem key={category.id} value={category.slug}>
+                              {category.name}
+                            </SelectItem>
+                          ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={articleForm.control}
@@ -1193,8 +1222,8 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
             </div>
 
             <div className="border-t pt-6">
-              <h3 className="text-lg font-medium mb-4">{language === 'vi' ? 'Thông Tin Chung' : 'General Information'}</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+              <h3 className="text-lg font-medium mb-4">{language === 'vi' ? 'SEO & URL' : 'SEO & URL'}</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                 <FormField
                   control={articleForm.control}
                   name="slugEn"
@@ -1222,63 +1251,6 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                   )}
                 />
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-                <FormField
-                  control={articleForm.control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{language === 'vi' ? 'Danh Mục' : 'Category'}</FormLabel>
-                      <Select onValueChange={field.onChange} value={field.value}>
-                        <FormControl>
-                          <SelectTrigger data-testid="select-article-category">
-                            <SelectValue placeholder={language === 'vi' ? 'Chọn danh mục' : 'Select a category'} />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {categories
-                            .filter(cat => cat.type === 'article' && cat.active)
-                            .map((category) => (
-                              <SelectItem key={category.id} value={category.slug}>
-                                {category.name}
-                              </SelectItem>
-                            ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={articleForm.control}
-                  name="status"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{language === 'vi' ? 'Trạng Thái' : 'Status'}</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
-                        <FormControl>
-                          <SelectTrigger data-testid="select-article-status">
-                            <SelectValue />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="draft">{language === 'vi' ? 'Bản Nháp' : 'Draft'}</SelectItem>
-                          <SelectItem value="published">{language === 'vi' ? 'Đã Đăng' : 'Published'}</SelectItem>
-                          <SelectItem value="archived">{language === 'vi' ? 'Lưu Trữ' : 'Archived'}</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-            </div>
-
-            <div className="border-t pt-6">
-              <h3 className="text-lg font-medium mb-4">{language === 'vi' ? 'Cài Đặt SEO' : 'SEO Settings'}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-4">
                   <h4 className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'SEO Tiếng Anh' : 'English SEO'}</h4>
