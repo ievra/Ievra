@@ -2,7 +2,9 @@ import { Request, Response, NextFunction } from "express";
 import fs from "fs";
 import { storage } from "./storage";
 
-const BOT_USER_AGENTS = /facebookexternalhit|facebookbot|twitterbot|linkedinbot|whatsapp|telegrambot|slackbot|discordbot|applebot|googlebot|bingbot|yandexbot|baiduspider|zalo|viber|line-|pinterest|tumblr/i;
+const STATIC_EXTENSIONS = /\.(js|css|png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|eot|map|json|txt|xml|pdf|zip)$/i;
+
+const BOT_USER_AGENTS = /facebookexternalhit|facebookbot|twitterbot|linkedinbot|whatsapp|telegrambot|slackbot|discordbot|applebot|googlebot|bingbot|yandexbot|baiduspider|zalo|viber|line-|pinterest|tumblr|curl|wget/i;
 
 function isBot(req: Request): boolean {
   const ua = req.headers["user-agent"] || "";
@@ -52,14 +54,34 @@ function injectOgTags(
   return html.replace(/<\/head>/, `    ${metaTags}\n  </head>`);
 }
 
-export function ogMiddleware(indexHtmlPath: string) {
+let settingsCache: { data: any; expiresAt: number } | null = null;
+const CACHE_TTL_MS = 30_000;
+
+async function getCachedSettings() {
+  const now = Date.now();
+  if (settingsCache && settingsCache.expiresAt > now) {
+    return settingsCache.data;
+  }
+  const s = await storage.getSettings();
+  settingsCache = { data: s, expiresAt: now + CACHE_TTL_MS };
+  return s;
+}
+
+export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
   return async (req: Request, res: Response, next: NextFunction) => {
-    if (req.path.startsWith("/api") || !isBot(req)) {
+    if (req.path.startsWith("/api") || STATIC_EXTENSIONS.test(req.path)) {
+      return next();
+    }
+
+    if (isDev && !isBot(req)) {
       return next();
     }
 
     try {
-      const baseUrl = process.env.SITE_URL || `${req.protocol}://${req.get("host")}`;
+      const siteUrl = process.env.SITE_URL;
+      const proto = req.headers["x-forwarded-proto"] || req.protocol;
+      const host = req.headers["x-forwarded-host"] || req.get("host");
+      const baseUrl = siteUrl || `${proto}://${host}`;
       const currentUrl = `${baseUrl}${req.originalUrl}`;
 
       let html: string;
@@ -79,17 +101,14 @@ export function ogMiddleware(indexHtmlPath: string) {
           if (project) {
             const coverImages = Array.isArray(project.coverImages) ? project.coverImages : [];
             const galleryImages = Array.isArray(project.galleryImages) ? project.galleryImages : [];
-            const firstImage =
-              project.heroImage ||
-              coverImages[0] ||
-              galleryImages[0];
+            const firstImage = project.heroImage || coverImages[0] || galleryImages[0];
             tags = {
               title: `${project.title} | IEVRA Design & Build`,
               description:
                 project.metaDescription ||
                 project.description ||
                 "Dự án thiết kế nội thất của IEVRA Design & Build",
-              image: firstImage ? `${baseUrl}${firstImage}` : undefined,
+              image: firstImage ? (firstImage.startsWith("http") ? firstImage : `${baseUrl}${firstImage}`) : undefined,
               url: currentUrl,
               type: "article",
             };
@@ -109,7 +128,9 @@ export function ogMiddleware(indexHtmlPath: string) {
                 article.metaDescription ||
                 article.excerpt ||
                 "Bài viết từ IEVRA Design & Build",
-              image: article.featuredImage ? `${baseUrl}${article.featuredImage}` : undefined,
+              image: article.featuredImage
+                ? (article.featuredImage.startsWith("http") ? article.featuredImage : `${baseUrl}${article.featuredImage}`)
+                : undefined,
               url: currentUrl,
               type: "article",
             };
@@ -119,12 +140,12 @@ export function ogMiddleware(indexHtmlPath: string) {
 
       if (!tags) {
         try {
-          const s = await storage.getSettings();
+          const s = await getCachedSettings();
           let ogImgUrl: string | undefined;
-          if (s?.ogImageData && s.ogImageData.startsWith('data:')) {
+          if (s?.ogImageData && s.ogImageData.startsWith("data:")) {
             ogImgUrl = `${baseUrl}/api/og-image`;
           } else if (s?.ogImage) {
-            ogImgUrl = s.ogImage.startsWith('http') ? s.ogImage : `${baseUrl}${s.ogImage}`;
+            ogImgUrl = s.ogImage.startsWith("http") ? s.ogImage : `${baseUrl}${s.ogImage}`;
           }
           tags = {
             title: s?.siteTitle || "IEVRA Design & Build",

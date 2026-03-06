@@ -147,7 +147,7 @@ app.use((req, res, next) => {
     ? path.resolve(import.meta.dirname, "..", "client", "index.html")
     : path.resolve(import.meta.dirname, "public", "index.html");
 
-  app.use(ogMiddleware(indexHtmlPath));
+  app.use(ogMiddleware(indexHtmlPath, isDev));
 
   if (isDev) {
     await setupVite(app, server);
