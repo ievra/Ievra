@@ -603,8 +603,12 @@ export default function About() {
               </h3>
             </div>
 
-            {/* Desktop snake layout — SVG single path; -mx extends to section edges */}
-            <div className="hidden md:block -mx-4 sm:-mx-6 lg:-mx-8" ref={snakeRef}>
+            {/* Desktop snake layout — SVG single path; full viewport width */}
+            <div
+              className="hidden md:block"
+              ref={snakeRef}
+              style={{ width: '100vw', marginLeft: 'calc(-50vw + 50%)' }}
+            >
               {(() => {
                 const PER_ROW = 3;
                 const R = 110;          // U-turn radius (px) — ROW_H must = 2*R for perfect semicircle
