@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRoute, Link, useLocation } from "wouter";
+import { getProjectPath } from "@/lib/routes";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
@@ -122,11 +123,12 @@ function parseFormattedText(text: string): JSX.Element[] {
 }
 
 export default function ProjectDetail() {
-  const [, slugParams] = useRoute("/portfolio/:slug");
+  const [, portfolioParams] = useRoute("/portfolio/:slug");
+  const [, duAnParams] = useRoute("/du-an/:slug");
   const [, idParams] = useRoute("/project/:id");
   const [location, setLocation] = useLocation();
   
-  const projectSlug = slugParams?.slug;
+  const projectSlug = portfolioParams?.slug || duAnParams?.slug;
   const projectId = idParams?.id;
   const isSlugRoute = !!projectSlug;
   
@@ -175,16 +177,16 @@ export default function ProjectDetail() {
   // Redirect to slug-based URL if accessing by ID and project has a slug
   useEffect(() => {
     if (project?.slug && !isSlugRoute) {
-      setLocation(`/portfolio/${project.slug}`, { replace: true });
+      setLocation(getProjectPath(language, project.slug), { replace: true });
     }
-  }, [project?.slug, isSlugRoute, setLocation]);
+  }, [project?.slug, isSlugRoute, language, setLocation]);
 
   // Redirect to correct language URL when language changes or server returns sibling via linkedSlug fallback
   useEffect(() => {
     if (project?.slug && isSlugRoute && projectSlug && project.slug !== projectSlug) {
-      setLocation(`/portfolio/${project.slug}`, { replace: true });
+      setLocation(getProjectPath(language, project.slug), { replace: true });
     }
-  }, [project?.slug, projectSlug, isSlugRoute, setLocation]);
+  }, [project?.slug, projectSlug, isSlugRoute, language, setLocation]);
 
   // Set SEO meta tags when project data is loaded
   useEffect(() => {
@@ -324,7 +326,7 @@ export default function ProjectDetail() {
               }
             </p>
             <Button asChild variant="outline" data-testid="button-back-portfolio">
-              <Link href="/portfolio">
+              <Link href={getProjectPath(language)}>
                 {language === 'vi' ? 'Quay lại Danh mục' : 'Back to Portfolio'}
               </Link>
             </Button>
@@ -379,7 +381,7 @@ export default function ProjectDetail() {
             <h1 className="font-light tracking-wider text-white uppercase" style={{ fontSize: '48px', lineHeight: '1.4' }} data-testid="text-project-title">
               {project.title}
             </h1>
-            <Link href="/portfolio" className="inline-flex items-center mt-4 text-zinc-300 hover:text-white transition-colors text-sm" data-testid="button-back-to-portfolio">
+            <Link href={getProjectPath(language)} className="inline-flex items-center mt-4 text-zinc-300 hover:text-white transition-colors text-sm" data-testid="button-back-to-portfolio">
               <ArrowLeft className="mr-2 h-4 w-4" />
               {language === 'vi' ? 'Quay lại Danh mục' : 'Back to Portfolio'}
             </Link>
@@ -569,7 +571,7 @@ export default function ProjectDetail() {
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
               {allProjects.map((otherProject) => (
-                <Link key={otherProject.id} href={otherProject.slug ? `/portfolio/${otherProject.slug}` : `/project/${otherProject.id}`}>
+                <Link key={otherProject.id} href={getProjectPath(language, otherProject.slug, otherProject.id)}>
                   <div className="group cursor-pointer">
                     <div className="aspect-square overflow-hidden">
                       <OptimizedImage

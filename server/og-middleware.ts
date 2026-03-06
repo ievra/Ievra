@@ -71,7 +71,7 @@ export function ogMiddleware(indexHtmlPath: string) {
 
       let tags: Parameters<typeof injectOgTags>[1] | null = null;
 
-      const projectMatch = req.path.match(/^\/portfolio\/([^/]+)$/);
+      const projectMatch = req.path.match(/^\/(?:portfolio|du-an)\/([^/]+)$/);
       if (projectMatch) {
         const slug = projectMatch[1];
         try {
@@ -97,7 +97,7 @@ export function ogMiddleware(indexHtmlPath: string) {
         } catch {}
       }
 
-      const blogMatch = req.path.match(/^\/blog\/([^/]+)$/);
+      const blogMatch = req.path.match(/^\/(?:blog|tin-tuc)\/([^/]+)$/);
       if (!tags && blogMatch) {
         const slug = blogMatch[1];
         try {

@@ -31,12 +31,18 @@ function Router() {
             <Route path="/" component={Home} />
             <Route path="/portfolio" component={Portfolio} />
             <Route path="/portfolio/:slug" component={ProjectDetail} />
+            <Route path="/du-an" component={Portfolio} />
+            <Route path="/du-an/:slug" component={ProjectDetail} />
             <Route path="/project/:id" component={ProjectDetail} />
             <Route path="/blog" component={Blog} />
             <Route path="/blog/:slug" component={BlogDetail} />
+            <Route path="/tin-tuc" component={Blog} />
+            <Route path="/tin-tuc/:slug" component={BlogDetail} />
             <Route path="/about" component={About} />
+            <Route path="/gioi-thieu" component={About} />
             <Route path="/contact" component={Contact} />
             <Route path="/lookup" component={Lookup} />
+            <Route path="/tra-cuu" component={Lookup} />
             <Route path="/admin">
               <ProtectedRoute>
                 <Admin />

@@ -9,6 +9,7 @@ import OptimizedImage from "@/components/OptimizedImage";
 import type { Article, Category } from "@shared/schema";
 import { useState, useEffect, useMemo } from "react";
 import { FormattedText } from "@/lib/textUtils";
+import { getArticlePath } from "@/lib/routes";
 
 export default function Blog() {
   const { language, t } = useLanguage();
@@ -437,7 +438,7 @@ export default function Blog() {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[3px]">
               {articles.map((article) => (
-                <Link key={article.id} href={`/blog/${article.slug}`}>
+                <Link key={article.id} href={getArticlePath(language, article.slug)}>
                   <div
                     className="article-card group relative overflow-hidden cursor-pointer w-full h-[420px] transform-gpu backface-hidden"
                     data-testid={`card-article-${article.id}`}

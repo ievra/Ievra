@@ -5,17 +5,18 @@ import { useLanguage, type Language } from "@/contexts/LanguageContext";
 import { useQuery } from "@tanstack/react-query";
 import Footer from "@/components/Footer";
 import PreFooterBanner from "@/components/PreFooterBanner";
+import { getPath, isRoutePath } from "@/lib/routes";
 
 interface LayoutProps {
   children: React.ReactNode;
 }
 
-const getNavigation = (t: (key: string) => string) => {
+const getNavigation = (t: (key: string) => string, language: string) => {
   return [
-    { name: t('nav.about'), href: `/about`, key: 'about' },
-    { name: t('nav.projects'), href: `/portfolio`, key: 'portfolio' },
-    { name: t('nav.news'), href: `/blog`, key: 'news' },
-    { name: t('nav.lookup'), href: `/lookup`, key: 'lookup' },
+    { name: t('nav.about'), href: getPath('about', language), key: 'about' },
+    { name: t('nav.projects'), href: getPath('portfolio', language), key: 'portfolio' },
+    { name: t('nav.news'), href: getPath('blog', language), key: 'news' },
+    { name: t('nav.lookup'), href: getPath('lookup', language), key: 'lookup' },
   ];
 };
 
@@ -40,7 +41,7 @@ export default function Layout({ children }: LayoutProps) {
   const headerLogoRef = useRef<HTMLImageElement>(null);
   const headerRef = useRef<HTMLElement>(null);
   const { language, setLanguage, t } = useLanguage();
-  const navigation = getNavigation(t);
+  const navigation = getNavigation(t, language);
 
   const { data: settings } = useQuery<{
     logoData?: string;
@@ -329,9 +330,12 @@ export default function Layout({ children }: LayoutProps) {
     setLanguage(lang);
   };
 
-  const isActive = (href: string) => {
-    if (href === '/') return location === '/';
-    return location.startsWith(href);
+  const isActive = (key: string) => {
+    if (key === 'about') return isRoutePath(location, 'about');
+    if (key === 'portfolio') return isRoutePath(location, 'portfolio');
+    if (key === 'news') return isRoutePath(location, 'blog');
+    if (key === 'lookup') return isRoutePath(location, 'lookup');
+    return false;
   };
 
   const introActive = location === '/' && introProgress < 1;
@@ -354,7 +358,7 @@ export default function Layout({ children }: LayoutProps) {
                 key={item.key}
                 href={item.href}
                 className={`text-[13px] font-light tracking-widest uppercase transition-colors nav-link-underline ${
-                  isActive(item.href)
+                  isActive(item.key)
                     ? 'text-white'
                     : 'text-white/70 hover:text-white'
                 }`}
@@ -479,7 +483,7 @@ export default function Layout({ children }: LayoutProps) {
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className={`block text-3xl font-light tracking-wider transition-colors ${
-                    isActive(item.href) ? 'text-white' : 'text-white/60 hover:text-white'
+                    isActive(item.key) ? 'text-white' : 'text-white/60 hover:text-white'
                   }`}
                   data-testid={`menu-nav-${item.key}`}
                 >
@@ -490,7 +494,7 @@ export default function Layout({ children }: LayoutProps) {
                 href="/contact"
                 onClick={() => setMobileMenuOpen(false)}
                 className={`block text-3xl font-light tracking-wider transition-colors ${
-                  isActive('/contact') ? 'text-white' : 'text-white/60 hover:text-white'
+                  location.startsWith('/contact') ? 'text-white' : 'text-white/60 hover:text-white'
                 }`}
                 data-testid="menu-nav-contact"
               >
@@ -522,7 +526,7 @@ export default function Layout({ children }: LayoutProps) {
       )}
 
       <main>{children}</main>
-      {!location.startsWith('/admin') && !location.startsWith('/portfolio') && !location.startsWith('/blog') && location !== '/lookup' && <PreFooterBanner />}
+      {!location.startsWith('/admin') && !isRoutePath(location, 'portfolio') && !isRoutePath(location, 'blog') && !isRoutePath(location, 'lookup') && <PreFooterBanner />}
       {!location.startsWith('/admin') && <Footer />}
     </div>
   );

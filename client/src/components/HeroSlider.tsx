@@ -6,6 +6,7 @@ import type { Project, Category } from '@shared/schema';
 import { ChevronRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
+import { getProjectPath } from '@/lib/routes';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -121,7 +122,7 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
                 <div className="relative h-full flex flex-col justify-between" style={{ zIndex: 10 }}>
                   <div className={`flex-1 flex items-end pb-4 transition-opacity duration-700 ${heroContentVisible ? 'opacity-100' : 'opacity-0'}`}>
                     <Link 
-                      href={project.slug ? `/portfolio/${project.slug}` : `/project/${project.id}`} 
+                      href={getProjectPath(language, project.slug, project.id)} 
                       className="block group"
                       data-testid={`slide-link-${project.id}`}
                     >

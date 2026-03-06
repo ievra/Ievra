@@ -20,6 +20,7 @@ import HeroSlider from "@/components/HeroSlider";
 import ScrollableContainer from "@/components/ScrollableContainer";
 import { apiRequest } from "@/lib/queryClient";
 import { FormattedText } from "@/lib/textUtils";
+import { getProjectPath, getArticlePath, getPath } from "@/lib/routes";
 import type {
   Project,
   HomepageContent,
@@ -916,7 +917,7 @@ export default function Home() {
                   className="rounded-none hover:bg-transparent text-white/60 hover:text-white view-more-btn scroll-animate transition-colors duration-300"
                   data-testid="button-view-more-projects"
                 >
-                  <Link href="/portfolio">
+                  <Link href={getPath('portfolio', language)}>
                     {t("common.viewMoreProjects")}{" "}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
@@ -1034,7 +1035,7 @@ export default function Home() {
                         }}
                         onClick={() => {
                           if (isActive) {
-                            navigate(project.slug ? `/portfolio/${project.slug}` : `/project/${project.id}`);
+                            navigate(getProjectPath(language, project.slug, project.id));
                           } else {
                             setActiveProjectIndex(index);
                           }
@@ -1168,7 +1169,7 @@ export default function Home() {
                   className="rounded-none hover:bg-transparent text-white/60 hover:text-white view-more-btn scroll-animate transition-colors duration-300"
                   data-testid="button-view-more-news"
                 >
-                  <Link href="/blog">
+                  <Link href={getPath('blog', language)}>
                     {t("common.viewMoreNews")}
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Link>
@@ -1297,7 +1298,7 @@ export default function Home() {
                         }}
                         onClick={() => {
                           if (isActive) {
-                            navigate(`/blog/${article.slug}`);
+                            navigate(getArticlePath(language, article.slug));
                           } else {
                             setActiveArticleIndex(index);
                           }

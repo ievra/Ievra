@@ -2,6 +2,7 @@ import { Link } from "wouter";
 import { useQuery } from "@tanstack/react-query";
 import type { Project, Category } from "@shared/schema";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { getProjectPath } from "@/lib/routes";
 
 interface ProjectCardProps {
   project: Project;
@@ -45,7 +46,7 @@ export default function ProjectCard({
       className={`project-card group relative overflow-hidden cursor-pointer w-full h-full transform-gpu backface-hidden ${className}`}
       data-index={index}
     >
-      <Link href={project.slug ? `/portfolio/${project.slug}` : `/project/${project.id}`} className="block w-full h-full">
+      <Link href={getProjectPath(language, project.slug, project.id)} className="block w-full h-full">
         {projectImage ? (
           <img
             src={projectImage}

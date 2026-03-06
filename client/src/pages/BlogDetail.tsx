@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Link, useParams } from "wouter";
+import { Link, useParams, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,6 +9,7 @@ import OptimizedImage from "@/components/OptimizedImage";
 import type { Article } from "@shared/schema";
 import { useEffect } from "react";
 import { FormattedText, parseBoldTextToHTML } from "@/lib/textUtils";
+import { getArticlePath } from "@/lib/routes";
 
 // Related Articles Component
 function RelatedArticles({ currentArticleId, category, language }: { currentArticleId: string; category: string; language: string }) {
@@ -70,7 +71,7 @@ function RelatedArticles({ currentArticleId, category, language }: { currentArti
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {relatedArticles.map((article) => (
           <Card key={article.id} className="group overflow-hidden hover-scale project-hover" data-testid={`card-related-article-${article.id}`}>
-            <Link href={`/blog/${article.slug}`}>
+            <Link href={getArticlePath(language, article.slug)}>
               <div className="relative">
                 {(article.featuredImage || article.featuredImageData) ? (
                   <OptimizedImage
@@ -115,6 +116,7 @@ function RelatedArticles({ currentArticleId, category, language }: { currentArti
 export default function BlogDetail() {
   const { slug } = useParams();
   const { language } = useLanguage();
+  const [, setLocation] = useLocation();
 
   const { data: article, isLoading, error } = useQuery<Article>({
     queryKey: ['/api/articles/slug', slug, language],
@@ -129,6 +131,13 @@ export default function BlogDetail() {
     },
     enabled: !!slug,
   });
+
+  // Redirect to correct language URL when server returns sibling via linkedSlug fallback
+  useEffect(() => {
+    if (article?.slug && slug && article.slug !== slug) {
+      setLocation(getArticlePath(language, article.slug), { replace: true } as any);
+    }
+  }, [article?.slug, slug, language, setLocation]);
 
   // Update document title and meta tags for SEO
   useEffect(() => {
