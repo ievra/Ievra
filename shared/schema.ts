@@ -622,6 +622,8 @@ export const settings = pgTable("settings", {
   metaDescriptionVi: text("meta_description_vi"),
   metaKeywords: text("meta_keywords"),
   metaKeywordsVi: text("meta_keywords_vi"),
+  ogImage: text("og_image"),
+  ogImageData: text("og_image_data"),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
 

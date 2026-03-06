@@ -48,6 +48,8 @@ const seoSettingsSchema = z.object({
   metaDescriptionVi: z.string().optional(),
   metaKeywords: z.string().optional(),
   metaKeywordsVi: z.string().optional(),
+  ogImage: z.string().optional(),
+  ogImageData: z.string().optional(),
 });
 
 type PartnerFormData = z.infer<typeof partnerSchema>;
@@ -179,6 +181,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     },
   });
 
+  const [ogImagePreview, setOgImagePreview] = useState<string>('');
+
   const seoSettingsForm = useForm<SeoSettingsFormData>({
     resolver: zodResolver(seoSettingsSchema),
     defaultValues: {
@@ -188,6 +192,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       metaDescriptionVi: "",
       metaKeywords: "",
       metaKeywordsVi: "",
+      ogImage: "",
+      ogImageData: "",
     },
   });
 
@@ -200,7 +206,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         metaDescriptionVi: settings.metaDescriptionVi || "",
         metaKeywords: settings.metaKeywords || "",
         metaKeywordsVi: settings.metaKeywordsVi || "",
+        ogImage: settings.ogImage || "",
+        ogImageData: settings.ogImageData || "",
       });
+      setOgImagePreview(settings.ogImageData || settings.ogImage || '');
     }
   }, [settings, seoSettingsForm]);
 
@@ -702,6 +711,25 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     } catch (error) {}
   };
 
+  const handleOgImageFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 10 * 1024 * 1024) {
+        toast({ title: "File too large", description: "Maximum: 10MB.", variant: "destructive" });
+        e.target.value = '';
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const dataUrl = ev.target?.result as string;
+        seoSettingsForm.setValue('ogImageData', dataUrl);
+        seoSettingsForm.setValue('ogImage', '');
+        setOgImagePreview(dataUrl);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const onSeoSettingsSubmit = async (data: SeoSettingsFormData) => {
     try {
       const existingSettings = settings || {};
@@ -713,6 +741,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         metaDescriptionVi: data.metaDescriptionVi,
         metaKeywords: data.metaKeywords,
         metaKeywordsVi: data.metaKeywordsVi,
+        ogImage: data.ogImage || existingSettings.ogImage,
+        ogImageData: data.ogImageData || existingSettings.ogImageData,
       });
       toast({ title: language === 'vi' ? "Thành công" : "Success", description: language === 'vi' ? "Đã lưu cài đặt SEO" : "SEO settings saved successfully" });
     } catch (error) {}
@@ -1453,6 +1483,37 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                           <FormMessage />
                         </FormItem>
                       )} />
+                    </div>
+                    <div className="space-y-3">
+                      <label className="text-sm font-medium block">
+                        {language === 'vi' ? 'Ảnh OG (Social Share Image)' : 'OG Image (Social Share Image)'}
+                      </label>
+                      <p className="text-xs text-muted-foreground">
+                        {language === 'vi'
+                          ? 'Ảnh hiển thị khi chia sẻ link trang chủ lên Zalo, Facebook,... Khuyến nghị: 1200×630px.'
+                          : 'Image displayed when sharing the homepage link on Zalo, Facebook,... Recommended: 1200×630px.'}
+                      </p>
+                      <input
+                        type="file"
+                        accept=".jpg,.jpeg,.png,.webp"
+                        onChange={handleOgImageFileChange}
+                        className="block w-full text-sm text-foreground file:mr-4 file:py-2 file:px-4 file:rounded-none file:border file:border-white/30 file:text-sm file:font-medium file:bg-transparent file:text-white hover:file:bg-white/10 hover:file:border-white cursor-pointer"
+                      />
+                      {ogImagePreview && (
+                        <div className="mt-3">
+                          <p className="text-xs text-muted-foreground mb-2">{language === 'vi' ? 'Xem trước:' : 'Preview:'}</p>
+                          <div className="relative border border-white/10 overflow-hidden" style={{ maxWidth: '400px', aspectRatio: '1200/630' }}>
+                            <img src={ogImagePreview} alt="OG Image Preview" className="w-full h-full object-cover" />
+                            <button
+                              type="button"
+                              onClick={() => { setOgImagePreview(''); seoSettingsForm.setValue('ogImageData', ''); seoSettingsForm.setValue('ogImage', ''); }}
+                              className="absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 hover:bg-black"
+                            >
+                              {language === 'vi' ? 'Xóa' : 'Remove'}
+                            </button>
+                          </div>
+                        </div>
+                      )}
                     </div>
                     <Button type="submit" disabled={updateSettingsMutation.isPending} data-testid="button-save-seo">
                       {updateSettingsMutation.isPending ? (language === 'vi' ? 'Đang lưu...' : 'Saving...') : (language === 'vi' ? 'Lưu Cài Đặt SEO' : 'Save SEO Settings')}
