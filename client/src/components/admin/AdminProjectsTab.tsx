@@ -388,46 +388,25 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
     setIsProjectDialogOpen(true);
   };
 
-  const handleCreateProjectDraft = async () => {
-    const timestamp = Date.now();
-    const draftSlug = `ban-nhap-${timestamp}`;
+  const handleCreateProjectDraft = () => {
     const defaultCategory = (categories.find(c => c.type === 'project' && c.active) || categories.find(c => c.type === 'project'))?.slug || 'residential';
-    try {
-      const res = await apiRequest('POST', '/api/projects', {
-        title: 'Dự Án Mới',
-        slug: draftSlug,
-        category: defaultCategory,
-        language: 'vi',
-        status: 'draft',
-        featured: false,
-        images: [],
-      });
-      const draft = await res.json();
-      queryClient.invalidateQueries({ queryKey: ['/api/projects'] });
-      setIsNewProject(true);
-      setEditingProject(draft);
-      setDialogKey(k => k + 1);
-      projectForm.reset({
-        titleVi: '',
-        titleEn: '',
-        slugEn: '',
-        slugVi: '',
-        category: defaultCategory,
-        status: 'draft',
-        featured: false,
-        coverImages: [],
-        contentImages: [],
-        galleryImages: [],
-        images: [],
-      });
-      setIsProjectDialogOpen(true);
-    } catch {
-      setIsNewProject(true);
-      setEditingProject(null);
-      setDialogKey(k => k + 1);
-      projectForm.reset();
-      setIsProjectDialogOpen(true);
-    }
+    setIsNewProject(true);
+    setEditingProject(null);
+    setDialogKey(k => k + 1);
+    projectForm.reset({
+      titleVi: '',
+      titleEn: '',
+      slugEn: '',
+      slugVi: '',
+      category: defaultCategory,
+      status: 'draft',
+      featured: false,
+      coverImages: [],
+      contentImages: [],
+      galleryImages: [],
+      images: [],
+    });
+    setIsProjectDialogOpen(true);
   };
 
   const onProjectSubmit = async (data: BilingualProjectFormData) => {
