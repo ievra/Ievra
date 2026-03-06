@@ -41,8 +41,7 @@ const bilingualProjectSchema = z.object({
   bannerTitleEn: z.string().optional(),
   bannerTitleVi: z.string().optional(),
   bannerImage: z.string().optional(),
-  slugEn: z.string().optional(),
-  slugVi: z.string().optional(),
+  slug: z.string().optional(),
   category: z.string().min(1, "Category is required"),
   status: z.enum(["draft", "published", "archived"]).default("draft"),
   locationEn: z.string().optional(),
@@ -175,8 +174,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       bannerTitleEn: "",
       bannerTitleVi: "",
       bannerImage: "",
-      slugEn: "",
-      slugVi: "",
+      slug: "",
       category: "",
       status: "draft",
       locationEn: "",
@@ -364,8 +362,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       metaDescriptionVi: viVersion?.metaDescription || "",
       metaKeywordsEn: enVersion?.metaKeywords || "",
       metaKeywordsVi: viVersion?.metaKeywords || "",
-      slugEn: enVersion?.slug || "",
-      slugVi: viVersion?.slug || project.slug || "",
+      slug: enVersion?.slug || viVersion?.slug || project.slug || "",
       category: project.category,
       status: (project as any).status || "draft",
       locationEn: enVersion?.location || "",
@@ -409,8 +406,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       projectForm.reset({
         titleVi: '',
         titleEn: '',
-        slugEn: '',
-        slugVi: '',
+        slug: '',
         category: defaultCategory,
         status: 'draft',
         featured: false,
@@ -445,32 +441,16 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-+|-+$/g, '');
       };
-      const rawSlugEn = data.slugEn ? toSlug(data.slugEn) : (hasEn ? toSlug(data.titleEn!) : '');
-      const rawSlugVi = data.slugVi ? toSlug(data.slugVi) : (hasVi ? toSlug(data.titleVi!) : '');
-      const finalSlugEn = rawSlugEn || rawSlugVi;
-      const finalSlugVi = rawSlugVi || rawSlugEn;
+      const rawSlug = data.slug ? toSlug(data.slug) : (hasEn ? toSlug(data.titleEn!) : (hasVi ? toSlug(data.titleVi!) : ''));
+      const finalSlug = rawSlug;
 
-      const currentEnSlug = editingProject
-        ? (projects.find(p => p.slug === editingProject.slug && p.language === 'en')?.slug || editingProject.slug)
-        : null;
-      const currentViSlug = editingProject
-        ? (projects.find(p => p.slug === editingProject.slug && p.language === 'vi')?.slug || editingProject.slug)
-        : null;
+      const currentSlug = editingProject?.slug || null;
 
-      if (hasEn && finalSlugEn) {
-        const dup = projects.some(p => p.language === 'en' && p.slug === finalSlugEn && p.slug !== currentEnSlug);
+      if (finalSlug) {
+        const dup = projects.some(p => p.slug === finalSlug && p.slug !== currentSlug);
         if (dup) {
-          projectForm.setError('slugEn', { type: 'manual', message: 'URL này đã được dùng (EN).' });
-          toast({ title: 'URL/Slug đã tồn tại', description: 'URL tiếng Anh đang được dùng bởi dự án khác.', variant: 'destructive' });
-          setIsProjectSubmitting(false);
-          return;
-        }
-      }
-      if (hasVi && finalSlugVi) {
-        const dup = projects.some(p => p.language === 'vi' && p.slug === finalSlugVi && p.slug !== currentViSlug);
-        if (dup) {
-          projectForm.setError('slugVi', { type: 'manual', message: 'URL này đã được dùng (VI).' });
-          toast({ title: 'URL/Slug đã tồn tại', description: 'URL tiếng Việt đang được dùng bởi dự án khác.', variant: 'destructive' });
+          projectForm.setError('slug', { type: 'manual', message: 'URL này đã được dùng.' });
+          toast({ title: 'URL/Slug đã tồn tại', description: 'URL này đang được dùng bởi dự án khác.', variant: 'destructive' });
           setIsProjectSubmitting(false);
           return;
         }
@@ -481,7 +461,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       if (hasEn) {
         const enProject = {
           title: data.titleEn!,
-          slug: finalSlugEn,
+          slug: finalSlug,
           description: data.descriptionEn,
           detailedDescription: data.detailedDescriptionEn,
           designPhilosophyTitle: data.designPhilosophyTitleEn,
@@ -530,7 +510,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       if (hasVi) {
         const viProject = {
           title: data.titleVi!,
-          slug: finalSlugVi,
+          slug: finalSlug,
           description: data.descriptionVi,
           detailedDescription: data.detailedDescriptionVi,
           designPhilosophyTitle: data.designPhilosophyTitleVi,
@@ -1230,28 +1210,15 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
 
                 <div className="border-t pt-6">
                   <h3 className="text-lg font-medium mb-4 uppercase tracking-wide">Cài Đặt SEO</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                  <div className="mb-4">
                     <FormField
                       control={projectForm.control}
-                      name="slugEn"
+                      name="slug"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>URL (English)</FormLabel>
+                          <FormLabel>URL / Slug</FormLabel>
                           <FormControl>
-                            <Input {...field} data-testid="input-project-slug" placeholder="auto-generated from EN title" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={projectForm.control}
-                      name="slugVi"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>URL (Tiếng Việt)</FormLabel>
-                          <FormControl>
-                            <Input {...field} placeholder="tự động tạo từ tiêu đề VI" />
+                            <Input {...field} data-testid="input-project-slug" placeholder="tự động tạo từ tiêu đề (dùng chung EN & VI)" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
