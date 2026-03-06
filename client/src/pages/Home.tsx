@@ -1125,16 +1125,16 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-black/60" />
         </div>
         <div className="relative h-full w-full px-4 sm:px-6 lg:px-8 flex">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 w-full items-start">
-            <div className="text-white space-y-6 mt-[30vh]">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-20 w-full items-start">
+            <div className="text-white space-y-6 mt-[12vh] md:mt-[30vh]">
               <TypewriterText
                 text={language === "vi"
                   ? (homepageContent?.qualityLeftTextVi || homepageContent?.qualityLeftText || "Mỗi chi tiết được lựa chọn để nội thất phục vụ lâu dài và trông hoàn hảo.")
                   : (homepageContent?.qualityLeftText || "Each detail is selected so that the interior will serve for a long time and look impeccable.")}
-                className="text-[36px] font-light"
+                className="text-[28px] md:text-[36px] font-light"
               />
             </div>
-            <div className="text-white space-y-6 text-right mt-[42vh]">
+            <div className="text-white space-y-6 text-right mt-6 md:mt-[42vh]">
               <TypewriterText
                 reverse
                 text={language === "vi"
@@ -1369,9 +1369,9 @@ export default function Home() {
 
         <div className="relative h-full flex">
           <div className="w-full px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start w-full">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-start w-full">
               {/* Left side text — lower */}
-              <div className="mt-[42vh]">
+              <div className="mt-[12vh] md:mt-[42vh]">
                 <TypewriterText
                   text={language === "vi"
                     ? (homepageContent?.quality2LeftTextVi || homepageContent?.quality2LeftText || "Mỗi chi tiết được lựa chọn để nội thất phục vụ lâu dài và luôn hoàn hảo.")
@@ -1381,7 +1381,7 @@ export default function Home() {
               </div>
 
               {/* Right side content — higher */}
-              <div className="text-right mt-[30vh]">
+              <div className="text-right mt-6 md:mt-[30vh]">
                 <TypewriterText
                   reverse
                   text={language === "vi"
