@@ -1383,9 +1383,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(settings);
     } catch (error) {
       if (error instanceof z.ZodError) {
+        console.error("[/api/settings PUT] Zod validation error:", JSON.stringify(error.errors));
         return res.status(400).json({ message: "Validation error", errors: error.errors });
       }
-      res.status(500).json({ message: "Failed to update settings" });
+      console.error("[/api/settings PUT] Error:", (error as any)?.message);
+      res.status(500).json({ message: "Failed to update settings", detail: (error as any)?.message });
     }
   });
 
