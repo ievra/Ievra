@@ -288,15 +288,11 @@ export default function About() {
               </div>
               {aboutContent.historyImage && (
                 <div className="slide-from-right">
-                  <div className="relative aspect-[4/3] overflow-hidden bg-white/5">
+                  <div className="relative aspect-[4/3] overflow-hidden bg-black">
                     <img 
                       src={aboutContent.historyImage} 
                       alt={language === "vi" ? "Lịch sử công ty" : "Company History"}
                       className="w-full h-full object-cover"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.src = 'https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600';
-                      }}
                     />
                   </div>
                 </div>
@@ -315,15 +311,11 @@ export default function About() {
                 <div className="space-y-8">
                   {(aboutContent.missionImageData || aboutContent.missionImage) && (
                     <div className="slide-from-left">
-                      <div className="relative overflow-hidden bg-white/5 aspect-[4/3]">
+                      <div className="relative overflow-hidden bg-black aspect-[4/3]">
                         <img
                           src={aboutContent.missionImageData || aboutContent.missionImage || undefined}
                           alt={language === "vi" ? "Sứ mệnh" : "Mission"}
                           className="w-full h-full object-cover"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.src = 'https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=600';
-                          }}
                         />
                       </div>
                     </div>
@@ -344,15 +336,11 @@ export default function About() {
                 <div className="space-y-8">
                   {(aboutContent.missionVisionImageData || aboutContent.missionVisionImage) && (
                     <div className="slide-from-right">
-                      <div className="relative overflow-hidden bg-white/5 aspect-[4/3]">
+                      <div className="relative overflow-hidden bg-black aspect-[4/3]">
                         <img
                           src={aboutContent.missionVisionImageData || aboutContent.missionVisionImage || undefined}
                           alt={language === "vi" ? "Tầm nhìn" : "Vision"}
                           className="w-full h-full object-cover"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.src = 'https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&h=1600';
-                          }}
                         />
                       </div>
                     </div>
@@ -379,7 +367,7 @@ export default function About() {
               {/* Left image — large */}
               {(aboutContent.principlesImageLeftData || aboutContent.principlesImageLeft) ? (
                 <div className="slide-from-left">
-                  <div className="overflow-hidden aspect-[2/3] bg-white/5">
+                  <div className="overflow-hidden aspect-[2/3] bg-black">
                     <img
                       src={aboutContent.principlesImageLeftData || aboutContent.principlesImageLeft}
                       alt=""
@@ -402,7 +390,7 @@ export default function About() {
               {/* Right image — small */}
               {(aboutContent.principlesImageRightData || aboutContent.principlesImageRight) ? (
                 <div className="slide-from-right">
-                  <div className="overflow-hidden aspect-[2/3] bg-white/5">
+                  <div className="overflow-hidden aspect-[2/3] bg-black">
                     <img
                       src={aboutContent.principlesImageRightData || aboutContent.principlesImageRight}
                       alt=""
