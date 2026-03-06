@@ -379,7 +379,6 @@ export default function ProjectDetail() {
           </div>
         </div>
       </div>
-
       {/* Section 1: Single image left + Description right */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
         <div>
@@ -399,7 +398,7 @@ export default function ProjectDetail() {
         </div>
         <div className="aspect-square flex flex-col justify-center px-16 md:px-20 lg:px-32 py-12 md:py-16 overflow-hidden">
           {(project.descriptionTitle || project.designPhilosophyTitle) && (
-            <h2 className="text-sm md:text-base font-light tracking-[0.15em] text-white uppercase mb-6">
+            <h2 className="md:text-base font-light tracking-[0.15em] text-white uppercase mb-6 text-[20px]">
               {project.descriptionTitle || project.designPhilosophyTitle}
             </h2>
           )}
@@ -433,7 +432,6 @@ export default function ProjectDetail() {
           )}
         </div>
       </div>
-
       {/* Section 2: Text left + Image right (alternating) */}
       {(project.detailedDescription || project.designPhilosophy) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
@@ -471,7 +469,6 @@ export default function ProjectDetail() {
           </div>
         </div>
       )}
-
       {/* Section 3: Image left + Text right */}
       {(project.materialSelection || (project.detailedDescription && project.designPhilosophy)) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
@@ -504,7 +501,6 @@ export default function ProjectDetail() {
           </div>
         </div>
       )}
-
       {/* Detailed Description - Full Width */}
       {project.detailedDescription && project.designPhilosophy && (
         <div className="w-full px-10 md:px-20 lg:px-32 py-12 md:py-16">
@@ -513,7 +509,6 @@ export default function ProjectDetail() {
           </div>
         </div>
       )}
-
       {/* Banner Section - Full Width */}
       {project.bannerImage && (
         <div className="w-full mt-16">
@@ -536,7 +531,6 @@ export default function ProjectDetail() {
           </div>
         </div>
       )}
-
       {/* Gallery Grid */}
       {galleryImages.length > 0 && (
         <div className="w-full mt-16" id="additional-gallery" data-testid="section-additional" tabIndex={-1}>
@@ -558,7 +552,6 @@ export default function ProjectDetail() {
           </div>
         </div>
       )}
-
       {/* Other Projects */}
       <div className="w-full px-4">
         {/* OTHER PROJECTS Section - Horizontal Scroll */}
@@ -598,7 +591,6 @@ export default function ProjectDetail() {
           </div>
         )}
       </div>
-
       {lightboxOpen && allClickableImages.length > 0 && createPortal(
         <div 
           className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center"
