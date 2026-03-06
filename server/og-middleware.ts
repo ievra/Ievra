@@ -120,11 +120,16 @@ export function ogMiddleware(indexHtmlPath: string) {
       if (!tags) {
         try {
           const s = await storage.getSettings();
-          const ogImg = s?.ogImageData || s?.ogImage;
+          let ogImgUrl: string | undefined;
+          if (s?.ogImageData && s.ogImageData.startsWith('data:')) {
+            ogImgUrl = `${baseUrl}/api/og-image`;
+          } else if (s?.ogImage) {
+            ogImgUrl = s.ogImage.startsWith('http') ? s.ogImage : `${baseUrl}${s.ogImage}`;
+          }
           tags = {
             title: s?.siteTitle || "IEVRA Design & Build",
             description: s?.metaDescription || "Thiết kế nội thất cao cấp - IEVRA Design & Build",
-            image: ogImg && !ogImg.startsWith('data:') ? `${baseUrl}${ogImg}` : ogImg || undefined,
+            image: ogImgUrl,
             url: currentUrl,
           };
         } catch {

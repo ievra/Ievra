@@ -1376,6 +1376,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/og-image", async (req, res) => {
+    try {
+      const s = await storage.getSettings();
+      const data = s?.ogImageData;
+      if (!data || !data.startsWith('data:')) {
+        return res.status(404).end();
+      }
+      const match = data.match(/^data:(image\/[a-zA-Z+]+);base64,(.+)$/);
+      if (!match) return res.status(404).end();
+      const mimeType = match[1];
+      const buffer = Buffer.from(match[2], 'base64');
+      res.set('Content-Type', mimeType);
+      res.set('Cache-Control', 'public, max-age=86400');
+      res.end(buffer);
+    } catch {
+      res.status(500).end();
+    }
+  });
+
   app.put("/api/settings", requirePermission('homepage'), async (req, res) => {
     try {
       const validatedData = insertSettingsSchema.parse(req.body);
