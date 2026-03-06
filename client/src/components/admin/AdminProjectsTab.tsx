@@ -790,7 +790,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                               .filter(cat => cat.type === 'project' && cat.active)
                               .map((category) => (
                                 <SelectItem key={category.id} value={category.slug}>
-                                  {category.name}
+                                  {language === 'vi' ? (category.nameVi || category.name) : category.name}
                                 </SelectItem>
                               ))}
                           </SelectContent>
