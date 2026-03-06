@@ -603,8 +603,8 @@ export default function About() {
               </h3>
             </div>
 
-            {/* Desktop snake layout — SVG single path */}
-            <div className="hidden md:block" ref={snakeRef}>
+            {/* Desktop snake layout — SVG single path; -mx extends to section edges */}
+            <div className="hidden md:block -mx-4 sm:-mx-6 lg:-mx-8" ref={snakeRef}>
               {(() => {
                 const PER_ROW = 3;
                 const R = 110;          // U-turn radius (px) — ROW_H must = 2*R for perfect semicircle
@@ -625,15 +625,13 @@ export default function About() {
                 const svgH = LINE_Y + (numRows - 1) * ROW_H + LINE_Y + 80; // extra bottom for text
 
                 const ANIM_DURATION = 5; // seconds for full line draw
-                const BLEED = 400; // px beyond container to bleed (enough to exit screen)
 
-                // Build SVG path — single connected snake, bleeding off both ends
+                // Build SVG background path — wrapper has -mx-* so x=0 and x=W are section edges
                 const buildPath = (W: number) => {
                   if (W <= 0) return '';
                   const xL = PAD_L;
                   const xR = W - PAD_R;
-                  // Start: bleed in from left → item 01 at xL
-                  let d = `M ${-BLEED},${LINE_Y} L ${xL},${LINE_Y}`;
+                  let d = `M 0,${LINE_Y} L ${xL},${LINE_Y}`;
                   for (let r = 0; r < numRows; r++) {
                     const y = LINE_Y + r * ROW_H;
                     if (r === 0) {
@@ -652,14 +650,9 @@ export default function About() {
                       }
                     }
                   }
-                  // End: bleed out from last item to far right (last row is even → L→R → ends at xR)
                   const lastY = LINE_Y + (numRows - 1) * ROW_H;
                   const lastIsReversed = (numRows - 1) % 2 === 1;
-                  if (lastIsReversed) {
-                    d += ` L ${-BLEED},${lastY}`;
-                  } else {
-                    d += ` L ${W + BLEED},${lastY}`;
-                  }
+                  d += lastIsReversed ? ` L 0,${lastY}` : ` L ${W},${lastY}`;
                   return d;
                 };
 
@@ -670,10 +663,11 @@ export default function About() {
                 const fullTurn0 = Math.PI * R;
                 const halfTurn0 = fullTurn0 / 2;
 
-                // Extra bleed beyond container edges (SVG overflow:visible renders outside bounds)
-                const EDGE_BLEED = 300;
-                const leftBleed0 = EDGE_BLEED + xL0;   // from -EDGE_BLEED to xL
-                const rightBleed0 = PAD_R + EDGE_BLEED; // from xR to W+EDGE_BLEED
+                // Snake wrapper has -mx-* so W spans full section width (no bleed needed)
+                // leftBleed0 = xL0 (from section left edge to item 01)
+                // rightBleed0 = PAD_R (from item 07/last to section right edge)
+                const leftBleed0 = xL0;
+                const rightBleed0 = PAD_R;
                 const totalAnimPathLen0 = leftBleed0 + numRows * rowLen0 + (numRows - 1) * fullTurn0 + rightBleed0;
                 const stepPathPos: Record<string, number> = {
                   '01': leftBleed0,
@@ -687,12 +681,12 @@ export default function About() {
                 const getItemDelay = (stepNum: string) =>
                   ((stepPathPos[stepNum] ?? 0) / totalAnimPathLen0) * ANIM_DURATION;
 
-                // Animated path — bleeds beyond container on both sides
+                // Animated path — from section left edge (x=0) to section right edge (x=W)
                 const buildVisiblePath = (W: number) => {
                   if (W <= 0) return '';
                   const xL = PAD_L;
                   const xR = W - PAD_R;
-                  let d = `M ${-EDGE_BLEED},${LINE_Y} L ${xL},${LINE_Y}`;
+                  let d = `M 0,${LINE_Y} L ${xL},${LINE_Y}`;
                   for (let r = 0; r < numRows; r++) {
                     const y = LINE_Y + r * ROW_H;
                     const endX = r % 2 === 0 ? xR : xL;
@@ -707,7 +701,7 @@ export default function About() {
                     }
                   }
                   const lastY = LINE_Y + (numRows - 1) * ROW_H;
-                  d += ` L ${W + EDGE_BLEED},${lastY}`;
+                  d += ` L ${W},${lastY}`;
                   return d;
                 };
 
