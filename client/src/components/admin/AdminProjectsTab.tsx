@@ -1403,13 +1403,23 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                     type="button"
                     variant="outline"
                     onClick={() => {
+                      if (isNewProject) {
+                        const vals = projectForm.getValues();
+                        const hasData = vals.titleEn || vals.titleVi || vals.descriptionEn || vals.descriptionVi ||
+                          vals.locationEn || vals.locationVi || vals.styleEn || vals.styleVi || vals.areaEn || vals.completionYear;
+                        if (hasData) {
+                          setIsProjectDiscardConfirmOpen(true);
+                          return;
+                        }
+                        try { localStorage.removeItem(PROJECT_AUTOSAVE_KEY); } catch {}
+                      }
                       setIsProjectDialogOpen(false);
                       setEditingProject(null);
                       projectForm.reset();
                     }}
                     className="h-10 px-4"
                   >
-                    Hủy
+                    {language === 'vi' ? 'Hủy' : 'Cancel'}
                   </Button>
                   <Button
                     type="submit"
@@ -1936,12 +1946,12 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
             <AlertDialogAction
               className="rounded-none bg-black text-white border border-white/20 hover:border-white transition-colors"
               onClick={() => {
-                try { localStorage.removeItem(PROJECT_AUTOSAVE_KEY); } catch {}
                 setIsProjectDiscardConfirmOpen(false);
                 setIsProjectDialogOpen(false);
                 setEditingProject(null);
                 setIsNewProject(false);
                 projectForm.reset();
+                setTimeout(() => { try { localStorage.removeItem(PROJECT_AUTOSAVE_KEY); } catch {} }, 50);
               }}
             >
               {language === 'vi' ? 'Xóa Dữ Liệu' : 'Discard'}

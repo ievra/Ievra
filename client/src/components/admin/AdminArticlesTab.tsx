@@ -1400,6 +1400,15 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                 type="button"
                 variant="outline"
                 onClick={() => {
+                  if (isNewArticle) {
+                    const vals = articleForm.getValues();
+                    const hasData = vals.titleEn || vals.titleVi || vals.contentEn || vals.contentVi || vals.excerptEn || vals.excerptVi;
+                    if (hasData) {
+                      setIsArticleDiscardConfirmOpen(true);
+                      return;
+                    }
+                    try { localStorage.removeItem(ARTICLE_AUTOSAVE_KEY); } catch {}
+                  }
                   setIsArticleDialogOpen(false);
                   setEditingArticle(null);
                   setArticleImagePreview('');
@@ -1705,7 +1714,6 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
             <AlertDialogAction
               className="rounded-none bg-black text-white border border-white/20 hover:border-white transition-colors"
               onClick={() => {
-                try { localStorage.removeItem(ARTICLE_AUTOSAVE_KEY); } catch {}
                 setIsArticleDiscardConfirmOpen(false);
                 setIsArticleDialogOpen(false);
                 setEditingArticle(null);
@@ -1714,6 +1722,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                 setArticleImageFile(null);
                 setArticleContentImages([]);
                 articleForm.reset();
+                setTimeout(() => { try { localStorage.removeItem(ARTICLE_AUTOSAVE_KEY); } catch {} }, 50);
               }}
             >
               {language === 'vi' ? 'Xóa Dữ Liệu' : 'Discard'}
