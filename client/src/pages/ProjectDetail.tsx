@@ -514,7 +514,7 @@ export default function ProjectDetail() {
         <div className="w-full mt-16">
           {project.bannerTitle && (
             <div className="px-10 md:px-20 lg:px-32 mb-6">
-              <h2 className="text-2xl md:text-3xl font-light tracking-wider text-white uppercase">
+              <h2 className="text-[20px] font-light tracking-wider text-white uppercase">
                 {project.bannerTitle}
               </h2>
             </div>
