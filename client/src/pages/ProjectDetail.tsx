@@ -411,7 +411,7 @@ export default function ProjectDetail() {
           {/* Project Info Summary */}
           {(project.location || project.completionYear || project.area || project.category) && (
             <div className="mt-10">
-              <p className="text-sm font-light tracking-[0.2em] text-white uppercase mb-6">
+              <p className="font-light tracking-[0.2em] text-white uppercase mb-6 text-[16px]">
                 {language === 'vi' ? 'THÔNG TIN' : 'INFOR'}
               </p>
               <div className="space-y-0">
