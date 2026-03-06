@@ -386,9 +386,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
     setIsArticleDialogOpen(true);
   };
 
-  const handleCreateArticleDraft = async () => {
-    const timestamp = Date.now();
-    const draftSlug = `bai-viet-${timestamp}`;
+  const handleCreateArticleDraft = () => {
     const defaultCategory = (categories.find(c => c.type === 'article' && c.active) || categories.find(c => c.type === 'article'))?.slug || 'news';
 
     let savedData: Partial<BilingualArticleFormData> | null = null;
@@ -397,59 +395,38 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       if (raw) savedData = JSON.parse(raw);
     } catch {}
 
-    try {
-      const res = await apiRequest('POST', '/api/articles', {
-        title: 'Bài Viết Mới',
-        slug: draftSlug,
-        content: ' ',
-        category: defaultCategory,
-        language: 'vi',
-        status: 'draft',
-        featured: false,
+    setEditingArticle(null);
+    setArticleImagePreview(savedData?.featuredImage || '');
+    setArticleImageFile(null);
+    setArticleContentImages([]);
+    setIsNewArticle(true);
+    articleForm.reset({
+      titleVi: savedData?.titleVi || '',
+      titleEn: savedData?.titleEn || '',
+      excerptVi: savedData?.excerptVi || '',
+      excerptEn: savedData?.excerptEn || '',
+      contentVi: savedData?.contentVi || '',
+      contentEn: savedData?.contentEn || '',
+      slugEn: savedData?.slugEn || '',
+      slugVi: savedData?.slugVi || '',
+      category: savedData?.category || defaultCategory,
+      status: 'draft',
+      featured: savedData?.featured || false,
+      featuredImage: savedData?.featuredImage || '',
+      metaTitleEn: savedData?.metaTitleEn || '',
+      metaTitleVi: savedData?.metaTitleVi || '',
+      metaDescriptionEn: savedData?.metaDescriptionEn || '',
+      metaDescriptionVi: savedData?.metaDescriptionVi || '',
+      metaKeywordsEn: savedData?.metaKeywordsEn || '',
+      metaKeywordsVi: savedData?.metaKeywordsVi || '',
+    });
+    if (savedData?.titleEn || savedData?.titleVi || savedData?.contentEn || savedData?.contentVi) {
+      toast({
+        title: language === 'vi' ? 'Đã khôi phục dữ liệu' : 'Draft restored',
+        description: language === 'vi' ? 'Dữ liệu nhập dở đã được khôi phục.' : 'Your unsaved form data has been restored.',
       });
-      const draft = await res.json();
-      queryClient.invalidateQueries({ queryKey: ['/api/articles', 'all'] });
-      setEditingArticle(draft);
-      setArticleImagePreview(savedData?.featuredImage || '');
-      setArticleImageFile(null);
-      setArticleContentImages([]);
-      setIsNewArticle(true);
-      articleForm.reset({
-        titleVi: savedData?.titleVi || '',
-        titleEn: savedData?.titleEn || '',
-        excerptVi: savedData?.excerptVi || '',
-        excerptEn: savedData?.excerptEn || '',
-        contentVi: savedData?.contentVi || '',
-        contentEn: savedData?.contentEn || '',
-        slugEn: savedData?.slugEn || '',
-        slugVi: savedData?.slugVi || '',
-        category: savedData?.category || defaultCategory,
-        status: 'draft',
-        featured: savedData?.featured || false,
-        featuredImage: savedData?.featuredImage || '',
-        metaTitleEn: savedData?.metaTitleEn || '',
-        metaTitleVi: savedData?.metaTitleVi || '',
-        metaDescriptionEn: savedData?.metaDescriptionEn || '',
-        metaDescriptionVi: savedData?.metaDescriptionVi || '',
-        metaKeywordsEn: savedData?.metaKeywordsEn || '',
-        metaKeywordsVi: savedData?.metaKeywordsVi || '',
-      });
-      if (savedData?.titleEn || savedData?.titleVi || savedData?.contentEn || savedData?.contentVi) {
-        toast({
-          title: language === 'vi' ? 'Đã khôi phục dữ liệu' : 'Draft restored',
-          description: language === 'vi' ? 'Dữ liệu nhập dở đã được khôi phục.' : 'Your unsaved form data has been restored.',
-        });
-      }
-      setIsArticleDialogOpen(true);
-    } catch {
-      setEditingArticle(null);
-      setArticleImagePreview('');
-      setArticleImageFile(null);
-      setArticleContentImages([]);
-      setIsNewArticle(true);
-      articleForm.reset();
-      setIsArticleDialogOpen(true);
     }
+    setIsArticleDialogOpen(true);
   };
 
   const onArticleSubmit = async (data: BilingualArticleFormData) => {
