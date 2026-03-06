@@ -363,7 +363,20 @@ export class DatabaseStorage implements IStorage {
       conditions.push(eq(projects.language, language));
     }
     const [project] = await db.select().from(projects).where(and(...conditions));
-    return project || undefined;
+    if (project) return project;
+
+    if (language) {
+      const [anyVersion] = await db.select().from(projects).where(eq(projects.slug, slug));
+      const groupKey = anyVersion?.linkedSlug || anyVersion?.slug;
+      if (groupKey) {
+        const [linkedProject] = await db.select().from(projects).where(
+          and(eq(projects.linkedSlug, groupKey), eq(projects.language, language))
+        );
+        if (linkedProject) return linkedProject;
+      }
+    }
+
+    return undefined;
   }
 
   async createProject(project: InsertProject): Promise<Project> {
@@ -572,7 +585,20 @@ export class DatabaseStorage implements IStorage {
       conditions.push(eq(articles.language, language));
     }
     const [article] = await db.select().from(articles).where(and(...conditions));
-    return article || undefined;
+    if (article) return article;
+
+    if (language) {
+      const [anyVersion] = await db.select().from(articles).where(eq(articles.slug, slug));
+      const groupKey = anyVersion?.linkedSlug || anyVersion?.slug;
+      if (groupKey) {
+        const [linkedArticle] = await db.select().from(articles).where(
+          and(eq(articles.linkedSlug, groupKey), eq(articles.language, language))
+        );
+        if (linkedArticle) return linkedArticle;
+      }
+    }
+
+    return undefined;
   }
 
   async createArticle(article: InsertArticle): Promise<Article> {

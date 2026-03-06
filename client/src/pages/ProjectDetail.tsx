@@ -179,6 +179,13 @@ export default function ProjectDetail() {
     }
   }, [project?.slug, isSlugRoute, setLocation]);
 
+  // Redirect to correct language URL when language changes or server returns sibling via linkedSlug fallback
+  useEffect(() => {
+    if (project?.slug && isSlugRoute && projectSlug && project.slug !== projectSlug) {
+      setLocation(`/portfolio/${project.slug}`, { replace: true });
+    }
+  }, [project?.slug, projectSlug, isSlugRoute, setLocation]);
+
   // Set SEO meta tags when project data is loaded
   useEffect(() => {
     if (project) {
