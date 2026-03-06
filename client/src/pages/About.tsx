@@ -160,11 +160,12 @@ export default function About() {
             }
           });
         },
-        { threshold: 0.3 }
+        { threshold: 0.1 }
       );
       getEls().forEach(el => obs.observe(el));
     };
     setup();
+    const retryTimer = setTimeout(setup, 500);
     const onScroll = () => {
       if (window.scrollY < 50) {
         getEls().forEach(el => el.classList.remove('in-view'));
@@ -172,8 +173,8 @@ export default function About() {
       }
     };
     window.addEventListener('scroll', onScroll, { passive: true });
-    return () => { obs?.disconnect(); window.removeEventListener('scroll', onScroll); };
-  }, [aboutContent, coreValues.length]);
+    return () => { obs?.disconnect(); clearTimeout(retryTimer); window.removeEventListener('scroll', onScroll); };
+  }, [aboutContent, coreValues.length, processSteps.length, teamMembers.length, awards.length]);
 
   useEffect(() => {
     if (!showcaseSectionRef.current || showcaseServices.length === 0) return;
