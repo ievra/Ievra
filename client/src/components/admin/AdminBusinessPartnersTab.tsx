@@ -887,8 +887,8 @@ export default function AdminBusinessPartnersTab({ user, hasPermission }: AdminB
                               <AlertDialogTitle>{language === 'vi' ? 'Xác nhận xóa đối tác' : 'Confirm Delete Partner'}</AlertDialogTitle>
                               <AlertDialogDescription className="text-white/70">
                                 {language === 'vi' 
-                                  ? <>Bạn có chắc chắn muốn xóa đối tác <strong className="text-white">{editingBusinessPartner.firstName} {editingBusinessPartner.lastName}</strong>?<br /><span className="!text-red-400">Hành động này không thể hoàn tác và sẽ xóa toàn bộ dữ liệu liên quan.</span></>
-                                  : <>Are you sure you want to delete partner <strong className="text-white">{editingBusinessPartner.firstName} {editingBusinessPartner.lastName}</strong>?<br /><span className="!text-red-400">This action cannot be undone and will delete all related data.</span></>
+                                  ? <>Bạn có chắc chắn muốn xóa đối tác <strong className="text-white">{editingBusinessPartner.firstName} {editingBusinessPartner.lastName}</strong>?</>
+                                  : <>Are you sure you want to delete partner <strong className="text-white">{editingBusinessPartner.firstName} {editingBusinessPartner.lastName}</strong>?</>
                                 }
                               </AlertDialogDescription>
                             </AlertDialogHeader>
