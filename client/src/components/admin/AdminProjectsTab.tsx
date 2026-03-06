@@ -203,11 +203,18 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
     },
   });
 
+  const PROJECT_AUTOSAVE_KEY = 'admin-project-autosave';
+
   useEffect(() => {
-    if (isProjectDialogOpen && !editingProject) {
-      projectForm.reset();
-    }
-  }, [isProjectDialogOpen, editingProject]);
+    if (!isNewProject || !isProjectDialogOpen) return;
+    const subscription = projectForm.watch((values) => {
+      const hasData = values.titleEn || values.titleVi || values.descriptionEn || values.descriptionVi;
+      if (hasData) {
+        try { localStorage.setItem(PROJECT_AUTOSAVE_KEY, JSON.stringify(values)); } catch {}
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [isNewProject, isProjectDialogOpen, projectForm]);
 
   const createProjectMutation = useMutation({
     mutationFn: async (data: any) => {
@@ -393,19 +400,69 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
     setIsNewProject(true);
     setEditingProject(null);
     setDialogKey(k => k + 1);
+
+    let savedData: Partial<BilingualProjectFormData> | null = null;
+    try {
+      const raw = localStorage.getItem(PROJECT_AUTOSAVE_KEY);
+      if (raw) savedData = JSON.parse(raw);
+    } catch {}
+
     projectForm.reset({
-      titleVi: '',
-      titleEn: '',
-      slugEn: '',
-      slugVi: '',
-      category: defaultCategory,
-      status: 'draft',
-      featured: false,
-      coverImages: [],
-      contentImages: [],
-      galleryImages: [],
-      images: [],
+      titleVi: savedData?.titleVi || '',
+      titleEn: savedData?.titleEn || '',
+      slugEn: savedData?.slugEn || '',
+      slugVi: savedData?.slugVi || '',
+      category: savedData?.category || defaultCategory,
+      status: savedData?.status || 'draft',
+      featured: savedData?.featured || false,
+      descriptionEn: savedData?.descriptionEn || '',
+      descriptionVi: savedData?.descriptionVi || '',
+      descriptionTitleEn: savedData?.descriptionTitleEn || '',
+      descriptionTitleVi: savedData?.descriptionTitleVi || '',
+      detailedDescriptionEn: savedData?.detailedDescriptionEn || '',
+      detailedDescriptionVi: savedData?.detailedDescriptionVi || '',
+      designPhilosophyTitleEn: savedData?.designPhilosophyTitleEn || '',
+      designPhilosophyTitleVi: savedData?.designPhilosophyTitleVi || '',
+      designPhilosophyEn: savedData?.designPhilosophyEn || '',
+      designPhilosophyVi: savedData?.designPhilosophyVi || '',
+      materialSelectionTitleEn: savedData?.materialSelectionTitleEn || '',
+      materialSelectionTitleVi: savedData?.materialSelectionTitleVi || '',
+      materialSelectionEn: savedData?.materialSelectionEn || '',
+      materialSelectionVi: savedData?.materialSelectionVi || '',
+      bannerTitleEn: savedData?.bannerTitleEn || '',
+      bannerTitleVi: savedData?.bannerTitleVi || '',
+      bannerImage: savedData?.bannerImage || '',
+      section2Image: savedData?.section2Image || '',
+      section3Image: savedData?.section3Image || '',
+      locationEn: savedData?.locationEn || '',
+      locationVi: savedData?.locationVi || '',
+      areaEn: savedData?.areaEn || '',
+      areaVi: savedData?.areaVi || '',
+      completionYear: savedData?.completionYear || '',
+      styleEn: savedData?.styleEn || '',
+      styleVi: savedData?.styleVi || '',
+      designerEn: savedData?.designerEn || '',
+      designerVi: savedData?.designerVi || '',
+      coverImages: savedData?.coverImages || [],
+      contentImages: savedData?.contentImages || [],
+      galleryImages: savedData?.galleryImages || [],
+      heroImage: savedData?.heroImage || '',
+      images: savedData?.images || [],
+      metaTitleEn: savedData?.metaTitleEn || '',
+      metaTitleVi: savedData?.metaTitleVi || '',
+      metaDescriptionEn: savedData?.metaDescriptionEn || '',
+      metaDescriptionVi: savedData?.metaDescriptionVi || '',
+      metaKeywordsEn: savedData?.metaKeywordsEn || '',
+      metaKeywordsVi: savedData?.metaKeywordsVi || '',
     });
+
+    if (savedData?.titleEn || savedData?.titleVi) {
+      toast({
+        title: language === 'vi' ? 'Đã khôi phục dữ liệu' : 'Draft restored',
+        description: language === 'vi' ? 'Dữ liệu nhập dở đã được khôi phục.' : 'Your unsaved form data has been restored.',
+      });
+    }
+
     setIsProjectDialogOpen(true);
   };
 
@@ -560,6 +617,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       setIsProjectDialogOpen(false);
       setEditingProject(null);
       projectForm.reset();
+      try { localStorage.removeItem(PROJECT_AUTOSAVE_KEY); } catch {}
       toast({ title: "Đã lưu dự án thành công" });
     } catch (error: any) {
       toast({

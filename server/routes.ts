@@ -379,7 +379,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (category) filters.category = category as string;
       if (featured) filters.featured = featured === 'true';
       if (language) filters.language = language as string;
-      if (status) filters.status = status as string;
+      filters.status = (status as string) || 'published';
       
       const projects = await storage.getProjects(filters);
       res.json(projects);
