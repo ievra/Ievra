@@ -669,25 +669,42 @@ export default function About() {
                 const rowLen0 = xR0 - xL0;
                 const fullTurn0 = Math.PI * R;
                 const halfTurn0 = fullTurn0 / 2;
-                // Path: M(-BLEED) → xL → xR → U-turn → xL → U-turn → xR → (W+BLEED)
-                const leftBleed0 = BLEED + xL0;  // distance from -BLEED to xL
-                const rightBleed0 = BLEED + PAD_R; // distance from xR to W+BLEED
-                const totalPathLen0 = leftBleed0 + numRows * rowLen0 + (numRows - 1) * fullTurn0 + rightBleed0;
-                // Path-length position for each step number (path starts at -9999)
+
+                // Visible path (no bleed): starts at xL, ends at xR of last row
+                const totalVisiblePathLen0 = numRows * rowLen0 + (numRows - 1) * fullTurn0;
                 const stepPathPos: Record<string, number> = {
-                  '01': leftBleed0,                                              // at xL (row1 start)
-                  '02': leftBleed0 + rowLen0 / 2,                               // xMid in row1
-                  '03': leftBleed0 + rowLen0 + halfTurn0,                       // right U-turn apex
-                  '04': leftBleed0 + rowLen0 + fullTurn0 + rowLen0 / 2,         // xMid in row2 (from xR)
-                  '05': leftBleed0 + rowLen0 + fullTurn0 + rowLen0 + halfTurn0, // left U-turn apex
-                  '06': leftBleed0 + 2 * rowLen0 + 2 * fullTurn0 + rowLen0 / 2,// xMid in row3
-                  '07': leftBleed0 + 3 * rowLen0 + 2 * fullTurn0,              // xR in row3
+                  '01': 0,
+                  '02': rowLen0 / 2,
+                  '03': rowLen0 + halfTurn0,
+                  '04': rowLen0 + fullTurn0 + rowLen0 / 2,
+                  '05': 2 * rowLen0 + fullTurn0 + halfTurn0,
+                  '06': 2 * rowLen0 + 2 * fullTurn0 + rowLen0 / 2,
+                  '07': 3 * rowLen0 + 2 * fullTurn0,
                 };
                 const getItemDelay = (stepNum: string) =>
-                  ((stepPathPos[stepNum] ?? 0) / totalPathLen0) * ANIM_DURATION;
+                  ((stepPathPos[stepNum] ?? 0) / totalVisiblePathLen0) * ANIM_DURATION;
 
-                // Animated path = same full-bleed path (SVG overflow:visible renders beyond container)
-                const buildVisiblePath = buildPath;
+                // Animated path — no bleed so pathLength="1" maps exactly to visible portion
+                const buildVisiblePath = (W: number) => {
+                  if (W <= 0) return '';
+                  const xL = PAD_L;
+                  const xR = W - PAD_R;
+                  let d = `M ${xL},${LINE_Y}`;
+                  for (let r = 0; r < numRows; r++) {
+                    const y = LINE_Y + r * ROW_H;
+                    const endX = r % 2 === 0 ? xR : xL;
+                    d += ` L ${endX},${y}`;
+                    if (r < numRows - 1) {
+                      const nextY = y + ROW_H;
+                      if (r % 2 === 0) {
+                        d += ` A ${R},${R} 0 0,1 ${xR},${nextY}`;
+                      } else {
+                        d += ` A ${R},${R} 0 0,0 ${xL},${nextY}`;
+                      }
+                    }
+                  }
+                  return d;
+                };
 
                 return (
                   <div className="relative" style={{ height: `${svgH}px` }}>
