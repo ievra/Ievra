@@ -808,8 +808,8 @@ export default function AdminBusinessPartnersTab({ user, hasPermission }: AdminB
                                     <AlertDialogTitle>{language === 'vi' ? 'Xóa giao dịch' : 'Delete Transaction'}</AlertDialogTitle>
                                     <AlertDialogDescription className="text-white/70">
                                       {language === 'vi'
-                                        ? <>Bạn có chắc chắn muốn xóa giao dịch <strong className="text-white">"{transaction.title}"</strong>?<br /><span className="!text-red-400">Hành động này không thể hoàn tác.</span></>
-                                        : <>Are you sure you want to delete transaction <strong className="text-white">"{transaction.title}"</strong>?<br /><span className="!text-red-400">This action cannot be undone.</span></>
+                                        ? <>Bạn có chắc chắn muốn xóa giao dịch <strong className="text-white">"{transaction.title}"</strong>?</>
+                                        : <>Are you sure you want to delete transaction <strong className="text-white">"{transaction.title}"</strong>?</>
                                       }
                                     </AlertDialogDescription>
                                   </AlertDialogHeader>
