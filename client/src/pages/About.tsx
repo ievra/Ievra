@@ -660,7 +660,9 @@ export default function About() {
                   return d;
                 };
 
-                const W0 = snakeW || 900;
+                // Do not render until snakeW is measured — avoids wrong fallback width
+                if (!snakeW) return null;
+                const W0 = snakeW;
                 const xL0 = PAD_L;
                 const xR0 = W0 - PAD_R;
                 const rowLen0 = xR0 - xL0;
@@ -714,9 +716,9 @@ export default function About() {
                     {/* SVG snake path */}
                     <svg
                       className="absolute top-0 left-0 pointer-events-none"
-                      style={{ width: '100%', height: svgH, overflow: 'visible' }}
-                      viewBox={`0 0 ${W0} ${svgH}`}
-                      preserveAspectRatio="none"
+                      width={W0}
+                      height={svgH}
+                      style={{ overflow: 'visible' }}
                     >
                       {/* Faint static background (with bleed) */}
                       <path
@@ -749,7 +751,7 @@ export default function About() {
                       const isReversed = rowIdx % 2 === 1;
                       const displayRow = isReversed ? [...row].reverse() : row;
                       const lineY = LINE_Y + rowIdx * ROW_H;
-                      const W = snakeW || 900;
+                      const W = snakeW;
                       const xL = PAD_L;
                       const xR = W - PAD_R;
                       const isSingleItem = row.length === 1;
