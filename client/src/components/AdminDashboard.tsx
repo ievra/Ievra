@@ -211,7 +211,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       });
       setOgImagePreview(settings.ogImageData || settings.ogImage || '');
     }
-  }, [settings, seoSettingsForm]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [settings]);
 
   const aboutContentForm = useForm<InsertAboutPageContent>({
     resolver: zodResolver(insertAboutPageContentSchema),
@@ -402,6 +403,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/settings'] });
+      toast({ title: language === 'vi' ? "Thành công" : "Success", description: language === 'vi' ? "Đã lưu cài đặt SEO" : "SEO settings saved successfully" });
     },
     onError: () => {
       toast({ title: language === 'vi' ? "Lỗi" : "Error", description: language === 'vi' ? "Không thể cập nhật cài đặt" : "Failed to update settings", variant: "destructive" });
@@ -731,8 +733,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   };
 
   const onSeoSettingsSubmit = async (data: SeoSettingsFormData) => {
+    const existingSettings = settings || {};
     try {
-      const existingSettings = settings || {};
       await updateSettingsMutation.mutateAsync({
         ...existingSettings,
         siteTitle: data.siteTitle,
@@ -744,8 +746,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         ogImage: data.ogImage || existingSettings.ogImage,
         ogImageData: data.ogImageData || existingSettings.ogImageData,
       });
-      toast({ title: language === 'vi' ? "Thành công" : "Success", description: language === 'vi' ? "Đã lưu cài đặt SEO" : "SEO settings saved successfully" });
-    } catch (error) {}
+    } catch (_) {}
   };
 
   const handleShowcaseBannerFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1515,8 +1516,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         </div>
                       )}
                     </div>
-                    <Button type="submit" disabled={updateSettingsMutation.isPending} data-testid="button-save-seo">
-                      {updateSettingsMutation.isPending ? (language === 'vi' ? 'Đang lưu...' : 'Saving...') : (language === 'vi' ? 'Lưu Cài Đặt SEO' : 'Save SEO Settings')}
+                    <Button type="submit" disabled={updateSettingsMutation.isPending || seoSettingsForm.formState.isSubmitting} data-testid="button-save-seo">
+                      {(updateSettingsMutation.isPending || seoSettingsForm.formState.isSubmitting) ? (language === 'vi' ? 'Đang lưu...' : 'Saving...') : (language === 'vi' ? 'Lưu Cài Đặt SEO' : 'Save SEO Settings')}
                     </Button>
                   </div>
                 )}
