@@ -398,7 +398,7 @@ export default function ProjectDetail() {
         </div>
         <div className="aspect-square flex flex-col justify-center px-16 md:px-20 lg:px-32 py-12 md:py-16 overflow-hidden">
           {(project.descriptionTitle || project.designPhilosophyTitle) && (
-            <h2 className="md:text-base font-light tracking-[0.15em] text-white uppercase mb-6 text-[20px]">
+            <h2 className="text-[20px] font-light tracking-[0.15em] text-white uppercase mb-6">
               {project.descriptionTitle || project.designPhilosophyTitle}
             </h2>
           )}
