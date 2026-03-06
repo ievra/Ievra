@@ -25,7 +25,8 @@ const bilingualArticleSchema = z.object({
   excerptVi: z.string().optional(),
   contentEn: z.string().optional(),
   contentVi: z.string().optional(),
-  slug: z.string().optional(),
+  slugEn: z.string().optional(),
+  slugVi: z.string().optional(),
   category: z.string().min(1, "Category is required"),
   status: z.enum(["draft", "published", "archived"]).default("draft"),
   featured: z.boolean().default(false),
@@ -127,7 +128,8 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       excerptVi: "",
       contentEn: "",
       contentVi: "",
-      slug: "",
+      slugEn: "",
+      slugVi: "",
       category: "news",
       status: "draft",
       featured: false,
@@ -151,10 +153,11 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
   }, [isArticleDialogOpen, editingArticle]);
 
   const groupedArticlesMap = articles.reduce((acc, article) => {
-    if (!acc[article.slug]) {
-      acc[article.slug] = [];
+    const key = (article as any).linkedSlug || article.slug;
+    if (!acc[key]) {
+      acc[key] = [];
     }
-    acc[article.slug].push(article);
+    acc[key].push(article);
     return acc;
   }, {} as Record<string, Article[]>);
 
@@ -333,8 +336,9 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
 
   const handleEditArticle = (article: Article) => {
     setEditingArticle(article);
-    const enVersion = articles.find(a => a.slug === article.slug && a.language === 'en');
-    const viVersion = articles.find(a => a.slug === article.slug && a.language === 'vi');
+    const groupKey = (article as any).linkedSlug || article.slug;
+    const enVersion = articles.find(a => ((a as any).linkedSlug === groupKey || a.slug === groupKey) && a.language === 'en');
+    const viVersion = articles.find(a => ((a as any).linkedSlug === groupKey || a.slug === groupKey) && a.language === 'vi');
     articleForm.reset({
       titleEn: enVersion?.title || "",
       titleVi: viVersion?.title || "",
@@ -342,7 +346,8 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       excerptVi: viVersion?.excerpt || "",
       contentEn: enVersion?.content || "",
       contentVi: viVersion?.content || "",
-      slug: enVersion?.slug || viVersion?.slug || article.slug || "",
+      slugEn: enVersion?.slug || "",
+      slugVi: viVersion?.slug || "",
       category: article.category,
       status: article.status as "draft" | "published" | "archived",
       featured: article.featured,
@@ -392,7 +397,8 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
         excerptEn: '',
         contentVi: '',
         contentEn: '',
-        slug: '',
+        slugEn: '',
+        slugVi: '',
         category: defaultCategory,
         status: 'draft',
         featured: false,
@@ -429,16 +435,27 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-+|-+$/g, '');
       };
-      const rawSlug = data.slug ? toSlug(data.slug) : (hasEn ? toSlug(data.titleEn!) : (hasVi ? toSlug(data.titleVi!) : ''));
-      const finalSlug = rawSlug;
+      const rawSlugEn = data.slugEn ? toSlug(data.slugEn) : (hasEn ? toSlug(data.titleEn!) : '');
+      const rawSlugVi = data.slugVi ? toSlug(data.slugVi) : (hasVi ? toSlug(data.titleVi!) : '');
+      const finalSlugEn = rawSlugEn || rawSlugVi;
+      const finalSlugVi = rawSlugVi || rawSlugEn;
+      const linkedSlug = finalSlugEn || finalSlugVi;
 
-      const currentSlug = editingArticle?.slug || null;
+      const editGroupKey = editingArticle ? ((editingArticle as any).linkedSlug || editingArticle.slug) : null;
 
-      if (finalSlug) {
-        const dup = articles.some((a: any) => a.slug === finalSlug && a.slug !== currentSlug);
+      if (hasEn && finalSlugEn) {
+        const dup = articles.some((a: any) => a.slug === finalSlugEn && (a.linkedSlug !== editGroupKey && a.slug !== editGroupKey));
         if (dup) {
-          articleForm.setError('slug', { type: 'manual', message: 'URL này đã được dùng.' });
-          toast({ title: 'URL/Slug đã tồn tại', description: 'URL này đang được dùng bởi bài viết khác.', variant: 'destructive' });
+          articleForm.setError('slugEn', { type: 'manual', message: 'URL này đã được dùng (EN).' });
+          toast({ title: 'URL/Slug đã tồn tại', description: 'URL tiếng Anh đang được dùng bởi bài viết khác.', variant: 'destructive' });
+          return;
+        }
+      }
+      if (hasVi && finalSlugVi && finalSlugVi !== finalSlugEn) {
+        const dup = articles.some((a: any) => a.slug === finalSlugVi && (a.linkedSlug !== editGroupKey && a.slug !== editGroupKey));
+        if (dup) {
+          articleForm.setError('slugVi', { type: 'manual', message: 'URL này đã được dùng (VI).' });
+          toast({ title: 'URL/Slug đã tồn tại', description: 'URL tiếng Việt đang được dùng bởi bài viết khác.', variant: 'destructive' });
           return;
         }
       }
@@ -450,7 +467,8 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       if (hasEn) {
         const enArticle: InsertArticle = {
           title: data.titleEn!,
-          slug: finalSlug,
+          slug: finalSlugEn,
+          linkedSlug,
           excerpt: data.excerptEn,
           content: data.contentEn!,
           category: data.category,
@@ -466,7 +484,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
         };
 
         if (editingArticle) {
-          const enVersion = articles.find(a => a.slug === editingArticle.slug && a.language === 'en');
+          const enVersion = articles.find(a => ((a as any).linkedSlug === editGroupKey || a.slug === editGroupKey) && a.language === 'en');
           mutations.push(enVersion
             ? updateArticleMutation.mutateAsync({ id: enVersion.id, data: enArticle })
             : createArticleMutation.mutateAsync(enArticle));
@@ -474,7 +492,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
           mutations.push(createArticleMutation.mutateAsync(enArticle));
         }
       } else if (editingArticle) {
-        const enVersion = articles.find(a => a.slug === editingArticle.slug && a.language === 'en');
+        const enVersion = articles.find(a => ((a as any).linkedSlug === editGroupKey || a.slug === editGroupKey) && a.language === 'en');
         if (enVersion) {
           mutations.push(deleteArticleMutation.mutateAsync(enVersion.id));
         }
@@ -483,7 +501,8 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       if (hasVi) {
         const viArticle: InsertArticle = {
           title: data.titleVi!,
-          slug: finalSlug,
+          slug: finalSlugVi,
+          linkedSlug,
           excerpt: data.excerptVi,
           content: data.contentVi!,
           category: data.category,
@@ -499,7 +518,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
         };
 
         if (editingArticle) {
-          const viVersion = articles.find(a => a.slug === editingArticle.slug && a.language === 'vi');
+          const viVersion = articles.find(a => ((a as any).linkedSlug === editGroupKey || a.slug === editGroupKey) && a.language === 'vi');
           mutations.push(viVersion
             ? updateArticleMutation.mutateAsync({ id: viVersion.id, data: viArticle })
             : createArticleMutation.mutateAsync(viArticle));
@@ -507,7 +526,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
           mutations.push(createArticleMutation.mutateAsync(viArticle));
         }
       } else if (editingArticle) {
-        const viVersion = articles.find(a => a.slug === editingArticle.slug && a.language === 'vi');
+        const viVersion = articles.find(a => ((a as any).linkedSlug === editGroupKey || a.slug === editGroupKey) && a.language === 'vi');
         if (viVersion) {
           mutations.push(deleteArticleMutation.mutateAsync(viVersion.id));
         }
@@ -1136,15 +1155,28 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
 
             <div className="border-t pt-6">
               <h3 className="text-lg font-medium mb-4">{language === 'vi' ? 'Thông Tin Chung' : 'General Information'}</h3>
-              <div className="mb-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <FormField
                   control={articleForm.control}
-                  name="slug"
+                  name="slugEn"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>URL / Slug</FormLabel>
+                      <FormLabel>URL (English)</FormLabel>
                       <FormControl>
-                        <Input {...field} data-testid="input-article-slug" placeholder="tự động tạo từ tiêu đề (dùng chung EN & VI)" />
+                        <Input {...field} data-testid="input-article-slug" placeholder="auto-generated from EN title" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={articleForm.control}
+                  name="slugVi"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>URL (Tiếng Việt)</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="tự động tạo từ tiêu đề VI" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

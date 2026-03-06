@@ -57,6 +57,8 @@ export const projects = pgTable("projects", {
   images: jsonb("images").default([]), // Legacy field, keeping for compatibility
   // Related projects
   relatedProjects: jsonb("related_projects").default([]), // Array of related project IDs
+  // Bilingual grouping — both EN and VI versions share this value
+  linkedSlug: text("linked_slug"),
   // SEO fields
   metaTitle: text("meta_title"),
   metaDescription: text("meta_description"),
@@ -188,6 +190,8 @@ export const articles = pgTable("articles", {
   language: varchar("language", { length: 5 }).notNull().default("en"), // en, vi
   featured: boolean("featured").notNull().default(false),
   publishedAt: timestamp("published_at"),
+  // Bilingual grouping — both EN and VI versions share this value
+  linkedSlug: text("linked_slug"),
   // SEO fields
   metaTitle: text("meta_title"),
   metaDescription: text("meta_description"),

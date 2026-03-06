@@ -41,7 +41,8 @@ const bilingualProjectSchema = z.object({
   bannerTitleEn: z.string().optional(),
   bannerTitleVi: z.string().optional(),
   bannerImage: z.string().optional(),
-  slug: z.string().optional(),
+  slugEn: z.string().optional(),
+  slugVi: z.string().optional(),
   category: z.string().min(1, "Category is required"),
   status: z.enum(["draft", "published", "archived"]).default("draft"),
   locationEn: z.string().optional(),
@@ -174,7 +175,8 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       bannerTitleEn: "",
       bannerTitleVi: "",
       bannerImage: "",
-      slug: "",
+      slugEn: "",
+      slugVi: "",
       category: "",
       status: "draft",
       locationEn: "",
@@ -331,8 +333,9 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
     setEditingProject(project);
     setDialogKey(k => k + 1);
 
-    const enVersion = projects.find(p => p.slug === project.slug && p.language === 'en');
-    const viVersion = projects.find(p => p.slug === project.slug && p.language === 'vi');
+    const groupKey = (project as any).linkedSlug || project.slug;
+    const enVersion = projects.find(p => ((p as any).linkedSlug === groupKey || p.slug === groupKey) && p.language === 'en');
+    const viVersion = projects.find(p => ((p as any).linkedSlug === groupKey || p.slug === groupKey) && p.language === 'vi');
 
     projectForm.reset({
       titleEn: enVersion?.title || "",
@@ -362,7 +365,8 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       metaDescriptionVi: viVersion?.metaDescription || "",
       metaKeywordsEn: enVersion?.metaKeywords || "",
       metaKeywordsVi: viVersion?.metaKeywords || "",
-      slug: enVersion?.slug || viVersion?.slug || project.slug || "",
+      slugEn: enVersion?.slug || "",
+      slugVi: viVersion?.slug || "",
       category: project.category,
       status: (project as any).status || "draft",
       locationEn: enVersion?.location || "",
@@ -406,7 +410,8 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       projectForm.reset({
         titleVi: '',
         titleEn: '',
-        slug: '',
+        slugEn: '',
+        slugVi: '',
         category: defaultCategory,
         status: 'draft',
         featured: false,
@@ -441,16 +446,28 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-+|-+$/g, '');
       };
-      const rawSlug = data.slug ? toSlug(data.slug) : (hasEn ? toSlug(data.titleEn!) : (hasVi ? toSlug(data.titleVi!) : ''));
-      const finalSlug = rawSlug;
+      const rawSlugEn = data.slugEn ? toSlug(data.slugEn) : (hasEn ? toSlug(data.titleEn!) : '');
+      const rawSlugVi = data.slugVi ? toSlug(data.slugVi) : (hasVi ? toSlug(data.titleVi!) : '');
+      const finalSlugEn = rawSlugEn || rawSlugVi;
+      const finalSlugVi = rawSlugVi || rawSlugEn;
+      const linkedSlug = finalSlugEn || finalSlugVi;
 
-      const currentSlug = editingProject?.slug || null;
+      const editGroupKey = editingProject ? ((editingProject as any).linkedSlug || editingProject.slug) : null;
 
-      if (finalSlug) {
-        const dup = projects.some(p => p.slug === finalSlug && p.slug !== currentSlug);
+      if (hasEn && finalSlugEn) {
+        const dup = projects.some(p => p.slug === finalSlugEn && ((p as any).linkedSlug !== editGroupKey && p.slug !== editGroupKey));
         if (dup) {
-          projectForm.setError('slug', { type: 'manual', message: 'URL này đã được dùng.' });
-          toast({ title: 'URL/Slug đã tồn tại', description: 'URL này đang được dùng bởi dự án khác.', variant: 'destructive' });
+          projectForm.setError('slugEn', { type: 'manual', message: 'URL này đã được dùng (EN).' });
+          toast({ title: 'URL/Slug đã tồn tại', description: 'URL tiếng Anh đang được dùng bởi dự án khác.', variant: 'destructive' });
+          setIsProjectSubmitting(false);
+          return;
+        }
+      }
+      if (hasVi && finalSlugVi && finalSlugVi !== finalSlugEn) {
+        const dup = projects.some(p => p.slug === finalSlugVi && ((p as any).linkedSlug !== editGroupKey && p.slug !== editGroupKey));
+        if (dup) {
+          projectForm.setError('slugVi', { type: 'manual', message: 'URL này đã được dùng (VI).' });
+          toast({ title: 'URL/Slug đã tồn tại', description: 'URL tiếng Việt đang được dùng bởi dự án khác.', variant: 'destructive' });
           setIsProjectSubmitting(false);
           return;
         }
@@ -461,7 +478,8 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       if (hasEn) {
         const enProject = {
           title: data.titleEn!,
-          slug: finalSlug,
+          slug: finalSlugEn,
+          linkedSlug,
           description: data.descriptionEn,
           detailedDescription: data.detailedDescriptionEn,
           designPhilosophyTitle: data.designPhilosophyTitleEn,
@@ -493,7 +511,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
         };
 
         if (editingProject) {
-          const enVersion = projects.find(p => p.slug === editingProject.slug && p.language === 'en');
+          const enVersion = projects.find(p => ((p as any).linkedSlug === editGroupKey || p.slug === editGroupKey) && p.language === 'en');
           mutations.push(enVersion
             ? apiRequest('PUT', `/api/projects/${enVersion.id}`, enProject)
             : createProjectMutation.mutateAsync(enProject));
@@ -501,7 +519,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
           mutations.push(createProjectMutation.mutateAsync(enProject));
         }
       } else if (editingProject) {
-        const enVersion = projects.find(p => p.slug === editingProject.slug && p.language === 'en');
+        const enVersion = projects.find(p => ((p as any).linkedSlug === editGroupKey || p.slug === editGroupKey) && p.language === 'en');
         if (enVersion) {
           mutations.push(deleteProjectMutation.mutateAsync(enVersion.id));
         }
@@ -510,7 +528,8 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       if (hasVi) {
         const viProject = {
           title: data.titleVi!,
-          slug: finalSlug,
+          slug: finalSlugVi,
+          linkedSlug,
           description: data.descriptionVi,
           detailedDescription: data.detailedDescriptionVi,
           designPhilosophyTitle: data.designPhilosophyTitleVi,
@@ -542,7 +561,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
         };
 
         if (editingProject) {
-          const viVersion = projects.find(p => p.slug === editingProject.slug && p.language === 'vi');
+          const viVersion = projects.find(p => ((p as any).linkedSlug === editGroupKey || p.slug === editGroupKey) && p.language === 'vi');
           mutations.push(viVersion
             ? apiRequest('PUT', `/api/projects/${viVersion.id}`, viProject)
             : createProjectMutation.mutateAsync(viProject));
@@ -550,7 +569,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
           mutations.push(createProjectMutation.mutateAsync(viProject));
         }
       } else if (editingProject) {
-        const viVersion = projects.find(p => p.slug === editingProject.slug && p.language === 'vi');
+        const viVersion = projects.find(p => ((p as any).linkedSlug === editGroupKey || p.slug === editGroupKey) && p.language === 'vi');
         if (viVersion) {
           mutations.push(deleteProjectMutation.mutateAsync(viVersion.id));
         }
@@ -584,7 +603,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
   };
 
   const groupedProjectsMap = projects.reduce((acc, project) => {
-    const key = project.slug || project.id;
+    const key = (project as any).linkedSlug || project.slug || project.id;
     if (!acc[key]) {
       acc[key] = [];
     }
@@ -1210,15 +1229,28 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
 
                 <div className="border-t pt-6">
                   <h3 className="text-lg font-medium mb-4 uppercase tracking-wide">Cài Đặt SEO</h3>
-                  <div className="mb-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                     <FormField
                       control={projectForm.control}
-                      name="slug"
+                      name="slugEn"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>URL / Slug</FormLabel>
+                          <FormLabel>URL (English)</FormLabel>
                           <FormControl>
-                            <Input {...field} data-testid="input-project-slug" placeholder="tự động tạo từ tiêu đề (dùng chung EN & VI)" />
+                            <Input {...field} data-testid="input-project-slug" placeholder="auto-generated from EN title" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={projectForm.control}
+                      name="slugVi"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>URL (Tiếng Việt)</FormLabel>
+                          <FormControl>
+                            <Input {...field} placeholder="tự động tạo từ tiêu đề VI" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
