@@ -447,8 +447,10 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       };
       const rawSlugEn = data.slugEn ? toSlug(data.slugEn) : (hasEn ? toSlug(data.titleEn!) : '');
       const rawSlugVi = data.slugVi ? toSlug(data.slugVi) : (hasVi ? toSlug(data.titleVi!) : '');
-      const finalSlugEn = rawSlugEn || rawSlugVi;
-      const finalSlugVi = rawSlugVi || rawSlugEn;
+      // Always use ONE shared slug for both languages so they stay linked
+      const sharedSlug = rawSlugEn || rawSlugVi;
+      const finalSlugEn = sharedSlug;
+      const finalSlugVi = sharedSlug;
 
       const currentEnSlug = editingProject
         ? (projects.find(p => p.slug === editingProject.slug && p.language === 'en')?.slug || editingProject.slug)
@@ -1244,19 +1246,9 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                         </FormItem>
                       )}
                     />
-                    <FormField
-                      control={projectForm.control}
-                      name="slugVi"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>URL (Tiếng Việt)</FormLabel>
-                          <FormControl>
-                            <Input {...field} placeholder="tự động tạo từ tiêu đề VI" />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                    <div className="flex flex-col justify-end pb-1">
+                      <p className="text-xs text-muted-foreground mt-6">Cả bản EN và VI dùng chung một URL để tự động liên kết song ngữ.</p>
+                    </div>
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-4">
