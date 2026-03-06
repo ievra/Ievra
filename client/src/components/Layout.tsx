@@ -21,7 +21,7 @@ const getNavigation = (t: (key: string) => string, language: string) => {
 };
 
 export default function Layout({ children }: LayoutProps) {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -328,6 +328,17 @@ export default function Layout({ children }: LayoutProps) {
 
   const handleLanguageChange = (lang: Language) => {
     setLanguage(lang);
+    const routeKeys = ['about', 'portfolio', 'blog', 'lookup'] as const;
+    for (const key of routeKeys) {
+      if (isRoutePath(location, key)) {
+        const newBase = getPath(key, lang);
+        const oldBase = getPath(key, language);
+        const suffix = location.startsWith(oldBase + '/') ? location.slice(oldBase.length) : '';
+        const newPath = newBase + suffix;
+        if (newPath !== location) setLocation(newPath, { replace: true } as any);
+        break;
+      }
+    }
   };
 
   const isActive = (key: string) => {
