@@ -99,11 +99,14 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
   const [isEditCategoryDialogOpen, setIsEditCategoryDialogOpen] = useState(false);
   const [newCategoryType, setNewCategoryType] = useState<"project" | "article">("article");
 
+  const [isNewArticle, setIsNewArticle] = useState(false);
   const [articleSearchQuery, setArticleSearchQuery] = useState('');
   const [articleCategoryFilter, setArticleCategoryFilter] = useState('all');
   const [articleStatusFilter, setArticleStatusFilter] = useState('all');
   const [articlesPage, setArticlesPage] = useState(1);
   const articlesPerPage = 10;
+
+  const ARTICLE_AUTOSAVE_KEY = 'admin-article-autosave';
 
   const { data: articles = [], isLoading: articlesLoading } = useQuery<Article[]>({
     queryKey: ['/api/articles', 'all'],
@@ -151,6 +154,17 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       setArticleImageFile(null);
     }
   }, [isArticleDialogOpen, editingArticle]);
+
+  useEffect(() => {
+    if (!isNewArticle || !isArticleDialogOpen) return;
+    const subscription = articleForm.watch((values) => {
+      const hasData = values.titleEn || values.titleVi || values.contentEn || values.contentVi || values.excerptEn || values.excerptVi;
+      if (hasData) {
+        try { localStorage.setItem(ARTICLE_AUTOSAVE_KEY, JSON.stringify(values)); } catch {}
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [isNewArticle, isArticleDialogOpen, articleForm]);
 
   const groupedArticlesMap = articles.reduce((acc, article) => {
     const key = (article as any).linkedSlug || article.slug;
@@ -335,6 +349,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
   });
 
   const handleEditArticle = (article: Article) => {
+    setIsNewArticle(false);
     setEditingArticle(article);
     const groupKey = (article as any).linkedSlug || article.slug;
     const enVersion = articles.find(a => ((a as any).linkedSlug === groupKey || a.slug === groupKey) && a.language === 'en');
@@ -374,6 +389,13 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
     const timestamp = Date.now();
     const draftSlug = `bai-viet-${timestamp}`;
     const defaultCategory = (categories.find(c => c.type === 'article' && c.active) || categories.find(c => c.type === 'article'))?.slug || 'news';
+
+    let savedData: Partial<BilingualArticleFormData> | null = null;
+    try {
+      const raw = localStorage.getItem(ARTICLE_AUTOSAVE_KEY);
+      if (raw) savedData = JSON.parse(raw);
+    } catch {}
+
     try {
       const res = await apiRequest('POST', '/api/articles', {
         title: 'Bài Viết Mới',
@@ -387,35 +409,43 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       const draft = await res.json();
       queryClient.invalidateQueries({ queryKey: ['/api/articles', 'all'] });
       setEditingArticle(draft);
-      setArticleImagePreview('');
+      setArticleImagePreview(savedData?.featuredImage || '');
       setArticleImageFile(null);
       setArticleContentImages([]);
+      setIsNewArticle(true);
       articleForm.reset({
-        titleVi: '',
-        titleEn: '',
-        excerptVi: '',
-        excerptEn: '',
-        contentVi: '',
-        contentEn: '',
-        slugEn: '',
-        slugVi: '',
-        category: defaultCategory,
+        titleVi: savedData?.titleVi || '',
+        titleEn: savedData?.titleEn || '',
+        excerptVi: savedData?.excerptVi || '',
+        excerptEn: savedData?.excerptEn || '',
+        contentVi: savedData?.contentVi || '',
+        contentEn: savedData?.contentEn || '',
+        slugEn: savedData?.slugEn || '',
+        slugVi: savedData?.slugVi || '',
+        category: savedData?.category || defaultCategory,
         status: 'draft',
-        featured: false,
-        featuredImage: '',
-        metaTitleEn: '',
-        metaTitleVi: '',
-        metaDescriptionEn: '',
-        metaDescriptionVi: '',
-        metaKeywordsEn: '',
-        metaKeywordsVi: '',
+        featured: savedData?.featured || false,
+        featuredImage: savedData?.featuredImage || '',
+        metaTitleEn: savedData?.metaTitleEn || '',
+        metaTitleVi: savedData?.metaTitleVi || '',
+        metaDescriptionEn: savedData?.metaDescriptionEn || '',
+        metaDescriptionVi: savedData?.metaDescriptionVi || '',
+        metaKeywordsEn: savedData?.metaKeywordsEn || '',
+        metaKeywordsVi: savedData?.metaKeywordsVi || '',
       });
+      if (savedData?.titleEn || savedData?.titleVi || savedData?.contentEn || savedData?.contentVi) {
+        toast({
+          title: language === 'vi' ? 'Đã khôi phục dữ liệu' : 'Draft restored',
+          description: language === 'vi' ? 'Dữ liệu nhập dở đã được khôi phục.' : 'Your unsaved form data has been restored.',
+        });
+      }
       setIsArticleDialogOpen(true);
     } catch {
       setEditingArticle(null);
       setArticleImagePreview('');
       setArticleImageFile(null);
       setArticleContentImages([]);
+      setIsNewArticle(true);
       articleForm.reset();
       setIsArticleDialogOpen(true);
     }
@@ -534,13 +564,15 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
 
       await Promise.all(mutations);
 
+      try { localStorage.removeItem(ARTICLE_AUTOSAVE_KEY); } catch {}
       articleForm.reset();
       setEditingArticle(null);
+      setIsNewArticle(false);
       setArticleImagePreview('');
       setArticleImageFile(null);
       setArticleContentImages([]);
       setIsArticleDialogOpen(false);
-      toast({ title: "Article updated successfully" });
+      toast({ title: language === 'vi' ? 'Đã lưu bài viết thành công' : 'Article saved successfully' });
     } catch (error) {
       console.error('Article submit error:', error);
     }
@@ -891,6 +923,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
             setIsArticleDialogOpen(open);
             if (!open) {
               setEditingArticle(null);
+              setIsNewArticle(false);
               setArticleImagePreview('');
               setArticleImageFile(null);
               setArticleContentImages([]);
@@ -917,7 +950,10 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
           </Button>
         </div>
       </div>
-      <Dialog open={isArticleDialogOpen} onOpenChange={setIsArticleDialogOpen}>
+      <Dialog open={isArticleDialogOpen} onOpenChange={(open) => {
+        setIsArticleDialogOpen(open);
+        if (!open) setIsNewArticle(false);
+      }}>
       <DialogContent className="max-w-4xl max-h-[85vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>
