@@ -670,26 +670,29 @@ export default function About() {
                 const fullTurn0 = Math.PI * R;
                 const halfTurn0 = fullTurn0 / 2;
 
-                // Visible path (no bleed): starts at xL, ends at xR of last row
-                const totalVisiblePathLen0 = numRows * rowLen0 + (numRows - 1) * fullTurn0;
+                // Animated path length includes edge bleed (from x=0 to xL, from xR to W)
+                const leftBleed0 = xL0;   // = PAD_L, horizontal segment from container left to item 01
+                const rightBleed0 = PAD_R; // horizontal segment from item 07 to container right
+                const totalAnimPathLen0 = leftBleed0 + numRows * rowLen0 + (numRows - 1) * fullTurn0 + rightBleed0;
                 const stepPathPos: Record<string, number> = {
-                  '01': 0,
-                  '02': rowLen0 / 2,
-                  '03': rowLen0 + halfTurn0,
-                  '04': rowLen0 + fullTurn0 + rowLen0 / 2,
-                  '05': 2 * rowLen0 + fullTurn0 + halfTurn0,
-                  '06': 2 * rowLen0 + 2 * fullTurn0 + rowLen0 / 2,
-                  '07': 3 * rowLen0 + 2 * fullTurn0,
+                  '01': leftBleed0,
+                  '02': leftBleed0 + rowLen0 / 2,
+                  '03': leftBleed0 + rowLen0 + halfTurn0,
+                  '04': leftBleed0 + rowLen0 + fullTurn0 + rowLen0 / 2,
+                  '05': leftBleed0 + 2 * rowLen0 + fullTurn0 + halfTurn0,
+                  '06': leftBleed0 + 2 * rowLen0 + 2 * fullTurn0 + rowLen0 / 2,
+                  '07': leftBleed0 + 3 * rowLen0 + 2 * fullTurn0,
                 };
                 const getItemDelay = (stepNum: string) =>
-                  ((stepPathPos[stepNum] ?? 0) / totalVisiblePathLen0) * ANIM_DURATION;
+                  ((stepPathPos[stepNum] ?? 0) / totalAnimPathLen0) * ANIM_DURATION;
 
-                // Animated path — no bleed so pathLength="1" maps exactly to visible portion
+                // Animated path — starts at left container edge, ends at right container edge
                 const buildVisiblePath = (W: number) => {
                   if (W <= 0) return '';
                   const xL = PAD_L;
                   const xR = W - PAD_R;
-                  let d = `M ${xL},${LINE_Y}`;
+                  // Start from left edge → xL (row 1 start)
+                  let d = `M 0,${LINE_Y} L ${xL},${LINE_Y}`;
                   for (let r = 0; r < numRows; r++) {
                     const y = LINE_Y + r * ROW_H;
                     const endX = r % 2 === 0 ? xR : xL;
@@ -703,6 +706,9 @@ export default function About() {
                       }
                     }
                   }
+                  // End from last item → right edge
+                  const lastY = LINE_Y + (numRows - 1) * ROW_H;
+                  d += ` L ${W},${lastY}`;
                   return d;
                 };
 
