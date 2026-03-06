@@ -670,9 +670,10 @@ export default function About() {
                 const fullTurn0 = Math.PI * R;
                 const halfTurn0 = fullTurn0 / 2;
 
-                // Animated path length includes edge bleed (from x=0 to xL, from xR to W)
-                const leftBleed0 = xL0;   // = PAD_L, horizontal segment from container left to item 01
-                const rightBleed0 = PAD_R; // horizontal segment from item 07 to container right
+                // Extra bleed beyond container edges (SVG overflow:visible renders outside bounds)
+                const EDGE_BLEED = 300;
+                const leftBleed0 = EDGE_BLEED + xL0;   // from -EDGE_BLEED to xL
+                const rightBleed0 = PAD_R + EDGE_BLEED; // from xR to W+EDGE_BLEED
                 const totalAnimPathLen0 = leftBleed0 + numRows * rowLen0 + (numRows - 1) * fullTurn0 + rightBleed0;
                 const stepPathPos: Record<string, number> = {
                   '01': leftBleed0,
@@ -686,13 +687,12 @@ export default function About() {
                 const getItemDelay = (stepNum: string) =>
                   ((stepPathPos[stepNum] ?? 0) / totalAnimPathLen0) * ANIM_DURATION;
 
-                // Animated path — starts at left container edge, ends at right container edge
+                // Animated path — bleeds beyond container on both sides
                 const buildVisiblePath = (W: number) => {
                   if (W <= 0) return '';
                   const xL = PAD_L;
                   const xR = W - PAD_R;
-                  // Start from left edge → xL (row 1 start)
-                  let d = `M 0,${LINE_Y} L ${xL},${LINE_Y}`;
+                  let d = `M ${-EDGE_BLEED},${LINE_Y} L ${xL},${LINE_Y}`;
                   for (let r = 0; r < numRows; r++) {
                     const y = LINE_Y + r * ROW_H;
                     const endX = r % 2 === 0 ? xR : xL;
@@ -706,9 +706,8 @@ export default function About() {
                       }
                     }
                   }
-                  // End from last item → right edge
                   const lastY = LINE_Y + (numRows - 1) * ROW_H;
-                  d += ` L ${W},${lastY}`;
+                  d += ` L ${W + EDGE_BLEED},${lastY}`;
                   return d;
                 };
 
