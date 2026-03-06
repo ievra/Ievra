@@ -112,17 +112,14 @@ export default function About() {
   const [pathAnimated, setPathAnimated] = useState(false);
 
   useEffect(() => {
-    const el = snakeRef.current;
-    if (!el) return;
+    // Use window.innerWidth since wrapper is width:100vw — avoids layout-dependent measurement errors
     const measure = () => {
-      const w = el.getBoundingClientRect().width || el.offsetWidth;
+      const w = window.innerWidth;
       if (w > 0) setSnakeW(w);
     };
     measure();
-    const rafId = requestAnimationFrame(measure);
-    const ro = new ResizeObserver(measure);
-    ro.observe(el);
-    return () => { cancelAnimationFrame(rafId); ro.disconnect(); };
+    window.addEventListener('resize', measure, { passive: true });
+    return () => window.removeEventListener('resize', measure);
   }, []);
 
   useEffect(() => {
