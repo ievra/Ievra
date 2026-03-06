@@ -3,6 +3,7 @@ import { Link, useLocation } from "wouter";
 import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { AboutPageContent } from "@shared/schema";
+import { getPath } from "@/lib/routes";
 
 export default function PreFooterBanner() {
   const { language } = useLanguage();
@@ -47,7 +48,7 @@ export default function PreFooterBanner() {
           <div className="flex flex-col items-end gap-4">
             <div className="w-24 h-px bg-white/30" />
             <Link
-              href="/contact"
+              href={getPath('contact', language)}
               className="inline-flex items-center gap-2 text-[13px] font-light tracking-widest text-white border border-white/30 rounded-full px-6 py-2.5 hover:bg-white hover:text-black transition-all duration-300 uppercase"
             >
               {isVi ? "LIÊN HỆ" : "CONTACT"}

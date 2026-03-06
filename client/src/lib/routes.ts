@@ -3,6 +3,7 @@ export const ROUTE_MAP = {
   portfolio: { en: '/portfolio', vi: '/du-an' },
   blog:      { en: '/blog',      vi: '/tin-tuc' },
   lookup:    { en: '/lookup',    vi: '/tra-cuu' },
+  contact:   { en: '/contact',   vi: '/lien-he' },
 } as const;
 
 type RouteKey = keyof typeof ROUTE_MAP;

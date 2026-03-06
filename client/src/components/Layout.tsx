@@ -328,7 +328,7 @@ export default function Layout({ children }: LayoutProps) {
 
   const handleLanguageChange = (lang: Language) => {
     setLanguage(lang);
-    const routeKeys = ['about', 'portfolio', 'blog', 'lookup'] as const;
+    const routeKeys = ['about', 'portfolio', 'blog', 'lookup', 'contact'] as const;
     for (const key of routeKeys) {
       if (isRoutePath(location, key)) {
         const newBase = getPath(key, lang);
@@ -436,7 +436,7 @@ export default function Layout({ children }: LayoutProps) {
             </div>
 
             <Link
-              href="/contact"
+              href={getPath('contact', language)}
               className="text-[13px] font-light tracking-wider text-white border border-white/30 rounded-full px-6 py-2.5 hover:bg-white hover:text-black transition-all duration-300 flex items-center gap-2"
               data-testid="nav-contact-btn"
             >
@@ -502,10 +502,10 @@ export default function Layout({ children }: LayoutProps) {
                 </Link>
               ))}
               <Link
-                href="/contact"
+                href={getPath('contact', language)}
                 onClick={() => setMobileMenuOpen(false)}
                 className={`block text-3xl font-light tracking-wider transition-colors ${
-                  location.startsWith('/contact') ? 'text-white' : 'text-white/60 hover:text-white'
+                  isRoutePath(location, 'contact') ? 'text-white' : 'text-white/60 hover:text-white'
                 }`}
                 data-testid="menu-nav-contact"
               >
