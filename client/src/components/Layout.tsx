@@ -522,7 +522,7 @@ export default function Layout({ children }: LayoutProps) {
       )}
 
       <main>{children}</main>
-      {!location.startsWith('/admin') && <PreFooterBanner />}
+      {!location.startsWith('/admin') && !location.startsWith('/portfolio') && !location.startsWith('/blog') && location !== '/lookup' && <PreFooterBanner />}
       {!location.startsWith('/admin') && <Footer />}
     </div>
   );
