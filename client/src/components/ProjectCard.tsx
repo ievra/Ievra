@@ -57,8 +57,8 @@ export default function ProjectCard({
           <div className="w-full h-full bg-zinc-900" data-testid={`img-project-${project.id}`} />
         )}
 
-        <div className="absolute inset-0 bg-black/30 transition-opacity duration-500 group-hover:opacity-0" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
+        <div className="absolute inset-x-0 top-0 -bottom-px bg-black/30 transition-opacity duration-500 group-hover:opacity-0" />
+        <div className="absolute inset-x-0 top-0 -bottom-px bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
 
         {/* Top-left: Category (large) / Style / Area (small) */}
         <div className="absolute top-0 left-0 p-5 md:p-6 flex flex-col gap-0">
