@@ -533,7 +533,7 @@ export default function ProjectDetail() {
       )}
       {/* Gallery Grid */}
       {galleryImages.length > 0 && (
-        <div className="w-full mt-16" id="additional-gallery" data-testid="section-additional" tabIndex={-1}>
+        <div className="w-full" id="additional-gallery" data-testid="section-additional" tabIndex={-1}>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0">
             {galleryImages.map((image: string, index: number) => (
               <div key={index} className="aspect-[4/3] cursor-pointer" onClick={() => openLightbox(image)}>
