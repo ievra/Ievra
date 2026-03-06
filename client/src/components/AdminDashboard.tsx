@@ -724,8 +724,8 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       const reader = new FileReader();
       reader.onload = (ev) => {
         const dataUrl = ev.target?.result as string;
-        seoSettingsForm.setValue('ogImageData', dataUrl);
-        seoSettingsForm.setValue('ogImage', '');
+        seoSettingsForm.setValue('ogImageData', dataUrl, { shouldDirty: true });
+        seoSettingsForm.setValue('ogImage', '', { shouldDirty: true });
         setOgImagePreview(dataUrl);
       };
       reader.readAsDataURL(file);
@@ -1507,7 +1507,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                             <img src={ogImagePreview} alt="OG Image Preview" className="w-full h-full object-cover" />
                             <button
                               type="button"
-                              onClick={() => { setOgImagePreview(''); seoSettingsForm.setValue('ogImageData', ''); seoSettingsForm.setValue('ogImage', ''); }}
+                              onClick={() => { setOgImagePreview(''); seoSettingsForm.setValue('ogImageData', '', { shouldDirty: true }); seoSettingsForm.setValue('ogImage', '', { shouldDirty: true }); }}
                               className="absolute top-2 right-2 bg-black/70 text-white text-xs px-2 py-1 hover:bg-black"
                             >
                               {language === 'vi' ? 'Xóa' : 'Remove'}
@@ -1516,7 +1516,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         </div>
                       )}
                     </div>
-                    <Button type="submit" disabled={updateSettingsMutation.isPending || seoSettingsForm.formState.isSubmitting} data-testid="button-save-seo">
+                    <Button type="submit" disabled={updateSettingsMutation.isPending || seoSettingsForm.formState.isSubmitting || !seoSettingsForm.formState.isDirty} data-testid="button-save-seo">
                       {(updateSettingsMutation.isPending || seoSettingsForm.formState.isSubmitting) ? (language === 'vi' ? 'Đang lưu...' : 'Saving...') : (language === 'vi' ? 'Lưu Cài Đặt SEO' : 'Save SEO Settings')}
                     </Button>
                   </div>
