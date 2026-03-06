@@ -132,6 +132,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
   const [deleteProjectData, setDeleteProjectData] = useState<{ title: string; group: Project[] } | null>(null);
   const [deleteCategoryData, setDeleteCategoryData] = useState<{ id: string, name: string } | null>(null);
   const [isDeleteCategoryAlertOpen, setIsDeleteCategoryAlertOpen] = useState(false);
+  const [isProjectDiscardConfirmOpen, setIsProjectDiscardConfirmOpen] = useState(false);
 
   if (!hasPermission(user, 'projects')) {
     return <PermissionDenied feature="Projects" />;
@@ -686,9 +687,20 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
         <h2 className="text-2xl font-sans font-light min-h-[36px]">{language === 'vi' ? 'Quản Lý Dự Án' : 'Projects Management'}</h2>
         <div className="flex gap-2 flex-shrink-0">
           <Dialog open={isProjectDialogOpen} onOpenChange={(open) => {
+            if (!open && isNewProject) {
+              const vals = projectForm.getValues();
+              const hasData = vals.titleEn || vals.titleVi || vals.descriptionEn || vals.descriptionVi ||
+                vals.locationEn || vals.locationVi || vals.styleEn || vals.styleVi || vals.areaEn || vals.completionYear;
+              if (hasData) {
+                setIsProjectDiscardConfirmOpen(true);
+                return;
+              }
+              try { localStorage.removeItem(PROJECT_AUTOSAVE_KEY); } catch {}
+            }
             setIsProjectDialogOpen(open);
             if (!open) {
               setEditingProject(null);
+              setIsNewProject(false);
               projectForm.reset();
             }
           }}>
@@ -1903,6 +1915,40 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
             )}
         </CardContent>
       </Card>
+
+      <AlertDialog open={isProjectDiscardConfirmOpen} onOpenChange={setIsProjectDiscardConfirmOpen}>
+        <AlertDialogContent className="bg-black border border-white/20 rounded-none">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl font-light">{language === 'vi' ? 'Hủy Bỏ Dữ Liệu?' : 'Discard Changes?'}</AlertDialogTitle>
+            <AlertDialogDescription className="text-white/70">
+              {language === 'vi'
+                ? 'Bạn có chắc muốn xóa những dữ liệu đang điền? Thao tác này không thể hoàn tác.'
+                : 'Are you sure you want to discard the data you are filling in? This action cannot be undone.'}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              className="bg-black border-white/20 hover:bg-black hover:border-white rounded-none transition-colors"
+              onClick={() => setIsProjectDiscardConfirmOpen(false)}
+            >
+              {language === 'vi' ? 'Tiếp Tục Điền' : 'Keep Filling'}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="rounded-none bg-black text-white border border-white/20 hover:border-white transition-colors"
+              onClick={() => {
+                try { localStorage.removeItem(PROJECT_AUTOSAVE_KEY); } catch {}
+                setIsProjectDiscardConfirmOpen(false);
+                setIsProjectDialogOpen(false);
+                setEditingProject(null);
+                setIsNewProject(false);
+                projectForm.reset();
+              }}
+            >
+              {language === 'vi' ? 'Xóa Dữ Liệu' : 'Discard'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <AlertDialog open={!!deleteProjectData} onOpenChange={(open) => { if (!open) setDeleteProjectData(null); }}>
         <AlertDialogContent className="bg-black border border-white/20 rounded-none">

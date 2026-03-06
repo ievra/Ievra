@@ -100,6 +100,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
   const [newCategoryType, setNewCategoryType] = useState<"project" | "article">("article");
 
   const [isNewArticle, setIsNewArticle] = useState(false);
+  const [isArticleDiscardConfirmOpen, setIsArticleDiscardConfirmOpen] = useState(false);
   const [articleSearchQuery, setArticleSearchQuery] = useState('');
   const [articleCategoryFilter, setArticleCategoryFilter] = useState('all');
   const [articleStatusFilter, setArticleStatusFilter] = useState('all');
@@ -920,6 +921,15 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
         <h2 className="text-2xl font-sans font-light min-h-[36px]">{language === 'vi' ? 'Quản Lý Bài Viết' : 'Articles Management'}</h2>
         <div className="flex gap-2 flex-shrink-0">
           <Dialog open={isArticleDialogOpen} onOpenChange={(open) => {
+            if (!open && isNewArticle) {
+              const vals = articleForm.getValues();
+              const hasData = vals.titleEn || vals.titleVi || vals.contentEn || vals.contentVi || vals.excerptEn || vals.excerptVi;
+              if (hasData) {
+                setIsArticleDiscardConfirmOpen(true);
+                return;
+              }
+              try { localStorage.removeItem(ARTICLE_AUTOSAVE_KEY); } catch {}
+            }
             setIsArticleDialogOpen(open);
             if (!open) {
               setEditingArticle(null);
@@ -951,8 +961,24 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
         </div>
       </div>
       <Dialog open={isArticleDialogOpen} onOpenChange={(open) => {
+        if (!open && isNewArticle) {
+          const vals = articleForm.getValues();
+          const hasData = vals.titleEn || vals.titleVi || vals.contentEn || vals.contentVi || vals.excerptEn || vals.excerptVi;
+          if (hasData) {
+            setIsArticleDiscardConfirmOpen(true);
+            return;
+          }
+          try { localStorage.removeItem(ARTICLE_AUTOSAVE_KEY); } catch {}
+        }
         setIsArticleDialogOpen(open);
-        if (!open) setIsNewArticle(false);
+        if (!open) {
+          setIsNewArticle(false);
+          setEditingArticle(null);
+          setArticleImagePreview('');
+          setArticleImageFile(null);
+          setArticleContentImages([]);
+          articleForm.reset();
+        }
       }}>
       <DialogContent className="max-w-4xl max-h-[85vh] flex flex-col">
         <DialogHeader>
@@ -1658,6 +1684,43 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
           )}
         </CardContent>
       </Card>
+
+      <AlertDialog open={isArticleDiscardConfirmOpen} onOpenChange={setIsArticleDiscardConfirmOpen}>
+        <AlertDialogContent className="bg-black border border-white/20 rounded-none">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl font-light">{language === 'vi' ? 'Hủy Bỏ Dữ Liệu?' : 'Discard Changes?'}</AlertDialogTitle>
+            <AlertDialogDescription className="text-white/70">
+              {language === 'vi'
+                ? 'Bạn có chắc muốn xóa những dữ liệu đang điền? Thao tác này không thể hoàn tác.'
+                : 'Are you sure you want to discard the data you are filling in? This action cannot be undone.'}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              className="bg-black border-white/20 hover:bg-black hover:border-white rounded-none transition-colors"
+              onClick={() => setIsArticleDiscardConfirmOpen(false)}
+            >
+              {language === 'vi' ? 'Tiếp Tục Điền' : 'Keep Filling'}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="rounded-none bg-black text-white border border-white/20 hover:border-white transition-colors"
+              onClick={() => {
+                try { localStorage.removeItem(ARTICLE_AUTOSAVE_KEY); } catch {}
+                setIsArticleDiscardConfirmOpen(false);
+                setIsArticleDialogOpen(false);
+                setEditingArticle(null);
+                setIsNewArticle(false);
+                setArticleImagePreview('');
+                setArticleImageFile(null);
+                setArticleContentImages([]);
+                articleForm.reset();
+              }}
+            >
+              {language === 'vi' ? 'Xóa Dữ Liệu' : 'Discard'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
