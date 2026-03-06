@@ -141,74 +141,76 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Sitemap.xml endpoint
+  const getSiteBaseUrl = (req: any) => {
+    if (process.env.SITE_URL) return process.env.SITE_URL.replace(/\/$/, '');
+    const host = req.headers['x-forwarded-host'] || req.headers.host || 'localhost:5000';
+    const proto = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
+    return `${proto}://${host}`;
+  };
+
+  app.get("/robots.txt", (req, res) => {
+    const baseUrl = getSiteBaseUrl(req);
+    res.set('Content-Type', 'text/plain');
+    res.send(`User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /login\nDisallow: /api/\n\nSitemap: ${baseUrl}/sitemap.xml\n`);
+  });
+
   app.get("/sitemap.xml", async (req, res) => {
     try {
-      const baseUrl = process.env.REPLIT_DEV_DOMAIN 
-        ? `https://${process.env.REPLIT_DEV_DOMAIN}`
-        : process.env.REPLIT_DEPLOYMENT_URL || 'https://example.com';
-      
-      // Static pages
+      const baseUrl = getSiteBaseUrl(req);
+
       const staticPages = [
-        { url: '/', priority: '1.0', changefreq: 'weekly' },
-        { url: '/about', priority: '0.8', changefreq: 'monthly' },
-        { url: '/projects', priority: '0.9', changefreq: 'weekly' },
-        { url: '/blog', priority: '0.9', changefreq: 'weekly' },
-        { url: '/contact', priority: '0.7', changefreq: 'monthly' },
+        { url: '/',          priority: '1.0', changefreq: 'weekly'  },
+        { url: '/about',     priority: '0.8', changefreq: 'monthly' },
+        { url: '/portfolio', priority: '0.9', changefreq: 'weekly'  },
+        { url: '/blog',      priority: '0.8', changefreq: 'weekly'  },
+        { url: '/contact',   priority: '0.7', changefreq: 'monthly' },
       ];
-      
-      // Get dynamic content
-      const projects = await storage.getProjects();
-      const articles = await storage.getArticles();
-      
-      // Filter for English versions only (to avoid duplicate URLs)
-      const englishProjects = projects.filter(p => p.language === 'en' && p.status === 'completed');
-      const publishedArticles = articles.filter(a => a.status === 'published');
-      
+
+      const [projects, articles] = await Promise.all([
+        storage.getProjects(),
+        storage.getArticles(),
+      ]);
+
+      const activeProjects = projects.filter(p => p.slug && p.status === 'completed');
+      const publishedArticles = articles.filter(a => a.status === 'published' && a.slug);
+
+      // Deduplicate projects by slug (keep one per slug regardless of language)
+      const seenProjectSlugs = new Set<string>();
+      const uniqueProjects = activeProjects.filter(p => {
+        if (seenProjectSlugs.has(p.slug)) return false;
+        seenProjectSlugs.add(p.slug);
+        return true;
+      });
+
+      const seenArticleSlugs = new Set<string>();
+      const uniqueArticles = publishedArticles.filter(a => {
+        if (seenArticleSlugs.has(a.slug)) return false;
+        seenArticleSlugs.add(a.slug);
+        return true;
+      });
+
       const today = new Date().toISOString().split('T')[0];
-      
-      let xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-`;
-      
-      // Add static pages
+
+      let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+
       for (const page of staticPages) {
-        xml += `  <url>
-    <loc>${baseUrl}${page.url}</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>${page.changefreq}</changefreq>
-    <priority>${page.priority}</priority>
-  </url>
-`;
+        xml += `  <url>\n    <loc>${baseUrl}${page.url}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>${page.changefreq}</changefreq>\n    <priority>${page.priority}</priority>\n  </url>\n`;
       }
-      
-      // Add project pages
-      for (const project of englishProjects) {
-        xml += `  <url>
-    <loc>${baseUrl}/projects/${project.slug}</loc>
-    <lastmod>${today}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>
-`;
+
+      for (const project of uniqueProjects) {
+        xml += `  <url>\n    <loc>${baseUrl}/portfolio/${project.slug}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
       }
-      
-      // Add article pages
-      for (const article of publishedArticles) {
-        const lastmod = article.publishedAt 
+
+      for (const article of uniqueArticles) {
+        const lastmod = article.publishedAt
           ? new Date(article.publishedAt).toISOString().split('T')[0]
           : today;
-        xml += `  <url>
-    <loc>${baseUrl}/blog/${article.slug}</loc>
-    <lastmod>${lastmod}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-`;
+        xml += `  <url>\n    <loc>${baseUrl}/blog/${article.slug}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.6</priority>\n  </url>\n`;
       }
-      
+
       xml += `</urlset>`;
-      
-      res.set('Content-Type', 'application/xml');
+
+      res.set('Content-Type', 'application/xml; charset=utf-8');
       res.send(xml);
     } catch (error) {
       console.error('Error generating sitemap:', error);
