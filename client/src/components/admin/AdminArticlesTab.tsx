@@ -1034,7 +1034,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                   <FormItem>
                     <FormLabel>{language === 'vi' ? 'Tóm Tắt (Tiếng Anh)' : 'Excerpt (English)'}</FormLabel>
                     <FormControl>
-                      <Textarea {...field} value={field.value || ''} rows={4} data-testid="textarea-article-excerpt-en" placeholder={language === 'vi' ? 'Mô tả ngắn bằng tiếng Anh...' : 'Brief description in English...'} />
+                      <Textarea {...field} value={field.value || ''} rows={4} data-testid="textarea-article-excerpt-en" placeholder={language === 'vi' ? 'Mô tả ngắn bằng tiếng Anh...' : 'Brief description in English...'} className="border-white/30 focus-visible:ring-white/50" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -1048,7 +1048,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                   <FormItem>
                     <FormLabel>{language === 'vi' ? 'Tóm Tắt (Tiếng Việt)' : 'Excerpt (Vietnamese)'}</FormLabel>
                     <FormControl>
-                      <Textarea {...field} value={field.value || ''} rows={4} data-testid="textarea-article-excerpt-vi" placeholder="Mô tả ngắn bằng tiếng Việt..." />
+                      <Textarea {...field} value={field.value || ''} rows={4} data-testid="textarea-article-excerpt-vi" placeholder="Mô tả ngắn bằng tiếng Việt..." className="border-white/30 focus-visible:ring-white/50" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -1078,7 +1078,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                   <FormItem>
                     <FormLabel>{language === 'vi' ? 'Nội Dung (Tiếng Anh)' : 'Content (English)'}</FormLabel>
                     <FormControl>
-                      <Textarea {...field} rows={10} data-testid="textarea-article-content-en" placeholder={language === 'vi' ? 'Viết nội dung bằng tiếng Anh...' : 'Write your content in English...'} />
+                      <Textarea {...field} rows={10} data-testid="textarea-article-content-en" placeholder={language === 'vi' ? 'Viết nội dung bằng tiếng Anh...' : 'Write your content in English...'} className="border-white/30 focus-visible:ring-white/50" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -1092,7 +1092,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                   <FormItem>
                     <FormLabel>{language === 'vi' ? 'Nội Dung (Tiếng Việt)' : 'Content (Vietnamese)'}</FormLabel>
                     <FormControl>
-                      <Textarea {...field} rows={10} data-testid="textarea-article-content-vi" placeholder="Viết nội dung bằng tiếng Việt..." />
+                      <Textarea {...field} rows={10} data-testid="textarea-article-content-vi" placeholder="Viết nội dung bằng tiếng Việt..." className="border-white/30 focus-visible:ring-white/50" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -1161,7 +1161,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
               {articleContentImages.length > 0 && (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
                   {articleContentImages.map((imagePath, index) => (
-                    <div key={index} className="relative group border rounded-lg overflow-hidden bg-muted/50 hover:border-primary transition-colors">
+                    <div key={index} className="relative group border border-white/20 rounded-lg overflow-hidden bg-muted/50 hover:border-white/50 transition-colors">
                       <img
                         src={imagePath}
                         alt={`Content ${index + 1}`}
