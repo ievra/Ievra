@@ -303,7 +303,7 @@ export default function BlogDetail() {
         )}
 
         {/* Article Header */}
-        <article className="prose prose-lg max-w-none">
+        <article className="max-w-none">
           <div className="mb-8">
             <h1 className="text-4xl md:text-6xl font-sans font-light mb-6 leading-tight text-white break-words" data-testid="article-title">
               {article.title}
@@ -328,7 +328,23 @@ export default function BlogDetail() {
 
           {/* Article Content */}
           <div 
-            className="prose prose-xl prose-invert max-w-none break-words overflow-wrap-anywhere"
+            className="text-white/80 text-base leading-relaxed max-w-none break-words
+              [&_h1]:text-white [&_h1]:text-3xl [&_h1]:font-light [&_h1]:mt-8 [&_h1]:mb-4
+              [&_h2]:text-white [&_h2]:text-2xl [&_h2]:font-light [&_h2]:mt-6 [&_h2]:mb-3
+              [&_h3]:text-white [&_h3]:text-xl [&_h3]:font-light [&_h3]:mt-5 [&_h3]:mb-2
+              [&_strong]:text-white [&_strong]:font-semibold
+              [&_em]:italic
+              [&_del]:line-through [&_del]:opacity-60
+              [&_code]:bg-white/10 [&_code]:px-1 [&_code]:rounded [&_code]:text-sm [&_code]:font-mono [&_code]:text-white/90
+              [&_blockquote]:border-l-4 [&_blockquote]:border-white/30 [&_blockquote]:pl-4 [&_blockquote]:my-4 [&_blockquote]:text-white/60 [&_blockquote]:italic
+              [&_hr]:border-white/20 [&_hr]:my-6
+              [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-2 [&_ul]:space-y-1
+              [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-2 [&_ol]:space-y-1
+              [&_li]:text-white/80
+              [&_img]:max-w-full [&_img]:h-auto [&_img]:my-4 [&_img]:rounded-lg
+              [&_figure]:my-4
+              [&_figcaption]:text-center [&_figcaption]:text-sm [&_figcaption]:text-white/50 [&_figcaption]:italic [&_figcaption]:mt-2
+              [&_p]:mb-3 [&_p]:leading-relaxed"
             style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}
             dangerouslySetInnerHTML={{ __html: parseBoldTextToHTML(String(article.content)) }}
             data-testid="article-content"
