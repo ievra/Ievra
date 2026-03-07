@@ -1343,7 +1343,7 @@ export default function Home() {
                           )}
                           {isActive && (
                             <p
-                              className="text-foreground/80 text-sm mb-2 break-words overflow-hidden"
+                              className="text-foreground/80 text-sm mb-2 break-all"
                               style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
                               data-testid={`text-article-excerpt-${article.id}`}
                             >
