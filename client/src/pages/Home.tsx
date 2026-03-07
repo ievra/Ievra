@@ -513,6 +513,14 @@ export default function Home() {
     return categorySlug;
   };
 
+  const getArticleCategoryLabel = (categorySlug: string) => {
+    if (!categorySlug) return null;
+    const articleCategories = dbCategories.filter(cat => cat.type === 'article');
+    const found = articleCategories.find(c => c.slug === categorySlug);
+    if (found) return language === 'vi' ? (found.nameVi || found.name) : found.name;
+    return categorySlug;
+  };
+
   const {
     data: faqs = [],
     isLoading: faqsLoading,
@@ -1322,13 +1330,18 @@ export default function Home() {
 
                         {/* Content below image */}
                         <div className="p-4 flex flex-col" style={{ flex: '1' }}>
+                          {article.category && (
+                            <p className="text-white/40 text-xs uppercase tracking-widest mb-2 font-light">
+                              {getArticleCategoryLabel(article.category)}
+                            </p>
+                          )}
                           {isActive && (
                             <TypewriterTitle
                               text={article.title}
                               className="text-xl font-sans font-light mb-2"
                             />
                           )}
-                          <p className="text-muted-foreground mb-3 text-sm">
+                          <p className="text-muted-foreground mb-2 text-sm">
                             {article.publishedAt &&
                               new Date(article.publishedAt).toLocaleDateString(
                                 language === "vi" ? "vi-VN" : "en-US",
@@ -1337,12 +1350,17 @@ export default function Home() {
                           </p>
                           {isActive && (
                             <p
-                              className="text-foreground/80 text-sm line-clamp-3"
+                              className="text-foreground/80 text-sm line-clamp-3 mb-2"
                               data-testid={`text-article-excerpt-${article.id}`}
                             >
                               {article.excerpt
                                 ? <FormattedText text={article.excerpt} />
                                 : "Discover insights and trends in interior design..."}
+                            </p>
+                          )}
+                          {(article as any).attribution && (
+                            <p className="text-white/40 text-xs italic mt-auto pt-2 text-right">
+                              {(article as any).attribution}
                             </p>
                           )}
                         </div>
