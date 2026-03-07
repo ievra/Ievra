@@ -239,8 +239,8 @@ function AdvantageCard({
 }) {
   return (
     <div
-      className="group advantage-card scroll-animate px-10 py-8 rounded-none flex flex-col relative"
-      style={{ minHeight: '380px', animationDelay: `${index * 0.18}s` }}
+      className="group advantage-card scroll-animate px-10 py-8 rounded-none flex flex-col relative h-[380px]"
+      style={{ animationDelay: `${index * 0.18}s` }}
       data-testid={`advantage-card-${index + 1}`}
     >
       {index > 0 && (
@@ -251,7 +251,7 @@ function AdvantageCard({
           {title}
         </h4>
       </div>
-      <div className="flex-1">
+      <div className="flex-1 overflow-hidden">
         <p className="text-white/50 group-hover:text-white/90 font-light text-base leading-relaxed transition-colors duration-300">
           {description}
         </p>
