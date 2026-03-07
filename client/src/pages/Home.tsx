@@ -1351,15 +1351,15 @@ export default function Home() {
                             </p>
                           )}
                           <div className="mt-auto pt-2 flex items-end justify-between gap-2">
-                            <p className="text-white/40 text-xs italic">
-                              {(article as any).attribution || ''}
-                            </p>
                             <p className="text-muted-foreground text-xs flex-shrink-0">
                               {article.publishedAt &&
                                 new Date(article.publishedAt).toLocaleDateString(
                                   language === "vi" ? "vi-VN" : "en-US",
                                   { year: "numeric", month: "long", day: "numeric" },
                                 )}
+                            </p>
+                            <p className="text-white/40 text-xs italic text-right">
+                              {(article as any).attribution || ''}
                             </p>
                           </div>
                         </div>
