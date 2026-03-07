@@ -82,27 +82,30 @@ export function parseBoldTextToHTML(text: string): string {
       continue;
     }
 
-    if (/^### /.test(raw)) {
+    if (/^###\s*/.test(raw)) {
       closeList();
-      out.push(`<h3 class="text-xl font-light mt-5 mb-2">${parseInline(raw.slice(4))}</h3>`);
+      const txt = raw.replace(/^###\s*/, '').replace(/#+$/, '').trim();
+      out.push(`<h3 class="text-xl font-light mt-5 mb-2">${parseInline(txt)}</h3>`);
       continue;
     }
 
-    if (/^## /.test(raw)) {
+    if (/^##\s*/.test(raw)) {
       closeList();
-      out.push(`<h2 class="text-2xl font-light mt-6 mb-3">${parseInline(raw.slice(3))}</h2>`);
+      const txt = raw.replace(/^##\s*/, '').replace(/#+$/, '').trim();
+      out.push(`<h2 class="text-2xl font-light mt-6 mb-3">${parseInline(txt)}</h2>`);
       continue;
     }
 
-    if (/^# /.test(raw)) {
+    if (/^#\s*/.test(raw)) {
       closeList();
-      out.push(`<h1 class="text-3xl font-light mt-8 mb-4">${parseInline(raw.slice(2))}</h1>`);
+      const txt = raw.replace(/^#\s*/, '').replace(/#+$/, '').trim();
+      out.push(`<h1 class="text-3xl font-light mt-8 mb-4">${parseInline(txt)}</h1>`);
       continue;
     }
 
-    if (/^> /.test(raw)) {
+    if (/^>\s*/.test(raw)) {
       closeList();
-      out.push(`<blockquote class="border-l-4 border-white/30 pl-4 my-4 text-white/60 italic">${parseInline(raw.slice(2))}</blockquote>`);
+      out.push(`<blockquote class="border-l-4 border-white/30 pl-4 my-4 text-white/60 italic">${parseInline(raw.replace(/^>\s*/, ''))}</blockquote>`);
       continue;
     }
 

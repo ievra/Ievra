@@ -310,9 +310,14 @@ export default function BlogDetail() {
             </h1>
 
             {article.excerpt && (
-              <p className="text-xl text-muted-foreground leading-relaxed mb-8" data-testid="article-excerpt">
-                <FormattedText text={article.excerpt} />
-              </p>
+              <div
+                className="text-xl text-white/60 leading-relaxed mb-8
+                  [&_strong]:text-white/80 [&_strong]:font-semibold
+                  [&_em]:italic [&_del]:line-through
+                  [&_code]:bg-white/10 [&_code]:px-1 [&_code]:rounded [&_code]:text-sm [&_code]:font-mono"
+                data-testid="article-excerpt"
+                dangerouslySetInnerHTML={{ __html: parseBoldTextToHTML(article.excerpt) }}
+              />
             )}
 
             {article.tags && Array.isArray(article.tags) && article.tags.length > 0 ? (
