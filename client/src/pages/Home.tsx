@@ -1545,13 +1545,13 @@ export default function Home() {
                 { value: (homepageContent as any).statsAwardsValue, labelEn: (homepageContent as any).statsAwardsLabelEn, labelVi: (homepageContent as any).statsAwardsLabelVi, descEn: (homepageContent as any).statsAwardsDescEn, descVi: (homepageContent as any).statsAwardsDescVi },
                 { value: (homepageContent as any).statsExperienceValue, labelEn: (homepageContent as any).statsExperienceLabelEn, labelVi: (homepageContent as any).statsExperienceLabelVi, descEn: (homepageContent as any).statsExperienceDescEn, descVi: (homepageContent as any).statsExperienceDescVi },
               ].filter(s => s.value).map((stat, i) => (
-                <div key={i} className="flex flex-col items-center text-center px-6 py-4 space-y-3">
-                  <StatCounter value={stat.value} className="text-6xl md:text-7xl font-light text-white tracking-tight leading-none" />
-                  <p className="text-base font-light text-white/50 uppercase tracking-widest">
+                <div key={i} className="flex flex-col items-center text-center px-6 py-4 space-y-3 group cursor-default transition-all duration-300">
+                  <StatCounter value={stat.value} className="text-6xl md:text-7xl font-light text-white tracking-tight leading-none transition-all duration-300 group-hover:text-white" />
+                  <p className="text-base font-light text-white/50 uppercase tracking-widest transition-colors duration-300 group-hover:text-white/90">
                     {language === 'vi' ? (stat.labelVi || stat.labelEn) : (stat.labelEn || stat.labelVi)}
                   </p>
                   {(stat.descEn || stat.descVi) && (
-                    <p className="font-light text-white/30 text-[16px]">
+                    <p className="font-light text-white/30 text-[16px] transition-colors duration-300 group-hover:text-white/60">
                       {language === 'vi' ? (stat.descVi || stat.descEn) : (stat.descEn || stat.descVi)}
                     </p>
                   )}
