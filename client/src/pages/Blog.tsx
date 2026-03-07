@@ -473,7 +473,10 @@ export default function Blog() {
                         {article.title}
                       </h3>
                       {article.excerpt && (
-                        <p className="text-white/60 text-xs font-light leading-relaxed line-clamp-3 mb-3">
+                        <p
+                          className="text-white/60 text-xs font-light leading-relaxed mb-3 break-all"
+                          style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+                        >
                           {article.excerpt}
                         </p>
                       )}
