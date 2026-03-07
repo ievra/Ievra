@@ -1041,7 +1041,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                           .filter(cat => cat.type === 'article' && cat.active)
                           .map((category) => (
                             <SelectItem key={category.id} value={category.slug}>
-                              {category.name}
+                              {language === 'vi' && category.nameVi ? category.nameVi : category.name}
                             </SelectItem>
                           ))}
                       </SelectContent>
