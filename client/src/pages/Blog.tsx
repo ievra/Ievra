@@ -464,14 +464,19 @@ export default function Blog() {
                       </p>
                     </div>
 
-                    {/* Bottom: Title + Date */}
+                    {/* Bottom: Title + Excerpt + Date */}
                     <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
                       <h3
-                        className="text-white uppercase tracking-wide text-sm md:text-base font-light mb-3 line-clamp-2"
+                        className="text-white uppercase tracking-wide text-sm md:text-base font-light mb-2 line-clamp-2"
                         data-testid={`text-title-${article.id}`}
                       >
                         {article.title}
                       </h3>
+                      {article.excerpt && (
+                        <p className="text-white/60 text-xs font-light leading-relaxed line-clamp-2 mb-3">
+                          {article.excerpt}
+                        </p>
+                      )}
                       <div className="flex items-end justify-between">
                         <div className="text-white">
                           <p className="text-white/90 text-xs font-light">
