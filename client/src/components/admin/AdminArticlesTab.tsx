@@ -1088,7 +1088,6 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
                 <span><code className="bg-white/10 px-1">**Chữ**</code> → <strong>{language === 'vi' ? 'In đậm' : 'Bold'}</strong></span>
                 <span><code className="bg-white/10 px-1">*Chữ*</code> → <em>{language === 'vi' ? 'In nghiêng' : 'Italic'}</em></span>
-                <span><code className="bg-white/10 px-1">***Chữ***</code> → <strong><em>{language === 'vi' ? 'Đậm & Nghiêng' : 'Bold & Italic'}</em></strong></span>
                 <span><code className="bg-white/10 px-1">~~Chữ~~</code> → <span style={{textDecoration:'line-through'}}>{language === 'vi' ? 'Gạch ngang' : 'Strikethrough'}</span></span>
                 <span><code className="bg-white/10 px-1">`Chữ`</code> → {language === 'vi' ? 'Code / Lệnh' : 'Code / Command'}</span>
                 <span><code className="bg-white/10 px-1"># {language === 'vi' ? 'hoặc' : 'or'} ##</code> → {language === 'vi' ? 'Tiêu đề (chữ to hơn)' : 'Heading (larger text)'}</span>
