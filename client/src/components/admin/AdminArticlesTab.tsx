@@ -1056,7 +1056,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
               />
             </div>
 
-            <div className="rounded border border-white/10 bg-white/5 px-4 py-3 text-xs text-white/50 space-y-1">
+            <div className="text-xs text-white/50 space-y-1">
               <p className="font-medium text-white/70 mb-2">📝 Hướng dẫn định dạng nội dung</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
                 <span><code className="bg-white/10 px-1"># Tiêu đề 1</code> → Heading lớn (H1)</span>
