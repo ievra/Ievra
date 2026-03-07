@@ -474,9 +474,6 @@ export default function Blog() {
                       </h3>
                       <div className="flex items-end justify-between">
                         <div className="text-white">
-                          <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">
-                            {language === 'vi' ? 'Ngày đăng' : 'Published'}
-                          </p>
                           <p className="text-white/90 text-xs font-light">
                             {formatDate(String(article.publishedAt || article.createdAt))}
                           </p>
