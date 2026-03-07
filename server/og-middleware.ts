@@ -4,6 +4,24 @@ import { storage } from "./storage";
 
 const STATIC_EXTENSIONS = /\.(js|css|png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|eot|map|json|txt|xml|pdf|zip)$/i;
 
+const VI_PATH_PREFIXES = [
+  '/gioi-thieu', '/du-an', '/tin-tuc', '/tra-cuu', '/lien-he',
+];
+const EN_PATH_PREFIXES = [
+  '/about', '/portfolio', '/blog', '/lookup', '/contact',
+];
+
+function detectLanguage(path: string): 'vi' | 'en' {
+  if (path === '/' || path === '') return 'vi';
+  for (const prefix of VI_PATH_PREFIXES) {
+    if (path === prefix || path.startsWith(prefix + '/')) return 'vi';
+  }
+  for (const prefix of EN_PATH_PREFIXES) {
+    if (path === prefix || path.startsWith(prefix + '/')) return 'en';
+  }
+  return 'vi';
+}
+
 const BOT_USER_AGENTS = /facebookexternalhit|facebookbot|twitterbot|linkedinbot|whatsapp|telegrambot|slackbot|discordbot|applebot|googlebot|bingbot|yandexbot|baiduspider|zalo|viber|line-|pinterest|tumblr|curl|wget/i;
 
 function isBot(req: Request): boolean {
@@ -141,15 +159,22 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
       if (!tags) {
         try {
           const s = await getCachedSettings();
+          const lang = detectLanguage(req.path);
           let ogImgUrl: string | undefined;
           if (s?.ogImageData && s.ogImageData.startsWith("data:")) {
             ogImgUrl = `${baseUrl}/api/og-image`;
           } else if (s?.ogImage) {
             ogImgUrl = s.ogImage.startsWith("http") ? s.ogImage : `${baseUrl}${s.ogImage}`;
           }
+          const title = lang === 'vi'
+            ? (s?.siteTitleVi || s?.siteTitle || "IEVRA Design & Build")
+            : (s?.siteTitle || "IEVRA Design & Build");
+          const description = lang === 'vi'
+            ? (s?.metaDescriptionVi || s?.metaDescription || "Thiết kế nội thất cao cấp - IEVRA Design & Build")
+            : (s?.metaDescription || "High-end interior design - IEVRA Design & Build");
           tags = {
-            title: s?.siteTitle || "IEVRA Design & Build",
-            description: s?.metaDescription || "Thiết kế nội thất cao cấp - IEVRA Design & Build",
+            title,
+            description,
             image: ogImgUrl,
             url: currentUrl,
           };
