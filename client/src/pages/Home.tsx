@@ -1343,12 +1343,11 @@ export default function Home() {
                           )}
                           {isActive && (
                             <p
-                              className="text-foreground/80 text-sm line-clamp-3 mb-2"
+                              className="text-foreground/80 text-sm mb-2 break-words overflow-hidden"
+                              style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
                               data-testid={`text-article-excerpt-${article.id}`}
                             >
-                              {article.excerpt
-                                ? <FormattedText text={article.excerpt} />
-                                : "Discover insights and trends in interior design..."}
+                              {article.excerpt || "Discover insights and trends in interior design..."}
                             </p>
                           )}
                           <div className="mt-auto pt-2 flex items-end justify-between gap-2">
