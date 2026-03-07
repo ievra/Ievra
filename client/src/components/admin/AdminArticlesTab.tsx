@@ -463,6 +463,25 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
 
   const onArticleSubmit = async (data: BilingualArticleFormData) => {
     try {
+      // Auto-embed captions: if a caption is typed but not yet in content, inject it
+      articleContentImages.forEach((imgPath, i) => {
+        const caption = articleContentImageCaptions[i];
+        if (!caption) return;
+        const escaped = imgPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const withCaption = `(${imgPath} "${caption}")`;
+        // Replace existing (/path) without caption
+        const noCaptionPattern = new RegExp(`\\(${escaped}\\)`, 'g');
+        // Replace existing (/path "old") with new caption
+        const withOldCaptionPattern = new RegExp(`\\(${escaped}\\s+"[^"]*"\\)`, 'g');
+        const applyCaption = (content: string) => {
+          let result = content.replace(withOldCaptionPattern, withCaption);
+          result = result.replace(noCaptionPattern, withCaption);
+          return result;
+        };
+        if (data.contentEn) data.contentEn = applyCaption(data.contentEn);
+        if (data.contentVi) data.contentVi = applyCaption(data.contentVi);
+      });
+
       const hasEn = data.titleEn && data.titleEn.trim() && data.contentEn && data.contentEn.trim();
       const hasVi = data.titleVi && data.titleVi.trim() && data.contentVi && data.contentVi.trim();
 
