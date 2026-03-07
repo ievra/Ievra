@@ -166,16 +166,28 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       const hasData = values.titleEn || values.titleVi || values.contentEn || values.contentVi || values.excerptEn || values.excerptVi;
       if (hasData) {
         try {
+          const existing = (() => { try { const r = localStorage.getItem(ARTICLE_AUTOSAVE_KEY); return r ? JSON.parse(r) : {}; } catch { return {}; } })();
           localStorage.setItem(ARTICLE_AUTOSAVE_KEY, JSON.stringify({
+            ...existing,
             ...values,
-            _contentImages: articleContentImages,
-            _contentImageCaptions: articleContentImageCaptions,
           }));
         } catch {}
       }
     });
     return () => subscription.unsubscribe();
-  }, [isNewArticle, isArticleDialogOpen, articleForm, articleContentImages, articleContentImageCaptions]);
+  }, [isNewArticle, isArticleDialogOpen, articleForm]);
+
+  useEffect(() => {
+    if (!isNewArticle || !isArticleDialogOpen) return;
+    try {
+      const existing = (() => { try { const r = localStorage.getItem(ARTICLE_AUTOSAVE_KEY); return r ? JSON.parse(r) : {}; } catch { return {}; } })();
+      localStorage.setItem(ARTICLE_AUTOSAVE_KEY, JSON.stringify({
+        ...existing,
+        _contentImages: articleContentImages,
+        _contentImageCaptions: articleContentImageCaptions,
+      }));
+    } catch {}
+  }, [articleContentImageCaptions, articleContentImages, isNewArticle, isArticleDialogOpen]);
 
   const groupedArticlesMap = articles.reduce((acc, article) => {
     const key = (article as any).linkedSlug || article.slug;
