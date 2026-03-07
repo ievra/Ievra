@@ -353,7 +353,7 @@ export default function BlogDetail() {
 
         {(article as any).attribution && (
           <div className="border-t border-white/10 mt-10 pt-6">
-            <p className="text-white/40 text-sm italic">{(article as any).attribution}</p>
+            <p className="text-white/40 text-sm italic text-right">{(article as any).attribution}</p>
           </div>
         )}
 
