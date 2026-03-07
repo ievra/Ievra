@@ -98,8 +98,10 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
     try {
       const siteUrl = process.env.SITE_URL;
       const proto = req.headers["x-forwarded-proto"] || req.protocol;
-      const host = req.headers["x-forwarded-host"] || req.get("host");
-      const baseUrl = siteUrl || `${proto}://${host}`;
+      const host = (req.headers["x-forwarded-host"] || req.get("host") || '') as string;
+      const isLocalhost = host.includes('localhost') || host.includes('127.0.0.1');
+      const effectiveProto = (!isLocalhost && proto === 'http') ? 'https' : proto;
+      const baseUrl = siteUrl || `${effectiveProto}://${host}`;
       const currentUrl = `${baseUrl}${req.originalUrl}`;
 
       let html: string;
