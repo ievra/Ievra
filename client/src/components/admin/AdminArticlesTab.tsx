@@ -165,11 +165,17 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
     const subscription = articleForm.watch((values) => {
       const hasData = values.titleEn || values.titleVi || values.contentEn || values.contentVi || values.excerptEn || values.excerptVi;
       if (hasData) {
-        try { localStorage.setItem(ARTICLE_AUTOSAVE_KEY, JSON.stringify(values)); } catch {}
+        try {
+          localStorage.setItem(ARTICLE_AUTOSAVE_KEY, JSON.stringify({
+            ...values,
+            _contentImages: articleContentImages,
+            _contentImageCaptions: articleContentImageCaptions,
+          }));
+        } catch {}
       }
     });
     return () => subscription.unsubscribe();
-  }, [isNewArticle, isArticleDialogOpen, articleForm]);
+  }, [isNewArticle, isArticleDialogOpen, articleForm, articleContentImages, articleContentImageCaptions]);
 
   const groupedArticlesMap = articles.reduce((acc, article) => {
     const key = (article as any).linkedSlug || article.slug;
@@ -388,6 +394,13 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
     }
     const contentImages = (enVersion?.contentImages || article.contentImages || []) as string[];
     setArticleContentImages(contentImages);
+    const combinedContent = [enVersion?.content || '', viVersion?.content || ''].join('\n');
+    const extractedCaptions = contentImages.map((imgPath) => {
+      const escaped = imgPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const m = combinedContent.match(new RegExp(`\\(${escaped}\\s+"([^"]*)"\\)`));
+      return m ? m[1] : '';
+    });
+    setArticleContentImageCaptions(extractedCaptions);
     setIsArticleDialogOpen(true);
   };
 
@@ -403,8 +416,8 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
     setEditingArticle(null);
     setArticleImagePreview(savedData?.featuredImage || '');
     setArticleImageFile(null);
-    setArticleContentImages([]);
-    setArticleContentImageCaptions([]);
+    setArticleContentImages((savedData as any)?._contentImages || []);
+    setArticleContentImageCaptions((savedData as any)?._contentImageCaptions || []);
     setIsNewArticle(true);
     articleForm.reset({
       titleVi: savedData?.titleVi || '',
