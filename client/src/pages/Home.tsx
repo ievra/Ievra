@@ -1336,10 +1336,15 @@ export default function Home() {
                             </p>
                           )}
                           {isActive && (
-                            <TypewriterTitle
-                              text={article.title}
-                              className="text-xl font-sans font-light mb-2"
-                            />
+                            <div
+                              className="mb-2 overflow-hidden"
+                              style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+                            >
+                              <TypewriterTitle
+                                text={article.title}
+                                className="text-xl font-sans font-light"
+                              />
+                            </div>
                           )}
                           {isActive && (
                             <p
