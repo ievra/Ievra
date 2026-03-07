@@ -59,7 +59,11 @@ export function parseBoldTextToHTML(text: string): string {
   };
 
   const parseInline = (s: string): string => {
-    s = s.replace(/\(([^)]+\.(?:png|jpg|jpeg|gif|webp|svg))\)/gi,
+    s = s.replace(/\(([^)"'\s]+\.(?:png|jpg|jpeg|gif|webp|svg))\s+"([^"]*)"\)/gi,
+      (_, url, caption) =>
+        `<figure class="my-4"><img src="${url}" alt="${caption}" class="max-w-full h-auto rounded-lg" /><figcaption class="text-center text-sm text-white/50 italic mt-2">${caption}</figcaption></figure>`
+    );
+    s = s.replace(/\(([^)"'\s]+\.(?:png|jpg|jpeg|gif|webp|svg))\)/gi,
       '<img src="$1" alt="" class="max-w-full h-auto my-4 rounded-lg" />');
     s = s.replace(/\*\*\*([^*]+)\*\*\*/g, '<strong><em>$1</em></strong>');
     s = s.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
@@ -126,6 +130,11 @@ export function parseBoldTextToHTML(text: string): string {
 
     if (trimmed === '') {
       out.push('<br />');
+      continue;
+    }
+
+    if (/^\([^)"'\s]+\.(?:png|jpg|jpeg|gif|webp|svg)(?:\s+"[^"]*")?\)$/.test(trimmed)) {
+      out.push(parseInline(trimmed));
       continue;
     }
 

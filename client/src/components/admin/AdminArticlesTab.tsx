@@ -89,6 +89,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
   const [articleImageFile, setArticleImageFile] = useState<File | null>(null);
   const [articleImagePreview, setArticleImagePreview] = useState<string>('');
   const [articleContentImages, setArticleContentImages] = useState<string[]>([]);
+  const [articleContentImageCaptions, setArticleContentImageCaptions] = useState<string[]>([]);
   const [isCategoryManagementDialogOpen, setIsCategoryManagementDialogOpen] = useState(false);
   const [deleteCategoryData, setDeleteCategoryData] = useState<{ id: string, name: string } | null>(null);
   const [isDeleteCategoryAlertOpen, setIsDeleteCategoryAlertOpen] = useState(false);
@@ -152,6 +153,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       articleForm.reset();
       setArticleImagePreview('');
       setArticleContentImages([]);
+      setArticleContentImageCaptions([]);
       setArticleImageFile(null);
     }
   }, [isArticleDialogOpen, editingArticle]);
@@ -399,6 +401,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
     setArticleImagePreview(savedData?.featuredImage || '');
     setArticleImageFile(null);
     setArticleContentImages([]);
+    setArticleContentImageCaptions([]);
     setIsNewArticle(true);
     articleForm.reset({
       titleVi: savedData?.titleVi || '',
@@ -549,6 +552,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       setArticleImagePreview('');
       setArticleImageFile(null);
       setArticleContentImages([]);
+      setArticleContentImageCaptions([]);
       setIsArticleDialogOpen(false);
       toast({ title: language === 'vi' ? 'Đã lưu bài viết thành công' : 'Article saved successfully' });
     } catch (error) {
@@ -663,6 +667,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
 
   const removeContentImage = (index: number) => {
     setArticleContentImages(prev => prev.filter((_, i) => i !== index));
+    setArticleContentImageCaptions(prev => prev.filter((_, i) => i !== index));
   };
 
   const formatDate = (date: string | Date) => {
@@ -914,6 +919,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
               setArticleImagePreview('');
               setArticleImageFile(null);
               setArticleContentImages([]);
+              setArticleContentImageCaptions([]);
               articleForm.reset();
             }
           }}>
@@ -954,6 +960,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
           setArticleImagePreview('');
           setArticleImageFile(null);
           setArticleContentImages([]);
+          setArticleContentImageCaptions([]);
           articleForm.reset();
         }
       }}>
@@ -1067,6 +1074,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                 <span><code className="bg-white/10 px-1"># {language === 'vi' ? 'hoặc' : 'or'} ##</code> → {language === 'vi' ? 'Tiêu đề (chữ to hơn)' : 'Heading (larger text)'}</span>
                 <span><code className="bg-white/10 px-1">&gt; {language === 'vi' ? 'Nội dung' : 'Content'}</code> → {language === 'vi' ? 'Trích dẫn (khối lề)' : 'Blockquote'}</span>
                 <span><code className="bg-white/10 px-1">---</code> → {language === 'vi' ? 'Dòng kẻ ngang phân cách' : 'Horizontal divider'}</span>
+                <span><code className="bg-white/10 px-1">(url "chú thích")</code> → {language === 'vi' ? 'Ảnh kèm chú thích' : 'Image with caption'}</span>
               </div>
             </div>
 
@@ -1161,43 +1169,53 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
               {articleContentImages.length > 0 && (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
                   {articleContentImages.map((imagePath, index) => (
-                    <div key={index} className="relative group border border-white/20 rounded-lg overflow-hidden bg-muted/50 hover:border-white/50 transition-colors">
-                      <img
-                        src={imagePath}
-                        alt={`Content ${index + 1}`}
-                        className="w-full h-32 object-cover"
+                    <div key={index} className="flex flex-col gap-1">
+                      <div className="relative group border border-white/20 rounded-lg overflow-hidden bg-muted/50 hover:border-white/50 transition-colors">
+                        <img
+                          src={imagePath}
+                          alt={`Content ${index + 1}`}
+                          className="w-full h-32 object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="secondary"
+                            onClick={() => {
+                              const caption = articleContentImageCaptions[index];
+                              const text = caption ? `(${imagePath} "${caption}")` : `(${imagePath})`;
+                              navigator.clipboard.writeText(text);
+                              toast({
+                                title: "Đã copy",
+                                description: text
+                              });
+                            }}
+                            className="text-xs"
+                          >
+                            Copy
+                          </Button>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline"
+                            className="bg-transparent border-white/30 hover:bg-white/10 hover:border-white"
+                            onClick={() => removeContentImage(index)}
+                          >
+                            <Trash2 className="h-4 w-4 text-white" />
+                          </Button>
+                        </div>
+                      </div>
+                      <input
+                        type="text"
+                        value={articleContentImageCaptions[index] || ''}
+                        onChange={(e) => {
+                          const next = [...articleContentImageCaptions];
+                          next[index] = e.target.value;
+                          setArticleContentImageCaptions(next);
+                        }}
+                        placeholder={language === 'vi' ? 'Chú thích ảnh...' : 'Image caption...'}
+                        className="text-xs bg-transparent border-b border-white/20 focus:border-white/50 text-white/70 placeholder:text-white/30 px-1 py-0.5 outline-none w-full"
                       />
-                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="secondary"
-                          onClick={() => {
-                            navigator.clipboard.writeText(`(${imagePath})`);
-                            toast({
-                              title: "Đã copy",
-                              description: `Đã copy: (${imagePath})`
-                            });
-                          }}
-                          className="text-xs"
-                        >
-                          Copy Path
-                        </Button>
-                        <Button
-                          type="button"
-                          size="sm"
-                          variant="outline"
-                          className="bg-transparent border-white/30 hover:bg-white/10 hover:border-white"
-                          onClick={() => removeContentImage(index)}
-                        >
-                          <Trash2 className="h-4 w-4 text-white" />
-                        </Button>
-                      </div>
-                      <div className="absolute bottom-0 left-0 right-0 bg-black/80 px-2 py-1">
-                        <p className="text-xs text-white truncate" title={`(${imagePath})`}>
-                          ({imagePath})
-                        </p>
-                      </div>
                     </div>
                   ))}
                 </div>
@@ -1377,6 +1395,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                   setArticleImagePreview('');
                   setArticleImageFile(null);
                   setArticleContentImages([]);
+                  setArticleContentImageCaptions([]);
                   articleForm.reset();
                 }}
                 data-testid="button-cancel-article"
@@ -1684,6 +1703,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                 setArticleImagePreview('');
                 setArticleImageFile(null);
                 setArticleContentImages([]);
+                setArticleContentImageCaptions([]);
                 articleForm.reset();
                 setTimeout(() => { try { localStorage.removeItem(ARTICLE_AUTOSAVE_KEY); } catch {} }, 50);
               }}
