@@ -1057,16 +1057,16 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
             </div>
 
             <div className="text-xs text-white/50 space-y-1">
-              <p className="font-medium text-white/70 mb-2">Hướng dẫn định dạng nội dung</p>
+              <p className="font-medium text-white/70 mb-2">{language === 'vi' ? 'Hướng dẫn định dạng nội dung' : 'Content formatting guide'}</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1">
-                <span><code className="bg-white/10 px-1">**Chữ**</code> → <strong>In đậm</strong></span>
-                <span><code className="bg-white/10 px-1">*Chữ*</code> → <em>In nghiêng</em></span>
-                <span><code className="bg-white/10 px-1">***Chữ***</code> → <strong><em>Đậm & Nghiêng</em></strong></span>
-                <span><code className="bg-white/10 px-1">~~Chữ~~</code> → <span style={{textDecoration:'line-through'}}>Gạch ngang</span></span>
-                <span><code className="bg-white/10 px-1">`Chữ`</code> → Code / Lệnh</span>
-                <span><code className="bg-white/10 px-1"># hoặc ##</code> → Tiêu đề (chữ to hơn)</span>
-                <span><code className="bg-white/10 px-1">&gt; Nội dung</code> → Trích dẫn (khối lề)</span>
-                <span><code className="bg-white/10 px-1">---</code> → Dòng kẻ ngang phân cách</span>
+                <span><code className="bg-white/10 px-1">**Chữ**</code> → <strong>{language === 'vi' ? 'In đậm' : 'Bold'}</strong></span>
+                <span><code className="bg-white/10 px-1">*Chữ*</code> → <em>{language === 'vi' ? 'In nghiêng' : 'Italic'}</em></span>
+                <span><code className="bg-white/10 px-1">***Chữ***</code> → <strong><em>{language === 'vi' ? 'Đậm & Nghiêng' : 'Bold & Italic'}</em></strong></span>
+                <span><code className="bg-white/10 px-1">~~Chữ~~</code> → <span style={{textDecoration:'line-through'}}>{language === 'vi' ? 'Gạch ngang' : 'Strikethrough'}</span></span>
+                <span><code className="bg-white/10 px-1">`Chữ`</code> → {language === 'vi' ? 'Code / Lệnh' : 'Code / Command'}</span>
+                <span><code className="bg-white/10 px-1"># {language === 'vi' ? 'hoặc' : 'or'} ##</code> → {language === 'vi' ? 'Tiêu đề (chữ to hơn)' : 'Heading (larger text)'}</span>
+                <span><code className="bg-white/10 px-1">&gt; {language === 'vi' ? 'Nội dung' : 'Content'}</code> → {language === 'vi' ? 'Trích dẫn (khối lề)' : 'Blockquote'}</span>
+                <span><code className="bg-white/10 px-1">---</code> → {language === 'vi' ? 'Dòng kẻ ngang phân cách' : 'Horizontal divider'}</span>
               </div>
             </div>
 
