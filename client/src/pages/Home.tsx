@@ -1368,11 +1368,11 @@ export default function Home() {
           <div className="absolute inset-0 bg-black/40" />
         </div>
 
-        <div className="relative h-full flex">
+        <div className="relative h-full flex items-center md:items-start">
           <div className="w-full px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 items-start w-full">
               {/* Left side text — lower */}
-              <div className="mt-[12vh] md:mt-[42vh]">
+              <div className="mt-0 md:mt-[42vh]">
                 <TypewriterText
                   text={language === "vi"
                     ? (homepageContent?.quality2LeftTextVi || homepageContent?.quality2LeftText || "Mỗi chi tiết được lựa chọn để nội thất phục vụ lâu dài và luôn hoàn hảo.")
