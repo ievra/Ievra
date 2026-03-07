@@ -37,6 +37,7 @@ const bilingualArticleSchema = z.object({
   metaDescriptionVi: z.string().optional(),
   metaKeywordsEn: z.string().optional(),
   metaKeywordsVi: z.string().optional(),
+  attribution: z.string().optional(),
 }).superRefine((data, ctx) => {
   const hasEn = data.titleEn && data.titleEn.trim() && data.contentEn && data.contentEn.trim();
   const hasVi = data.titleVi && data.titleVi.trim() && data.contentVi && data.contentVi.trim();
@@ -145,6 +146,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       metaDescriptionVi: "",
       metaKeywordsEn: "",
       metaKeywordsVi: "",
+      attribution: "",
     },
   });
 
@@ -376,6 +378,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       metaDescriptionVi: viVersion?.metaDescription || "",
       metaKeywordsEn: enVersion?.metaKeywords || "",
       metaKeywordsVi: viVersion?.metaKeywords || "",
+      attribution: (article as any).attribution || "",
     });
     const previewImage = enVersion?.featuredImage || enVersion?.featuredImageData || article.featuredImage || article.featuredImageData;
     if (previewImage) {
@@ -422,6 +425,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       metaDescriptionVi: savedData?.metaDescriptionVi || '',
       metaKeywordsEn: savedData?.metaKeywordsEn || '',
       metaKeywordsVi: savedData?.metaKeywordsVi || '',
+      attribution: savedData?.attribution || '',
     });
     if (savedData?.titleEn || savedData?.titleVi || savedData?.contentEn || savedData?.contentVi) {
       toast({
@@ -492,6 +496,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
           metaKeywords: data.metaKeywordsEn,
           tags: [],
           contentImages: articleContentImages.length > 0 ? articleContentImages as any : undefined,
+          attribution: data.attribution || undefined,
         };
 
         if (editingArticle) {
@@ -526,6 +531,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
           metaKeywords: data.metaKeywordsVi,
           tags: [],
           contentImages: articleContentImages.length > 0 ? articleContentImages as any : undefined,
+          attribution: data.attribution || undefined,
         };
 
         if (editingArticle) {
@@ -1004,7 +1010,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
               />
             </div>
 
-            <div className="w-full max-w-xs">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 control={articleForm.control}
                 name="category"
@@ -1027,6 +1033,20 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                           ))}
                       </SelectContent>
                     </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={articleForm.control}
+                name="attribution"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{language === 'vi' ? 'Chú Thích (Tác giả, Nguồn,...)' : 'Attribution (Author, Source,...)'}</FormLabel>
+                    <FormControl>
+                      <Input {...field} value={field.value || ''} placeholder={language === 'vi' ? 'VD: Ảnh: Reuters • Tác giả: Nguyễn Văn A' : 'E.g: Photo: Reuters • Author: John Doe'} />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}

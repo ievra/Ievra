@@ -335,6 +335,11 @@ export default function BlogDetail() {
           />
         </article>
 
+        {(article as any).attribution && (
+          <div className="border-t border-white/10 mt-10 pt-6">
+            <p className="text-white/40 text-sm italic">{(article as any).attribution}</p>
+          </div>
+        )}
 
         {/* Related Articles Section */}
         <RelatedArticles currentArticleId={article.id} category={article.category} language={language} />

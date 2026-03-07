@@ -481,6 +481,11 @@ export default function Blog() {
                             {formatDate(String(article.publishedAt || article.createdAt))}
                           </p>
                         </div>
+                        {(article as any).attribution && (
+                          <p className="text-white/50 text-[10px] font-light text-right max-w-[50%] line-clamp-2">
+                            {(article as any).attribution}
+                          </p>
+                        )}
                       </div>
                     </div>
                   </div>

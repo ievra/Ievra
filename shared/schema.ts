@@ -197,6 +197,7 @@ export const articles = pgTable("articles", {
   metaDescription: text("meta_description"),
   metaKeywords: text("meta_keywords"),
   // Analytics
+  attribution: text("attribution"),
   viewCount: integer("view_count").notNull().default(0),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
