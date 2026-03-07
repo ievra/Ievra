@@ -473,7 +473,7 @@ export default function Blog() {
                         {article.title}
                       </h3>
                       {article.excerpt && (
-                        <p className="text-white/60 text-xs font-light leading-relaxed line-clamp-2 mb-3">
+                        <p className="text-white/60 text-xs font-light leading-relaxed line-clamp-3 mb-3">
                           {article.excerpt}
                         </p>
                       )}
