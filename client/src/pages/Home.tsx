@@ -1382,7 +1382,7 @@ export default function Home() {
               </div>
 
               {/* Right side content — higher */}
-              <div className="text-right mt-6 md:mt-[30vh]">
+              <div className="text-right mt-16 md:mt-[30vh]">
                 <TypewriterText
                   reverse
                   text={language === "vi"
