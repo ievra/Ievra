@@ -113,6 +113,13 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
 
       let tags: Parameters<typeof injectOgTags>[1] | null = null;
 
+      function resolveImageUrl(raw: string | null | undefined): string | undefined {
+        if (!raw) return undefined;
+        if (raw.startsWith("data:")) return undefined; // base64 not usable as OG image
+        if (raw.startsWith("http")) return raw;
+        return `${baseUrl}${raw}`;
+      }
+
       const projectMatch = req.path.match(/^\/(?:portfolio|du-an)\/([^/]+)$/);
       if (projectMatch) {
         const slug = projectMatch[1];
@@ -121,14 +128,15 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
           if (project) {
             const coverImages = Array.isArray(project.coverImages) ? project.coverImages : [];
             const galleryImages = Array.isArray(project.galleryImages) ? project.galleryImages : [];
-            const firstImage = project.heroImage || coverImages[0] || galleryImages[0];
+            const candidates = [project.heroImage, ...coverImages, ...galleryImages];
+            const firstImage = candidates.find(img => img && !String(img).startsWith("data:"));
             tags = {
               title: `${project.title} | IEVRA Design & Build`,
               description:
                 project.metaDescription ||
                 project.description ||
                 "Dự án thiết kế nội thất của IEVRA Design & Build",
-              image: firstImage ? (firstImage.startsWith("http") ? firstImage : `${baseUrl}${firstImage}`) : undefined,
+              image: resolveImageUrl(firstImage as string),
               url: currentUrl,
               type: "article",
             };
@@ -148,9 +156,7 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
                 article.metaDescription ||
                 article.excerpt ||
                 "Bài viết từ IEVRA Design & Build",
-              image: article.featuredImage
-                ? (article.featuredImage.startsWith("http") ? article.featuredImage : `${baseUrl}${article.featuredImage}`)
-                : undefined,
+              image: resolveImageUrl(article.featuredImage),
               url: currentUrl,
               type: "article",
             };
