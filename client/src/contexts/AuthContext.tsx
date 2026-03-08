@@ -1,6 +1,9 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { queryClient, apiRequest, getQueryFn } from '@/lib/queryClient';
+
+const SESSION_DURATION_MS = 60 * 60 * 1000; // 1 hour
+const LOGIN_TIME_KEY = 'admin_login_at';
 
 interface User {
   id: string;
@@ -27,8 +30,8 @@ interface AuthProviderProps {
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const [manualUser, setManualUser] = useState<User | null>(null);
+  const logoutTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // Check if user is authenticated on app load
   const { data: userData, isPending, isFetching } = useQuery<User | null>({
     queryKey: ['/api/auth/me'],
     queryFn: getQueryFn({ on401: 'returnNull' }),
@@ -38,10 +41,56 @@ export function AuthProvider({ children }: AuthProviderProps) {
     refetchOnMount: 'always',
   });
 
-  // Use userData from query as primary, manualUser as fallback (for login mutation)
   const user = userData ?? manualUser;
-  // isLoading when pending (first fetch) or fetching (refetch) 
   const isLoading = isPending || isFetching;
+
+  const doLogout = () => {
+    sessionStorage.removeItem(LOGIN_TIME_KEY);
+    if (logoutTimerRef.current) {
+      clearTimeout(logoutTimerRef.current);
+      logoutTimerRef.current = null;
+    }
+    setManualUser(null);
+    queryClient.clear();
+    apiRequest('POST', '/api/auth/logout').catch(() => {});
+  };
+
+  const scheduleAutoLogout = (loginAt: number) => {
+    if (logoutTimerRef.current) clearTimeout(logoutTimerRef.current);
+    const remaining = SESSION_DURATION_MS - (Date.now() - loginAt);
+    if (remaining <= 0) {
+      doLogout();
+      return;
+    }
+    logoutTimerRef.current = setTimeout(() => {
+      doLogout();
+    }, remaining);
+  };
+
+  // On mount: check if session is still valid, schedule auto-logout if needed
+  useEffect(() => {
+    const stored = sessionStorage.getItem(LOGIN_TIME_KEY);
+    if (stored) {
+      const loginAt = parseInt(stored, 10);
+      const elapsed = Date.now() - loginAt;
+      if (elapsed >= SESSION_DURATION_MS) {
+        doLogout();
+      } else {
+        scheduleAutoLogout(loginAt);
+      }
+    }
+    return () => {
+      if (logoutTimerRef.current) clearTimeout(logoutTimerRef.current);
+    };
+  }, []);
+
+  // When userData resolves to null (session expired server-side), clear local state
+  useEffect(() => {
+    if (!isPending && !isFetching && userData === null && manualUser !== null) {
+      setManualUser(null);
+      sessionStorage.removeItem(LOGIN_TIME_KEY);
+    }
+  }, [userData, isPending, isFetching]);
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: { username: string; password: string }) => {
@@ -49,8 +98,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
       return await response.json();
     },
     onSuccess: (data: User) => {
+      const now = Date.now();
+      sessionStorage.setItem(LOGIN_TIME_KEY, String(now));
       setManualUser(data);
       queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
+      scheduleAutoLogout(now);
     },
   });
 
@@ -60,6 +112,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
       return await response.json();
     },
     onSuccess: () => {
+      sessionStorage.removeItem(LOGIN_TIME_KEY);
+      if (logoutTimerRef.current) clearTimeout(logoutTimerRef.current);
       setManualUser(null);
       queryClient.clear();
     },
