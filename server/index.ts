@@ -47,7 +47,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'U/jU2wbJ9Rm7t+W+m5/N47ihf+DIkzzKXFv5z0/2Xsn5WrltM9NTAps9xnWJBWHYEeqDhph/xait8kLvWDed7g==',
   resave: true,
   saveUninitialized: false,
-  rolling: false,
+  rolling: true,
   cookie: {
     secure: false,
     httpOnly: true,
