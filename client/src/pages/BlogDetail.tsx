@@ -3,7 +3,7 @@ import { Link, useParams, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Eye, ArrowLeft, Link2, Check } from "lucide-react";
+import { Eye, ArrowLeft, Share2, Check } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import OptimizedImage from "@/components/OptimizedImage";
 import type { Article } from "@shared/schema";
@@ -385,12 +385,12 @@ export default function BlogDetail() {
         </article>
 
         {/* Share / Copy URL */}
-        <div className="mt-10 pt-8 border-t border-white/10">
+        <div className="mt-10 pt-8 border-t border-white/10 flex justify-end">
           <button
             onClick={handleCopyUrl}
             className="flex items-center gap-2 text-sm text-white/50 hover:text-white/80 transition-colors"
           >
-            {copied ? <Check size={15} className="text-green-400" /> : <Link2 size={15} />}
+            {copied ? <Check size={15} className="text-green-400" /> : <Share2 size={15} />}
             <span>{copied ? (language === 'vi' ? 'Đã sao chép!' : 'Copied!') : (language === 'vi' ? 'Chia sẻ' : 'Share')}</span>
           </button>
         </div>
