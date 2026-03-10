@@ -3,11 +3,11 @@ import { Link, useParams, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Eye, ArrowLeft } from "lucide-react";
+import { Eye, ArrowLeft, Link2, Check } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import OptimizedImage from "@/components/OptimizedImage";
 import type { Article } from "@shared/schema";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FormattedText, parseBoldTextToHTML } from "@/lib/textUtils";
 import { getArticlePath } from "@/lib/routes";
 
@@ -117,6 +117,14 @@ export default function BlogDetail() {
   const { slug } = useParams();
   const { language } = useLanguage();
   const [, setLocation] = useLocation();
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyUrl = () => {
+    navigator.clipboard.writeText(window.location.href).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
 
   const { data: article, isLoading, error } = useQuery<Article>({
     queryKey: ['/api/articles/slug', slug, language],
@@ -375,6 +383,17 @@ export default function BlogDetail() {
             data-testid="article-content"
           />
         </article>
+
+        {/* Share / Copy URL */}
+        <div className="mt-10 pt-8 border-t border-white/10">
+          <button
+            onClick={handleCopyUrl}
+            className="flex items-center gap-2 text-sm text-white/50 hover:text-white/80 transition-colors"
+          >
+            {copied ? <Check size={15} className="text-green-400" /> : <Link2 size={15} />}
+            <span>{copied ? (language === 'vi' ? 'Đã sao chép!' : 'Copied!') : (language === 'vi' ? 'Chia sẻ' : 'Share')}</span>
+          </button>
+        </div>
 
         {/* Related Articles Section */}
         <RelatedArticles currentArticleId={article.id} category={article.category} language={language} />
