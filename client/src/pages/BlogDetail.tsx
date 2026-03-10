@@ -44,6 +44,7 @@ function RelatedArticles({ currentArticleId, category, language }: { currentArti
         tips: 'Design Tips',
         projects: 'Project Highlights',
         'design-trends': 'Design Trends',
+        trend: 'Trend',
         general: 'General'
       },
       vi: {
@@ -51,6 +52,7 @@ function RelatedArticles({ currentArticleId, category, language }: { currentArti
         tips: 'Mẹo thiết kế',
         projects: 'Dự án nổi bật',
         'design-trends': 'Xu hướng thiết kế',
+        trend: 'Xu hướng',
         general: 'Chung'
       }
     };
@@ -220,6 +222,7 @@ export default function BlogDetail() {
         tips: 'Design Tips',
         projects: 'Project Highlights',
         'design-trends': 'Design Trends',
+        trend: 'Trend',
         general: 'General'
       },
       vi: {
@@ -227,6 +230,7 @@ export default function BlogDetail() {
         tips: 'Mẹo thiết kế',
         projects: 'Dự án nổi bật',
         'design-trends': 'Xu hướng thiết kế',
+        trend: 'Xu hướng',
         general: 'Chung'
       }
     };
