@@ -304,6 +304,26 @@ export default function BlogDetail() {
 
         {/* Article Header */}
         <article className="max-w-none">
+          {/* Article Meta Row */}
+          <div className="flex items-center justify-between gap-4 mb-6 text-xs text-white/40 tracking-wide uppercase">
+            <div className="flex items-center gap-3">
+              {article.category && (
+                <span>{getCategoryLabel(article.category)}</span>
+              )}
+              {(article as any).attribution && (
+                <>
+                  <span className="opacity-40">·</span>
+                  <span className="normal-case tracking-normal italic">{(article as any).attribution}</span>
+                </>
+              )}
+            </div>
+            {(article.publishedAt || (article as any).createdAt) && (
+              <span className="normal-case tracking-normal shrink-0">
+                {formatDate(String(article.publishedAt || (article as any).createdAt))}
+              </span>
+            )}
+          </div>
+
           <div className="mb-8">
             <h1 className="text-4xl md:text-6xl font-sans font-light mb-6 leading-normal text-white break-words" data-testid="article-title">
               {article.title}
@@ -331,26 +351,6 @@ export default function BlogDetail() {
             ) : null}
           </div>
 
-          {/* Article Meta Row */}
-          <div className="flex items-center justify-between gap-4 border-t border-white/10 pt-5 mt-2 text-xs text-white/40 tracking-wide uppercase">
-            <div className="flex items-center gap-3">
-              {article.category && (
-                <span>{getCategoryLabel(article.category)}</span>
-              )}
-              {article.category && (article.publishedAt || (article as any).createdAt) && (
-                <span className="opacity-40">·</span>
-              )}
-              {(article.publishedAt || (article as any).createdAt) && (
-                <span>{formatDate(String(article.publishedAt || (article as any).createdAt))}</span>
-              )}
-            </div>
-            {(article as any).attribution && (
-              <span className="text-right normal-case tracking-normal italic opacity-60 max-w-xs truncate">
-                {(article as any).attribution}
-              </span>
-            )}
-          </div>
-
           {/* Article Content */}
           <div 
             className="mt-20 text-white/80 text-base leading-relaxed max-w-none break-words
@@ -375,12 +375,6 @@ export default function BlogDetail() {
             data-testid="article-content"
           />
         </article>
-
-        {(article as any).attribution && (
-          <div className="border-t border-white/10 mt-10 pt-6">
-            <p className="text-white/40 text-sm italic text-right">{(article as any).attribution}</p>
-          </div>
-        )}
 
         {/* Related Articles Section */}
         <RelatedArticles currentArticleId={article.id} category={article.category} language={language} />
