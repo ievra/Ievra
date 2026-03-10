@@ -337,7 +337,7 @@ export default function BlogDetail() {
           </div>
 
           <div className="mb-8">
-            <h1 className="text-base font-sans font-light mb-6 text-white break-words" style={{ lineHeight: 1.2 }} data-testid="article-title">
+            <h1 className="font-sans font-light mb-6 text-white break-words" style={{ fontSize: '48px', lineHeight: 1.2 }} data-testid="article-title">
               {article.title}
             </h1>
 
