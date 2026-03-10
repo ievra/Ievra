@@ -331,6 +331,26 @@ export default function BlogDetail() {
             ) : null}
           </div>
 
+          {/* Article Meta Row */}
+          <div className="flex items-center justify-between gap-4 border-t border-white/10 pt-5 mt-2 text-xs text-white/40 tracking-wide uppercase">
+            <div className="flex items-center gap-3">
+              {article.category && (
+                <span>{getCategoryLabel(article.category)}</span>
+              )}
+              {article.category && (article.publishedAt || (article as any).createdAt) && (
+                <span className="opacity-40">·</span>
+              )}
+              {(article.publishedAt || (article as any).createdAt) && (
+                <span>{formatDate(String(article.publishedAt || (article as any).createdAt))}</span>
+              )}
+            </div>
+            {(article as any).attribution && (
+              <span className="text-right normal-case tracking-normal italic opacity-60 max-w-xs truncate">
+                {(article as any).attribution}
+              </span>
+            )}
+          </div>
+
           {/* Article Content */}
           <div 
             className="mt-20 text-white/80 text-base leading-relaxed max-w-none break-words
