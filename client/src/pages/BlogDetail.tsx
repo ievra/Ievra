@@ -305,7 +305,7 @@ export default function BlogDetail() {
         {/* Article Header */}
         <article className="max-w-none">
           <div className="mb-8">
-            <h1 className="text-4xl md:text-6xl font-sans font-light mb-6 leading-tight text-white break-words" data-testid="article-title">
+            <h1 className="text-4xl md:text-6xl font-sans font-light mb-6 leading-normal text-white break-words" data-testid="article-title">
               {article.title}
             </h1>
 
