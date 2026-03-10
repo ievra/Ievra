@@ -343,7 +343,7 @@ export default function BlogDetail() {
 
             {article.excerpt && (
               <div
-                className="text-xl text-white leading-relaxed mb-8
+                className="text-lg text-white leading-relaxed mb-8
                   [&_strong]:text-white/80 [&_strong]:font-semibold
                   [&_em]:italic [&_del]:line-through
                   [&_code]:bg-white/10 [&_code]:px-1 [&_code]:rounded [&_code]:text-sm [&_code]:font-mono"
