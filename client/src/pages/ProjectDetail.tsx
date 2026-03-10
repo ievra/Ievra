@@ -378,7 +378,7 @@ export default function ProjectDetail() {
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12">
           <div>
-            <h1 className="font-light tracking-wider text-white uppercase" style={{ fontSize: '48px', lineHeight: '1.4' }} data-testid="text-project-title">
+            <h1 className="font-light tracking-wider text-white uppercase" style={{ fontSize: '48px', lineHeight: '1.2' }} data-testid="text-project-title">
               {project.title}
             </h1>
             <Link href={getProjectPath(language)} className="inline-flex items-center mt-4 text-zinc-300 hover:text-white transition-colors text-sm" data-testid="button-back-to-portfolio">
