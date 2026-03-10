@@ -392,7 +392,7 @@ export default function BlogDetail() {
         <div className="mt-10 pt-4 border-t border-white/10 flex justify-end">
           <button
             onClick={handleCopyUrl}
-            className="flex items-center gap-2 text-sm text-white/50 hover:text-white/80 transition-colors"
+            className={`flex items-center gap-2 text-sm transition-colors ${copied ? 'text-white' : 'text-white/50 hover:text-white/80'}`}
           >
             {copied ? <Check size={15} className="text-white" /> : <Share2 size={15} />}
             <span>{copied ? (language === 'vi' ? 'Đã sao chép!' : 'Copied!') : (language === 'vi' ? 'Chia sẻ' : 'Share')}</span>
