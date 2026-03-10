@@ -325,7 +325,7 @@ export default function BlogDetail() {
               {(article as any).attribution && (
                 <>
                   <span className="opacity-40">·</span>
-                  <span className="normal-case tracking-normal italic">{(article as any).attribution}</span>
+                  <span className="normal-case tracking-normal">{(article as any).attribution}</span>
                 </>
               )}
             </div>
