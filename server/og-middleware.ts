@@ -115,9 +115,18 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
 
       function resolveImageUrl(raw: string | null | undefined): string | undefined {
         if (!raw) return undefined;
-        if (raw.startsWith("data:")) return undefined; // base64 not usable as OG image
-        if (raw.startsWith("http")) return raw;
-        return `${baseUrl}${raw}`;
+        if (raw.startsWith("data:")) return undefined;
+        if (raw.startsWith("http")) {
+          const url = new URL(raw);
+          if (url.pathname.startsWith("/api/assets/")) {
+            return `${baseUrl}/api/og-asset/${url.pathname.replace("/api/assets/", "")}`;
+          }
+          return raw;
+        }
+        const ogPath = raw.startsWith("/api/assets/")
+          ? `/api/og-asset/${raw.replace("/api/assets/", "")}`
+          : raw;
+        return `${baseUrl}${ogPath}`;
       }
 
       const projectMatch = req.path.match(/^\/(?:portfolio|du-an)\/([^/]+)$/);
