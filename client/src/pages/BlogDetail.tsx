@@ -99,7 +99,7 @@ function RelatedArticles({ currentArticleId, category, language }: { currentArti
               <h3 className="text-xl font-sans font-light mb-2 line-clamp-2" style={{ minHeight: '3.5rem' }} data-testid={`text-title-${article.id}`}>
                 {article.title}
               </h3>
-              <p className="text-muted-foreground mb-3 text-sm" data-testid={`text-category-${article.id}`}>
+              <p className="text-muted-foreground mb-3 text-sm -mt-1" data-testid={`text-category-${article.id}`}>
                 {getCategoryLabel(article.category)} • {formatDate(String(article.publishedAt || article.createdAt))}
               </p>
               {article.excerpt && (
