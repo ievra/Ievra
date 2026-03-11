@@ -46,22 +46,27 @@ function injectOgTags(
     url?: string;
     type?: string;
     siteName?: string;
+    locale?: string;
   }
 ): string {
-  const { title, description, image, url, type = "website", siteName = "IEVRA Design & Build" } = tags;
+  const { title, description, image, url, type = "website", siteName = "IEVRA Design & Build", locale = "vi_VN" } = tags;
 
   const metaTags = [
     `<title>${escapeHtml(title)}</title>`,
-    `<meta property="og:title" content="${escapeHtml(title)}" />`,
-    `<meta property="og:type" content="${escapeHtml(type)}" />`,
+    `<meta property="og:locale" content="${escapeHtml(locale)}" />`,
     `<meta property="og:site_name" content="${escapeHtml(siteName)}" />`,
+    `<meta property="og:type" content="${escapeHtml(type)}" />`,
+    `<meta property="og:title" content="${escapeHtml(title)}" />`,
     description ? `<meta name="description" content="${escapeHtml(description)}" />` : "",
     description ? `<meta property="og:description" content="${escapeHtml(description)}" />` : "",
     image ? `<meta property="og:image" content="${escapeHtml(image)}" />` : "",
+    image ? `<meta property="og:image:secure_url" content="${escapeHtml(image)}" />` : "",
+    image ? `<meta property="og:image:type" content="image/jpeg" />` : "",
     image ? `<meta property="og:image:width" content="1200" />` : "",
     image ? `<meta property="og:image:height" content="630" />` : "",
     url ? `<meta property="og:url" content="${escapeHtml(url)}" />` : "",
     `<meta name="twitter:card" content="${image ? "summary_large_image" : "summary"}" />`,
+    `<meta name="twitter:site" content="@ievradesign" />`,
     `<meta name="twitter:title" content="${escapeHtml(title)}" />`,
     description ? `<meta name="twitter:description" content="${escapeHtml(description)}" />` : "",
     image ? `<meta name="twitter:image" content="${escapeHtml(image)}" />` : "",
@@ -69,7 +74,12 @@ function injectOgTags(
     .filter(Boolean)
     .join("\n    ");
 
-  return html.replace(/<\/head>/, `    ${metaTags}\n  </head>`);
+  // Remove any pre-existing OG/title tags injected by a previous render before appending
+  const cleaned = html
+    .replace(/<title>[^<]*<\/title>/gi, "")
+    .replace(/<meta\s+(?:name|property)="(?:og:|twitter:|description)[^"]*"[^>]*\/>/gi, "");
+
+  return cleaned.replace(/<\/head>/, `    ${metaTags}\n  </head>`);
 }
 
 let settingsCache: { data: any; expiresAt: number } | null = null;
@@ -129,6 +139,9 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
         return `https://images.weserv.nl/?url=${encoded}&w=1200&h=630&fit=cover&output=jpg&q=82`;
       }
 
+      const lang = detectLanguage(req.path);
+      const locale = lang === 'en' ? 'en_US' : 'vi_VN';
+
       const projectMatch = req.path.match(/^\/(?:portfolio|du-an)\/([^/]+)$/);
       if (projectMatch) {
         const slug = projectMatch[1];
@@ -148,6 +161,7 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
               image: resolveImageUrl(firstImage as string),
               url: currentUrl,
               type: "article",
+              locale,
             };
           }
         } catch {}
@@ -168,6 +182,7 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
               image: resolveImageUrl(article.featuredImage),
               url: currentUrl,
               type: "article",
+              locale,
             };
           }
         } catch {}
@@ -176,7 +191,6 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
       if (!tags) {
         try {
           const s = await getCachedSettings();
-          const lang = detectLanguage(req.path);
           let ogImgUrl: string | undefined;
           if (s?.ogImageData && s.ogImageData.startsWith("data:")) {
             ogImgUrl = resolveImageUrl(`${baseUrl}/api/og-image`);
@@ -194,12 +208,14 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
             description,
             image: ogImgUrl,
             url: currentUrl,
+            locale,
           };
         } catch {
           tags = {
             title: "IEVRA Design & Build",
             description: "Thiết kế nội thất cao cấp - IEVRA Design & Build",
             url: currentUrl,
+            locale,
           };
         }
       }
