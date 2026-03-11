@@ -1,13 +1,13 @@
-import { createContext, useContext, useState, useEffect, useRef, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useRef, useCallback, ReactNode } from 'react';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { queryClient, apiRequest, getQueryFn } from '@/lib/queryClient';
 import { useToast } from '@/hooks/use-toast';
 
-const SESSION_MS = 60 * 60 * 1000;       // 1 hour
-const WARN_BEFORE_MS = 5 * 60 * 1000;    // warn 5 min before expiry
-const ACTIVITY_THROTTLE_MS = 60 * 1000;  // throttle activity pings to 1/min
-const LOGIN_AT_KEY = 'admin_login_at';
-const LOGOUT_REASON_KEY = 'admin_logout_reason';
+const SESSION_MS = 30 * 60 * 1000;       // 30 minutes
+const WARN_BEFORE_MS = 5 * 60 * 1000;    // warn 5 min before expiry (at 25 min)
+const ACTIVITY_THROTTLE_MS = 60 * 1000;  // throttle server pings to 1/min
+export const LOGIN_AT_KEY = 'admin_login_at';
+export const LOGOUT_REASON_KEY = 'admin_logout_reason';
 
 interface User {
   id: string;
@@ -36,7 +36,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const warnTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const logoutTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastPingRef = useRef<number>(0);
-  const warnToastIdRef = useRef<string | null>(null);
+
+  // Use refs to hold latest versions of functions (escape hatch for stale closures in setTimeout)
+  const doAutoLogoutRef = useRef<() => void>(() => {});
+  const extendSessionRef = useRef<() => void>(() => {});
+  const scheduleTimersRef = useRef<(loginAt: number) => void>(() => {});
 
   const { data: userData, isPending, isFetching } = useQuery<User | null>({
     queryKey: ['/api/auth/me'],
@@ -62,69 +66,78 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     apiRequest('GET', '/api/auth/me').catch(() => {});
   };
 
-  const doAutoLogout = () => {
-    clearTimers();
-    sessionStorage.removeItem(LOGIN_AT_KEY);
-    sessionStorage.setItem(LOGOUT_REASON_KEY, 'timeout');
-    setManualUser(null);
-    queryClient.clear();
-    apiRequest('POST', '/api/auth/logout').catch(() => {});
-  };
+  // Keep refs in sync with latest function implementations on every render
+  useEffect(() => {
+    doAutoLogoutRef.current = () => {
+      clearTimers();
+      sessionStorage.removeItem(LOGIN_AT_KEY);
+      sessionStorage.setItem(LOGOUT_REASON_KEY, 'timeout');
+      setManualUser(null);
+      queryClient.clear();
+      apiRequest('POST', '/api/auth/logout').catch(() => {});
+    };
+  });
 
-  const scheduleTimers = (loginAt: number) => {
-    clearTimers();
-    const elapsed = Date.now() - loginAt;
-    const warnIn = SESSION_MS - WARN_BEFORE_MS - elapsed;
-    const logoutIn = SESSION_MS - elapsed;
+  useEffect(() => {
+    scheduleTimersRef.current = (loginAt: number) => {
+      clearTimers();
+      const elapsed = Date.now() - loginAt;
+      const warnIn = SESSION_MS - WARN_BEFORE_MS - elapsed;
+      const logoutIn = SESSION_MS - elapsed;
 
-    if (logoutIn <= 0) { doAutoLogout(); return; }
+      if (logoutIn <= 0) { doAutoLogoutRef.current(); return; }
 
-    if (warnIn > 0) {
-      warnTimerRef.current = setTimeout(() => {
-        const { id } = toast({
-          title: 'Phiên làm việc sắp hết hạn',
-          description: 'Phiên của bạn sẽ kết thúc sau 5 phút. Nhấn Gia hạn để tiếp tục.',
-          duration: WARN_BEFORE_MS,
-          action: (
-            <button
-              onClick={() => extendSession()}
-              className="shrink-0 rounded border border-white/30 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/10 transition-colors"
-            >
-              Gia hạn
-            </button>
-          ) as any,
-        });
-        warnToastIdRef.current = id ?? null;
-      }, warnIn);
-    }
+      if (warnIn > 0) {
+        warnTimerRef.current = setTimeout(() => {
+          toast({
+            title: 'Phiên làm việc sắp hết hạn',
+            description: 'Phiên của bạn sẽ kết thúc sau 5 phút. Nhấn Gia hạn để tiếp tục.',
+            duration: WARN_BEFORE_MS,
+            action: (
+              <button
+                onClick={() => extendSessionRef.current()}
+                className="shrink-0 rounded border border-white/30 px-3 py-1.5 text-xs font-medium text-white hover:bg-white/10 transition-colors"
+              >
+                Gia hạn
+              </button>
+            ) as any,
+          });
+        }, warnIn);
+      }
 
-    logoutTimerRef.current = setTimeout(() => {
-      doAutoLogout();
-    }, logoutIn);
-  };
+      logoutTimerRef.current = setTimeout(() => {
+        doAutoLogoutRef.current();
+      }, logoutIn);
+    };
+  });
 
-  const extendSession = () => {
-    const now = Date.now();
-    sessionStorage.setItem(LOGIN_AT_KEY, String(now));
-    pingServer();
-    scheduleTimers(now);
-    toast({
-      title: 'Phiên đã được gia hạn',
-      description: 'Phiên làm việc của bạn đã được gia hạn thêm 1 giờ.',
-      duration: 3000,
-    });
-  };
+  useEffect(() => {
+    extendSessionRef.current = () => {
+      const now = Date.now();
+      sessionStorage.setItem(LOGIN_AT_KEY, String(now));
+      pingServer();
+      scheduleTimersRef.current(now);
+      toast({
+        title: 'Phiên đã được gia hạn',
+        description: 'Phiên làm việc của bạn đã được gia hạn thêm 30 phút.',
+        duration: 3000,
+      });
+    };
+  });
 
-  // Activity listener: extend session automatically if user is active before logout
+  // Stable public extendSession for consumers
+  const extendSession = useCallback(() => {
+    extendSessionRef.current();
+  }, []);
+
+  // Activity listener: if user acts within warning window, auto-extend
   useEffect(() => {
     const onActivity = () => {
       const stored = sessionStorage.getItem(LOGIN_AT_KEY);
       if (!stored) return;
-      const loginAt = parseInt(stored, 10);
-      const elapsed = Date.now() - loginAt;
-      // If within warn window (last 5 min) and user is active → auto-extend
+      const elapsed = Date.now() - parseInt(stored, 10);
       if (elapsed >= SESSION_MS - WARN_BEFORE_MS && elapsed < SESSION_MS) {
-        extendSession();
+        extendSessionRef.current();
       }
     };
     const events = ['mousemove', 'keydown', 'click', 'touchstart', 'scroll'];
@@ -132,16 +145,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => events.forEach(e => document.removeEventListener(e, onActivity));
   }, []);
 
-  // On mount: restore timer if already logged in
+  // On mount: restore timer from sessionStorage if previously logged in
   useEffect(() => {
     const stored = sessionStorage.getItem(LOGIN_AT_KEY);
     if (stored) {
-      scheduleTimers(parseInt(stored, 10));
+      // Small delay to let refs initialize on first render
+      const t = setTimeout(() => {
+        scheduleTimersRef.current(parseInt(stored, 10));
+      }, 100);
+      return () => { clearTimeout(t); clearTimers(); };
     }
     return () => clearTimers();
   }, []);
 
-  // When server says not authenticated, clear local state
+  // When server returns 401, clear local session state
   useEffect(() => {
     if (!isPending && !isFetching && userData === null && manualUser !== null) {
       setManualUser(null);
@@ -161,7 +178,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       sessionStorage.removeItem(LOGOUT_REASON_KEY);
       setManualUser(data);
       queryClient.invalidateQueries({ queryKey: ['/api/auth/me'] });
-      scheduleTimers(now);
+      setTimeout(() => scheduleTimersRef.current(now), 100);
     },
   });
 
@@ -202,5 +219,3 @@ export function useAuth() {
   if (!ctx) throw new Error('useAuth must be used within an AuthProvider');
   return ctx;
 }
-
-export { LOGOUT_REASON_KEY };
