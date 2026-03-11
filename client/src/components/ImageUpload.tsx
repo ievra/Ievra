@@ -39,7 +39,7 @@ export default function ImageUpload({
   const [brokenImages, setBrokenImages] = useState<Set<string>>(new Set());
   const { toast } = useToast();
 
-  const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
+  const MAX_FILE_SIZE = 20 * 1024 * 1024; // 20MB in bytes
 
   // Get image dimensions from file
   const getImageDimensions = (file: File): Promise<{ width: number; height: number }> => {
@@ -57,7 +57,7 @@ export default function ImageUpload({
   const uploadImage = async (file: File): Promise<ImageMetadata> => {
     // Validate file size
     if (file.size > MAX_FILE_SIZE) {
-      throw new Error(`File "${file.name}" exceeds 10MB limit (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
+      throw new Error(`File "${file.name}" exceeds 20MB limit (${(file.size / 1024 / 1024).toFixed(2)}MB)`);
     }
 
     // Get image dimensions
@@ -342,7 +342,7 @@ export default function ImageUpload({
       {/* Upload Guidelines */}
       <div className="text-xs text-muted-foreground space-y-1">
         <p>• Supported formats: JPG, PNG, GIF, WebP</p>
-        <p>• Maximum file size: 10MB per image</p>
+        <p>• Maximum file size: 20MB per image</p>
         <p>• Recommended dimensions: 1200x800px or higher</p>
         {multiple && <p>• You can upload up to {maxImages} images</p>}
       </div>
