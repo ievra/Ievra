@@ -585,12 +585,12 @@ export default function ProjectDetail() {
                         data-testid={`img-other-project-${otherProject.id}`}
                       />
                     </div>
-                    <div className="mt-3 space-y-1">
-                      <h3 className="text-white font-light tracking-wider text-xs uppercase line-clamp-2">
+                    <div className="mt-3">
+                      <h3 className="text-white font-light tracking-wider text-xs uppercase line-clamp-2" style={{ minHeight: '2.5rem' }}>
                         {otherProject.title}
                       </h3>
-                      <p className="text-zinc-400 text-xs">
-                        {otherProject.category}
+                      <p className="text-zinc-400 text-xs mt-1">
+                        {getCategoryLabel(otherProject.category)}
                       </p>
                     </div>
                   </div>

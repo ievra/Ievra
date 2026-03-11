@@ -96,7 +96,7 @@ function RelatedArticles({ currentArticleId, category, language }: { currentArti
             </Link>
             
             <CardContent className="p-6">
-              <h3 className="text-xl font-sans font-light mb-2 line-clamp-1" data-testid={`text-title-${article.id}`}>
+              <h3 className="text-xl font-sans font-light mb-2 line-clamp-2" style={{ minHeight: '3.5rem' }} data-testid={`text-title-${article.id}`}>
                 {article.title}
               </h3>
               <p className="text-muted-foreground mb-3 text-sm" data-testid={`text-category-${article.id}`}>
