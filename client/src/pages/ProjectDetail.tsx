@@ -586,7 +586,7 @@ export default function ProjectDetail() {
                       />
                       <div className="absolute inset-0 bg-black/40 group-hover:bg-black/0 transition-colors duration-300" />
                     </div>
-                    <div className="mt-3">
+                    <div className="mt-1">
                       <h3 className="text-white font-light tracking-wider text-xs uppercase line-clamp-2" style={{ minHeight: '2.5rem' }}>
                         {otherProject.title}
                       </h3>
