@@ -116,17 +116,17 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
       function resolveImageUrl(raw: string | null | undefined): string | undefined {
         if (!raw) return undefined;
         if (raw.startsWith("data:")) return undefined;
+
+        let fullUrl: string;
         if (raw.startsWith("http")) {
-          const url = new URL(raw);
-          if (url.pathname.startsWith("/api/assets/")) {
-            return `${baseUrl}/api/og-asset/${url.pathname.replace("/api/assets/", "")}`;
-          }
-          return raw;
+          fullUrl = raw;
+        } else {
+          fullUrl = `${baseUrl}${raw}`;
         }
-        const ogPath = raw.startsWith("/api/assets/")
-          ? `/api/og-asset/${raw.replace("/api/assets/", "")}`
-          : raw;
-        return `${baseUrl}${ogPath}`;
+
+        // Use images.weserv.nl to resize & compress the image for OG (avoids 10MB+ files)
+        const encoded = encodeURIComponent(fullUrl.replace(/^https?:\/\//, ''));
+        return `https://images.weserv.nl/?url=${encoded}&w=1200&h=630&fit=cover&output=jpg&q=82`;
       }
 
       const projectMatch = req.path.match(/^\/(?:portfolio|du-an)\/([^/]+)$/);
@@ -179,9 +179,9 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
           const lang = detectLanguage(req.path);
           let ogImgUrl: string | undefined;
           if (s?.ogImageData && s.ogImageData.startsWith("data:")) {
-            ogImgUrl = `${baseUrl}/api/og-image`;
+            ogImgUrl = resolveImageUrl(`${baseUrl}/api/og-image`);
           } else if (s?.ogImage) {
-            ogImgUrl = s.ogImage.startsWith("http") ? s.ogImage : `${baseUrl}${s.ogImage}`;
+            ogImgUrl = resolveImageUrl(s.ogImage);
           }
           const title = lang === 'vi'
             ? (s?.siteTitleVi || s?.siteTitle || "IEVRA Design & Build")

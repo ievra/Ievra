@@ -6,7 +6,6 @@ import path from "path";
 import fs from "fs";
 import { randomUUID } from "crypto";
 import { fileURLToPath } from "url";
-import sharp from "sharp";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -123,25 +122,31 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (fs.existsSync(p)) { filePath = p; break; }
     }
     if (!filePath) {
+      console.error('[og-asset] not found:', relativePath);
       return res.status(404).json({ error: 'Image not found' });
     }
 
     try {
-      const buffer = await sharp(filePath)
-        .resize(1200, 630, { fit: 'cover', position: 'center' })
-        .jpeg({ quality: 80 })
-        .toBuffer();
+      const sharpModule = await import('sharp').catch(() => null);
+      if (sharpModule) {
+        const buffer = await sharpModule.default(filePath)
+          .resize(1200, 630, { fit: 'cover', position: 'center' })
+          .jpeg({ quality: 80 })
+          .toBuffer();
 
-      res.set({
-        'Content-Type': 'image/jpeg',
-        'Content-Length': String(buffer.length),
-        'Cache-Control': 'public, max-age=86400',
-      });
-      res.end(buffer);
+        res.set({
+          'Content-Type': 'image/jpeg',
+          'Content-Length': String(buffer.length),
+          'Cache-Control': 'public, max-age=86400',
+        });
+        return res.end(buffer);
+      }
     } catch (err) {
       console.error('[og-asset] sharp error:', err);
-      res.sendFile(filePath);
     }
+
+    res.set('Cache-Control', 'public, max-age=86400');
+    res.sendFile(filePath);
   });
 
   // API route to serve images from attached_assets folder (supports subdirectories)
