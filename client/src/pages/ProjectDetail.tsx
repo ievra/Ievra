@@ -590,7 +590,7 @@ export default function ProjectDetail() {
                       <h3 className="text-white font-light tracking-wider text-xs uppercase line-clamp-2" style={{ minHeight: '2.5rem' }}>
                         {otherProject.title}
                       </h3>
-                      <p className="text-zinc-400 text-xs mt-1">
+                      <p className="text-zinc-400 text-xs">
                         {getCategoryLabel(otherProject.category)}
                       </p>
                     </div>
