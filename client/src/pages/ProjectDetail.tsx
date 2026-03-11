@@ -573,17 +573,18 @@ export default function ProjectDetail() {
               {allProjects.map((otherProject) => (
                 <Link key={otherProject.id} href={getProjectPath(language, otherProject.slug, otherProject.id)}>
                   <div className="group cursor-pointer">
-                    <div className="aspect-square overflow-hidden">
+                    <div className="aspect-square overflow-hidden relative">
                       <OptimizedImage
                         src={(Array.isArray(otherProject.coverImages) ? otherProject.coverImages[0] : '') || (Array.isArray(otherProject.contentImages) ? otherProject.contentImages[0] : '') || otherProject.heroImage || (Array.isArray(otherProject.galleryImages) ? otherProject.galleryImages[0] : '') || (Array.isArray(otherProject.images) ? otherProject.images[0] : '') || '/placeholder-project.jpg'} 
                         alt={otherProject.title}
                         width={300}
                         height={300}
                         wrapperClassName="w-full h-full"
-                        className="w-full h-full object-cover group-hover:opacity-80 transition-opacity duration-300"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                         data-testid={`img-other-project-${otherProject.id}`}
                       />
+                      <div className="absolute inset-0 bg-black/40 group-hover:bg-black/0 transition-colors duration-300" />
                     </div>
                     <div className="mt-3">
                       <h3 className="text-white font-light tracking-wider text-xs uppercase line-clamp-2" style={{ minHeight: '2.5rem' }}>

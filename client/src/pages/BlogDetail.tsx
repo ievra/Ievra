@@ -74,7 +74,7 @@ function RelatedArticles({ currentArticleId, category, language }: { currentArti
         {relatedArticles.map((article) => (
           <Card key={article.id} className="group overflow-hidden hover-scale project-hover" data-testid={`card-related-article-${article.id}`}>
             <Link href={getArticlePath(language, article.slug)}>
-              <div className="relative">
+              <div className="relative overflow-hidden">
                 {(article.featuredImage || article.featuredImageData) ? (
                   <OptimizedImage
                     src={article.featuredImage || article.featuredImageData || ''}
@@ -82,7 +82,7 @@ function RelatedArticles({ currentArticleId, category, language }: { currentArti
                     width={600}
                     height={192}
                     wrapperClassName="w-full h-48"
-                    className="w-full h-full group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     sizes="(max-width: 768px) 100vw, 33vw"
                     data-testid={`img-related-article-${article.id}`}
                   />
@@ -91,7 +91,7 @@ function RelatedArticles({ currentArticleId, category, language }: { currentArti
                     <div className="text-6xl font-sans font-light text-primary/30">N</div>
                   </div>
                 )}
-                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/0 transition-colors duration-300" />
               </div>
             </Link>
             
