@@ -685,7 +685,7 @@ export default function Lookup() {
             <DialogTitle className="text-lg font-light">{isVi ? "Xác minh danh tính" : "Verify Identity"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <p className="text-sm text-white/60">{isVi ? "Nhập số CCCD/CMND trên hợp đồng để xem toàn bộ thông tin" : "Enter ID card number from your contract to view full information"}</p>
+            <p className="text-sm text-white/60">{isVi ? "Nhập số CCCD/CMND/MST trên hợp đồng để xem toàn bộ thông tin" : "Enter ID card number from your contract to view full information"}</p>
             <Input
               value={cccdInput}
               onChange={(e) => setCccdInput(e.target.value)}
