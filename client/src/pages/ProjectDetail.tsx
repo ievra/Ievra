@@ -390,7 +390,7 @@ export default function ProjectDetail() {
       </div>
       {/* Section 1: Single image left + Description right */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-        <div>
+        <div className="order-1">
           {section1Image && (
             <div className="aspect-square cursor-pointer" onClick={() => openLightbox(section1Image)}>
               <OptimizedImage
@@ -405,7 +405,7 @@ export default function ProjectDetail() {
             </div>
           )}
         </div>
-        <div className="md:aspect-square flex flex-col justify-center px-8 md:px-20 lg:px-32 py-12 md:py-16 md:overflow-hidden">
+        <div className="order-2 md:aspect-square flex flex-col justify-center px-8 md:px-20 lg:px-32 py-12 md:py-16 md:overflow-hidden">
           {(project.descriptionTitle || project.designPhilosophyTitle) && (
             <h2 className="text-[20px] font-light tracking-[0.15em] text-white uppercase mb-6">
               {project.descriptionTitle || project.designPhilosophyTitle}
@@ -481,7 +481,7 @@ export default function ProjectDetail() {
       {/* Section 3: Image left + Text right */}
       {(project.materialSelection || (project.detailedDescription && project.designPhilosophy)) && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
-          <div>
+          <div className="order-1">
             {(project.section3Image || galleryImages[1]) && (
               <div className="aspect-square cursor-pointer" onClick={() => openLightbox(project.section3Image || galleryImages[1])}>
                 <OptimizedImage
@@ -496,7 +496,7 @@ export default function ProjectDetail() {
               </div>
             )}
           </div>
-          <div className="md:aspect-square flex flex-col justify-center px-8 md:px-20 lg:px-32 py-12 md:py-16 md:overflow-hidden">
+          <div className="order-2 md:aspect-square flex flex-col justify-center px-8 md:px-20 lg:px-32 py-12 md:py-16 md:overflow-hidden">
             {project.materialSelection && (
               <div className="space-y-4">
                 <h2 className="text-[20px] font-light tracking-[0.15em] text-white uppercase">
