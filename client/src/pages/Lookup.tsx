@@ -273,7 +273,7 @@ export default function Lookup() {
             {phases.map((phase) => {
               const target = phaseTargets[phase.value] || 0;
               const logged = circleInteractions.filter((int) => int.phase === phase.value).length;
-              const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 0;
+              const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 100;
               return (
                 <div key={phase.id} className="space-y-0.5">
                   <div className="flex justify-between items-center">

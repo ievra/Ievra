@@ -944,7 +944,7 @@ export default function LookupAdminTab() {
                           {phases.map((phase: any) => {
                             const target = phaseTargets[phase.value] || 0;
                             const logged = circleInteractions.filter((int) => (int as any).phase === phase.value).length;
-                            const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 0;
+                            const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 100;
                             return (
                               <div key={phase.id} className="space-y-0.5">
                                 <div className="flex justify-between items-center">
@@ -1188,11 +1188,15 @@ export default function LookupAdminTab() {
                                       <p className="text-xs text-white font-light">{phaseInteractions.length} / {phaseTarget}</p>
                                     </div>
                                   </div>
-                                ) : (
+                                ) : constMaxForPhase > 0 ? (
                                   <span
                                     className="text-xs text-white/30 cursor-pointer hover:text-white/50 flex items-center gap-1"
                                     onClick={() => { setPhaseTargetValue(""); setEditingPhaseTarget(`construction_${phase.value}`); }}
                                   >
+                                    <Plus className="w-3 h-3" /> {isVi ? "Mục tiêu" : "Target"}
+                                  </span>
+                                ) : (
+                                  <span className="text-xs text-white/20 flex items-center gap-1 cursor-not-allowed select-none" title={isVi ? "Đã phân bổ đủ ngày" : "All days allocated"}>
                                     <Plus className="w-3 h-3" /> {isVi ? "Mục tiêu" : "Target"}
                                   </span>
                                 );
@@ -1443,11 +1447,15 @@ export default function LookupAdminTab() {
                                       <p className="text-xs text-white font-light">{phaseInteractions.length} / {phaseTarget}</p>
                                     </div>
                                   </div>
-                                ) : (
+                                ) : designMaxForPhase > 0 ? (
                                   <span
                                     className="text-xs text-white/30 cursor-pointer hover:text-white/50 flex items-center gap-1"
                                     onClick={() => { setPhaseTargetValue(""); setEditingPhaseTarget(`design_${phase.value}`); }}
                                   >
+                                    <Plus className="w-3 h-3" /> {isVi ? "Mục tiêu" : "Target"}
+                                  </span>
+                                ) : (
+                                  <span className="text-xs text-white/20 flex items-center gap-1 cursor-not-allowed select-none" title={isVi ? "Đã phân bổ đủ ngày" : "All days allocated"}>
                                     <Plus className="w-3 h-3" /> {isVi ? "Mục tiêu" : "Target"}
                                   </span>
                                 );
