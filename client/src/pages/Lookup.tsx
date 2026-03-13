@@ -689,7 +689,7 @@ export default function Lookup() {
             <Input
               value={cccdInput}
               onChange={(e) => setCccdInput(e.target.value)}
-              placeholder={isVi ? "Nhập số CCCD/CMND" : "Enter ID card number"}
+              placeholder={isVi ? "Nhập số CCCD/CMND/MST" : "Enter ID card number"}
               className="bg-transparent border-white/30 rounded-none"
               onKeyDown={(e) => {
                 if (e.key === "Enter" && cccdInput.trim()) {
