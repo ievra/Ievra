@@ -607,13 +607,28 @@ export default function Lookup() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Input
                       type="text"
-                      value={`${result.client.lastName} ${result.client.firstName}`.trim()}
+                      value={infoRevealed
+                        ? `${result.client.lastName} ${result.client.firstName}`.trim()
+                        : (() => {
+                            const nameParts = `${result.client.lastName || ""} ${result.client.firstName || ""}`.trim().split(" ");
+                            return nameParts.map((p, i) => i === 0 ? p : "*".repeat(p.length)).join(" ");
+                          })()}
                       readOnly
                       className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 py-4 text-white/50 focus-visible:ring-0 cursor-default"
                     />
                     <Input
-                      type="email"
-                      value={result.client.email || ""}
+                      type="text"
+                      value={infoRevealed
+                        ? (result.client.email || "")
+                        : (() => {
+                            const em = result.client.email || "";
+                            if (!em) return "";
+                            const atIdx = em.indexOf("@");
+                            if (atIdx <= 0) return "*".repeat(em.length);
+                            const local = em.slice(0, atIdx);
+                            const domain = em.slice(atIdx);
+                            return local.slice(0, 3) + "*".repeat(Math.max(0, local.length - 3)) + domain;
+                          })()}
                       readOnly
                       placeholder={isVi ? "Email" : "Email"}
                       className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 py-4 text-white/50 placeholder-white/30 focus-visible:ring-0 cursor-default"
@@ -621,14 +636,22 @@ export default function Lookup() {
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Input
-                      type="tel"
-                      value={result.client.phone || phone.trim()}
+                      type="text"
+                      value={infoRevealed
+                        ? (result.client.phone || phone.trim())
+                        : (() => {
+                            const ph = result.client.phone || phone.trim();
+                            if (!ph) return "";
+                            return ph.slice(0, 3) + "*".repeat(Math.max(0, ph.length - 3));
+                          })()}
                       readOnly
                       className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 py-4 text-white/50 focus-visible:ring-0 cursor-default"
                     />
                     <Input
                       type="text"
-                      value={result.client.address || ""}
+                      value={infoRevealed
+                        ? (result.client.address || "")
+                        : (result.client.address ? "*".repeat(16) : "")}
                       readOnly
                       placeholder={isVi ? "Địa chỉ dự án" : "Project address"}
                       className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 py-4 text-white/50 placeholder-white/30 focus-visible:ring-0 cursor-default"
