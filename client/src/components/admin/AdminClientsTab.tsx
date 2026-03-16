@@ -25,7 +25,7 @@ import CrmSettingsManager from "@/components/CrmSettingsManager";
 const clientSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
-  email: z.string().email("Valid email is required"),
+  email: z.string().email("Valid email is required").optional().or(z.literal("")),
   phone: z.string().optional(),
   position: z.string().optional(),
   company: z.string().optional(),
@@ -486,7 +486,12 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
       } else {
         await createClientMutation.mutateAsync(cleanedData);
       }
-    } catch (error) {
+    } catch (error: any) {
+      toast({
+        title: "Lỗi khi lưu khách hàng",
+        description: error?.message || "Có lỗi xảy ra, vui lòng thử lại",
+        variant: "destructive",
+      });
     }
   };
 
@@ -1333,7 +1338,7 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                       </Button>
                       <Button 
                         type="submit"
-                        disabled={createClientMutation.isPending}
+                        disabled={createClientMutation.isPending || updateClientMutation.isPending}
                         data-testid="button-save-client"
                         className="h-10 px-4"
                       >
