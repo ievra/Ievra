@@ -223,23 +223,27 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
   }, [clients.length, currentPage, totalPages]);
 
   const clientFinances = useMemo(() => {
-    const finances: Record<string, { totalSpending: number; refundAmount: number; commission: number }> = {};
+    const finances: Record<string, { totalSpending: number; refundAmount: number; commission: number; pendingAmount: number }> = {};
     
     allTransactions.forEach((t: any) => {
-      if (t.status !== "completed" || !t.clientId) return;
+      if (!t.clientId) return;
       
       if (!finances[t.clientId]) {
-        finances[t.clientId] = { totalSpending: 0, refundAmount: 0, commission: 0 };
+        finances[t.clientId] = { totalSpending: 0, refundAmount: 0, commission: 0, pendingAmount: 0 };
       }
       
       const amount = parseFloat(t.amount || "0");
       
-      if (t.type === "payment") {
-        finances[t.clientId].totalSpending += amount;
-      } else if (t.type === "refund") {
-        finances[t.clientId].refundAmount += amount;
-      } else if (t.type === "commission") {
-        finances[t.clientId].commission += amount;
+      if (t.status === "completed") {
+        if (t.type === "payment") {
+          finances[t.clientId].totalSpending += amount;
+        } else if (t.type === "refund") {
+          finances[t.clientId].refundAmount += amount;
+        } else if (t.type === "commission") {
+          finances[t.clientId].commission += amount;
+        }
+      } else if (t.status === "pending" && t.type === "payment") {
+        finances[t.clientId].pendingAmount += amount;
       }
     });
     
@@ -1965,7 +1969,7 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                         </TableHead>
                         <TableHead className="w-[110px] whitespace-nowrap">
                           <div>{language === 'vi' ? 'Thanh Toán' : 'Paid'}</div>
-                          <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Hoàn Trả' : 'Refund'}</div>
+                          <div className="text-xs font-normal text-muted-foreground mt-0.5">{language === 'vi' ? 'Chưa Thanh Toán' : 'Unpaid'}</div>
                         </TableHead>
                         <TableHead className="w-[100px] text-center whitespace-nowrap">{t('crm.warrantyStatus')}</TableHead>
                         <TableHead className="w-[100px] text-center whitespace-nowrap">{t('crm.pipelineStage')}</TableHead>
@@ -2011,7 +2015,7 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                               {Math.round(clientFinances[client.id]?.totalSpending || 0).toLocaleString('vi-VN')} đ
                             </div>
                             <div className="text-xs text-muted-foreground mt-1 whitespace-nowrap">
-                              {Math.round(clientFinances[client.id]?.refundAmount || 0).toLocaleString('vi-VN')} đ
+                              {Math.round(clientFinances[client.id]?.pendingAmount || 0).toLocaleString('vi-VN')} đ
                             </div>
                           </TableCell>
                           <TableCell className="align-middle text-center">
