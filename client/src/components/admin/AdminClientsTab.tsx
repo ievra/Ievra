@@ -1779,7 +1779,7 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
             </Form>
           </DialogContent>
         </Dialog>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mb-6">
           <Card className="bg-black border-white/10 rounded-none">
             <CardContent className="p-6 min-h-[90px]">
               <div>
