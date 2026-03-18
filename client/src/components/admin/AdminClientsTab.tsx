@@ -454,7 +454,7 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
       constructionTimeline: client.constructionTimeline || 0,
       tier: client.tier || "silver",
       identityCard: client.identityCard || "",
-      tags: (client.tags as string[]) || [],
+      tags: Array.isArray(client.tags) ? (client.tags as string[]) : [],
       notes: client.notes || "",
     });
     setIsClientDialogOpen(true);
@@ -615,7 +615,12 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                 </DialogTitle>
               </DialogHeader>
               <Form {...clientForm}>
-                <form onSubmit={clientForm.handleSubmit(onClientSubmit)} className="space-y-4 max-h-[70vh] overflow-y-auto px-1">
+                <form onSubmit={clientForm.handleSubmit(onClientSubmit, (errors) => {
+                  console.error("Form validation errors:", JSON.stringify(errors, null, 2));
+                  const firstKey = Object.keys(errors)[0];
+                  const firstErr = errors[firstKey as keyof typeof errors];
+                  toast({ title: `Lỗi: trường "${firstKey}" - ${(firstErr as any)?.message || "không hợp lệ"}`, variant: "destructive" });
+                })} className="space-y-4 max-h-[70vh] overflow-y-auto px-1">
                   <div className="grid grid-cols-2 gap-4">
                     <FormField
                       control={clientForm.control}
