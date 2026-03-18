@@ -1851,18 +1851,6 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
             </CardContent>
           </Card>
 
-          <Card className="bg-black border-white/10 rounded-none">
-            <CardContent className="p-6 min-h-[90px]">
-              <div>
-                <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Hoàn trả' : 'Refunds'}</p>
-                <p className="text-2xl font-semibold mt-1">
-                  {allTransactions.filter(t => t.type === 'refund' && t.status === 'completed').reduce((sum, t) => {
-                    return sum + parseFloat(t.amount || "0");
-                  }, 0).toLocaleString('vi-VN', {maximumFractionDigits: 0})} đ
-                </p>
-              </div>
-            </CardContent>
-          </Card>
         </div>
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
