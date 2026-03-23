@@ -1,10 +1,7 @@
 import { SiFacebook, SiInstagram, SiTiktok } from "react-icons/si";
 import upseinLogo from "@assets/UpSEIN_Logo_1774251344290.png";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Footer() {
-  const { language } = useLanguage();
-
   return (
     <footer className="bg-black py-6 px-4 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between">
@@ -41,10 +38,10 @@ export default function Footer() {
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 group"
-            title={language === 'vi' ? 'Phát triển bởi UpSEIN' : 'Developed by UpSEIN'}
+            title="Developed by UpSEIN"
           >
             <span className="text-white/30 text-[12px] font-light group-hover:text-white/50 transition-colors">
-              {language === 'vi' ? 'Phát triển bởi' : 'Developed by'}
+              Developed by
             </span>
             <img
               src={upseinLogo}
