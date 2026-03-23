@@ -50,9 +50,12 @@ function injectOgTags(
   }
 ): string {
   const { title, description, image, url, type = "website", siteName = "IEVRA Design & Build", locale = "vi_VN" } = tags;
+  const lang = locale.startsWith("en") ? "en" : "vi";
 
   const metaTags = [
     `<title>${escapeHtml(title)}</title>`,
+    `<meta name="robots" content="index, follow" />`,
+    url ? `<link rel="canonical" href="${escapeHtml(url)}" />` : "",
     `<meta property="og:locale" content="${escapeHtml(locale)}" />`,
     `<meta property="og:site_name" content="${escapeHtml(siteName)}" />`,
     `<meta property="og:type" content="${escapeHtml(type)}" />`,
@@ -74,10 +77,13 @@ function injectOgTags(
     .filter(Boolean)
     .join("\n    ");
 
-  // Remove any pre-existing OG/title tags injected by a previous render before appending
+  // Remove pre-existing tags before injecting fresh ones
   const cleaned = html
     .replace(/<title>[^<]*<\/title>/gi, "")
-    .replace(/<meta\s+(?:name|property)="(?:og:|twitter:|description)[^"]*"[^>]*\/>/gi, "");
+    .replace(/<meta\s+(?:name|property)="(?:og:|twitter:|description|robots)[^"]*"[^>]*\/?>/gi, "")
+    .replace(/<link\s+rel="canonical"[^>]*\/?>/gi, "")
+    .replace(/(<html[^>]*)\slang="[^"]*"/i, "$1")
+    .replace(/<html/, `<html lang="${lang}"`);
 
   return cleaned.replace(/<\/head>/, `    ${metaTags}\n  </head>`);
 }
