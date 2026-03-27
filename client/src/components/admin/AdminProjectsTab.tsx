@@ -204,6 +204,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       metaDescriptionVi: "",
       metaKeywordsEn: "",
       metaKeywordsVi: "",
+      ogImage: "",
     },
   });
 
@@ -551,7 +552,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
           metaTitle: data.metaTitleEn,
           metaDescription: data.metaDescriptionEn,
           metaKeywords: data.metaKeywordsEn,
-          ogImage: projectOgImagePreview || data.ogImage || undefined,
+          ogImage: projectOgImagePreview || data.ogImage || null,
           language: 'en' as const,
         };
 
@@ -602,7 +603,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
           metaTitle: data.metaTitleVi,
           metaDescription: data.metaDescriptionVi,
           metaKeywords: data.metaKeywordsVi,
-          ogImage: projectOgImagePreview || data.ogImage || undefined,
+          ogImage: projectOgImagePreview || data.ogImage || null,
           language: 'vi' as const,
         };
 
@@ -1349,7 +1350,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                       {projectOgImagePreview ? (
                         <div className="relative w-full h-full">
                           <img
-                            src={projectOgImagePreview.startsWith('data:') ? projectOgImagePreview : `https://images.weserv.nl/?url=ievra.com${projectOgImagePreview}&w=1200&output=webp`}
+                            src={projectOgImagePreview}
                             alt="OG preview"
                             className="w-full h-full object-contain"
                           />

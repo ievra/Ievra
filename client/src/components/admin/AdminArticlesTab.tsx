@@ -150,6 +150,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       metaKeywordsEn: "",
       metaKeywordsVi: "",
       attribution: "",
+      ogImage: "",
     },
   });
 
@@ -528,7 +529,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       }
 
       const featuredImg = articleImagePreview || data.featuredImage || undefined;
-      const ogImg = articleOgImagePreview || data.ogImage || undefined;
+      const ogImg = articleOgImagePreview || data.ogImage || null;
 
       const mutations: Promise<any>[] = [];
 
@@ -1392,7 +1393,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                   {articleOgImagePreview ? (
                     <div className="relative w-full h-full">
                       <img
-                        src={articleOgImagePreview.startsWith('data:') ? articleOgImagePreview : `https://images.weserv.nl/?url=ievra.com${articleOgImagePreview}&w=1200&output=webp`}
+                        src={articleOgImagePreview}
                         alt="OG preview"
                         className="w-full h-full object-contain"
                       />

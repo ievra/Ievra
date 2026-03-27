@@ -622,7 +622,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put("/api/projects/:id", requirePermission('projects'), requirePermission('crm'), async (req, res) => {
     try {
+      console.log('[PUT /api/projects] ogImage received:', req.body.ogImage);
       const validatedData = insertProjectSchema.partial().parse(req.body);
+      console.log('[PUT /api/projects] ogImage after Zod:', validatedData.ogImage);
       if (validatedData.slug) {
         const current = await storage.getProject(req.params.id);
         if (current && current.slug !== validatedData.slug) {
