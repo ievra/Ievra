@@ -141,8 +141,9 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
         }
 
         // Use images.weserv.nl to resize & compress the image for OG (avoids 10MB+ files)
-        const encoded = encodeURIComponent(fullUrl.replace(/^https?:\/\//, ''));
-        return `https://images.weserv.nl/?url=${encoded}&w=1200&h=630&fit=cover&output=jpg&q=82`;
+        // NOTE: do NOT encodeURIComponent the whole URL — weserv.nl expects plain slashes
+        const urlWithoutProtocol = fullUrl.replace(/^https?:\/\//, '');
+        return `https://images.weserv.nl/?url=${urlWithoutProtocol}&w=1200&h=630&fit=cover&output=jpg&q=82`;
       }
 
       const lang = detectLanguage(req.path);
@@ -199,7 +200,8 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
           const s = await getCachedSettings();
           let ogImgUrl: string | undefined;
           if (s?.ogImageData && s.ogImageData.startsWith("data:")) {
-            ogImgUrl = resolveImageUrl(`${baseUrl}/api/og-image`);
+            // Serve the base64 OG image directly — no need for weserv.nl resizing
+            ogImgUrl = `${baseUrl}/api/og-image`;
           } else if (s?.ogImage) {
             ogImgUrl = resolveImageUrl(s.ogImage);
           }
