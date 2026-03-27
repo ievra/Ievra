@@ -43,13 +43,14 @@ function injectOgTags(
     title: string;
     description?: string;
     image?: string;
+    imageType?: string;
     url?: string;
     type?: string;
     siteName?: string;
     locale?: string;
   }
 ): string {
-  const { title, description, image, url, type = "website", siteName = "IEVRA Design & Build", locale = "vi_VN" } = tags;
+  const { title, description, image, imageType = "image/jpeg", url, type = "website", siteName = "IEVRA Design & Build", locale = "vi_VN" } = tags;
   const lang = locale.startsWith("en") ? "en" : "vi";
 
   const metaTags = [
@@ -64,7 +65,7 @@ function injectOgTags(
     description ? `<meta property="og:description" content="${escapeHtml(description)}" />` : "",
     image ? `<meta property="og:image" content="${escapeHtml(image)}" />` : "",
     image ? `<meta property="og:image:secure_url" content="${escapeHtml(image)}" />` : "",
-    image ? `<meta property="og:image:type" content="image/jpeg" />` : "",
+    image ? `<meta property="og:image:type" content="${escapeHtml(imageType)}" />` : "",
     image ? `<meta property="og:image:width" content="1200" />` : "",
     image ? `<meta property="og:image:height" content="630" />` : "",
     url ? `<meta property="og:url" content="${escapeHtml(url)}" />` : "",
@@ -212,11 +213,16 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
         try {
           const s = await getCachedSettings();
           let ogImgUrl: string | undefined;
+          let ogImgType: string | undefined;
           if (s?.ogImageData && s.ogImageData.startsWith("data:")) {
-            // Serve the base64 OG image directly — no need for weserv.nl resizing
+            // Detect actual MIME type from the base64 data URL
+            const mimeMatch = s.ogImageData.match(/^data:(image\/[a-zA-Z+]+);base64,/);
+            ogImgType = mimeMatch ? mimeMatch[1] : "image/jpeg";
             ogImgUrl = `${baseUrl}/api/og-image`;
           } else if (s?.ogImage) {
             ogImgUrl = resolveImageUrl(s.ogImage);
+            // weserv.nl always returns jpg
+            ogImgType = "image/jpeg";
           }
           const title = lang === 'vi'
             ? (s?.siteTitleVi || s?.siteTitle || "IEVRA Design & Build")
@@ -228,6 +234,7 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
             title,
             description,
             image: ogImgUrl,
+            imageType: ogImgType,
             url: currentUrl,
             locale,
           };
