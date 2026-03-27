@@ -264,10 +264,6 @@ export default function About() {
                     loading={index === 0 ? "eager" : "lazy"}
                     decoding="async"
                     onLoad={index === 0 ? handleHeroImageLoad : undefined}
-                    onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.src = 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&h=1200';
-                    }}
                   />
                 </SwiperSlide>
               ))}
