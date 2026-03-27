@@ -60,6 +60,7 @@ export default function About() {
   const [showcaseAnimStarted, setShowcaseAnimStarted] = useState(false);
 
   const [heroAnimStarted, setHeroAnimStarted] = useState(false);
+  const [mobileHeroHeight, setMobileHeroHeight] = useState<number | null>(null);
 
   useEffect(() => {
     if (aboutContent) {
@@ -67,6 +68,24 @@ export default function About() {
       return () => clearTimeout(t);
     }
   }, [aboutContent]);
+
+  // On mobile, measure the first hero image's natural aspect ratio
+  // and set the hero height so there are no black bars and no cropping
+  const handleHeroImageLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    if (window.innerWidth >= 640) return; // desktop keeps h-screen
+    const img = e.currentTarget;
+    if (!img.naturalWidth || !img.naturalHeight) return;
+    const aspectRatio = img.naturalHeight / img.naturalWidth;
+    setMobileHeroHeight(Math.round(window.innerWidth * aspectRatio));
+  };
+
+  useEffect(() => {
+    const onResize = () => {
+      if (window.innerWidth >= 640) setMobileHeroHeight(null);
+    };
+    window.addEventListener('resize', onResize, { passive: true });
+    return () => window.removeEventListener('resize', onResize);
+  }, []);
 
   const coreValuesContainerRef = useRef<HTMLDivElement>(null);
   const coreValueDotRefs = useRef<(HTMLDivElement | null)[]>([]);
@@ -217,8 +236,14 @@ export default function About() {
   return (
     <main className="lg:ml-16 min-h-[120vh]">
       {/* Hero Section */}
-      <section className="relative h-screen min-h-[600px] bg-black overflow-hidden lg:-ml-16">
-        <div className="relative h-screen">
+      <section
+        className="relative bg-black overflow-hidden lg:-ml-16 sm:h-screen sm:min-h-[600px]"
+        style={mobileHeroHeight ? { height: `${mobileHeroHeight}px` } : undefined}
+      >
+        <div
+          className="relative sm:h-screen"
+          style={mobileHeroHeight ? { height: `${mobileHeroHeight}px` } : { minHeight: '60vw' }}
+        >
           {/* Background Images Slider */}
           {aboutContent?.heroImages && aboutContent.heroImages.length > 0 ? (
             <Swiper
@@ -235,9 +260,10 @@ export default function About() {
                   <img 
                     src={imageUrl} 
                     alt={`About Hero ${index + 1}`}
-                    className="absolute inset-0 w-full h-full object-contain sm:object-cover"
+                    className="absolute inset-0 w-full h-full object-cover"
                     loading={index === 0 ? "eager" : "lazy"}
                     decoding="async"
+                    onLoad={index === 0 ? handleHeroImageLoad : undefined}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&h=1200';
@@ -253,7 +279,7 @@ export default function About() {
           
           {/* Content */}
           {aboutContent && (
-            <div className="relative h-full flex items-center" style={{ zIndex: 2 }}>
+            <div className="absolute inset-0 flex items-center" style={{ zIndex: 2 }}>
               <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
                 <div className="flex justify-center">
                   <h1 className="font-light text-white uppercase tracking-[0.06em] text-center whitespace-pre-line text-[42px]">
