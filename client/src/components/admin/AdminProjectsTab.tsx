@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { compressOgImage } from "@/lib/imageUtils";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -651,10 +650,9 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       return;
     }
     try {
-      const compressed = await compressOgImage(file);
-      const sizeMB = (compressed.size / 1024 / 1024).toFixed(1);
+      const sizeMB = (file.size / 1024 / 1024).toFixed(1);
       const formData = new FormData();
-      formData.append('file', new File([compressed], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' }));
+      formData.append('file', file);
       const response = await fetch('/api/upload', { method: 'POST', body: formData });
       if (!response.ok) throw new Error('Upload failed');
       const data = await response.json();
