@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { compressOgImage } from "@/lib/imageUtils";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -643,20 +644,22 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
   const handleProjectOgImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 10 * 1024 * 1024) {
-      toast({ title: "File quá lớn", description: "OG Image tối đa 10MB.", variant: "destructive" });
+    if (file.size > 20 * 1024 * 1024) {
+      toast({ title: "File quá lớn", description: "OG Image tối đa 20MB.", variant: "destructive" });
       e.target.value = '';
       return;
     }
-    const formData = new FormData();
-    formData.append('file', file);
     try {
+      const compressed = await compressOgImage(file);
+      const sizekB = Math.round(compressed.size / 1024);
+      const formData = new FormData();
+      formData.append('file', new File([compressed], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' }));
       const response = await fetch('/api/upload', { method: 'POST', body: formData });
       if (!response.ok) throw new Error('Upload failed');
       const data = await response.json();
       setProjectOgImagePreview(data.path);
       projectForm.setValue('ogImage', data.path);
-      toast({ title: "Upload thành công", description: "OG Image đã được tải lên" });
+      toast({ title: "Upload thành công", description: `OG Image đã nén còn ${sizekB} KB` });
     } catch {
       toast({ title: "Lỗi upload", description: "Không thể upload OG Image", variant: "destructive" });
       e.target.value = '';
