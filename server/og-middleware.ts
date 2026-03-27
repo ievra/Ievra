@@ -130,21 +130,22 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
 
       let tags: Parameters<typeof injectOgTags>[1] | null = null;
 
+      // Serve the image directly — no proxy/resize, preserving original quality.
       function resolveImageUrl(raw: string | null | undefined): string | undefined {
         if (!raw) return undefined;
         if (raw.startsWith("data:")) return undefined;
+        if (raw.startsWith("http")) return raw;
+        return `${baseUrl}${raw}`;
+      }
 
-        let fullUrl: string;
-        if (raw.startsWith("http")) {
-          fullUrl = raw;
-        } else {
-          fullUrl = `${baseUrl}${raw}`;
-        }
-
-        // Use images.weserv.nl to resize & compress the image for OG (avoids 10MB+ files)
-        // NOTE: do NOT encodeURIComponent the whole URL — weserv.nl expects plain slashes
+      // For fallback images (hero/cover/gallery) use weserv to standardise OG dimensions.
+      // High quality (q=92) to avoid visible blurring.
+      function resolveImageUrlWithResize(raw: string | null | undefined): string | undefined {
+        if (!raw) return undefined;
+        if (raw.startsWith("data:")) return undefined;
+        const fullUrl = raw.startsWith("http") ? raw : `${baseUrl}${raw}`;
         const urlWithoutProtocol = fullUrl.replace(/^https?:\/\//, '');
-        return `https://images.weserv.nl/?url=${urlWithoutProtocol}&w=1200&h=630&fit=cover&output=jpg&q=82`;
+        return `https://images.weserv.nl/?url=${urlWithoutProtocol}&w=1200&h=630&fit=inside&output=jpg&q=92`;
       }
 
       const lang = detectLanguage(req.path);
@@ -160,13 +161,15 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
             const explicitOgImage = (project as any).ogImage as string | undefined;
             let imageUrl: string | undefined;
             if (explicitOgImage && !explicitOgImage.startsWith("data:")) {
+              // Serve user-uploaded OG image directly — no proxy, full quality
               imageUrl = resolveImageUrl(explicitOgImage);
             } else {
               const coverImages = Array.isArray(project.coverImages) ? project.coverImages : [];
               const galleryImages = Array.isArray(project.galleryImages) ? project.galleryImages : [];
               const candidates = [project.heroImage, ...coverImages, ...galleryImages];
               const firstImage = candidates.find(img => img && !String(img).startsWith("data:"));
-              imageUrl = resolveImageUrl(firstImage as string);
+              // Fallback images are resized via weserv (q=92) to fit OG dimensions
+              imageUrl = resolveImageUrlWithResize(firstImage as string);
             }
             tags = {
               title: `${project.title} | IEVRA Design & Build`,
@@ -193,7 +196,7 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
             const explicitOgImage = (article as any).ogImage as string | undefined;
             const imageUrl = (explicitOgImage && !explicitOgImage.startsWith("data:"))
               ? resolveImageUrl(explicitOgImage)
-              : resolveImageUrl(article.featuredImage);
+              : resolveImageUrlWithResize(article.featuredImage);
             tags = {
               title: `${article.title} | IEVRA Design & Build`,
               description:
