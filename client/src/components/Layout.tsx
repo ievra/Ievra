@@ -215,7 +215,7 @@ export default function Layout({ children }: LayoutProps) {
       introAnimatingRef.current = true;
 
       const isMobile = window.innerWidth < 768;
-      const duration = isMobile ? 1400 : 2200;
+      const duration = isMobile ? 900 : 1400;
       const logoStartY = window.innerHeight / 2;
       const startScale = isMobile ? 2.2 : 2.8;
 
