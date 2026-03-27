@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { compressIfNeeded } from "@/lib/imageUtils";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -674,15 +675,19 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       return;
     }
     try {
-      const sizeMB = (file.size / 1024 / 1024).toFixed(1);
+      const { blob, didCompress } = await compressIfNeeded(file);
+      const sizeMB = (blob.size / 1024 / 1024).toFixed(1);
+      const uploadFile = didCompress
+        ? new File([blob], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' })
+        : file;
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', uploadFile);
       const response = await fetch('/api/upload', { method: 'POST', body: formData });
       if (!response.ok) throw new Error('Upload failed');
       const data = await response.json();
       setArticleOgImagePreview(data.path);
       articleForm.setValue('ogImage', data.path);
-      toast({ title: "Upload thành công", description: `OG Image: ${sizeMB} MB` });
+      toast({ title: "Upload thành công", description: `OG Image: ${sizeMB} MB${didCompress ? ' (đã nén nhẹ)' : ''}` });
     } catch {
       toast({ title: "Lỗi upload", description: "Không thể upload OG Image", variant: "destructive" });
       e.target.value = '';
