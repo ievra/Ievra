@@ -676,7 +676,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
     }
     try {
       const compressed = await compressOgImage(file);
-      const sizekB = Math.round(compressed.size / 1024);
+      const sizeMB = (compressed.size / 1024 / 1024).toFixed(1);
       const formData = new FormData();
       formData.append('file', new File([compressed], file.name.replace(/\.[^.]+$/, '.jpg'), { type: 'image/jpeg' }));
       const response = await fetch('/api/upload', { method: 'POST', body: formData });
@@ -684,7 +684,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       const data = await response.json();
       setArticleOgImagePreview(data.path);
       articleForm.setValue('ogImage', data.path);
-      toast({ title: "Upload thành công", description: `OG Image đã nén còn ${sizekB} KB` });
+      toast({ title: "Upload thành công", description: `OG Image: ${sizeMB} MB` });
     } catch {
       toast({ title: "Lỗi upload", description: "Không thể upload OG Image", variant: "destructive" });
       e.target.value = '';

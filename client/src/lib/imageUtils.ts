@@ -1,11 +1,11 @@
 /**
- * Compress and resize an image to OG-optimal dimensions (max 1200×630, JPEG quality 0.82).
- * Result is typically 80–200 KB — fast for social media crawlers.
+ * Lightly compress an OG image — max 2400×2400, JPEG quality 0.95.
+ * Result is typically 1–4 MB, good quality for social media crawlers.
  */
 export function compressOgImage(file: File): Promise<Blob> {
   return new Promise((resolve, reject) => {
-    const MAX_W = 1200;
-    const MAX_H = 630;
+    const MAX_W = 2400;
+    const MAX_H = 2400;
 
     const img = new Image();
     const objectUrl = URL.createObjectURL(file);
@@ -37,7 +37,7 @@ export function compressOgImage(file: File): Promise<Blob> {
           else reject(new Error('Canvas toBlob failed'));
         },
         'image/jpeg',
-        0.92,
+        0.95,
       );
     };
 
