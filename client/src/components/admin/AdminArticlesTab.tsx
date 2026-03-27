@@ -38,6 +38,7 @@ const bilingualArticleSchema = z.object({
   metaKeywordsEn: z.string().optional(),
   metaKeywordsVi: z.string().optional(),
   attribution: z.string().optional(),
+  ogImage: z.string().optional(),
 }).superRefine((data, ctx) => {
   const hasEn = data.titleEn && data.titleEn.trim() && data.contentEn && data.contentEn.trim();
   const hasVi = data.titleVi && data.titleVi.trim() && data.contentVi && data.contentVi.trim();
@@ -89,6 +90,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
   const [togglingFeaturedSlug, setTogglingFeaturedSlug] = useState<string | null>(null);
   const [articleImageFile, setArticleImageFile] = useState<File | null>(null);
   const [articleImagePreview, setArticleImagePreview] = useState<string>('');
+  const [articleOgImagePreview, setArticleOgImagePreview] = useState<string>('');
   const [articleContentImages, setArticleContentImages] = useState<string[]>([]);
   const [articleContentImageCaptions, setArticleContentImageCaptions] = useState<string[]>([]);
   const [isCategoryManagementDialogOpen, setIsCategoryManagementDialogOpen] = useState(false);
@@ -397,6 +399,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       metaKeywordsEn: enVersion?.metaKeywords || "",
       metaKeywordsVi: viVersion?.metaKeywords || "",
       attribution: (article as any).attribution || "",
+      ogImage: (enVersion as any)?.ogImage || (article as any).ogImage || "",
     });
     const previewImage = enVersion?.featuredImage || enVersion?.featuredImageData || article.featuredImage || article.featuredImageData;
     if (previewImage) {
@@ -404,6 +407,8 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
     } else {
       setArticleImagePreview('');
     }
+    const ogImg = (enVersion as any)?.ogImage || (article as any).ogImage || '';
+    setArticleOgImagePreview(ogImg);
     const contentImages = (enVersion?.contentImages || article.contentImages || []) as string[];
     setArticleContentImages(contentImages);
     const combinedContent = [enVersion?.content || '', viVersion?.content || ''].join('\n');
@@ -428,6 +433,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
     setEditingArticle(null);
     setArticleImagePreview(savedData?.featuredImage || '');
     setArticleImageFile(null);
+    setArticleOgImagePreview((savedData as any)?.ogImage || '');
     setArticleContentImages((savedData as any)?._contentImages || []);
     setArticleContentImageCaptions((savedData as any)?._contentImageCaptions || []);
     setIsNewArticle(true);
@@ -451,6 +457,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       metaKeywordsEn: savedData?.metaKeywordsEn || '',
       metaKeywordsVi: savedData?.metaKeywordsVi || '',
       attribution: savedData?.attribution || '',
+      ogImage: (savedData as any)?.ogImage || '',
     });
     if (savedData?.titleEn || savedData?.titleVi || savedData?.contentEn || savedData?.contentVi) {
       toast({
@@ -520,6 +527,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       }
 
       const featuredImg = articleImagePreview || data.featuredImage || undefined;
+      const ogImg = articleOgImagePreview || data.ogImage || undefined;
 
       const mutations: Promise<any>[] = [];
 
@@ -535,6 +543,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
           language: 'en',
           featured: data.featured,
           featuredImage: featuredImg,
+          ogImage: ogImg,
           metaTitle: data.metaTitleEn,
           metaDescription: data.metaDescriptionEn,
           metaKeywords: data.metaKeywordsEn,
@@ -570,6 +579,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
           language: 'vi',
           featured: data.featured,
           featuredImage: featuredImg,
+          ogImage: ogImg,
           metaTitle: data.metaTitleVi,
           metaDescription: data.metaDescriptionVi,
           metaKeywords: data.metaKeywordsVi,
@@ -601,6 +611,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
       setIsNewArticle(false);
       setArticleImagePreview('');
       setArticleImageFile(null);
+      setArticleOgImagePreview('');
       setArticleContentImages([]);
       setArticleContentImageCaptions([]);
       setIsArticleDialogOpen(false);
@@ -650,6 +661,29 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
         });
         e.target.value = '';
       }
+    }
+  };
+
+  const handleArticleOgImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+      toast({ title: "File quá lớn", description: "OG Image tối đa 10MB.", variant: "destructive" });
+      e.target.value = '';
+      return;
+    }
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const response = await fetch('/api/upload', { method: 'POST', body: formData });
+      if (!response.ok) throw new Error('Upload failed');
+      const data = await response.json();
+      setArticleOgImagePreview(data.path);
+      articleForm.setValue('ogImage', data.path);
+      toast({ title: "Upload thành công", description: "OG Image đã được tải lên" });
+    } catch {
+      toast({ title: "Lỗi upload", description: "Không thể upload OG Image", variant: "destructive" });
+      e.target.value = '';
     }
   };
 
@@ -1346,6 +1380,49 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                   )}
                 />
               </div>
+
+              {/* OG Image */}
+              <div className="space-y-2">
+                <h4 className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Ảnh OG (Social Media)' : 'OG Image (Social Media)'}</h4>
+                <p className="text-xs text-muted-foreground">{language === 'vi' ? 'Ảnh hiển thị khi chia sẻ lên Facebook, Zalo... (khuyến nghị 1200×630px). Nếu để trống, ảnh đại diện sẽ được dùng thay thế.' : 'Image shown when sharing on Facebook, Zalo... (recommended 1200×630px). If blank, the featured image will be used instead.'}</p>
+                <div className="border-2 border-dashed border-muted-foreground/30 rounded-lg p-4">
+                  {articleOgImagePreview ? (
+                    <div className="relative">
+                      <img
+                        src={articleOgImagePreview.startsWith('data:') ? articleOgImagePreview : `https://images.weserv.nl/?url=ievra.com${articleOgImagePreview}&w=600&output=webp`}
+                        alt="OG preview"
+                        className="w-full max-h-40 object-cover rounded-md"
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="sm"
+                        className="absolute top-2 right-2"
+                        onClick={() => { setArticleOgImagePreview(''); articleForm.setValue('ogImage', ''); }}
+                        disabled={!hasPermission(user, 'articles')}
+                      >
+                        {language === 'vi' ? 'Xóa' : 'Remove'}
+                      </Button>
+                    </div>
+                  ) : (
+                    <label htmlFor="article-og-image-upload" className={`flex flex-col items-center gap-2 cursor-pointer ${!hasPermission(user, 'articles') ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                      <svg className="w-10 h-10 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      <span className="text-sm text-muted-foreground">{language === 'vi' ? 'Nhấn để tải ảnh OG' : 'Click to upload OG image'}</span>
+                    </label>
+                  )}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleArticleOgImageChange}
+                    className="hidden"
+                    id="article-og-image-upload"
+                    disabled={!hasPermission(user, 'articles')}
+                  />
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-4">
                   <h4 className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'SEO Tiếng Anh' : 'English SEO'}</h4>
@@ -1457,6 +1534,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                   setEditingArticle(null);
                   setArticleImagePreview('');
                   setArticleImageFile(null);
+                  setArticleOgImagePreview('');
                   setArticleContentImages([]);
                   setArticleContentImageCaptions([]);
                   articleForm.reset();
@@ -1765,6 +1843,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                 setIsNewArticle(false);
                 setArticleImagePreview('');
                 setArticleImageFile(null);
+                setArticleOgImagePreview('');
                 setArticleContentImages([]);
                 setArticleContentImageCaptions([]);
                 articleForm.reset();

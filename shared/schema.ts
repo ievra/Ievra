@@ -63,6 +63,7 @@ export const projects = pgTable("projects", {
   metaTitle: text("meta_title"),
   metaDescription: text("meta_description"),
   metaKeywords: text("meta_keywords"),
+  ogImage: text("og_image"), // Custom OG image URL for social sharing
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 });
@@ -196,6 +197,7 @@ export const articles = pgTable("articles", {
   metaTitle: text("meta_title"),
   metaDescription: text("meta_description"),
   metaKeywords: text("meta_keywords"),
+  ogImage: text("og_image"), // Custom OG image URL for social sharing
   // Analytics
   attribution: text("attribution"),
   viewCount: integer("view_count").notNull().default(0),

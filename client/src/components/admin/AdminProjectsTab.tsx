@@ -66,6 +66,7 @@ const bilingualProjectSchema = z.object({
   metaDescriptionVi: z.string().optional(),
   metaKeywordsEn: z.string().optional(),
   metaKeywordsVi: z.string().optional(),
+  ogImage: z.string().optional(),
 }).superRefine((data, ctx) => {
   const hasEn = data.titleEn && data.titleEn.trim();
   const hasVi = data.titleVi && data.titleVi.trim();
@@ -133,6 +134,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
   const [deleteCategoryData, setDeleteCategoryData] = useState<{ id: string, name: string } | null>(null);
   const [isDeleteCategoryAlertOpen, setIsDeleteCategoryAlertOpen] = useState(false);
   const [isProjectDiscardConfirmOpen, setIsProjectDiscardConfirmOpen] = useState(false);
+  const [projectOgImagePreview, setProjectOgImagePreview] = useState('');
 
   if (!hasPermission(user, 'projects')) {
     return <PermissionDenied feature="Projects" />;
@@ -392,7 +394,9 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       featured: project.featured,
       heroImage: project.heroImage || "",
       images: Array.isArray(project.images) ? project.images : [],
+      ogImage: (enVersion as any)?.ogImage || (project as any).ogImage || "",
     });
+    setProjectOgImagePreview((enVersion as any)?.ogImage || (project as any).ogImage || '');
     setIsProjectDialogOpen(true);
   };
 
@@ -455,7 +459,9 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       metaDescriptionVi: savedData?.metaDescriptionVi || '',
       metaKeywordsEn: savedData?.metaKeywordsEn || '',
       metaKeywordsVi: savedData?.metaKeywordsVi || '',
+      ogImage: (savedData as any)?.ogImage || '',
     });
+    setProjectOgImagePreview((savedData as any)?.ogImage || '');
 
     if (savedData?.titleEn || savedData?.titleVi) {
       toast({
@@ -544,6 +550,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
           metaTitle: data.metaTitleEn,
           metaDescription: data.metaDescriptionEn,
           metaKeywords: data.metaKeywordsEn,
+          ogImage: projectOgImagePreview || data.ogImage || undefined,
           language: 'en' as const,
         };
 
@@ -594,6 +601,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
           metaTitle: data.metaTitleVi,
           metaDescription: data.metaDescriptionVi,
           metaKeywords: data.metaKeywordsVi,
+          ogImage: projectOgImagePreview || data.ogImage || undefined,
           language: 'vi' as const,
         };
 
@@ -617,6 +625,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
 
       setIsProjectDialogOpen(false);
       setEditingProject(null);
+      setProjectOgImagePreview('');
       projectForm.reset();
       try { localStorage.removeItem(PROJECT_AUTOSAVE_KEY); } catch {}
       toast({ title: "Đã lưu dự án thành công" });
@@ -628,6 +637,29 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       });
     } finally {
       setIsProjectSubmitting(false);
+    }
+  };
+
+  const handleProjectOgImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) {
+      toast({ title: "File quá lớn", description: "OG Image tối đa 10MB.", variant: "destructive" });
+      e.target.value = '';
+      return;
+    }
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const response = await fetch('/api/upload', { method: 'POST', body: formData });
+      if (!response.ok) throw new Error('Upload failed');
+      const data = await response.json();
+      setProjectOgImagePreview(data.path);
+      projectForm.setValue('ogImage', data.path);
+      toast({ title: "Upload thành công", description: "OG Image đã được tải lên" });
+    } catch {
+      toast({ title: "Lỗi upload", description: "Không thể upload OG Image", variant: "destructive" });
+      e.target.value = '';
     }
   };
 
@@ -1306,6 +1338,48 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                       )}
                     />
                   </div>
+                  {/* OG Image */}
+                  <div className="space-y-2">
+                    <h4 className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Ảnh OG (Social Media)' : 'OG Image (Social Media)'}</h4>
+                    <p className="text-xs text-muted-foreground">{language === 'vi' ? 'Ảnh hiển thị khi chia sẻ lên Facebook, Zalo... (khuyến nghị 1200×630px). Nếu để trống, ảnh đại diện sẽ được dùng thay thế.' : 'Image shown when sharing on Facebook, Zalo... (recommended 1200×630px). If blank, the featured image will be used instead.'}</p>
+                    <div className="border-2 border-dashed border-muted-foreground/30 rounded-lg p-4">
+                      {projectOgImagePreview ? (
+                        <div className="relative">
+                          <img
+                            src={projectOgImagePreview.startsWith('data:') ? projectOgImagePreview : `https://images.weserv.nl/?url=ievra.com${projectOgImagePreview}&w=600&output=webp`}
+                            alt="OG preview"
+                            className="w-full max-h-40 object-cover rounded-md"
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="sm"
+                            className="absolute top-2 right-2"
+                            onClick={() => { setProjectOgImagePreview(''); projectForm.setValue('ogImage', ''); }}
+                            disabled={!hasPermission(user, 'projects')}
+                          >
+                            {language === 'vi' ? 'Xóa' : 'Remove'}
+                          </Button>
+                        </div>
+                      ) : (
+                        <label htmlFor="project-og-image-upload" className={`flex flex-col items-center gap-2 cursor-pointer ${!hasPermission(user, 'projects') ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                          <svg className="w-10 h-10 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          <span className="text-sm text-muted-foreground">{language === 'vi' ? 'Nhấn để tải ảnh OG' : 'Click to upload OG image'}</span>
+                        </label>
+                      )}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleProjectOgImageChange}
+                        className="hidden"
+                        id="project-og-image-upload"
+                        disabled={!hasPermission(user, 'projects')}
+                      />
+                    </div>
+                  </div>
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-4">
                       <h4 className="text-sm font-medium text-muted-foreground uppercase">SEO Tiếng Anh</h4>
@@ -1415,6 +1489,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                       }
                       setIsProjectDialogOpen(false);
                       setEditingProject(null);
+                      setProjectOgImagePreview('');
                       projectForm.reset();
                     }}
                     className="h-10 px-4"
@@ -1950,6 +2025,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                 setIsProjectDialogOpen(false);
                 setEditingProject(null);
                 setIsNewProject(false);
+                setProjectOgImagePreview('');
                 projectForm.reset();
                 setTimeout(() => { try { localStorage.removeItem(PROJECT_AUTOSAVE_KEY); } catch {} }, 50);
               }}

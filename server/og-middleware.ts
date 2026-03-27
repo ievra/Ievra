@@ -155,17 +155,25 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
         try {
           const project = await storage.getProjectBySlug(slug);
           if (project) {
-            const coverImages = Array.isArray(project.coverImages) ? project.coverImages : [];
-            const galleryImages = Array.isArray(project.galleryImages) ? project.galleryImages : [];
-            const candidates = [project.heroImage, ...coverImages, ...galleryImages];
-            const firstImage = candidates.find(img => img && !String(img).startsWith("data:"));
+            // Prioritize explicit ogImage field; fall back to cover/gallery/hero images
+            const explicitOgImage = (project as any).ogImage as string | undefined;
+            let imageUrl: string | undefined;
+            if (explicitOgImage && !explicitOgImage.startsWith("data:")) {
+              imageUrl = resolveImageUrl(explicitOgImage);
+            } else {
+              const coverImages = Array.isArray(project.coverImages) ? project.coverImages : [];
+              const galleryImages = Array.isArray(project.galleryImages) ? project.galleryImages : [];
+              const candidates = [project.heroImage, ...coverImages, ...galleryImages];
+              const firstImage = candidates.find(img => img && !String(img).startsWith("data:"));
+              imageUrl = resolveImageUrl(firstImage as string);
+            }
             tags = {
               title: `${project.title} | IEVRA Design & Build`,
               description:
                 project.metaDescription ||
                 project.description ||
                 "Dự án thiết kế nội thất của IEVRA Design & Build",
-              image: resolveImageUrl(firstImage as string),
+              image: imageUrl,
               url: currentUrl,
               type: "article",
               locale,
@@ -180,13 +188,18 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
         try {
           const article = await storage.getArticleBySlug(slug);
           if (article) {
+            // Prioritize explicit ogImage field; fall back to featuredImage
+            const explicitOgImage = (article as any).ogImage as string | undefined;
+            const imageUrl = (explicitOgImage && !explicitOgImage.startsWith("data:"))
+              ? resolveImageUrl(explicitOgImage)
+              : resolveImageUrl(article.featuredImage);
             tags = {
               title: `${article.title} | IEVRA Design & Build`,
               description:
                 article.metaDescription ||
                 article.excerpt ||
                 "Bài viết từ IEVRA Design & Build",
-              image: resolveImageUrl(article.featuredImage),
+              image: imageUrl,
               url: currentUrl,
               type: "article",
               locale,
