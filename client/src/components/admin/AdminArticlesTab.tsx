@@ -1385,16 +1385,16 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
               </div>
 
               {/* OG Image */}
-              <div className="space-y-2">
+              <div className="space-y-2 mb-8">
                 <h4 className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Ảnh OG (Social Media)' : 'OG Image (Social Media)'}</h4>
                 <p className="text-xs text-muted-foreground">{language === 'vi' ? 'Ảnh hiển thị khi chia sẻ lên Facebook, Zalo... (khuyến nghị 1200×630px). Nếu để trống, ảnh đại diện sẽ được dùng thay thế.' : 'Image shown when sharing on Facebook, Zalo... (recommended 1200×630px). If blank, the featured image will be used instead.'}</p>
-                <div className="border-2 border-dashed border-muted-foreground/30 rounded-lg p-4">
+                <div className="border-2 border-dashed border-muted-foreground/30 rounded-lg overflow-hidden" style={{ height: '168px' }}>
                   {articleOgImagePreview ? (
-                    <div className="relative">
+                    <div className="relative w-full h-full">
                       <img
-                        src={articleOgImagePreview.startsWith('data:') ? articleOgImagePreview : `https://images.weserv.nl/?url=ievra.com${articleOgImagePreview}&w=600&output=webp`}
+                        src={articleOgImagePreview.startsWith('data:') ? articleOgImagePreview : `https://images.weserv.nl/?url=ievra.com${articleOgImagePreview}&w=1200&output=webp`}
                         alt="OG preview"
-                        className="w-full max-h-40 object-cover rounded-md"
+                        className="w-full h-full object-contain"
                       />
                       <button
                         type="button"
@@ -1407,7 +1407,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                       </button>
                     </div>
                   ) : (
-                    <label htmlFor="article-og-image-upload" className={`flex flex-col items-center gap-2 cursor-pointer ${!hasPermission(user, 'articles') ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                    <label htmlFor="article-og-image-upload" className={`flex flex-col items-center justify-center gap-2 w-full h-full cursor-pointer ${!hasPermission(user, 'articles') ? 'opacity-50 cursor-not-allowed' : ''}`}>
                       <svg className="w-10 h-10 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
