@@ -15,7 +15,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Pencil, Trash2, Plus, Star, Settings, Lock, Search } from "lucide-react";
+import { Pencil, Trash2, Plus, Star, Settings, Lock, Search, X } from "lucide-react";
 import type { Article, InsertArticle, Category } from "@shared/schema";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -1396,16 +1396,15 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                         alt="OG preview"
                         className="w-full max-h-40 object-cover rounded-md"
                       />
-                      <Button
+                      <button
                         type="button"
-                        variant="destructive"
-                        size="sm"
-                        className="absolute top-2 right-2"
+                        className="absolute top-2 right-2 w-7 h-7 flex items-center justify-center rounded-full bg-black/60 hover:bg-black/90 text-white transition-colors disabled:opacity-40"
                         onClick={() => { setArticleOgImagePreview(''); articleForm.setValue('ogImage', ''); }}
                         disabled={!hasPermission(user, 'articles')}
+                        aria-label="Xóa ảnh OG"
                       >
-                        {language === 'vi' ? 'Xóa' : 'Remove'}
-                      </Button>
+                        <X className="w-4 h-4" />
+                      </button>
                     </div>
                   ) : (
                     <label htmlFor="article-og-image-upload" className={`flex flex-col items-center gap-2 cursor-pointer ${!hasPermission(user, 'articles') ? 'opacity-50 cursor-not-allowed' : ''}`}>

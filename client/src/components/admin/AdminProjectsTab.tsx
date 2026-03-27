@@ -16,7 +16,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import ImageUpload from "@/components/ImageUpload";
-import { Pencil, Trash2, Plus, Star, Settings, Lock, Search } from "lucide-react";
+import { Pencil, Trash2, Plus, Star, Settings, Lock, Search, X } from "lucide-react";
 import type { Project, Category } from "@shared/schema";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -1353,16 +1353,15 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                             alt="OG preview"
                             className="w-full max-h-40 object-cover rounded-md"
                           />
-                          <Button
+                          <button
                             type="button"
-                            variant="destructive"
-                            size="sm"
-                            className="absolute top-2 right-2"
+                            className="absolute top-2 right-2 w-7 h-7 flex items-center justify-center rounded-full bg-black/60 hover:bg-black/90 text-white transition-colors disabled:opacity-40"
                             onClick={() => { setProjectOgImagePreview(''); projectForm.setValue('ogImage', ''); }}
                             disabled={!hasPermission(user, 'projects')}
+                            aria-label="Xóa ảnh OG"
                           >
-                            {language === 'vi' ? 'Xóa' : 'Remove'}
-                          </Button>
+                            <X className="w-4 h-4" />
+                          </button>
                         </div>
                       ) : (
                         <label htmlFor="project-og-image-upload" className={`flex flex-col items-center gap-2 cursor-pointer ${!hasPermission(user, 'projects') ? 'opacity-50 cursor-not-allowed' : ''}`}>

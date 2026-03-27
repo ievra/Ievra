@@ -37,7 +37,7 @@ export function compressOgImage(file: File): Promise<Blob> {
           else reject(new Error('Canvas toBlob failed'));
         },
         'image/jpeg',
-        0.82,
+        0.92,
       );
     };
 
