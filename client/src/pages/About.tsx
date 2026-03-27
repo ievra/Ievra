@@ -235,7 +235,7 @@ export default function About() {
                   <img 
                     src={imageUrl} 
                     alt={`About Hero ${index + 1}`}
-                    className="absolute inset-0 w-full h-full object-cover"
+                    className="absolute inset-0 w-full h-full object-contain sm:object-cover"
                     loading={index === 0 ? "eager" : "lazy"}
                     decoding="async"
                     onError={(e) => {
