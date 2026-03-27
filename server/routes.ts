@@ -203,54 +203,137 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const baseUrl = getSiteBaseUrl(req);
 
+      // Static pages with both EN and VI alternate URLs
       const staticPages = [
-        { url: '/',          priority: '1.0', changefreq: 'weekly'  },
-        { url: '/about',     priority: '0.8', changefreq: 'monthly' },
-        { url: '/portfolio', priority: '0.9', changefreq: 'weekly'  },
-        { url: '/blog',      priority: '0.8', changefreq: 'weekly'  },
-        { url: '/contact',   priority: '0.7', changefreq: 'monthly' },
+        { en: '/',           vi: '/',             priority: '1.0', changefreq: 'weekly'  },
+        { en: '/about',      vi: '/gioi-thieu',   priority: '0.8', changefreq: 'monthly' },
+        { en: '/portfolio',  vi: '/du-an',        priority: '0.9', changefreq: 'weekly'  },
+        { en: '/blog',       vi: '/tin-tuc',      priority: '0.8', changefreq: 'weekly'  },
+        { en: '/contact',    vi: '/lien-he',      priority: '0.7', changefreq: 'monthly' },
+        { en: '/lookup',     vi: '/tra-cuu',      priority: '0.6', changefreq: 'monthly' },
       ];
 
       const [projects, articles] = await Promise.all([
-        storage.getProjects(),
+        storage.getProjects({ status: 'all' } as any),
         storage.getArticles(),
       ]);
 
-      const activeProjects = projects.filter(p => p.slug && p.status === 'completed');
+      const publishedProjects = projects.filter(p => p.slug && p.status === 'published');
       const publishedArticles = articles.filter(a => a.status === 'published' && a.slug);
 
-      // Deduplicate projects by slug (keep one per slug regardless of language)
-      const seenProjectSlugs = new Set<string>();
-      const uniqueProjects = activeProjects.filter(p => {
-        if (seenProjectSlugs.has(p.slug)) return false;
-        seenProjectSlugs.add(p.slug);
-        return true;
-      });
+      // Group projects by linkedSlug to find EN/VI pairs
+      const projectGroups = new Map<string, { en?: typeof projects[0]; vi?: typeof projects[0] }>();
+      for (const p of publishedProjects) {
+        const key = (p as any).linkedSlug || p.slug;
+        if (!projectGroups.has(key)) projectGroups.set(key, {});
+        const group = projectGroups.get(key)!;
+        if (p.language === 'vi') group.vi = p;
+        else group.en = p;
+      }
 
-      const seenArticleSlugs = new Set<string>();
-      const uniqueArticles = publishedArticles.filter(a => {
-        if (seenArticleSlugs.has(a.slug)) return false;
-        seenArticleSlugs.add(a.slug);
-        return true;
-      });
+      // Group articles by linkedSlug to find EN/VI pairs
+      const articleGroups = new Map<string, { en?: typeof articles[0]; vi?: typeof articles[0] }>();
+      for (const a of publishedArticles) {
+        const key = (a as any).linkedSlug || a.slug;
+        if (!articleGroups.has(key)) articleGroups.set(key, {});
+        const group = articleGroups.get(key)!;
+        if (a.language === 'vi') group.vi = a;
+        else group.en = a;
+      }
 
       const today = new Date().toISOString().split('T')[0];
 
-      let xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n`;
+      let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+      xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n`;
+      xml += `        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n`;
 
+      // Static pages
       for (const page of staticPages) {
-        xml += `  <url>\n    <loc>${baseUrl}${page.url}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>${page.changefreq}</changefreq>\n    <priority>${page.priority}</priority>\n  </url>\n`;
+        const isSamePath = page.en === page.vi;
+        xml += `  <url>\n`;
+        xml += `    <loc>${baseUrl}${page.en}</loc>\n`;
+        xml += `    <lastmod>${today}</lastmod>\n`;
+        xml += `    <changefreq>${page.changefreq}</changefreq>\n`;
+        xml += `    <priority>${page.priority}</priority>\n`;
+        xml += `    <xhtml:link rel="alternate" hreflang="vi" href="${baseUrl}${page.vi}"/>\n`;
+        xml += `    <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}${page.en}"/>\n`;
+        xml += `    <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}${page.vi}"/>\n`;
+        xml += `  </url>\n`;
+        if (!isSamePath) {
+          xml += `  <url>\n`;
+          xml += `    <loc>${baseUrl}${page.vi}</loc>\n`;
+          xml += `    <lastmod>${today}</lastmod>\n`;
+          xml += `    <changefreq>${page.changefreq}</changefreq>\n`;
+          xml += `    <priority>${page.priority}</priority>\n`;
+          xml += `    <xhtml:link rel="alternate" hreflang="vi" href="${baseUrl}${page.vi}"/>\n`;
+          xml += `    <xhtml:link rel="alternate" hreflang="en" href="${baseUrl}${page.en}"/>\n`;
+          xml += `    <xhtml:link rel="alternate" hreflang="x-default" href="${baseUrl}${page.vi}"/>\n`;
+          xml += `  </url>\n`;
+        }
       }
 
-      for (const project of uniqueProjects) {
-        xml += `  <url>\n    <loc>${baseUrl}/portfolio/${project.slug}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.7</priority>\n  </url>\n`;
+      // Project pages (EN + VI with hreflang)
+      for (const [, group] of projectGroups) {
+        const enSlug = group.en?.slug;
+        const viSlug = group.vi?.slug;
+        const enUrl = enSlug ? `${baseUrl}/portfolio/${enSlug}` : null;
+        const viUrl = viSlug ? `${baseUrl}/du-an/${viSlug}` : null;
+        const canonical = enUrl || viUrl;
+        if (!canonical) continue;
+        if (enUrl) {
+          xml += `  <url>\n`;
+          xml += `    <loc>${enUrl}</loc>\n`;
+          xml += `    <lastmod>${today}</lastmod>\n`;
+          xml += `    <changefreq>monthly</changefreq>\n`;
+          xml += `    <priority>0.7</priority>\n`;
+          if (viUrl) xml += `    <xhtml:link rel="alternate" hreflang="vi" href="${viUrl}"/>\n`;
+          xml += `    <xhtml:link rel="alternate" hreflang="en" href="${enUrl}"/>\n`;
+          if (viUrl) xml += `    <xhtml:link rel="alternate" hreflang="x-default" href="${viUrl}"/>\n`;
+          xml += `  </url>\n`;
+        }
+        if (viUrl) {
+          xml += `  <url>\n`;
+          xml += `    <loc>${viUrl}</loc>\n`;
+          xml += `    <lastmod>${today}</lastmod>\n`;
+          xml += `    <changefreq>monthly</changefreq>\n`;
+          xml += `    <priority>0.7</priority>\n`;
+          xml += `    <xhtml:link rel="alternate" hreflang="vi" href="${viUrl}"/>\n`;
+          if (enUrl) xml += `    <xhtml:link rel="alternate" hreflang="en" href="${enUrl}"/>\n`;
+          xml += `    <xhtml:link rel="alternate" hreflang="x-default" href="${viUrl}"/>\n`;
+          xml += `  </url>\n`;
+        }
       }
 
-      for (const article of uniqueArticles) {
-        const lastmod = article.publishedAt
-          ? new Date(article.publishedAt).toISOString().split('T')[0]
-          : today;
-        xml += `  <url>\n    <loc>${baseUrl}/blog/${article.slug}</loc>\n    <lastmod>${lastmod}</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.6</priority>\n  </url>\n`;
+      // Article pages (EN + VI with hreflang)
+      for (const [, group] of articleGroups) {
+        const enSlug = group.en?.slug;
+        const viSlug = group.vi?.slug;
+        const enUrl = enSlug ? `${baseUrl}/blog/${enSlug}` : null;
+        const viUrl = viSlug ? `${baseUrl}/tin-tuc/${viSlug}` : null;
+        const enLastmod = group.en?.publishedAt ? new Date(group.en.publishedAt).toISOString().split('T')[0] : today;
+        const viLastmod = group.vi?.publishedAt ? new Date(group.vi.publishedAt).toISOString().split('T')[0] : today;
+        if (enUrl) {
+          xml += `  <url>\n`;
+          xml += `    <loc>${enUrl}</loc>\n`;
+          xml += `    <lastmod>${enLastmod}</lastmod>\n`;
+          xml += `    <changefreq>monthly</changefreq>\n`;
+          xml += `    <priority>0.6</priority>\n`;
+          if (viUrl) xml += `    <xhtml:link rel="alternate" hreflang="vi" href="${viUrl}"/>\n`;
+          xml += `    <xhtml:link rel="alternate" hreflang="en" href="${enUrl}"/>\n`;
+          if (viUrl) xml += `    <xhtml:link rel="alternate" hreflang="x-default" href="${viUrl}"/>\n`;
+          xml += `  </url>\n`;
+        }
+        if (viUrl) {
+          xml += `  <url>\n`;
+          xml += `    <loc>${viUrl}</loc>\n`;
+          xml += `    <lastmod>${viLastmod}</lastmod>\n`;
+          xml += `    <changefreq>monthly</changefreq>\n`;
+          xml += `    <priority>0.6</priority>\n`;
+          xml += `    <xhtml:link rel="alternate" hreflang="vi" href="${viUrl}"/>\n`;
+          if (enUrl) xml += `    <xhtml:link rel="alternate" hreflang="en" href="${enUrl}"/>\n`;
+          xml += `    <xhtml:link rel="alternate" hreflang="x-default" href="${viUrl}"/>\n`;
+          xml += `  </url>\n`;
+        }
       }
 
       xml += `</urlset>`;
@@ -259,6 +342,66 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.send(xml);
     } catch (error) {
       console.error('Error generating sitemap:', error);
+      res.status(500).send('Error generating sitemap');
+    }
+  });
+
+  // Plain text sitemap (one URL per line — useful for Google Search Console submission)
+  app.get("/sitemap.txt", async (req, res) => {
+    try {
+      const baseUrl = getSiteBaseUrl(req);
+
+      const staticUrls = [
+        `${baseUrl}/`,
+        `${baseUrl}/about`,
+        `${baseUrl}/gioi-thieu`,
+        `${baseUrl}/portfolio`,
+        `${baseUrl}/du-an`,
+        `${baseUrl}/blog`,
+        `${baseUrl}/tin-tuc`,
+        `${baseUrl}/contact`,
+        `${baseUrl}/lien-he`,
+        `${baseUrl}/lookup`,
+        `${baseUrl}/tra-cuu`,
+      ];
+
+      const [projects, articles] = await Promise.all([
+        storage.getProjects({ status: 'all' } as any),
+        storage.getArticles(),
+      ]);
+
+      const publishedProjects = projects.filter(p => p.slug && p.status === 'published');
+      const publishedArticles = articles.filter(a => a.status === 'published' && a.slug);
+
+      const seenProjectSlugs = new Set<string>();
+      const projectUrls: string[] = [];
+      for (const p of publishedProjects) {
+        if (seenProjectSlugs.has(p.slug)) continue;
+        seenProjectSlugs.add(p.slug);
+        if (p.language === 'vi') {
+          projectUrls.push(`${baseUrl}/du-an/${p.slug}`);
+        } else {
+          projectUrls.push(`${baseUrl}/portfolio/${p.slug}`);
+        }
+      }
+
+      const seenArticleSlugs = new Set<string>();
+      const articleUrls: string[] = [];
+      for (const a of publishedArticles) {
+        if (seenArticleSlugs.has(a.slug)) continue;
+        seenArticleSlugs.add(a.slug);
+        if (a.language === 'vi') {
+          articleUrls.push(`${baseUrl}/tin-tuc/${a.slug}`);
+        } else {
+          articleUrls.push(`${baseUrl}/blog/${a.slug}`);
+        }
+      }
+
+      const allUrls = [...staticUrls, ...projectUrls, ...articleUrls];
+      res.set('Content-Type', 'text/plain; charset=utf-8');
+      res.send(allUrls.join('\n') + '\n');
+    } catch (error) {
+      console.error('Error generating sitemap.txt:', error);
       res.status(500).send('Error generating sitemap');
     }
   });
