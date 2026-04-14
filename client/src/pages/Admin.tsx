@@ -33,16 +33,10 @@ function hasPermission(user: any, permission: string): boolean {
     return true;
   }
   
-  // Only super admin can access Users tab
-  if (permission === 'users') {
-    return user.role === 'superadmin';
-  }
-  
   // Super Admin role always has full access to everything
   if (user.role === 'superadmin') return true;
   
   // Admin and Editor roles: check if user has the specific permission in their permissions array
-  // This enables granular permission control for admin users
   return user.permissions && Array.isArray(user.permissions) && user.permissions.includes(permission);
 }
 

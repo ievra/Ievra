@@ -30,13 +30,15 @@ type UserFormData = z.infer<typeof userSchema>;
 
 const AVAILABLE_PERMISSIONS = [
   { id: 'projects', label: 'Projects', labelVi: 'Dự Án' },
-  { id: 'clients', label: 'Clients', labelVi: 'Khách Hàng' },
+  { id: 'clients', label: 'Clients & CRM', labelVi: 'Khách Hàng & CRM' },
   { id: 'inquiries', label: 'Inquiries', labelVi: 'Yêu Cầu' },
   { id: 'articles', label: 'Articles', labelVi: 'Bài Viết' },
   { id: 'homepage', label: 'Homepage', labelVi: 'Trang Chủ' },
   { id: 'about', label: 'About', labelVi: 'Giới Thiệu' },
+  { id: 'partners', label: 'Partners', labelVi: 'Đối Tác' },
   { id: 'content', label: 'SEO', labelVi: 'SEO' },
   { id: 'lookup', label: 'Lookup', labelVi: 'Tra Cứu' },
+  { id: 'users', label: 'User Management', labelVi: 'Quản Lý Người Dùng' },
 ];
 
 function PermissionDenied({ feature }: { feature: string }) {

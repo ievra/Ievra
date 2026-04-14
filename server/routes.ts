@@ -479,7 +479,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/users", requirePermission('users'), requirePermission('crm'), async (req, res) => {
+  app.post("/api/users", requirePermission('users'), async (req, res) => {
     try {
       const { password, ...rest } = req.body;
       const validatedData = insertUserSchema.parse({
@@ -497,7 +497,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/users/:id", requirePermission('users'), requirePermission('crm'), async (req, res) => {
+  app.put("/api/users/:id", requirePermission('users'), async (req, res) => {
     try {
       const { password, ...rest } = req.body;
       const updateData: any = { ...rest };
@@ -518,7 +518,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/users/:id", requirePermission('users'), requirePermission('crm'), async (req, res) => {
+  app.delete("/api/users/:id", requirePermission('users'), async (req, res) => {
     try {
       // Prevent deleting the last superadmin
       const users = await storage.getUsers();
@@ -537,7 +537,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Change password endpoint
-  app.post("/api/users/:id/change-password", requireAuth, requirePermission('crm'), async (req, res) => {
+  app.post("/api/users/:id/change-password", requireAuth, async (req, res) => {
     try {
       const { currentPassword, newPassword } = req.body;
       
@@ -601,7 +601,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/projects", requirePermission('projects'), requirePermission('crm'), async (req, res) => {
+  app.post("/api/projects", requirePermission('projects'), async (req, res) => {
     try {
       const validatedData = insertProjectSchema.parse({ ...req.body, featured: false });
       if (validatedData.slug) {
@@ -620,11 +620,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/projects/:id", requirePermission('projects'), requirePermission('crm'), async (req, res) => {
+  app.put("/api/projects/:id", requirePermission('projects'), async (req, res) => {
     try {
-      console.log('[PUT /api/projects] ogImage received:', req.body.ogImage);
       const validatedData = insertProjectSchema.partial().parse(req.body);
-      console.log('[PUT /api/projects] ogImage after Zod:', validatedData.ogImage);
       if (validatedData.slug) {
         const current = await storage.getProject(req.params.id);
         if (current && current.slug !== validatedData.slug) {
@@ -644,7 +642,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/projects/:id", requirePermission('projects'), requirePermission('crm'), async (req, res) => {
+  app.delete("/api/projects/:id", requirePermission('projects'), async (req, res) => {
     try {
       await storage.deleteProject(req.params.id);
       res.status(204).send();
@@ -799,7 +797,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/clients", requirePermission('clients'), requirePermission('crm'), async (req, res) => {
+  app.post("/api/clients", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertClientSchema.parse(req.body);
       const client = await storage.createClient(validatedData);
@@ -812,7 +810,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/clients/:id", requirePermission('clients'), requirePermission('crm'), async (req, res) => {
+  app.put("/api/clients/:id", requirePermission('clients'), async (req, res) => {
     try {
       const body = { ...req.body };
       const nullableFields: Record<string, boolean> = {};
@@ -838,7 +836,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/clients/:id", requirePermission('clients'), requirePermission('crm'), async (req, res) => {
+  app.delete("/api/clients/:id", requirePermission('clients'), async (req, res) => {
     try {
       const client = await storage.getClient(req.params.id);
       if (!client) {
@@ -890,7 +888,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/inquiries/:id", requirePermission('inquiries'), requirePermission('crm'), async (req, res) => {
+  app.put("/api/inquiries/:id", requirePermission('inquiries'), async (req, res) => {
     try {
       const validatedData = insertInquirySchema.partial().parse(req.body);
       const inquiry = await storage.updateInquiry(req.params.id, validatedData);
@@ -922,7 +920,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/services", requirePermission('crm'), async (req, res) => {
+  app.post("/api/services", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertServiceSchema.parse(req.body);
       const service = await storage.createService(validatedData);
@@ -935,7 +933,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/services/:id", requirePermission('crm'), async (req, res) => {
+  app.put("/api/services/:id", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertServiceSchema.partial().parse(req.body);
       const service = await storage.updateService(req.params.id, validatedData);
@@ -948,7 +946,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/services/:id", requirePermission('crm'), async (req, res) => {
+  app.delete("/api/services/:id", requirePermission('clients'), async (req, res) => {
     try {
       await storage.deleteService(req.params.id);
       res.status(204).send();
@@ -1306,7 +1304,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/interactions", requirePermission('crm'), async (req, res) => {
+  app.post("/api/interactions", requirePermission('clients'), async (req, res) => {
     try {
       const body = { ...req.body };
       if (body.date && typeof body.date === 'string') body.date = new Date(body.date);
@@ -1322,7 +1320,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/interactions/:id", requirePermission('crm'), async (req, res) => {
+  app.put("/api/interactions/:id", requirePermission('clients'), async (req, res) => {
     try {
       const body = { ...req.body };
       if (body.date && typeof body.date === 'string') body.date = new Date(body.date);
@@ -1338,7 +1336,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/interactions/:id", requirePermission('crm'), async (req, res) => {
+  app.delete("/api/interactions/:id", requirePermission('clients'), async (req, res) => {
     try {
       await storage.deleteInteraction(req.params.id);
       res.status(204).send();
@@ -1374,7 +1372,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/deals", requirePermission('crm'), async (req, res) => {
+  app.post("/api/deals", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertDealSchema.parse(req.body);
       const deal = await storage.createDeal(validatedData);
@@ -1387,7 +1385,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/deals/:id", requirePermission('crm'), async (req, res) => {
+  app.put("/api/deals/:id", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertDealSchema.partial().parse(req.body);
       const deal = await storage.updateDeal(req.params.id, validatedData);
@@ -1400,7 +1398,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/deals/:id", requirePermission('crm'), async (req, res) => {
+  app.delete("/api/deals/:id", requirePermission('clients'), async (req, res) => {
     try {
       await storage.deleteDeal(req.params.id);
       res.status(204).send();
@@ -1432,7 +1430,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/transactions", requirePermission('crm'), async (req, res) => {
+  app.post("/api/transactions", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertTransactionSchema.parse(req.body);
       const transaction = await storage.createTransaction(validatedData);
@@ -1445,7 +1443,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/transactions/:id", requirePermission('crm'), async (req, res) => {
+  app.put("/api/transactions/:id", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertTransactionSchema.partial().parse(req.body);
       const transaction = await storage.updateTransaction(req.params.id, validatedData);
@@ -1458,7 +1456,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/transactions/:id", requirePermission('crm'), async (req, res) => {
+  app.delete("/api/transactions/:id", requirePermission('clients'), async (req, res) => {
     try {
       await storage.deleteTransaction(req.params.id);
       res.status(204).send();
@@ -1478,7 +1476,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/warranty-logs", requirePermission('crm'), async (req, res) => {
+  app.post("/api/warranty-logs", requirePermission('clients'), async (req, res) => {
     try {
       const data = insertWarrantyLogSchema.parse(req.body);
       const log = await storage.createWarrantyLog(data);
@@ -1488,7 +1486,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/warranty-logs/:id", requirePermission('crm'), async (req, res) => {
+  app.put("/api/warranty-logs/:id", requirePermission('clients'), async (req, res) => {
     try {
       const data = insertWarrantyLogSchema.partial().parse(req.body);
       const log = await storage.updateWarrantyLog(req.params.id, data);
@@ -1498,7 +1496,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/warranty-logs/:id", requirePermission('crm'), async (req, res) => {
+  app.delete("/api/warranty-logs/:id", requirePermission('clients'), async (req, res) => {
     try {
       await storage.deleteWarrantyLog(req.params.id);
       res.status(204).send();
@@ -1517,7 +1515,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/clients/:id/update-tier", requirePermission('crm'), async (req, res) => {
+  app.post("/api/clients/:id/update-tier", requirePermission('clients'), async (req, res) => {
     try {
       await storage.updateClientTier(req.params.id);
       const updatedClient = await storage.getClient(req.params.id);
@@ -1802,7 +1800,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/about-content", requirePermission('crm'), async (req, res) => {
+  app.put("/api/about-content", requirePermission('about'), async (req, res) => {
     try {
       const validatedData = insertAboutPageContentSchema.parse(req.body);
       const content = await storage.upsertAboutPageContent(validatedData);
@@ -2154,7 +2152,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/crm-pipeline-stages", requirePermission('crm'), async (req, res) => {
+  app.post("/api/crm-pipeline-stages", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertCrmPipelineStageSchema.parse(req.body);
       let attempts = 0;
@@ -2183,7 +2181,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/crm-pipeline-stages/:id", requirePermission('crm'), async (req, res) => {
+  app.put("/api/crm-pipeline-stages/:id", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertCrmPipelineStageSchema.partial().parse(req.body);
       const stage = await storage.updateCrmPipelineStage(req.params.id, validatedData);
@@ -2196,7 +2194,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/crm-pipeline-stages/:id", requirePermission('crm'), async (req, res) => {
+  app.delete("/api/crm-pipeline-stages/:id", requirePermission('clients'), async (req, res) => {
     try {
       await storage.deleteCrmPipelineStage(req.params.id);
       res.status(204).send();
@@ -2218,7 +2216,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/bp-categories", requirePermission('crm'), async (req, res) => {
+  app.post("/api/bp-categories", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertBpCategorySchema.parse(req.body);
       let attempts = 0;
@@ -2247,7 +2245,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/bp-categories/:id", requirePermission('crm'), async (req, res) => {
+  app.put("/api/bp-categories/:id", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertBpCategorySchema.partial().parse(req.body);
       const category = await storage.updateBpCategory(req.params.id, validatedData);
@@ -2260,7 +2258,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/bp-categories/:id", requirePermission('crm'), async (req, res) => {
+  app.delete("/api/bp-categories/:id", requirePermission('clients'), async (req, res) => {
     try {
       await storage.deleteBpCategory(req.params.id);
       res.status(204).send();
@@ -2282,7 +2280,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/bp-statuses", requirePermission('crm'), async (req, res) => {
+  app.post("/api/bp-statuses", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertBpStatusSchema.parse(req.body);
       let attempts = 0;
@@ -2311,7 +2309,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/bp-statuses/:id", requirePermission('crm'), async (req, res) => {
+  app.put("/api/bp-statuses/:id", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertBpStatusSchema.partial().parse(req.body);
       const status = await storage.updateBpStatus(req.params.id, validatedData);
@@ -2324,7 +2322,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/bp-statuses/:id", requirePermission('crm'), async (req, res) => {
+  app.delete("/api/bp-statuses/:id", requirePermission('clients'), async (req, res) => {
     try {
       await storage.deleteBpStatus(req.params.id);
       res.status(204).send();
@@ -2346,7 +2344,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/bp-tiers", requirePermission('crm'), async (req, res) => {
+  app.post("/api/bp-tiers", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertBpTierSchema.parse(req.body);
       let attempts = 0;
@@ -2375,7 +2373,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/bp-tiers/:id", requirePermission('crm'), async (req, res) => {
+  app.put("/api/bp-tiers/:id", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertBpTierSchema.partial().parse(req.body);
       const tier = await storage.updateBpTier(req.params.id, validatedData);
@@ -2388,7 +2386,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/bp-tiers/:id", requirePermission('crm'), async (req, res) => {
+  app.delete("/api/bp-tiers/:id", requirePermission('clients'), async (req, res) => {
     try {
       await storage.deleteBpTier(req.params.id);
       res.status(204).send();
@@ -2411,7 +2409,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/crm-customer-tiers", requirePermission('crm'), async (req, res) => {
+  app.post("/api/crm-customer-tiers", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertCrmCustomerTierSchema.parse(req.body);
       let attempts = 0;
@@ -2440,7 +2438,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/crm-customer-tiers/:id", requirePermission('crm'), async (req, res) => {
+  app.put("/api/crm-customer-tiers/:id", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertCrmCustomerTierSchema.partial().parse(req.body);
       const tier = await storage.updateCrmCustomerTier(req.params.id, validatedData);
@@ -2453,7 +2451,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/crm-customer-tiers/:id", requirePermission('crm'), async (req, res) => {
+  app.delete("/api/crm-customer-tiers/:id", requirePermission('clients'), async (req, res) => {
     try {
       await storage.deleteCrmCustomerTier(req.params.id);
       res.status(204).send();
@@ -2476,7 +2474,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/crm-statuses", requirePermission('crm'), async (req, res) => {
+  app.post("/api/crm-statuses", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertCrmStatusSchema.parse(req.body);
       let attempts = 0;
@@ -2507,7 +2505,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/crm-statuses/:id", requirePermission('crm'), async (req, res) => {
+  app.put("/api/crm-statuses/:id", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertCrmStatusSchema.partial().parse(req.body);
       const status = await storage.updateCrmStatus(req.params.id, validatedData);
@@ -2520,7 +2518,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/crm-statuses/:id", requirePermission('crm'), async (req, res) => {
+  app.delete("/api/crm-statuses/:id", requirePermission('clients'), async (req, res) => {
     try {
       await storage.deleteCrmStatus(req.params.id);
       res.status(204).send();
@@ -2667,7 +2665,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/construction-phases", requirePermission('crm'), async (req, res) => {
+  app.post("/api/construction-phases", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertConstructionPhaseSchema.parse(req.body);
       let attempts = 0;
@@ -2696,7 +2694,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/construction-phases/:id", requirePermission('crm'), async (req, res) => {
+  app.put("/api/construction-phases/:id", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertConstructionPhaseSchema.partial().parse(req.body);
       const phase = await storage.updateConstructionPhase(req.params.id, validatedData);
@@ -2709,7 +2707,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/construction-phases/:id", requirePermission('crm'), async (req, res) => {
+  app.delete("/api/construction-phases/:id", requirePermission('clients'), async (req, res) => {
     try {
       await storage.deleteConstructionPhase(req.params.id);
       res.status(204).send();
@@ -2732,7 +2730,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/design-phases", requirePermission('crm'), async (req, res) => {
+  app.post("/api/design-phases", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertDesignPhaseSchema.parse(req.body);
       let attempts = 0;
@@ -2761,7 +2759,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/design-phases/:id", requirePermission('crm'), async (req, res) => {
+  app.put("/api/design-phases/:id", requirePermission('clients'), async (req, res) => {
     try {
       const validatedData = insertDesignPhaseSchema.partial().parse(req.body);
       const phase = await storage.updateDesignPhase(req.params.id, validatedData);
@@ -2774,7 +2772,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/design-phases/:id", requirePermission('crm'), async (req, res) => {
+  app.delete("/api/design-phases/:id", requirePermission('clients'), async (req, res) => {
     try {
       await storage.deleteDesignPhase(req.params.id);
       res.status(204).send();

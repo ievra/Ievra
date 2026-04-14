@@ -440,8 +440,8 @@ export default function AdminBusinessPartnersTab({ user, hasPermission }: AdminB
     }
   };
 
-  if (!hasPermission(user, 'crm')) {
-    return <PermissionDenied feature="CRM / Business Partners" />;
+  if (!hasPermission(user, 'clients')) {
+    return <PermissionDenied feature="Business Partners" />;
   }
 
   return (
