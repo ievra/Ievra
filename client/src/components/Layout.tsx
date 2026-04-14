@@ -371,7 +371,7 @@ export default function Layout({ children }: LayoutProps) {
 
           <Link
             href="/"
-            className="absolute left-1/2 -translate-x-1/2 cursor-pointer"
+            className="lg:absolute lg:left-1/2 lg:-translate-x-1/2 cursor-pointer"
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
           >
             <img
@@ -463,8 +463,9 @@ export default function Layout({ children }: LayoutProps) {
         />
       )}
 
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-[60] bg-black flex flex-col">
+      <div className={`fixed inset-0 z-[60] bg-black flex flex-col transition-transform duration-500 ease-in-out ${
+        mobileMenuOpen ? 'translate-x-0' : 'translate-x-full pointer-events-none'
+      }`}>
           <div className="flex items-center justify-end py-4 px-6">
             <button
               className="text-white p-2"
@@ -523,7 +524,6 @@ export default function Layout({ children }: LayoutProps) {
             </div>
           </div>
         </div>
-      )}
 
       <main>{children}</main>
       {!location.startsWith('/admin') && !isRoutePath(location, 'portfolio') && !isRoutePath(location, 'blog') && !isRoutePath(location, 'lookup') && <PreFooterBanner />}
