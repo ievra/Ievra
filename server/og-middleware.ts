@@ -48,9 +48,10 @@ function injectOgTags(
     type?: string;
     siteName?: string;
     locale?: string;
+    jsonLd?: object | object[];
   }
 ): string {
-  const { title, description, image, imageType = "image/jpeg", url, type = "website", siteName = "IEVRA Design & Build", locale = "vi_VN" } = tags;
+  const { title, description, image, imageType = "image/jpeg", url, type = "website", siteName = "IEVRA Design & Build", locale = "vi_VN", jsonLd } = tags;
   const lang = locale.startsWith("en") ? "en" : "vi";
 
   const metaTags = [
@@ -78,15 +79,24 @@ function injectOgTags(
     .filter(Boolean)
     .join("\n    ");
 
+  // JSON-LD structured data
+  const jsonLdScripts = jsonLd
+    ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd])
+        .map(schema => `<script type="application/ld+json">\n${JSON.stringify(schema, null, 2)}\n</script>`)
+        .join("\n    ")
+    : "";
+
   // Remove pre-existing tags before injecting fresh ones
   const cleaned = html
     .replace(/<title>[^<]*<\/title>/gi, "")
     .replace(/<meta\s+(?:name|property)="(?:og:|twitter:|description|robots)[^"]*"[^>]*\/?>/gi, "")
     .replace(/<link\s+rel="canonical"[^>]*\/?>/gi, "")
+    .replace(/<script\s+type="application\/ld\+json"[\s\S]*?<\/script>/gi, "")
     .replace(/(<html[^>]*)\slang="[^"]*"/i, "$1")
     .replace(/<html/, `<html lang="${lang}"`);
 
-  return cleaned.replace(/<\/head>/, `    ${metaTags}\n  </head>`);
+  const inject = [metaTags, jsonLdScripts].filter(Boolean).join("\n    ");
+  return cleaned.replace(/<\/head>/, `    ${inject}\n  </head>`);
 }
 
 let settingsCache: { data: any; expiresAt: number } | null = null;
@@ -157,30 +167,57 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
         try {
           const project = await storage.getProjectBySlug(slug);
           if (project) {
-            // Prioritize explicit ogImage field; fall back to cover/gallery/hero images
             const explicitOgImage = (project as any).ogImage as string | undefined;
             let imageUrl: string | undefined;
             if (explicitOgImage && !explicitOgImage.startsWith("data:")) {
-              // Serve user-uploaded OG image directly — no proxy, full quality
               imageUrl = resolveImageUrl(explicitOgImage);
             } else {
               const coverImages = Array.isArray(project.coverImages) ? project.coverImages : [];
               const galleryImages = Array.isArray(project.galleryImages) ? project.galleryImages : [];
               const candidates = [project.heroImage, ...coverImages, ...galleryImages];
               const firstImage = candidates.find(img => img && !String(img).startsWith("data:"));
-              // Fallback images are resized via weserv (q=92) to fit OG dimensions
               imageUrl = resolveImageUrlWithResize(firstImage as string);
             }
+            const desc = project.metaDescription || project.description || "Dự án thiết kế nội thất của IEVRA Design & Build";
+            const breadcrumbListName = lang === 'en' ? 'Portfolio' : 'Dự Án';
+            const breadcrumbListUrl = `${baseUrl}${lang === 'en' ? '/portfolio' : '/du-an'}`;
+            const jsonLd: object[] = [
+              {
+                "@context": "https://schema.org",
+                "@type": "Article",
+                "headline": project.title,
+                "description": desc,
+                "image": imageUrl ? [imageUrl] : undefined,
+                "url": currentUrl,
+                "datePublished": project.createdAt ? new Date(project.createdAt).toISOString() : undefined,
+                "dateModified": project.updatedAt ? new Date(project.updatedAt).toISOString() : undefined,
+                "author": { "@type": "Organization", "name": "IEVRA Design & Build", "url": baseUrl },
+                "publisher": {
+                  "@type": "Organization",
+                  "name": "IEVRA Design & Build",
+                  "url": baseUrl,
+                  "logo": { "@type": "ImageObject", "url": `${baseUrl}/api/assets/logo.white.png` }
+                },
+                "inLanguage": lang === 'en' ? "en-US" : "vi-VN",
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                  { "@type": "ListItem", "position": 1, "name": "Home", "item": baseUrl + "/" },
+                  { "@type": "ListItem", "position": 2, "name": breadcrumbListName, "item": breadcrumbListUrl },
+                  { "@type": "ListItem", "position": 3, "name": project.title, "item": currentUrl },
+                ]
+              }
+            ];
             tags = {
               title: `${project.title} | IEVRA Design & Build`,
-              description:
-                project.metaDescription ||
-                project.description ||
-                "Dự án thiết kế nội thất của IEVRA Design & Build",
+              description: desc,
               image: imageUrl,
               url: currentUrl,
               type: "article",
               locale,
+              jsonLd,
             };
           }
         } catch {}
@@ -192,21 +229,51 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
         try {
           const article = await storage.getArticleBySlug(slug);
           if (article) {
-            // Prioritize explicit ogImage field; fall back to featuredImage
             const explicitOgImage = (article as any).ogImage as string | undefined;
             const imageUrl = (explicitOgImage && !explicitOgImage.startsWith("data:"))
               ? resolveImageUrl(explicitOgImage)
               : resolveImageUrlWithResize(article.featuredImage);
+            const desc = article.metaDescription || article.excerpt || "Bài viết từ IEVRA Design & Build";
+            const breadcrumbListName = lang === 'en' ? 'Blog' : 'Tin Tức';
+            const breadcrumbListUrl = `${baseUrl}${lang === 'en' ? '/blog' : '/tin-tuc'}`;
+            const jsonLd: object[] = [
+              {
+                "@context": "https://schema.org",
+                "@type": "Article",
+                "headline": article.title,
+                "description": desc,
+                "image": imageUrl ? [imageUrl] : undefined,
+                "url": currentUrl,
+                "datePublished": article.publishedAt ? new Date(article.publishedAt).toISOString() : (article.createdAt ? new Date(article.createdAt).toISOString() : undefined),
+                "dateModified": article.updatedAt ? new Date(article.updatedAt).toISOString() : undefined,
+                "author": { "@type": "Organization", "name": "IEVRA Design & Build", "url": baseUrl },
+                "publisher": {
+                  "@type": "Organization",
+                  "name": "IEVRA Design & Build",
+                  "url": baseUrl,
+                  "logo": { "@type": "ImageObject", "url": `${baseUrl}/api/assets/logo.white.png` }
+                },
+                "inLanguage": lang === 'en' ? "en-US" : "vi-VN",
+                "articleSection": article.category || (lang === 'en' ? "Interior Design" : "Thiết Kế Nội Thất"),
+              },
+              {
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                "itemListElement": [
+                  { "@type": "ListItem", "position": 1, "name": "Home", "item": baseUrl + "/" },
+                  { "@type": "ListItem", "position": 2, "name": breadcrumbListName, "item": breadcrumbListUrl },
+                  { "@type": "ListItem", "position": 3, "name": article.title, "item": currentUrl },
+                ]
+              }
+            ];
             tags = {
               title: `${article.title} | IEVRA Design & Build`,
-              description:
-                article.metaDescription ||
-                article.excerpt ||
-                "Bài viết từ IEVRA Design & Build",
+              description: desc,
               image: imageUrl,
               url: currentUrl,
               type: "article",
               locale,
+              jsonLd,
             };
           }
         } catch {}
