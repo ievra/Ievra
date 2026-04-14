@@ -112,7 +112,7 @@ export default function Layout({ children }: LayoutProps) {
       setLogoSwapped(true);
       setHeaderLogoVisible(true);
       setNoTransition(true);
-      setIsScrolled(true);
+      setIsScrolled(false);
       hasScrolledRef.current = false;
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -144,25 +144,14 @@ export default function Layout({ children }: LayoutProps) {
       }, 5000);
     };
 
-    let lastScrollY = window.scrollY;
-    const updateScrollDirection = () => {
+    const updateScrollPosition = () => {
       const scrollY = window.scrollY;
       if (!hasScrolledRef.current && scrollY > 10) {
         hasScrolledRef.current = true;
       }
-      if (!hasScrolledRef.current) {
-        lastScrollY = scrollY > 0 ? scrollY : 0;
-        return;
-      }
-      const direction = scrollY > lastScrollY ? "down" : "up";
-      if (direction === "down" && scrollY > 100) {
-        setIsScrolled(true);
-      } else if (direction === "up") {
-        setIsScrolled(false);
-      }
+      setIsScrolled(scrollY > 80);
       setIsInHero(scrollY < window.innerHeight * 0.8);
-      lastScrollY = scrollY > 0 ? scrollY : 0;
-      setLangDropdownOpen(false);
+      if (scrollY > 10) setLangDropdownOpen(false);
       resetIdleTimer();
     };
 
@@ -184,14 +173,14 @@ export default function Layout({ children }: LayoutProps) {
       }
     };
 
-    window.addEventListener("scroll", updateScrollDirection);
+    window.addEventListener("scroll", updateScrollPosition);
     window.addEventListener("wheel", handleWheel);
     window.addEventListener("touchmove", handleTouchMove);
 
     resetIdleTimer();
 
     return () => {
-      window.removeEventListener("scroll", updateScrollDirection);
+      window.removeEventListener("scroll", updateScrollPosition);
       window.removeEventListener("wheel", handleWheel);
       window.removeEventListener("touchmove", handleTouchMove);
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
@@ -360,7 +349,7 @@ export default function Layout({ children }: LayoutProps) {
       <header ref={headerRef} className={`fixed top-0 left-0 right-0 z-50 ${
         noTransition ? '' : `transition-transform ${logoSwapped ? 'duration-700 ease-in-out' : ''}`
       } ${
-        location === '/' && !headerRevealed ? '-translate-y-full' : ((isScrolled || isIdle) && logoSwapped ? '-translate-y-full' : 'translate-y-0')
+        location === '/' && !headerRevealed ? '-translate-y-full' : (isScrolled && logoSwapped ? '-translate-y-full' : 'translate-y-0')
       }`}>
         <div className={`flex items-center justify-between py-2 px-6 md:py-3 md:px-10 lg:px-16 transition-colors duration-300 ${isInHero ? '' : 'bg-black/70'}`}>
           <nav className="hidden lg:flex items-center gap-8 transition-opacity duration-500" style={{ opacity: location === '/' && !logoSwapped ? (introProgress > 0 ? 1 : 0) : 1 }}>
