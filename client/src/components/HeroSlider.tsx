@@ -7,6 +7,7 @@ import { ChevronRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
 import { getProjectPath } from '@/lib/routes';
+import { imgUrl } from '@/lib/imageUrl';
 
 // Import Swiper styles
 import 'swiper/css';
@@ -87,26 +88,32 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
         data-slider-slug="hero"
         data-testid="hero-slider"
       >
-        {projects.map((project) => {
-          const backgroundImage = Array.isArray(project.coverImages) && project.coverImages[0] ||
+        {projects.map((project, idx) => {
+          const rawBg = Array.isArray(project.coverImages) && project.coverImages[0] ||
                 Array.isArray(project.contentImages) && project.contentImages[0] ||
                 Array.isArray(project.galleryImages) && project.galleryImages[0] ||
                 project.heroImage ||
                 (Array.isArray(project.images) && project.images[0]) ||
                 '';
 
+          // First slide loads eagerly at full HD; subsequent slides lazy-load at lower res
+          const isFirst = idx === 0;
+          const heroSrc = rawBg ? imgUrl(rawBg, { w: isFirst ? 1920 : 1600, q: 80 }) : '';
+
           return (
             <SwiperSlide key={project.id} data-testid={`slide-${project.id}`}>
               <div className="wrapper relative h-screen px-6 md:px-10 lg:px-16">
                 <div className="absolute inset-0">
-                  {backgroundImage ? (
+                  {heroSrc ? (
                     <>
                       <img 
-                        src={backgroundImage} 
+                        src={heroSrc}
                         alt={project.title}
                         className="absolute inset-0 w-full h-full object-cover"
                         data-testid={`slide-bg-${project.id}`}
                         style={{ zIndex: 1 }}
+                        loading={isFirst ? 'eager' : 'lazy'}
+                        decoding={isFirst ? 'sync' : 'async'}
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.style.display = 'none';

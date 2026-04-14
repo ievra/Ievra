@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { imgUrl } from '@/lib/imageUrl';
 
 interface OptimizedImageProps {
   src: string;
@@ -49,7 +50,7 @@ export default function OptimizedImage({
         }
       },
       {
-        rootMargin: '50px', // Start loading 50px before the image enters viewport
+        rootMargin: '100px',
         threshold: 0.1
       }
     );
@@ -72,32 +73,14 @@ export default function OptimizedImage({
     onError?.();
   };
 
-  // Generate optimized image URL with responsive srcSet
+  // Use weserv to resize & convert to WebP for local and external images
   const getOptimizedSrc = (originalSrc: string, targetWidth?: number) => {
-    if (originalSrc.includes('unsplash.com')) {
-      const url = new URL(originalSrc);
-      if (targetWidth) url.searchParams.set('w', targetWidth.toString());
-      url.searchParams.set('auto', 'format');
-      url.searchParams.set('fit', 'max'); // Better default than crop
-      url.searchParams.set('q', '80');
-      return url.toString();
-    }
-    return originalSrc;
-  };
-
-  // Generate responsive srcSet for Unsplash images
-  const getSrcSet = (originalSrc: string) => {
-    if (!originalSrc.includes('unsplash.com')) return undefined;
-    
-    const breakpoints = [320, 640, 960, 1280, 1920];
-    return breakpoints
-      .map(w => `${getOptimizedSrc(originalSrc, w)} ${w}w`)
-      .join(', ');
+    if (!originalSrc || originalSrc.startsWith('data:')) return originalSrc;
+    return imgUrl(originalSrc, { w: targetWidth, q: 82 });
   };
 
   const optimizedSrc = getOptimizedSrc(src, width);
-  const srcSet = getSrcSet(src);
-  
+
   // Calculate aspect ratio for space reservation
   const aspectRatio = width && height ? height / width : undefined;
 
@@ -130,12 +113,11 @@ export default function OptimizedImage({
         <img
           ref={imgRef}
           src={optimizedSrc}
-          srcSet={srcSet}
-          sizes={sizes}
           alt={alt}
           width={width}
           height={height}
           loading={priority ? 'eager' : 'lazy'}
+          decoding={priority ? 'sync' : 'async'}
           className={`transition-opacity duration-300 object-${objectFit} ${
             isLoaded ? 'opacity-100' : 'opacity-0'
           } ${className}`}

@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { Project, Category } from "@shared/schema";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getProjectPath } from "@/lib/routes";
+import { imgUrl } from "@/lib/imageUrl";
 
 interface ProjectCardProps {
   project: Project;
@@ -41,17 +42,23 @@ export default function ProjectCard({
   const categoryLabel = getCategoryLabel(project.category);
   const subInfoItems = [p.style, p.area].filter(Boolean);
 
+  // Card display size: large cards ~800px, small cards ~500px — serve 900px for retina
+  const cardW = isLarge ? 1200 : 900;
+  const optimizedSrc = projectImage ? imgUrl(projectImage, { w: cardW, q: 82 }) : null;
+
   return (
     <div
       className={`project-card group relative overflow-hidden cursor-pointer w-full h-full transform-gpu backface-hidden ${className}`}
       data-index={index}
     >
       <Link href={getProjectPath(language, project.slug, project.id)} className="block w-full h-full">
-        {projectImage ? (
+        {optimizedSrc ? (
           <img
-            src={projectImage}
+            src={optimizedSrc}
             alt={title}
             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+            loading={index < 4 ? 'eager' : 'lazy'}
+            decoding="async"
             data-testid={`img-project-${project.id}`}
           />
         ) : (
