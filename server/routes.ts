@@ -1,5 +1,6 @@
 import type { Express, Request, Response, NextFunction } from "express";
 import { createServer, type Server } from "http";
+import https from "https";
 import passport from "passport";
 import multer from "multer";
 import path from "path";
@@ -17,6 +18,24 @@ import { createHash } from "crypto";
 // Simple password hashing function
 function hashPassword(password: string): string {
   return createHash('sha256').update(password).digest('hex');
+}
+
+// Ping Google and Bing to notify them that the sitemap has been updated.
+// Runs fire-and-forget — never blocks the HTTP response.
+function pingSitemap(siteBaseUrl: string) {
+  const sitemapUrl = encodeURIComponent(`${siteBaseUrl}/sitemap.xml`);
+  const targets = [
+    `https://www.google.com/ping?sitemap=${sitemapUrl}`,
+    `https://www.bing.com/ping?sitemap=${sitemapUrl}`,
+  ];
+  for (const url of targets) {
+    https.get(url, (res) => {
+      res.resume(); // discard body
+      console.log(`[sitemap-ping] ${url.split('?')[0]} → HTTP ${res.statusCode}`);
+    }).on('error', (err) => {
+      console.warn(`[sitemap-ping] failed: ${err.message}`);
+    });
+  }
 }
 
 // Authentication middleware
@@ -611,6 +630,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       const project = await storage.createProject(validatedData);
+      if (validatedData.status === 'published') pingSitemap(getSiteBaseUrl(req));
       res.status(201).json(project);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -633,6 +653,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         }
       }
       const project = await storage.updateProject(req.params.id, validatedData);
+      if (validatedData.status === 'published') pingSitemap(getSiteBaseUrl(req));
       res.json(project);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -1036,6 +1057,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const article = await storage.createArticle(validatedData);
+      if (validatedData.status === 'published') pingSitemap(getSiteBaseUrl(req));
       res.status(201).json(article);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -1076,6 +1098,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       
       const article = await storage.updateArticle(req.params.id, validatedData);
+      if (validatedData.status === 'published') pingSitemap(getSiteBaseUrl(req));
       res.json(article);
     } catch (error) {
       if (error instanceof z.ZodError) {
