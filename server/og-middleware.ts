@@ -269,6 +269,11 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
       return next();
     }
 
+    if (req.path !== '/' && req.path.endsWith('/')) {
+      const cleanPath = req.path.replace(/\/+$/, '') + (req.originalUrl.includes('?') ? req.originalUrl.substring(req.originalUrl.indexOf('?')) : '');
+      return res.redirect(301, cleanPath);
+    }
+
     if (isDev && !isBot(req)) {
       return next();
     }
@@ -280,7 +285,7 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
       const isLocalhost = host.includes('localhost') || host.includes('127.0.0.1');
       const effectiveProto = (!isLocalhost && proto === 'http') ? 'https' : proto;
       const baseUrl = siteUrl || `${effectiveProto}://${host}`;
-      const currentUrl = `${baseUrl}${req.originalUrl}`;
+      const currentUrl = `${baseUrl}${req.path}`;
 
       let html: string;
       try {
@@ -308,13 +313,17 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
 
       const lang = detectLanguage(req.path);
       const locale = lang === 'en' ? 'en_US' : 'vi_VN';
+      let isContentPage = false;
+      let contentFound = false;
 
       const projectMatch = req.path.match(/^\/(?:portfolio|du-an)\/([^/]+)$/);
       if (projectMatch) {
+        isContentPage = true;
         const slug = projectMatch[1];
         try {
           const project = await storage.getProjectBySlug(slug);
           if (project) {
+            contentFound = true;
             const explicitOgImage = (project as any).ogImage as string | undefined;
             let imageUrl: string | undefined;
             if (explicitOgImage && !explicitOgImage.startsWith("data:")) {
@@ -378,10 +387,12 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
 
       const blogMatch = req.path.match(/^\/(?:blog|tin-tuc)\/([^/]+)$/);
       if (!tags && blogMatch) {
+        isContentPage = true;
         const slug = blogMatch[1];
         try {
           const article = await storage.getArticleBySlug(slug);
           if (article) {
+            contentFound = true;
             const explicitOgImage = (article as any).ogImage as string | undefined;
             const imageUrl = (explicitOgImage && !explicitOgImage.startsWith("data:"))
               ? resolveImageUrl(explicitOgImage)
@@ -495,6 +506,16 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
             hreflang,
           };
         }
+      }
+
+      if (isContentPage && !contentFound) {
+        const cleaned = html
+          .replace(/<title>[^<]*<\/title>/gi, "")
+          .replace(/<meta\s+(?:name|property)="(?:og:|twitter:|description|robots)[^"]*"[^>]*\/?>/gi, "")
+          .replace(/<link\s+rel="canonical"[^>]*\/?>/gi, "")
+          .replace(/<script\s+type="application\/ld\+json"[\s\S]*?<\/script>/gi, "");
+        const notFoundHtml = cleaned.replace(/<\/head>/, `    <title>404 - ${lang === 'vi' ? 'Không Tìm Thấy' : 'Not Found'} | IEVRA Design & Build</title>\n    <meta name="robots" content="noindex, nofollow" />\n  </head>`);
+        return res.status(404).set({ "Content-Type": "text/html" }).end(notFoundHtml);
       }
 
       html = injectOgTags(html, tags);
