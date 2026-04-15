@@ -21,9 +21,11 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
   const [progressKey, setProgressKey] = useState(0);
   const swiperRef = useRef<any>(null);
   const { language } = useLanguage();
-  const [heroContentVisible, setHeroContentVisible] = useState(false);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const [heroContentVisible, setHeroContentVisible] = useState(isMobile);
 
   useEffect(() => {
+    if (isMobile) return;
     const handleIntroComplete = () => {
       setHeroContentVisible(true);
     };
