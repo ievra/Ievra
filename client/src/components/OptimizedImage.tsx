@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect } from 'react';
-import { imgUrl } from '@/lib/imageUrl';
 
 interface OptimizedImageProps {
   src: string;
@@ -73,13 +72,7 @@ export default function OptimizedImage({
     onError?.();
   };
 
-  // Use weserv to resize & convert to WebP for local and external images
-  const getOptimizedSrc = (originalSrc: string, targetWidth?: number) => {
-    if (!originalSrc || originalSrc.startsWith('data:')) return originalSrc;
-    return imgUrl(originalSrc, { w: targetWidth, q: 82 });
-  };
-
-  const optimizedSrc = getOptimizedSrc(src, width);
+  const optimizedSrc = src;
 
   // Calculate aspect ratio for space reservation
   const aspectRatio = width && height ? height / width : undefined;

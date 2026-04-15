@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import type { Project, Category } from "@shared/schema";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getProjectPath } from "@/lib/routes";
-import { imgUrl } from "@/lib/imageUrl";
+
 
 interface ProjectCardProps {
   project: Project;
@@ -42,13 +42,7 @@ export default function ProjectCard({
   const categoryLabel = getCategoryLabel(project.category);
   const subInfoItems = [p.style, p.area].filter(Boolean);
 
-  // Serve images at physical pixel size (CSS size × devicePixelRatio, capped at 2×)
-  const isMobileVp = typeof window !== 'undefined' && window.innerWidth < 768;
-  const dpr = typeof window !== 'undefined' ? Math.min(window.devicePixelRatio || 1, 2) : 1;
-  const cardW = isMobileVp
-    ? (isLarge ? Math.round(700 * dpr) : Math.round(500 * dpr))
-    : (isLarge ? Math.min(Math.round(1280 * dpr), 2560) : Math.round(900 * dpr));
-  const optimizedSrc = projectImage ? imgUrl(projectImage, { w: cardW, q: 88 }) : null;
+  const optimizedSrc = projectImage || null;
 
   return (
     <div

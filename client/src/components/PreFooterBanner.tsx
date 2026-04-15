@@ -4,7 +4,6 @@ import { ArrowRight } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import type { AboutPageContent } from "@shared/schema";
 import { getPath } from "@/lib/routes";
-import { imgUrl } from "@/lib/imageUrl";
 
 export default function PreFooterBanner() {
   const { language } = useLanguage();
@@ -15,11 +14,7 @@ export default function PreFooterBanner() {
     queryKey: ["/api/about-content"],
   });
 
-  const rawBgImage = aboutContent?.ctaBannerImageData || aboutContent?.ctaBannerImage;
-  // Resize banner to 1920px wide if it's a URL (not base64)
-  const bgImage = rawBgImage?.startsWith('data:')
-    ? rawBgImage
-    : imgUrl(rawBgImage, { w: 1920, q: 82 });
+  const bgImage = aboutContent?.ctaBannerImageData || aboutContent?.ctaBannerImage || '';
 
   const title = isVi
     ? (aboutContent?.ctaBannerTitleVi || "")

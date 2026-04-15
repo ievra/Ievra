@@ -7,7 +7,7 @@ import { ChevronRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
 import { getProjectPath } from '@/lib/routes';
-import { imgUrl } from '@/lib/imageUrl';
+
 
 // Import Swiper styles
 import 'swiper/css';
@@ -98,11 +98,7 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
                 (Array.isArray(project.images) && project.images[0]) ||
                 '';
 
-          // Serve smaller images on mobile to reduce bandwidth significantly
-          const isMobileViewport = typeof window !== 'undefined' && window.innerWidth < 768;
-          const isFirst = idx === 0;
-          const heroW = isMobileViewport ? (isFirst ? 900 : 800) : (isFirst ? 1920 : 1400);
-          const heroSrc = rawBg ? imgUrl(rawBg, { w: heroW, q: isMobileViewport ? 78 : 80 }) : '';
+          const heroSrc = rawBg || '';
 
           return (
             <SwiperSlide key={project.id} data-testid={`slide-${project.id}`}>
@@ -116,8 +112,8 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
                         className="absolute inset-0 w-full h-full object-cover"
                         data-testid={`slide-bg-${project.id}`}
                         style={{ zIndex: 1 }}
-                        loading={isFirst ? 'eager' : 'lazy'}
-                        decoding={isFirst ? 'sync' : 'async'}
+                        loading={idx === 0 ? 'eager' : 'lazy'}
+                        decoding={idx === 0 ? 'sync' : 'async'}
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
                           target.style.display = 'none';
