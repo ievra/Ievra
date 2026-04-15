@@ -364,7 +364,7 @@ export default function AboutAdminTab({
       if (!response.ok) throw new Error('Upload failed');
       const data = await response.json();
       setCtaBannerPreview(data.path);
-      aboutContentForm.setValue('ctaBannerImage', data.path);
+      aboutContentForm.setValue('ctaBannerImage', data.path, { shouldDirty: true });
       toast({ title: language === 'vi' ? 'Tải lên thành công' : 'Upload successful' });
     } catch {
       toast({ title: language === 'vi' ? 'Lỗi tải lên' : 'Upload failed', variant: 'destructive' });
@@ -401,10 +401,10 @@ export default function AboutAdminTab({
       const data = await response.json();
       if (side === 'left') {
         setPrinciplesImageLeftPreview(data.path);
-        aboutContentForm.setValue('principlesImageLeft', data.path);
+        aboutContentForm.setValue('principlesImageLeft', data.path, { shouldDirty: true });
       } else {
         setPrinciplesImageRightPreview(data.path);
-        aboutContentForm.setValue('principlesImageRight', data.path);
+        aboutContentForm.setValue('principlesImageRight', data.path, { shouldDirty: true });
       }
       toast({ title: language === 'vi' ? 'Tải lên thành công' : 'Upload successful' });
     } catch {
