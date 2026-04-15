@@ -91,7 +91,7 @@ function RelatedArticles({ currentArticleId, category, language }: { currentArti
                     <div className="text-6xl font-sans font-light text-primary/30">N</div>
                   </div>
                 )}
-                <div className="absolute inset-0 bg-black/15 group-hover:bg-black/0 transition-colors duration-300" />
+                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/0 transition-colors duration-300" />
               </div>
             </Link>
             
