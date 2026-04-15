@@ -16,7 +16,7 @@ export function imgUrl(
   if (!src) return '';
   if (src.startsWith('data:')) return src;
 
-  const { w, h, q = 82, fit = 'cover' } = opts || {};
+  const { w, h, q = 88, fit = 'cover' } = opts || {};
 
   let fullUrl: string;
   if (src.startsWith('http')) {

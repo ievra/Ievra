@@ -584,7 +584,7 @@ export default function ProjectDetail() {
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
                         data-testid={`img-other-project-${otherProject.id}`}
                       />
-                      <div className="absolute inset-0 bg-black/40 group-hover:bg-black/0 transition-colors duration-300" />
+                      <div className="absolute inset-0 bg-black/15 group-hover:bg-black/0 transition-colors duration-300" />
                     </div>
                     <div className="mt-3">
                       <h3 className="text-white font-light tracking-wider text-xs uppercase line-clamp-2" style={{ minHeight: '2.5rem' }}>

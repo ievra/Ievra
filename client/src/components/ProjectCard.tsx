@@ -42,10 +42,13 @@ export default function ProjectCard({
   const categoryLabel = getCategoryLabel(project.category);
   const subInfoItems = [p.style, p.area].filter(Boolean);
 
-  // Card display size — serve smaller on mobile to save bandwidth
+  // Serve images at physical pixel size (CSS size × devicePixelRatio, capped at 2×)
   const isMobileVp = typeof window !== 'undefined' && window.innerWidth < 768;
-  const cardW = isMobileVp ? (isLarge ? 700 : 500) : (isLarge ? 1200 : 900);
-  const optimizedSrc = projectImage ? imgUrl(projectImage, { w: cardW, q: isMobileVp ? 78 : 82 }) : null;
+  const dpr = typeof window !== 'undefined' ? Math.min(window.devicePixelRatio || 1, 2) : 1;
+  const cardW = isMobileVp
+    ? (isLarge ? Math.round(700 * dpr) : Math.round(500 * dpr))
+    : (isLarge ? Math.min(Math.round(1280 * dpr), 2560) : Math.round(900 * dpr));
+  const optimizedSrc = projectImage ? imgUrl(projectImage, { w: cardW, q: 88 }) : null;
 
   return (
     <div
@@ -66,8 +69,8 @@ export default function ProjectCard({
           <div className="w-full h-full bg-zinc-900" data-testid={`img-project-${project.id}`} />
         )}
 
-        <div className="absolute inset-x-0 top-0 -bottom-px bg-black/30 transition-opacity duration-500 group-hover:opacity-0" />
-        <div className="absolute inset-x-0 top-0 -bottom-px bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
+        <div className="absolute inset-x-0 top-0 -bottom-px bg-gradient-to-t from-black/70 via-black/5 to-transparent" />
+        <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/40 to-transparent" />
 
         {/* Top-left: Category (large) / Style / Area (small) */}
         <div className="absolute top-0 left-0 p-5 md:p-6 flex flex-col gap-0">

@@ -1059,7 +1059,7 @@ export default function Home() {
                         ) : (
                           <div className="w-full h-full bg-transparent" data-testid={`img-project-${project.id}`} />
                         )}
-                        <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-all duration-300" />
+                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all duration-300" />
 
                         <div className="absolute inset-0 p-6 pb-8 flex flex-col justify-between">
                           <div>
