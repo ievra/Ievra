@@ -549,8 +549,8 @@ export default function ProjectDetail() {
                 <OptimizedImage
                   src={image}
                   alt={`${project.title} - Gallery ${index + 1}`}
-                  width={400}
-                  height={300}
+                  width={700}
+                  height={525}
                   wrapperClassName="w-full h-full"
                   className="w-full h-full object-cover hover:opacity-90 transition-opacity"
                   sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
@@ -577,8 +577,8 @@ export default function ProjectDetail() {
                       <OptimizedImage
                         src={(Array.isArray(otherProject.coverImages) ? otherProject.coverImages[0] : '') || (Array.isArray(otherProject.contentImages) ? otherProject.contentImages[0] : '') || otherProject.heroImage || (Array.isArray(otherProject.galleryImages) ? otherProject.galleryImages[0] : '') || (Array.isArray(otherProject.images) ? otherProject.images[0] : '') || '/placeholder-project.jpg'} 
                         alt={otherProject.title}
-                        width={300}
-                        height={300}
+                        width={500}
+                        height={500}
                         wrapperClassName="w-full h-full"
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                         sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"

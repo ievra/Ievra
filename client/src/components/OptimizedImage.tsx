@@ -74,9 +74,12 @@ export default function OptimizedImage({
   };
 
   // Use weserv to resize & convert to WebP for local and external images
+  // Multiply by devicePixelRatio (capped at 2×) so Retina/HiDPI screens get crisp images
   const getOptimizedSrc = (originalSrc: string, targetWidth?: number) => {
     if (!originalSrc || originalSrc.startsWith('data:')) return originalSrc;
-    return imgUrl(originalSrc, { w: targetWidth, q: 82 });
+    const dpr = typeof window !== 'undefined' ? Math.min(window.devicePixelRatio || 1, 2) : 1;
+    const physicalWidth = targetWidth ? Math.min(Math.round(targetWidth * dpr), 3840) : targetWidth;
+    return imgUrl(originalSrc, { w: physicalWidth, q: 88 });
   };
 
   const optimizedSrc = getOptimizedSrc(src, width);
