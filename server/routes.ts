@@ -205,6 +205,65 @@ export async function registerRoutes(app: Express): Promise<Server> {
     });
   });
 
+  // ─── Local image proxy (Sharp) ────────────────────────────────────────────
+  // GET /api/img?src=/api/assets/xxx.jpg&w=900&q=90
+  // Resizes + converts to WebP server-side. Cache-Control: immutable (1 year).
+  // Falls back to original file if Sharp fails.
+  {
+    // Simple in-memory LRU: store up to 200 processed buffers (~200×~300KB = ~60MB max)
+    const imgCache = new Map<string, { buf: Buffer; ct: string }>();
+    const IMG_CACHE_MAX = 200;
+
+    const resolveAssetPath = (src: string): string | null => {
+      // src must start with /api/assets/
+      if (!src.startsWith('/api/assets/')) return null;
+      const rel = src.slice('/api/assets/'.length);
+      if (rel.includes('..')) return null;
+      const candidates = [
+        path.join('/var/www/vhosts/moderno.com.vn/httpdocs/attached_assets', rel),
+        path.join(__dirname, '..', 'attached_assets', rel),
+        path.join(__dirname, '..', '..', 'attached_assets', rel),
+        path.join(process.cwd(), 'attached_assets', rel),
+      ];
+      return candidates.find(p => fs.existsSync(p)) ?? null;
+    };
+
+    app.get('/api/img', async (req, res) => {
+      const src = String(req.query.src || '');
+      const w = parseInt(String(req.query.w || '0'), 10) || 0;
+      const q = Math.min(100, Math.max(1, parseInt(String(req.query.q || '90'), 10)));
+
+      const filePath = resolveAssetPath(src);
+      if (!filePath) return res.status(404).json({ error: 'Not found' });
+
+      const cacheKey = `${filePath}|${w}|${q}`;
+      const cached = imgCache.get(cacheKey);
+      if (cached) {
+        res.set({ 'Content-Type': cached.ct, 'Cache-Control': 'public, max-age=31536000, immutable', 'X-Cache': 'HIT' });
+        return res.end(cached.buf);
+      }
+
+      try {
+        const sharp = (await import('sharp')).default;
+        let pipeline = sharp(filePath, { failOn: 'none' });
+        if (w > 0) pipeline = pipeline.resize(w, undefined, { withoutEnlargement: true });
+        const buf = await pipeline.webp({ quality: q, effort: 4 }).toBuffer();
+
+        if (imgCache.size >= IMG_CACHE_MAX) {
+          imgCache.delete(imgCache.keys().next().value!);
+        }
+        imgCache.set(cacheKey, { buf, ct: 'image/webp' });
+
+        res.set({ 'Content-Type': 'image/webp', 'Cache-Control': 'public, max-age=31536000, immutable', 'X-Cache': 'MISS' });
+        return res.end(buf);
+      } catch {
+        // Sharp failed — serve original file
+        res.set('Cache-Control', 'public, max-age=86400');
+        return res.sendFile(filePath);
+      }
+    });
+  }
+
   // Sitemap.xml endpoint
   const getSiteBaseUrl = (req: any) => {
     if (process.env.SITE_URL) return process.env.SITE_URL.replace(/\/$/, '');
