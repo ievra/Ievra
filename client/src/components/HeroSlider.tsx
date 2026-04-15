@@ -98,9 +98,11 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
                 (Array.isArray(project.images) && project.images[0]) ||
                 '';
 
-          // First slide loads eagerly at full HD; subsequent slides lazy-load at lower res
+          // Serve smaller images on mobile to reduce bandwidth significantly
+          const isMobileViewport = typeof window !== 'undefined' && window.innerWidth < 768;
           const isFirst = idx === 0;
-          const heroSrc = rawBg ? imgUrl(rawBg, { w: isFirst ? 1920 : 1600, q: 80 }) : '';
+          const heroW = isMobileViewport ? (isFirst ? 900 : 800) : (isFirst ? 1920 : 1400);
+          const heroSrc = rawBg ? imgUrl(rawBg, { w: heroW, q: isMobileViewport ? 78 : 80 }) : '';
 
           return (
             <SwiperSlide key={project.id} data-testid={`slide-${project.id}`}>

@@ -196,6 +196,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
     }
     
+    res.set('Cache-Control', 'public, max-age=31536000, immutable');
     res.sendFile(filePath, (err) => {
       if (err) {
         console.error(`Image not found. Tried paths:`, possiblePaths);

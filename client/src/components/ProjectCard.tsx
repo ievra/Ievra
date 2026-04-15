@@ -42,9 +42,10 @@ export default function ProjectCard({
   const categoryLabel = getCategoryLabel(project.category);
   const subInfoItems = [p.style, p.area].filter(Boolean);
 
-  // Card display size: large cards ~800px, small cards ~500px — serve 900px for retina
-  const cardW = isLarge ? 1200 : 900;
-  const optimizedSrc = projectImage ? imgUrl(projectImage, { w: cardW, q: 82 }) : null;
+  // Card display size — serve smaller on mobile to save bandwidth
+  const isMobileVp = typeof window !== 'undefined' && window.innerWidth < 768;
+  const cardW = isMobileVp ? (isLarge ? 700 : 500) : (isLarge ? 1200 : 900);
+  const optimizedSrc = projectImage ? imgUrl(projectImage, { w: cardW, q: isMobileVp ? 78 : 82 }) : null;
 
   return (
     <div

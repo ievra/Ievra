@@ -50,8 +50,8 @@ export default function OptimizedImage({
         }
       },
       {
-        rootMargin: '100px',
-        threshold: 0.1
+        rootMargin: '500px',
+        threshold: 0
       }
     );
 
