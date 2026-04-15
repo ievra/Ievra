@@ -336,8 +336,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           xml += `  <url>\n`;
           xml += `    <loc>${enUrl}</loc>\n`;
           xml += `    <lastmod>${enLastmod}</lastmod>\n`;
-          xml += `    <changefreq>monthly</changefreq>\n`;
-          xml += `    <priority>0.6</priority>\n`;
+          xml += `    <changefreq>weekly</changefreq>\n`;
+          xml += `    <priority>0.7</priority>\n`;
           if (viUrl) xml += `    <xhtml:link rel="alternate" hreflang="vi" href="${viUrl}"/>\n`;
           xml += `    <xhtml:link rel="alternate" hreflang="en" href="${enUrl}"/>\n`;
           if (viUrl) xml += `    <xhtml:link rel="alternate" hreflang="x-default" href="${viUrl}"/>\n`;
@@ -347,8 +347,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           xml += `  <url>\n`;
           xml += `    <loc>${viUrl}</loc>\n`;
           xml += `    <lastmod>${viLastmod}</lastmod>\n`;
-          xml += `    <changefreq>monthly</changefreq>\n`;
-          xml += `    <priority>0.6</priority>\n`;
+          xml += `    <changefreq>weekly</changefreq>\n`;
+          xml += `    <priority>0.7</priority>\n`;
           xml += `    <xhtml:link rel="alternate" hreflang="vi" href="${viUrl}"/>\n`;
           if (enUrl) xml += `    <xhtml:link rel="alternate" hreflang="en" href="${enUrl}"/>\n`;
           xml += `    <xhtml:link rel="alternate" hreflang="x-default" href="${viUrl}"/>\n`;
