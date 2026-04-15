@@ -449,21 +449,87 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
       }
 
       if (!tags) {
-        const staticHreflang: { [key: string]: { en: string; vi: string } } = {
-          '/': { en: '/', vi: '/' },
-          '/about': { en: '/about', vi: '/gioi-thieu' },
-          '/gioi-thieu': { en: '/about', vi: '/gioi-thieu' },
-          '/portfolio': { en: '/portfolio', vi: '/du-an' },
-          '/du-an': { en: '/portfolio', vi: '/du-an' },
-          '/blog': { en: '/blog', vi: '/tin-tuc' },
-          '/tin-tuc': { en: '/blog', vi: '/tin-tuc' },
-          '/contact': { en: '/contact', vi: '/lien-he' },
-          '/lien-he': { en: '/contact', vi: '/lien-he' },
-          '/lookup': { en: '/lookup', vi: '/tra-cuu' },
-          '/tra-cuu': { en: '/lookup', vi: '/tra-cuu' },
+        const staticPages: { [key: string]: { en: string; vi: string; titleEn: string; titleVi: string; descEn: string; descVi: string } } = {
+          '/': {
+            en: '/', vi: '/',
+            titleEn: 'IEVRA Design & Build | Luxury Interior & Architecture',
+            titleVi: 'IEVRA Design & Build | Thiết Kế Kiến Trúc & Nội Thất Cao Cấp',
+            descEn: 'IEVRA Design & Build - Premium interior design and architecture studio in Vietnam.',
+            descVi: 'IEVRA Design & Build - Studio thiết kế nội thất và kiến trúc cao cấp tại Việt Nam.',
+          },
+          '/about': {
+            en: '/about', vi: '/gioi-thieu',
+            titleEn: 'About Us | IEVRA Design & Build',
+            titleVi: 'Giới Thiệu | IEVRA Design & Build',
+            descEn: 'Learn about IEVRA Design & Build - our story, philosophy, and commitment to luxury interior design.',
+            descVi: 'Tìm hiểu về IEVRA Design & Build - câu chuyện, triết lý và cam kết về thiết kế nội thất cao cấp.',
+          },
+          '/gioi-thieu': {
+            en: '/about', vi: '/gioi-thieu',
+            titleEn: 'About Us | IEVRA Design & Build',
+            titleVi: 'Giới Thiệu | IEVRA Design & Build',
+            descEn: 'Learn about IEVRA Design & Build - our story, philosophy, and commitment to luxury interior design.',
+            descVi: 'Tìm hiểu về IEVRA Design & Build - câu chuyện, triết lý và cam kết về thiết kế nội thất cao cấp.',
+          },
+          '/portfolio': {
+            en: '/portfolio', vi: '/du-an',
+            titleEn: 'Portfolio | IEVRA Design & Build',
+            titleVi: 'Dự Án | IEVRA Design & Build',
+            descEn: 'Explore our portfolio of luxury interior design and architecture projects.',
+            descVi: 'Khám phá bộ sưu tập dự án thiết kế nội thất và kiến trúc cao cấp.',
+          },
+          '/du-an': {
+            en: '/portfolio', vi: '/du-an',
+            titleEn: 'Portfolio | IEVRA Design & Build',
+            titleVi: 'Dự Án | IEVRA Design & Build',
+            descEn: 'Explore our portfolio of luxury interior design and architecture projects.',
+            descVi: 'Khám phá bộ sưu tập dự án thiết kế nội thất và kiến trúc cao cấp.',
+          },
+          '/blog': {
+            en: '/blog', vi: '/tin-tuc',
+            titleEn: 'Blog | IEVRA Design & Build',
+            titleVi: 'Tin Tức | IEVRA Design & Build',
+            descEn: 'Interior design insights, trends, and inspiration from IEVRA Design & Build.',
+            descVi: 'Kiến thức, xu hướng và cảm hứng thiết kế nội thất từ IEVRA Design & Build.',
+          },
+          '/tin-tuc': {
+            en: '/blog', vi: '/tin-tuc',
+            titleEn: 'Blog | IEVRA Design & Build',
+            titleVi: 'Tin Tức | IEVRA Design & Build',
+            descEn: 'Interior design insights, trends, and inspiration from IEVRA Design & Build.',
+            descVi: 'Kiến thức, xu hướng và cảm hứng thiết kế nội thất từ IEVRA Design & Build.',
+          },
+          '/contact': {
+            en: '/contact', vi: '/lien-he',
+            titleEn: 'Contact Us | IEVRA Design & Build',
+            titleVi: 'Liên Hệ | IEVRA Design & Build',
+            descEn: 'Get in touch with IEVRA Design & Build for your interior design and architecture needs.',
+            descVi: 'Liên hệ IEVRA Design & Build cho nhu cầu thiết kế nội thất và kiến trúc của bạn.',
+          },
+          '/lien-he': {
+            en: '/contact', vi: '/lien-he',
+            titleEn: 'Contact Us | IEVRA Design & Build',
+            titleVi: 'Liên Hệ | IEVRA Design & Build',
+            descEn: 'Get in touch with IEVRA Design & Build for your interior design and architecture needs.',
+            descVi: 'Liên hệ IEVRA Design & Build cho nhu cầu thiết kế nội thất và kiến trúc của bạn.',
+          },
+          '/lookup': {
+            en: '/lookup', vi: '/tra-cuu',
+            titleEn: 'Project Lookup | IEVRA Design & Build',
+            titleVi: 'Tra Cứu Dự Án | IEVRA Design & Build',
+            descEn: 'Look up your project progress and status with IEVRA Design & Build.',
+            descVi: 'Tra cứu tiến độ và trạng thái dự án với IEVRA Design & Build.',
+          },
+          '/tra-cuu': {
+            en: '/lookup', vi: '/tra-cuu',
+            titleEn: 'Project Lookup | IEVRA Design & Build',
+            titleVi: 'Tra Cứu Dự Án | IEVRA Design & Build',
+            descEn: 'Look up your project progress and status with IEVRA Design & Build.',
+            descVi: 'Tra cứu tiến độ và trạng thái dự án với IEVRA Design & Build.',
+          },
         };
 
-        const staticMatch = staticHreflang[req.path];
+        const staticMatch = staticPages[req.path];
         const hreflang = staticMatch ? [
           { lang: 'vi', href: `${baseUrl}${staticMatch.vi}` },
           { lang: 'en', href: `${baseUrl}${staticMatch.en}` },
@@ -482,15 +548,19 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
             ogImgUrl = resolveImageUrl(s.ogImage);
             ogImgType = "image/jpeg";
           }
-          const title = lang === 'vi'
-            ? (s?.siteTitleVi || s?.siteTitle || "IEVRA Design & Build")
-            : (s?.siteTitle || "IEVRA Design & Build");
-          const description = lang === 'vi'
-            ? (s?.metaDescriptionVi || s?.metaDescription || "Thiết kế nội thất cao cấp - IEVRA Design & Build")
-            : (s?.metaDescription || "High-end interior design - IEVRA Design & Build");
+          const pageTitle = staticMatch
+            ? (lang === 'vi' ? staticMatch.titleVi : staticMatch.titleEn)
+            : (lang === 'vi'
+              ? (s?.siteTitleVi || s?.siteTitle || "IEVRA Design & Build")
+              : (s?.siteTitle || "IEVRA Design & Build"));
+          const pageDesc = staticMatch
+            ? (lang === 'vi' ? staticMatch.descVi : staticMatch.descEn)
+            : (lang === 'vi'
+              ? (s?.metaDescriptionVi || s?.metaDescription || "Thiết kế nội thất cao cấp - IEVRA Design & Build")
+              : (s?.metaDescription || "High-end interior design - IEVRA Design & Build"));
           tags = {
-            title,
-            description,
+            title: pageTitle,
+            description: pageDesc,
             image: ogImgUrl,
             imageType: ogImgType,
             url: currentUrl,
@@ -499,8 +569,8 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
           };
         } catch {
           tags = {
-            title: "IEVRA Design & Build",
-            description: "Thiết kế nội thất cao cấp - IEVRA Design & Build",
+            title: staticMatch ? (lang === 'vi' ? staticMatch.titleVi : staticMatch.titleEn) : "IEVRA Design & Build",
+            description: staticMatch ? (lang === 'vi' ? staticMatch.descVi : staticMatch.descEn) : "Thiết kế nội thất cao cấp - IEVRA Design & Build",
             url: currentUrl,
             locale,
             hreflang,
