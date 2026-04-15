@@ -440,15 +440,17 @@ export default function Layout({ children }: LayoutProps) {
             </Link>
           </div>
 
-          <button
-            className="lg:hidden text-white p-2 z-50 transition-opacity duration-500"
-            style={{ opacity: location === '/' && !logoSwapped ? (introProgress > 0 ? 1 : 0) : 1 }}
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="Toggle menu"
-            data-testid="button-main-menu"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {!mobileMenuOpen && (
+            <button
+              className="lg:hidden text-white p-2 z-50 transition-opacity duration-500"
+              style={{ opacity: location === '/' && !logoSwapped ? (introProgress > 0 ? 1 : 0) : 1 }}
+              onClick={() => setMobileMenuOpen(true)}
+              aria-label="Toggle menu"
+              data-testid="button-main-menu"
+            >
+              <Menu className="w-6 h-6" />
+            </button>
+          )}
         </div>
       </header>
 
