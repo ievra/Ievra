@@ -22,6 +22,8 @@ const getNavigation = (t: (key: string) => string, language: string) => {
 
 export default function Layout({ children }: LayoutProps) {
   const [location, setLocation] = useLocation();
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+  const skipIntro = isMobile || location !== '/';
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [langDropdownOpen, setLangDropdownOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -29,12 +31,12 @@ export default function Layout({ children }: LayoutProps) {
   const [isIdle, setIsIdle] = useState(false);
   const [noTransition, setNoTransition] = useState(false);
   const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const [introProgress, setIntroProgress] = useState(location === '/' ? 0 : 1);
-  const [headerRevealed, setHeaderRevealed] = useState(location !== '/');
-  const [logoSwapped, setLogoSwapped] = useState(location !== '/');
-  const [headerLogoVisible, setHeaderLogoVisible] = useState(location !== '/');
+  const [introProgress, setIntroProgress] = useState(skipIntro ? 1 : 0);
+  const [headerRevealed, setHeaderRevealed] = useState(skipIntro);
+  const [logoSwapped, setLogoSwapped] = useState(skipIntro);
+  const [headerLogoVisible, setHeaderLogoVisible] = useState(skipIntro);
   const [logoFading, setLogoFading] = useState(false);
-  const showIntroRef = useRef(location === '/');
+  const showIntroRef = useRef(!skipIntro);
   const isHomepageRef = useRef(location === '/');
   const introAnimatingRef = useRef(false);
   const introLogoRef = useRef<HTMLImageElement>(null);
@@ -96,7 +98,7 @@ export default function Layout({ children }: LayoutProps) {
     window.scrollTo(0, 0);
     const isHomepage = location === '/';
     isHomepageRef.current = isHomepage;
-    if (isHomepage) {
+    if (isHomepage && !isMobile) {
       showIntroRef.current = true;
       setIntroProgress(0);
       setHeaderRevealed(false);
@@ -189,6 +191,10 @@ export default function Layout({ children }: LayoutProps) {
 
   useEffect(() => {
     if (location !== '/') return;
+    if (isMobile) {
+      window.dispatchEvent(new CustomEvent('heroIntroComplete'));
+      return;
+    }
 
     if (showIntroRef.current) {
       document.body.style.overflow = 'hidden';
