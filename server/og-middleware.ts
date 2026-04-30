@@ -338,11 +338,39 @@ function buildStaticPageSeoContent(
 
   if (path === '/blog' || path === '/tin-tuc') {
     const intro = isVi
-      ? 'Cập nhật xu hướng thiết kế nội thất, kiến thức chuyên môn và cảm hứng từ đội ngũ IEVRA Design & Build. Khám phá những bài viết chuyên sâu về phong cách thiết kế, vật liệu và giải pháp không gian.'
-      : 'Stay updated with interior design trends, expert knowledge and inspiration from the IEVRA Design & Build team. Discover in-depth articles on design styles, materials and space solutions.';
+      ? 'Cập nhật xu hướng thiết kế nội thất, kiến thức chuyên môn và cảm hứng từ đội ngũ IEVRA Design & Build. Khám phá những bài viết chuyên sâu về phong cách thiết kế, vật liệu và giải pháp không gian sống đương đại.'
+      : 'Stay updated with interior design trends, expert knowledge and inspiration from the IEVRA Design & Build team. Discover in-depth articles on design styles, materials and contemporary living space solutions.';
+    const topics = isVi
+      ? [
+          ['Xu hướng thiết kế', 'Những xu hướng nội thất mới nhất từ Wabi-Sabi, tối giản hiện đại đến cổ điển hoài niệm.'],
+          ['Phong cách thiết kế', 'Khám phá các phong cách thiết kế đặc trưng và cách áp dụng vào không gian sống.'],
+          ['Vật liệu & hoàn thiện', 'Hướng dẫn lựa chọn vật liệu nội thất chất lượng, bền vững và phù hợp với phong cách.'],
+          ['Giải pháp không gian', 'Tối ưu công năng cho căn hộ, nhà phố, biệt thự và không gian thương mại.'],
+          ['Kinh nghiệm thực tế', 'Bài học và quy trình thi công từ các dự án thực tế của IEVRA.'],
+        ]
+      : [
+          ['Design Trends', 'The latest interior trends from Wabi-Sabi, modern minimalism to nostalgic classic.'],
+          ['Design Styles', 'Explore signature design styles and how to apply them to living spaces.'],
+          ['Materials & Finishes', 'Guidance on selecting quality, sustainable interior materials that match your style.'],
+          ['Space Solutions', 'Optimizing function for apartments, townhouses, villas and commercial spaces.'],
+          ['Real-world Insights', 'Lessons and construction processes from IEVRA real projects.'],
+        ];
+    const why = isVi
+      ? 'Đội ngũ IEVRA Design & Build chia sẻ kiến thức từ kinh nghiệm thực tế thực hiện hàng chục dự án thiết kế và thi công nội thất. Mỗi bài viết được biên soạn cẩn thận để mang lại giá trị thiết thực cho chủ nhà, kiến trúc sư và những ai quan tâm đến nghệ thuật kiến tạo không gian sống.'
+      : 'The IEVRA Design & Build team shares insights from real-world experience executing dozens of interior design and construction projects. Each article is carefully crafted to deliver practical value for homeowners, architects and anyone passionate about the art of creating living spaces.';
 
     return `<header>${nav}<nav aria-label="breadcrumb"><ol><li><a href="${baseUrl}/">${home}</a></li><li>${blog}</li></ol></nav><h1>${blog}</h1><p>${escapeHtml(intro)}</p></header>
-<main><section><h2>${isVi ? 'Tất Cả Bài Viết' : 'All Articles'}</h2><ul>${articles.map(renderArticleCard).join('')}</ul></section></main>`;
+<main>
+<section>
+  <h2>${isVi ? 'Chủ Đề Chính' : 'Main Topics'}</h2>
+  <ul>${topics.map(([t, d]) => `<li><strong>${escapeHtml(t)}</strong>: ${escapeHtml(d)}</li>`).join('')}</ul>
+</section>
+<section>
+  <h2>${isVi ? 'Tại Sao Đọc Blog IEVRA?' : 'Why Read the IEVRA Blog?'}</h2>
+  <p>${escapeHtml(why)}</p>
+</section>
+<section><h2>${isVi ? 'Tất Cả Bài Viết' : 'All Articles'}</h2><ul>${articles.map(renderArticleCard).join('')}</ul></section>
+</main>`;
   }
 
   if (path === '/contact' || path === '/lien-he') {
@@ -809,6 +837,40 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
             } catch {}
           }
 
+          const orgSchema: any = {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "@id": `${baseUrl}/#organization`,
+            name: "IEVRA Design & Build",
+            url: baseUrl,
+            ...(ogImgUrl ? { logo: ogImgUrl } : {}),
+            ...(s?.companyPhone ? { telephone: s.companyPhone } : {}),
+            ...(s?.companyEmail ? { email: s.companyEmail } : {}),
+            ...(s?.companyAddress ? { address: { "@type": "PostalAddress", streetAddress: s.companyAddress } } : {}),
+          };
+          const websiteSchema: any = {
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            "@id": `${baseUrl}/#website`,
+            url: baseUrl,
+            name: "IEVRA Design & Build",
+            inLanguage: lang === 'vi' ? 'vi-VN' : 'en-US',
+            publisher: { "@id": `${baseUrl}/#organization` },
+          };
+          let pageTypeSchema: any = null;
+          if (req.path === '/' || req.path === '') {
+            pageTypeSchema = null;
+          } else if (req.path === '/contact' || req.path === '/lien-he') {
+            pageTypeSchema = { "@context": "https://schema.org", "@type": "ContactPage", url: currentUrl, name: pageTitle, description: pageDesc, inLanguage: lang === 'vi' ? 'vi-VN' : 'en-US', isPartOf: { "@id": `${baseUrl}/#website` } };
+          } else if (req.path === '/about' || req.path === '/gioi-thieu') {
+            pageTypeSchema = { "@context": "https://schema.org", "@type": "AboutPage", url: currentUrl, name: pageTitle, description: pageDesc, inLanguage: lang === 'vi' ? 'vi-VN' : 'en-US', isPartOf: { "@id": `${baseUrl}/#website` } };
+          } else if (req.path === '/portfolio' || req.path === '/du-an' || req.path === '/blog' || req.path === '/tin-tuc') {
+            pageTypeSchema = { "@context": "https://schema.org", "@type": "CollectionPage", url: currentUrl, name: pageTitle, description: pageDesc, inLanguage: lang === 'vi' ? 'vi-VN' : 'en-US', isPartOf: { "@id": `${baseUrl}/#website` } };
+          } else {
+            pageTypeSchema = { "@context": "https://schema.org", "@type": "WebPage", url: currentUrl, name: pageTitle, description: pageDesc, inLanguage: lang === 'vi' ? 'vi-VN' : 'en-US', isPartOf: { "@id": `${baseUrl}/#website` } };
+          }
+          const staticJsonLd = pageTypeSchema ? [orgSchema, websiteSchema, pageTypeSchema] : [orgSchema, websiteSchema];
+
           tags = {
             title: pageTitle,
             description: pageDesc,
@@ -818,6 +880,7 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
             locale,
             hreflang,
             seoContent,
+            jsonLd: staticJsonLd,
           };
         } catch {
           tags = {
