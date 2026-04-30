@@ -347,8 +347,24 @@ function buildStaticPageSeoContent(
 
   if (path === '/contact' || path === '/lien-he') {
     const intro = isVi
-      ? 'Liên hệ IEVRA Design & Build để được tư vấn về dự án thiết kế nội thất và kiến trúc của bạn. Đội ngũ chuyên gia của chúng tôi luôn sẵn sàng hỗ trợ.'
-      : 'Contact IEVRA Design & Build for consultation on your interior design and architecture project. Our expert team is always ready to assist.';
+      ? 'Liên hệ IEVRA Design & Build để được tư vấn về dự án thiết kế nội thất và kiến trúc của bạn. Đội ngũ chuyên gia của chúng tôi luôn sẵn sàng lắng nghe và hỗ trợ bạn từ bước lên ý tưởng đến khi hoàn thiện không gian sống.'
+      : 'Contact IEVRA Design & Build for expert consultation on your interior design and architecture project. Our experienced team is ready to guide you from concept to completion, creating spaces that reflect your unique vision.';
+    const services = isVi
+      ? ['Tư vấn thiết kế nội thất', 'Tư vấn kiến trúc', 'Thi công trọn gói', 'Thiết kế căn hộ, nhà phố, biệt thự', 'Thiết kế không gian thương mại', 'Tư vấn lựa chọn vật liệu']
+      : ['Interior design consultation', 'Architectural consultation', 'Turnkey construction', 'Apartment, townhouse & villa design', 'Commercial space design', 'Material selection advisory'];
+    const steps = isVi
+      ? [
+          ['Bước 1: Tư vấn ban đầu', 'IEVRA lắng nghe nhu cầu, phong cách và ngân sách của bạn để đề xuất hướng thiết kế phù hợp.'],
+          ['Bước 2: Lập hồ sơ thiết kế', 'Đội ngũ thiết kế triển khai bản vẽ 2D, 3D và phối cảnh không gian chi tiết.'],
+          ['Bước 3: Thi công & giám sát', 'IEVRA quản lý toàn bộ quá trình thi công đảm bảo chất lượng và đúng tiến độ.'],
+          ['Bước 4: Bàn giao & hậu mãi', 'Bàn giao không gian hoàn chỉnh và hỗ trợ bảo hành theo cam kết.'],
+        ]
+      : [
+          ['Step 1: Initial Consultation', 'IEVRA listens to your needs, style preferences and budget to propose the right design direction.'],
+          ['Step 2: Design Development', 'Our team creates detailed 2D drawings, 3D visualizations and space renderings.'],
+          ['Step 3: Construction & Supervision', 'IEVRA manages the entire construction process ensuring quality and on-time delivery.'],
+          ['Step 4: Handover & After-sales', 'We deliver your completed space and provide warranty support as committed.'],
+        ];
 
     return `<header>${nav}<nav aria-label="breadcrumb"><ol><li><a href="${baseUrl}/">${home}</a></li><li>${contact}</li></ol></nav><h1>${contact}</h1><p>${escapeHtml(intro)}</p></header>
 <main>
@@ -359,16 +375,55 @@ function buildStaticPageSeoContent(
   ${email ? `<p>Email: <a itemprop="email" href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></p>` : ''}
   ${address ? `<p itemprop="address">${isVi ? 'Địa chỉ' : 'Address'}: ${escapeHtml(address)}</p>` : ''}
 </section>
+<section>
+  <h2>${isVi ? 'Dịch Vụ Của Chúng Tôi' : 'Our Services'}</h2>
+  <ul>${services.map(s => `<li>${escapeHtml(s)}</li>`).join('')}</ul>
+</section>
+<section>
+  <h2>${isVi ? 'Quy Trình Làm Việc' : 'Our Process'}</h2>
+  <ol>${steps.map(([title, desc]) => `<li><strong>${escapeHtml(title)}</strong>: ${escapeHtml(desc)}</li>`).join('')}</ol>
+</section>
+<section>
+  <h2>${isVi ? 'Tại Sao Chọn IEVRA?' : 'Why Choose IEVRA?'}</h2>
+  <ul>
+    ${isVi
+      ? `<li>Đội ngũ kiến trúc sư và nhà thiết kế giàu kinh nghiệm trong nhiều phong cách thiết kế</li>
+         <li>Cam kết chất lượng thi công với vật liệu được tuyển chọn kỹ lưỡng</li>
+         <li>Tiến độ thi công minh bạch, cập nhật thường xuyên cho khách hàng</li>
+         <li>Giải pháp thiết kế cá nhân hóa, phù hợp với từng không gian và ngân sách</li>`
+      : `<li>Experienced architects and designers across multiple design styles</li>
+         <li>Commitment to construction quality with carefully selected materials</li>
+         <li>Transparent project progress with regular client updates</li>
+         <li>Personalized design solutions tailored to each space and budget</li>`}
+  </ul>
+</section>
 </main>`;
   }
 
   if (path === '/lookup' || path === '/tra-cuu') {
     const intro = isVi
-      ? 'Tra cứu tiến độ và trạng thái dự án thiết kế và thi công của bạn với IEVRA Design & Build. Nhập mã dự án để xem thông tin chi tiết về các giai đoạn thực hiện.'
-      : 'Look up the progress and status of your design and construction project with IEVRA Design & Build. Enter your project code to view detailed phase information.';
+      ? 'Tra cứu tiến độ và trạng thái dự án thiết kế và thi công của bạn với IEVRA Design & Build. Nhập mã dự án được cung cấp bởi đội ngũ IEVRA để xem thông tin chi tiết về các giai đoạn thực hiện.'
+      : 'Look up the progress and status of your design and construction project with IEVRA Design & Build. Enter your project code provided by the IEVRA team to view detailed phase information.';
+    const phases = isVi
+      ? ['Ký kết hợp đồng', 'Thiết kế ý tưởng', 'Triển khai bản vẽ kỹ thuật', 'Thi công phần thô', 'Hoàn thiện nội thất', 'Bàn giao dự án', 'Bảo hành & hậu mãi']
+      : ['Contract signing', 'Concept design', 'Technical drawings', 'Structural work', 'Interior finishing', 'Project handover', 'Warranty & after-sales'];
 
     return `<header>${nav}<nav aria-label="breadcrumb"><ol><li><a href="${baseUrl}/">${home}</a></li><li>${lookup}</li></ol></nav><h1>${lookup}</h1><p>${escapeHtml(intro)}</p></header>
-<main><section><h2>${isVi ? 'Hướng Dẫn Tra Cứu' : 'How to Look Up'}</h2><p>${isVi ? 'Vui lòng nhập mã dự án được cung cấp bởi đội ngũ IEVRA để xem tiến độ chi tiết.' : 'Please enter the project code provided by the IEVRA team to view detailed progress.'}</p></section></main>`;
+<main>
+<section>
+  <h2>${isVi ? 'Hướng Dẫn Tra Cứu' : 'How to Look Up'}</h2>
+  <p>${isVi ? 'Vui lòng nhập mã dự án được cung cấp bởi đội ngũ IEVRA để xem tiến độ chi tiết của từng giai đoạn. Hệ thống sẽ hiển thị thông tin cập nhật mới nhất về dự án của bạn.' : 'Please enter the project code provided by the IEVRA team to view detailed progress for each phase. The system will display the latest updates for your project.'}</p>
+</section>
+<section>
+  <h2>${isVi ? 'Các Giai Đoạn Thực Hiện' : 'Project Phases'}</h2>
+  <ol>${phases.map(phase => `<li>${escapeHtml(phase)}</li>`).join('')}</ol>
+</section>
+<section>
+  <h2>${isVi ? 'Liên Hệ Hỗ Trợ' : 'Support Contact'}</h2>
+  <p>${isVi ? 'Nếu bạn cần hỗ trợ hoặc có câu hỏi về dự án, vui lòng' : 'If you need support or have questions about your project, please'} <a href="${baseUrl}${contactPath}">${isVi ? 'liên hệ trực tiếp với đội ngũ IEVRA' : 'contact the IEVRA team directly'}</a>.</p>
+  ${phone ? `<p>${isVi ? 'Điện thoại' : 'Phone'}: <a href="tel:${escapeHtml(phone)}">${escapeHtml(phone)}</a></p>` : ''}
+</section>
+</main>`;
   }
 
   return '';
@@ -378,20 +433,71 @@ function buildProjectSeoContent(project: any, imageUrl: string | undefined, base
   const isVi = project.language === 'vi';
   const breadcrumbLabel = isVi ? 'Dự Án' : 'Portfolio';
   const breadcrumbPath = isVi ? '/du-an' : '/portfolio';
+  const projectUrl = `${baseUrl}${breadcrumbPath}/${project.slug}`;
 
-  const descText = project.description ? escapeHtml(project.description) : '';
-  const contentText = project.content ? sanitizeContentHtml(project.content) : '';
+  const p = project as any;
+  const resolveImg = (raw: string | null | undefined): string | undefined => {
+    if (!raw) return undefined;
+    if (raw.startsWith('data:')) return undefined;
+    if (raw.startsWith('http')) return raw;
+    return `${baseUrl}${raw}`;
+  };
 
-  let html = `<article itemscope itemtype="https://schema.org/Article">`;
+  let html = `<article itemscope itemtype="https://schema.org/CreativeWork">`;
   html += `<nav aria-label="breadcrumb"><ol><li><a href="${baseUrl}/">${isVi ? 'Trang Chủ' : 'Home'}</a></li><li><a href="${baseUrl}${breadcrumbPath}">${breadcrumbLabel}</a></li><li>${escapeHtml(project.title)}</li></ol></nav>`;
-  html += `<h1 itemprop="headline">${escapeHtml(project.title)}</h1>`;
-  if (project.category) html += `<span>${escapeHtml(project.category)}</span>`;
-  if ((project as any).style) html += `<span>${escapeHtml((project as any).style)}</span>`;
-  if ((project as any).area) html += `<span>${escapeHtml((project as any).area)}</span>`;
+  html += `<h1 itemprop="name">${escapeHtml(project.title)}</h1>`;
+
+  // Meta info block
+  const metas: string[] = [];
+  if (project.category) metas.push(`<li>${isVi ? 'Danh mục' : 'Category'}: <strong>${escapeHtml(project.category)}</strong></li>`);
+  if (p.style)          metas.push(`<li>${isVi ? 'Phong cách' : 'Style'}: <strong>${escapeHtml(p.style)}</strong></li>`);
+  if (p.area)           metas.push(`<li>${isVi ? 'Diện tích' : 'Area'}: <strong>${escapeHtml(p.area)}</strong></li>`);
+  if (p.location)       metas.push(`<li>${isVi ? 'Địa điểm' : 'Location'}: <strong>${escapeHtml(p.location)}</strong></li>`);
+  if (p.duration)       metas.push(`<li>${isVi ? 'Thời gian thi công' : 'Duration'}: <strong>${escapeHtml(p.duration)}</strong></li>`);
+  if (p.budget)         metas.push(`<li>${isVi ? 'Ngân sách' : 'Budget'}: <strong>${escapeHtml(p.budget)}</strong></li>`);
+  if (p.completionYear) metas.push(`<li>${isVi ? 'Năm hoàn thành' : 'Completion year'}: <strong>${escapeHtml(String(p.completionYear))}</strong></li>`);
+  if (p.designer)       metas.push(`<li>${isVi ? 'Nhà thiết kế' : 'Designer'}: <strong>${escapeHtml(p.designer)}</strong></li>`);
+  if (metas.length > 0) html += `<ul>${metas.join('')}</ul>`;
+
+  // Hero image
   if (imageUrl) html += `<img itemprop="image" src="${escapeHtml(imageUrl)}" alt="${escapeHtml(project.title)}" />`;
-  if (descText) html += `<p itemprop="description">${descText}</p>`;
-  if (contentText) html += `<div itemprop="articleBody">${contentText}</div>`;
-  html += `<span itemprop="author" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="IEVRA Design &amp; Build" /></span>`;
+
+  // Description
+  if (project.description) html += `<p itemprop="description">${escapeHtml(project.description)}</p>`;
+
+  // Detailed description
+  if (p.detailedDescription) {
+    html += `<section><h2>${p.descriptionTitle ? escapeHtml(p.descriptionTitle) : (isVi ? 'Mô Tả Chi Tiết' : 'Project Details')}</h2>`;
+    html += `<p>${escapeHtml(p.detailedDescription)}</p></section>`;
+  }
+
+  // Design philosophy
+  if (p.designPhilosophy) {
+    html += `<section><h2>${p.designPhilosophyTitle ? escapeHtml(p.designPhilosophyTitle) : (isVi ? 'Triết Lý Thiết Kế' : 'Design Philosophy')}</h2>`;
+    html += `<p>${escapeHtml(p.designPhilosophy)}</p></section>`;
+  }
+
+  // Material selection
+  if (p.materialSelection) {
+    html += `<section><h2>${p.materialSelectionTitle ? escapeHtml(p.materialSelectionTitle) : (isVi ? 'Chọn Lựa Vật Liệu' : 'Material Selection')}</h2>`;
+    html += `<p>${escapeHtml(p.materialSelection)}</p></section>`;
+  }
+
+  // Gallery images
+  const galleryImages: string[] = Array.isArray(p.galleryImages)
+    ? p.galleryImages
+    : (p.galleryImages ? (() => { try { return JSON.parse(p.galleryImages); } catch { return []; } })() : []);
+  if (galleryImages.length > 0) {
+    html += `<section><h2>${isVi ? 'Hình Ảnh Dự Án' : 'Project Gallery'}</h2><ul>`;
+    galleryImages.slice(0, 8).forEach((img: any, i: number) => {
+      const imgSrc = resolveImg(typeof img === 'string' ? img : img?.url || img?.src);
+      if (imgSrc) html += `<li><img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(project.title)} - ${isVi ? 'ảnh' : 'photo'} ${i+1}" loading="lazy" /></li>`;
+    });
+    html += `</ul></section>`;
+  }
+
+  html += `<span itemprop="creator" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="IEVRA Design &amp; Build" /><meta itemprop="url" content="${baseUrl}/" /></span>`;
+  html += `<link itemprop="url" href="${projectUrl}" />`;
   html += `</article>`;
   return html;
 }
