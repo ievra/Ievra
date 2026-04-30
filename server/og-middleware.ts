@@ -241,6 +241,139 @@ function buildArticleSeoContent(article: any, imageUrl: string | undefined, base
   return html;
 }
 
+function buildStaticPageSeoContent(
+  path: string,
+  lang: 'vi' | 'en',
+  settings: any,
+  projects: any[],
+  articles: any[],
+  baseUrl: string,
+): string {
+  const isVi = lang === 'vi';
+  const home = isVi ? 'Trang Chủ' : 'Home';
+  const portfolio = isVi ? 'Dự Án' : 'Portfolio';
+  const blog = isVi ? 'Tin Tức' : 'Blog';
+  const about = isVi ? 'Giới Thiệu' : 'About';
+  const contact = isVi ? 'Liên Hệ' : 'Contact';
+  const lookup = isVi ? 'Tra Cứu Dự Án' : 'Project Lookup';
+  const portfolioPath = isVi ? '/du-an' : '/portfolio';
+  const blogPath = isVi ? '/tin-tuc' : '/blog';
+  const aboutPath = isVi ? '/gioi-thieu' : '/about';
+  const contactPath = isVi ? '/lien-he' : '/contact';
+  const lookupPath = isVi ? '/tra-cuu' : '/lookup';
+
+  const resolveImg = (raw: string | null | undefined): string | undefined => {
+    if (!raw) return undefined;
+    if (raw.startsWith('data:')) return undefined;
+    if (raw.startsWith('http')) return raw;
+    return `${baseUrl}${raw}`;
+  };
+  const renderProjectCard = (p: any) => {
+    const slug = p.slug || '';
+    const href = `${baseUrl}${isVi ? '/du-an/' : '/portfolio/'}${slug}`;
+    const img = resolveImg(p.heroImage || p.thumbnail || (p.galleryImages && p.galleryImages[0]) || '');
+    return `<li><article><a href="${href}"><h3>${escapeHtml(p.title || '')}</h3>${img ? `<img src="${escapeHtml(img)}" alt="${escapeHtml(p.title || '')}" loading="lazy" />` : ''}${p.description ? `<p>${escapeHtml(String(p.description).slice(0, 200))}</p>` : ''}${p.category ? `<span>${escapeHtml(p.category)}</span>` : ''}${(p as any).area ? `<span>${escapeHtml((p as any).area)}</span>` : ''}</a></article></li>`;
+  };
+  const renderArticleCard = (a: any) => {
+    const slug = a.slug || '';
+    const href = `${baseUrl}${isVi ? '/tin-tuc/' : '/blog/'}${slug}`;
+    const img = resolveImg(a.coverImage || a.thumbnail || '');
+    const date = a.publishedAt ? new Date(a.publishedAt).toLocaleDateString(isVi ? 'vi-VN' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '';
+    return `<li><article><a href="${href}"><h3>${escapeHtml(a.title || '')}</h3>${img ? `<img src="${escapeHtml(img)}" alt="${escapeHtml(a.title || '')}" loading="lazy" />` : ''}${date ? `<time datetime="${a.publishedAt ? new Date(a.publishedAt).toISOString() : ''}">${date}</time>` : ''}${a.excerpt ? `<p>${escapeHtml(String(a.excerpt).slice(0, 200))}</p>` : ''}</a></article></li>`;
+  };
+
+  const nav = `<nav aria-label="${isVi ? 'Điều hướng chính' : 'Main navigation'}"><ul><li><a href="${baseUrl}/">${home}</a></li><li><a href="${baseUrl}${aboutPath}">${about}</a></li><li><a href="${baseUrl}${portfolioPath}">${portfolio}</a></li><li><a href="${baseUrl}${blogPath}">${blog}</a></li><li><a href="${baseUrl}${contactPath}">${contact}</a></li><li><a href="${baseUrl}${lookupPath}">${lookup}</a></li></ul></nav>`;
+
+  const phone = settings?.phone || '';
+  const email = settings?.email || '';
+  const addressVi = settings?.addressVi || settings?.address || '';
+  const addressEn = settings?.addressEn || settings?.address || '';
+  const address = isVi ? addressVi : addressEn;
+
+  if (path === '/' || path === '') {
+    const intro = isVi
+      ? 'IEVRA Design & Build là studio thiết kế kiến trúc và nội thất cao cấp tại Việt Nam. Chúng tôi mang đến những giải pháp thiết kế tinh tế, kết hợp giữa thẩm mỹ hiện đại và công năng tối ưu cho không gian sống của bạn.'
+      : 'IEVRA Design & Build is a premium interior and architecture studio in Vietnam. We deliver refined design solutions that combine modern aesthetics with optimized functionality for your living space.';
+    const services = isVi
+      ? ['Thiết Kế Nội Thất Căn Hộ', 'Thiết Kế Nội Thất Nhà Phố', 'Thiết Kế Biệt Thự', 'Thi Công Trọn Gói', 'Tư Vấn Kiến Trúc']
+      : ['Apartment Interior Design', 'Townhouse Interior Design', 'Villa Design', 'Turnkey Construction', 'Architectural Consulting'];
+
+    return `<header>${nav}<h1>IEVRA Design &amp; Build</h1><p>${intro}</p></header>
+<main>
+<section><h2>${isVi ? 'Dịch Vụ' : 'Our Services'}</h2><ul>${services.map(s => `<li>${escapeHtml(s)}</li>`).join('')}</ul></section>
+<section><h2>${isVi ? 'Dự Án Tiêu Biểu' : 'Featured Projects'}</h2><ul>${projects.slice(0, 6).map(renderProjectCard).join('')}</ul><p><a href="${baseUrl}${portfolioPath}">${isVi ? 'Xem tất cả dự án' : 'View all projects'}</a></p></section>
+<section><h2>${isVi ? 'Bài Viết Mới Nhất' : 'Latest Articles'}</h2><ul>${articles.slice(0, 3).map(renderArticleCard).join('')}</ul><p><a href="${baseUrl}${blogPath}">${isVi ? 'Xem tất cả bài viết' : 'View all articles'}</a></p></section>
+<section><h2>${contact}</h2>${phone ? `<p>${isVi ? 'Điện thoại' : 'Phone'}: <a href="tel:${escapeHtml(phone)}">${escapeHtml(phone)}</a></p>` : ''}${email ? `<p>Email: <a href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></p>` : ''}${address ? `<p>${isVi ? 'Địa chỉ' : 'Address'}: ${escapeHtml(address)}</p>` : ''}</section>
+</main>`;
+  }
+
+  if (path === '/about' || path === '/gioi-thieu') {
+    const story = isVi
+      ? 'IEVRA Design & Build được thành lập với sứ mệnh mang đến những không gian sống đẳng cấp, tinh tế và đậm chất cá nhân cho khách hàng Việt Nam. Đội ngũ kiến trúc sư và nhà thiết kế giàu kinh nghiệm của chúng tôi luôn theo đuổi sự hoàn hảo trong từng chi tiết.'
+      : 'IEVRA Design & Build was founded with the mission of delivering refined, distinctive living spaces for Vietnamese clients. Our experienced team of architects and designers pursues perfection in every detail.';
+    const philosophy = isVi
+      ? 'Triết lý thiết kế của chúng tôi là sự kết hợp hài hòa giữa thẩm mỹ hiện đại, công năng thực tiễn và bản sắc văn hóa Á Đông. Mỗi dự án đều được tiếp cận với tinh thần cẩn trọng, tôn trọng nhu cầu và phong cách sống riêng của gia chủ.'
+      : 'Our design philosophy harmonizes modern aesthetics, practical functionality and Asian cultural identity. Every project is approached with care, respecting the unique needs and lifestyle of each client.';
+    const values = isVi
+      ? ['Chất lượng vượt trội', 'Tôn trọng khách hàng', 'Sáng tạo bền vững', 'Trách nhiệm với từng dự án']
+      : ['Outstanding quality', 'Client respect', 'Sustainable creativity', 'Responsibility in every project'];
+
+    return `<header>${nav}<nav aria-label="breadcrumb"><ol><li><a href="${baseUrl}/">${home}</a></li><li>${about}</li></ol></nav><h1>${about}</h1></header>
+<main>
+<section><h2>${isVi ? 'Câu Chuyện Của Chúng Tôi' : 'Our Story'}</h2><p>${escapeHtml(story)}</p></section>
+<section><h2>${isVi ? 'Triết Lý Thiết Kế' : 'Design Philosophy'}</h2><p>${escapeHtml(philosophy)}</p></section>
+<section><h2>${isVi ? 'Giá Trị Cốt Lõi' : 'Core Values'}</h2><ul>${values.map(v => `<li>${escapeHtml(v)}</li>`).join('')}</ul></section>
+<section><h2>${isVi ? 'Dự Án Tiêu Biểu' : 'Featured Projects'}</h2><ul>${projects.slice(0, 3).map(renderProjectCard).join('')}</ul></section>
+</main>`;
+  }
+
+  if (path === '/portfolio' || path === '/du-an') {
+    const intro = isVi
+      ? 'Khám phá bộ sưu tập dự án thiết kế nội thất và kiến trúc cao cấp của IEVRA Design & Build. Từ căn hộ hiện đại, nhà phố tinh tế đến biệt thự sang trọng — mỗi dự án là một câu chuyện thiết kế độc đáo.'
+      : 'Explore the portfolio of premium interior design and architecture projects by IEVRA Design & Build. From modern apartments and refined townhouses to luxury villas — each project tells a unique design story.';
+
+    return `<header>${nav}<nav aria-label="breadcrumb"><ol><li><a href="${baseUrl}/">${home}</a></li><li>${portfolio}</li></ol></nav><h1>${portfolio}</h1><p>${escapeHtml(intro)}</p></header>
+<main><section><h2>${isVi ? 'Tất Cả Dự Án' : 'All Projects'}</h2><ul>${projects.map(renderProjectCard).join('')}</ul></section></main>`;
+  }
+
+  if (path === '/blog' || path === '/tin-tuc') {
+    const intro = isVi
+      ? 'Cập nhật xu hướng thiết kế nội thất, kiến thức chuyên môn và cảm hứng từ đội ngũ IEVRA Design & Build. Khám phá những bài viết chuyên sâu về phong cách thiết kế, vật liệu và giải pháp không gian.'
+      : 'Stay updated with interior design trends, expert knowledge and inspiration from the IEVRA Design & Build team. Discover in-depth articles on design styles, materials and space solutions.';
+
+    return `<header>${nav}<nav aria-label="breadcrumb"><ol><li><a href="${baseUrl}/">${home}</a></li><li>${blog}</li></ol></nav><h1>${blog}</h1><p>${escapeHtml(intro)}</p></header>
+<main><section><h2>${isVi ? 'Tất Cả Bài Viết' : 'All Articles'}</h2><ul>${articles.map(renderArticleCard).join('')}</ul></section></main>`;
+  }
+
+  if (path === '/contact' || path === '/lien-he') {
+    const intro = isVi
+      ? 'Liên hệ IEVRA Design & Build để được tư vấn về dự án thiết kế nội thất và kiến trúc của bạn. Đội ngũ chuyên gia của chúng tôi luôn sẵn sàng hỗ trợ.'
+      : 'Contact IEVRA Design & Build for consultation on your interior design and architecture project. Our expert team is always ready to assist.';
+
+    return `<header>${nav}<nav aria-label="breadcrumb"><ol><li><a href="${baseUrl}/">${home}</a></li><li>${contact}</li></ol></nav><h1>${contact}</h1><p>${escapeHtml(intro)}</p></header>
+<main>
+<section itemscope itemtype="https://schema.org/Organization">
+  <meta itemprop="name" content="IEVRA Design &amp; Build" />
+  <h2>${isVi ? 'Thông Tin Liên Hệ' : 'Contact Information'}</h2>
+  ${phone ? `<p>${isVi ? 'Điện thoại' : 'Phone'}: <a itemprop="telephone" href="tel:${escapeHtml(phone)}">${escapeHtml(phone)}</a></p>` : ''}
+  ${email ? `<p>Email: <a itemprop="email" href="mailto:${escapeHtml(email)}">${escapeHtml(email)}</a></p>` : ''}
+  ${address ? `<p itemprop="address">${isVi ? 'Địa chỉ' : 'Address'}: ${escapeHtml(address)}</p>` : ''}
+</section>
+</main>`;
+  }
+
+  if (path === '/lookup' || path === '/tra-cuu') {
+    const intro = isVi
+      ? 'Tra cứu tiến độ và trạng thái dự án thiết kế và thi công của bạn với IEVRA Design & Build. Nhập mã dự án để xem thông tin chi tiết về các giai đoạn thực hiện.'
+      : 'Look up the progress and status of your design and construction project with IEVRA Design & Build. Enter your project code to view detailed phase information.';
+
+    return `<header>${nav}<nav aria-label="breadcrumb"><ol><li><a href="${baseUrl}/">${home}</a></li><li>${lookup}</li></ol></nav><h1>${lookup}</h1><p>${escapeHtml(intro)}</p></header>
+<main><section><h2>${isVi ? 'Hướng Dẫn Tra Cứu' : 'How to Look Up'}</h2><p>${isVi ? 'Vui lòng nhập mã dự án được cung cấp bởi đội ngũ IEVRA để xem tiến độ chi tiết.' : 'Please enter the project code provided by the IEVRA team to view detailed progress.'}</p></section></main>`;
+  }
+
+  return '';
+}
+
 function buildProjectSeoContent(project: any, imageUrl: string | undefined, baseUrl: string): string {
   const isVi = project.language === 'vi';
   const breadcrumbLabel = isVi ? 'Dự Án' : 'Portfolio';
@@ -558,6 +691,18 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
             : (lang === 'vi'
               ? (s?.metaDescriptionVi || s?.metaDescription || "Thiết kế nội thất cao cấp - IEVRA Design & Build")
               : (s?.metaDescription || "High-end interior design - IEVRA Design & Build"));
+
+          let seoContent: string | undefined;
+          if (staticMatch) {
+            try {
+              const [projectsForLang, articlesForLang] = await Promise.all([
+                storage.getProjects({ language: lang }).catch(() => []),
+                storage.getArticles({ language: lang, status: 'published' }).catch(() => []),
+              ]);
+              seoContent = buildStaticPageSeoContent(req.path, lang as 'vi' | 'en', s, projectsForLang || [], articlesForLang || [], baseUrl);
+            } catch {}
+          }
+
           tags = {
             title: pageTitle,
             description: pageDesc,
@@ -566,6 +711,7 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
             url: currentUrl,
             locale,
             hreflang,
+            seoContent,
           };
         } catch {
           tags = {
