@@ -54,3 +54,7 @@ DB_URL = "postgresql://iev18274_ievra_user:TN3n2lu%268nan*uFw@103.138.88.63:5432
 
 [userenv.production]
 SITE_URL = "https://ievra.com"
+
+[postMerge]
+path = "scripts/post-merge.sh"
+timeoutMs = 20000
