@@ -250,11 +250,27 @@ export default function LookupAdminTab() {
 
   const handleSearch = () => {
     if (!phoneSearch.trim()) return;
-    const normalized = phoneSearch.trim().replace(/[\s\-\.]/g, "");
+    const raw = phoneSearch.trim().toLowerCase();
+    const normalized = raw.replace(/[\s\-\.]/g, "");
     const found = clients.find((c) => {
-      if (!c.phone) return false;
-      const cp = c.phone.replace(/[\s\-\.]/g, "");
-      return cp === normalized || cp.endsWith(normalized) || normalized.endsWith(cp);
+      const fullName = `${c.lastName || ""} ${c.firstName || ""}`.toLowerCase().trim();
+      const fullNameAlt = `${c.firstName || ""} ${c.lastName || ""}`.toLowerCase().trim();
+      const phone = (c.phone || "").replace(/[\s\-\.]/g, "");
+      const email = (c.email || "").toLowerCase();
+      const company = (c.company || "").toLowerCase();
+      const address = (c.address || "").toLowerCase();
+      const identity = (c.identityCard || "").replace(/[\s\-\.]/g, "");
+      const notes = (c.notes || "").toLowerCase();
+      return (
+        fullName.includes(raw) ||
+        fullNameAlt.includes(raw) ||
+        phone === normalized || phone.endsWith(normalized) || normalized.endsWith(phone) ||
+        email.includes(raw) ||
+        company.includes(raw) ||
+        address.includes(raw) ||
+        identity.includes(normalized) ||
+        notes.includes(raw)
+      );
     });
     if (found) {
       setSelectedClient(found);
@@ -262,7 +278,7 @@ export default function LookupAdminTab() {
       setWarrantyStatus(found.warrantyStatus || "none");
       setActiveSubTab("design_progress");
     } else {
-      toast({ title: isVi ? "Không tìm thấy" : "Not found", description: isVi ? "Không tìm thấy khách hàng với số điện thoại này" : "No client found with this phone number", variant: "destructive" });
+      toast({ title: isVi ? "Không tìm thấy" : "Not found", description: isVi ? "Không tìm thấy khách hàng phù hợp" : "No matching client found", variant: "destructive" });
       setSelectedClient(null);
     }
   };
@@ -846,8 +862,8 @@ export default function LookupAdminTab() {
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40" />
           <Input
-            type="tel"
-            placeholder={isVi ? "Nhập số điện thoại khách hàng..." : "Enter client phone number..."}
+            type="text"
+            placeholder={isVi ? "Họ tên, SĐT, CCCD, email, công ty..." : "Name, phone, ID card, email, company..."}
             value={phoneSearch}
             onChange={(e) => setPhoneSearch(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSearch()}

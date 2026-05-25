@@ -1062,35 +1062,29 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     ].filter(Boolean);
 
     const qs = quickSearch.trim().toLowerCase();
+    const qsNorm = qs.replace(/[\s\-\.]/g, "");
     const quickClientResults = canCrm && qs.length >= 2
       ? clients.filter((c: any) => {
           const name = `${c.lastName || ''} ${c.firstName || ''}`.toLowerCase();
-          const phone = (c.phone || '').toLowerCase();
+          const nameAlt = `${c.firstName || ''} ${c.lastName || ''}`.toLowerCase();
+          const phone = (c.phone || '').replace(/[\s\-\.]/g, '');
           const email = (c.email || '').toLowerCase();
           const company = (c.company || '').toLowerCase();
           const address = (c.address || '').toLowerCase();
-          return name.includes(qs) || phone.includes(qs) || email.includes(qs) || company.includes(qs) || address.includes(qs);
-        }).slice(0, 6)
+          const identity = (c.identityCard || '').replace(/[\s\-\.]/g, '');
+          const notes = (c.notes || '').toLowerCase();
+          return (
+            name.includes(qs) || nameAlt.includes(qs) ||
+            phone.includes(qsNorm) ||
+            email.includes(qs) ||
+            company.includes(qs) ||
+            address.includes(qs) ||
+            identity.includes(qsNorm) ||
+            notes.includes(qs)
+          );
+        }).slice(0, 8)
       : [];
-    const quickBpResults = canCrm && qs.length >= 2
-      ? businessPartners.filter((bp: any) => {
-          const name = `${bp.lastName || ''} ${bp.firstName || ''}`.toLowerCase();
-          const phone = (bp.phone || '').toLowerCase();
-          const email = (bp.email || '').toLowerCase();
-          const company = (bp.company || '').toLowerCase();
-          return name.includes(qs) || phone.includes(qs) || email.includes(qs) || company.includes(qs);
-        }).slice(0, 4)
-      : [];
-    const quickInquiryResults = canInquiries && qs.length >= 2
-      ? inquiries.filter((inq: any) => {
-          const name = `${inq.firstName || ''} ${inq.lastName || ''}`.toLowerCase();
-          const phone = (inq.phone || '').toLowerCase();
-          const email = (inq.email || '').toLowerCase();
-          const msg = (inq.message || '').toLowerCase();
-          return name.includes(qs) || phone.includes(qs) || email.includes(qs) || msg.includes(qs);
-        }).slice(0, 4)
-      : [];
-    const hasQuickResults = quickClientResults.length > 0 || quickBpResults.length > 0 || quickInquiryResults.length > 0;
+    const hasQuickResults = quickClientResults.length > 0;
 
     return (
       <div className="space-y-6 p-6">
@@ -1111,51 +1105,18 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
           <Card>
             <CardContent className="p-0">
               {!hasQuickResults ? (
-                <p className="text-muted-foreground text-sm py-6 text-center">{language === 'vi' ? 'Không tìm thấy kết quả' : 'No results found'}</p>
+                <p className="text-muted-foreground text-sm py-6 text-center">{language === 'vi' ? 'Không tìm thấy khách hàng phù hợp' : 'No matching clients found'}</p>
               ) : (
-                <div className="divide-y divide-white/10">
-                  {quickClientResults.length > 0 && (
-                    <div>
-                      <p className="text-xs text-white/40 font-medium uppercase tracking-wider px-4 pt-3 pb-1">{language === 'vi' ? 'Khách Hàng' : 'Clients'}</p>
-                      {quickClientResults.map((c: any) => (
-                        <div key={c.id} className="flex items-center justify-between px-4 py-2.5 hover:bg-white/5 cursor-pointer" onClick={() => {}}>
-                          <div>
-                            <p className="text-sm font-light">{c.lastName} {c.firstName}</p>
-                            <p className="text-xs text-muted-foreground">{[c.phone, c.email, c.company].filter(Boolean).join(' · ')}</p>
-                          </div>
-                          <span className="text-xs text-white/30 shrink-0 ml-2">{language === 'vi' ? 'KH' : 'Client'}</span>
-                        </div>
-                      ))}
+                <div>
+                  {quickClientResults.map((c: any) => (
+                    <div key={c.id} className="flex items-center justify-between px-4 py-3 border-b border-white/5 last:border-0 hover:bg-white/5">
+                      <div className="min-w-0">
+                        <p className="text-sm font-light">{c.lastName} {c.firstName}</p>
+                        <p className="text-xs text-muted-foreground truncate">{[c.phone, c.email, c.company].filter(Boolean).join(' · ')}</p>
+                        {c.identityCard && <p className="text-xs text-white/30">CCCD: {c.identityCard}</p>}
+                      </div>
                     </div>
-                  )}
-                  {quickBpResults.length > 0 && (
-                    <div>
-                      <p className="text-xs text-white/40 font-medium uppercase tracking-wider px-4 pt-3 pb-1">{language === 'vi' ? 'Đối Tác' : 'Business Partners'}</p>
-                      {quickBpResults.map((bp: any) => (
-                        <div key={bp.id} className="flex items-center justify-between px-4 py-2.5 hover:bg-white/5 cursor-pointer">
-                          <div>
-                            <p className="text-sm font-light">{bp.lastName} {bp.firstName}</p>
-                            <p className="text-xs text-muted-foreground">{[bp.phone, bp.email, bp.company].filter(Boolean).join(' · ')}</p>
-                          </div>
-                          <span className="text-xs text-white/30 shrink-0 ml-2">{language === 'vi' ? 'ĐT' : 'Partner'}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                  {quickInquiryResults.length > 0 && (
-                    <div>
-                      <p className="text-xs text-white/40 font-medium uppercase tracking-wider px-4 pt-3 pb-1">{language === 'vi' ? 'Yêu Cầu' : 'Inquiries'}</p>
-                      {quickInquiryResults.map((inq: any) => (
-                        <div key={inq.id} className="flex items-center justify-between px-4 py-2.5 hover:bg-white/5 cursor-pointer">
-                          <div>
-                            <p className="text-sm font-light">{inq.firstName} {inq.lastName}</p>
-                            <p className="text-xs text-muted-foreground">{[inq.phone, inq.email, inq.projectType].filter(Boolean).join(' · ')}</p>
-                          </div>
-                          <span className="text-xs text-white/30 shrink-0 ml-2">{language === 'vi' ? 'YC' : 'Inquiry'}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  ))}
                 </div>
               )}
             </CardContent>
