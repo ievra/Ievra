@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -550,49 +550,62 @@ export default function LookupAdminTab({ user }: { user?: any }) {
     },
   });
 
-  const toggleHiddenDesignPhaseMutation = useMutation({
-    mutationFn: async (phaseValue: string) => {
-      const current = (selectedClient?.hiddenDesignPhases as string[]) || [];
-      const next = current.includes(phaseValue)
-        ? current.filter(v => v !== phaseValue)
-        : [...current, phaseValue];
-      const res = await apiRequest("PUT", `/api/clients/${selectedClient!.id}`, { hiddenDesignPhases: next });
-      return await res.json() as Client;
-    },
-    onMutate: (phaseValue: string) => {
-      const current = (selectedClient?.hiddenDesignPhases as string[]) || [];
-      const next = current.includes(phaseValue)
-        ? current.filter(v => v !== phaseValue)
-        : [...current, phaseValue];
-      setSelectedClient(prev => prev ? { ...prev, hiddenDesignPhases: next } as Client : prev);
-    },
-    onSuccess: (updatedClient: Client) => {
-      setSelectedClient(updatedClient);
-      queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
-    },
-  });
+  const selectedClientRef = useRef<Client | null>(null);
+  selectedClientRef.current = selectedClient;
 
-  const toggleHiddenConstructionPhaseMutation = useMutation({
-    mutationFn: async (phaseValue: string) => {
-      const current = (selectedClient?.hiddenConstructionPhases as string[]) || [];
-      const next = current.includes(phaseValue)
-        ? current.filter(v => v !== phaseValue)
-        : [...current, phaseValue];
-      const res = await apiRequest("PUT", `/api/clients/${selectedClient!.id}`, { hiddenConstructionPhases: next });
-      return await res.json() as Client;
-    },
-    onMutate: (phaseValue: string) => {
-      const current = (selectedClient?.hiddenConstructionPhases as string[]) || [];
-      const next = current.includes(phaseValue)
-        ? current.filter(v => v !== phaseValue)
-        : [...current, phaseValue];
-      setSelectedClient(prev => prev ? { ...prev, hiddenConstructionPhases: next } as Client : prev);
-    },
-    onSuccess: (updatedClient: Client) => {
-      setSelectedClient(updatedClient);
-      queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
-    },
-  });
+  const toggleHiddenDesignPhase = async (phaseValue: string) => {
+    const client = selectedClientRef.current;
+    if (!client) return;
+    const current = (client.hiddenDesignPhases as string[]) || [];
+    const next = current.includes(phaseValue)
+      ? current.filter(v => v !== phaseValue)
+      : [...current, phaseValue];
+    setSelectedClient({ ...client, hiddenDesignPhases: next } as Client);
+    try {
+      const res = await fetch(`/api/clients/${client.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ hiddenDesignPhases: next }),
+        credentials: 'include',
+      });
+      if (res.ok) {
+        const updated = await res.json() as Client;
+        setSelectedClient(updated);
+        queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
+      } else {
+        setSelectedClient({ ...client, hiddenDesignPhases: current } as Client);
+      }
+    } catch {
+      setSelectedClient({ ...client, hiddenDesignPhases: current } as Client);
+    }
+  };
+
+  const toggleHiddenConstructionPhase = async (phaseValue: string) => {
+    const client = selectedClientRef.current;
+    if (!client) return;
+    const current = (client.hiddenConstructionPhases as string[]) || [];
+    const next = current.includes(phaseValue)
+      ? current.filter(v => v !== phaseValue)
+      : [...current, phaseValue];
+    setSelectedClient({ ...client, hiddenConstructionPhases: next } as Client);
+    try {
+      const res = await fetch(`/api/clients/${client.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ hiddenConstructionPhases: next }),
+        credentials: 'include',
+      });
+      if (res.ok) {
+        const updated = await res.json() as Client;
+        setSelectedClient(updated);
+        queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
+      } else {
+        setSelectedClient({ ...client, hiddenConstructionPhases: current } as Client);
+      }
+    } catch {
+      setSelectedClient({ ...client, hiddenConstructionPhases: current } as Client);
+    }
+  };
 
   const updateWarrantyMutation = useMutation({
     mutationFn: async () => {
@@ -1246,7 +1259,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                               <div className="flex items-center gap-2">
                                 <button
                                   type="button"
-                                  onClick={() => toggleHiddenConstructionPhaseMutation.mutate(phase.value)}
+                                  onClick={() => toggleHiddenConstructionPhase(phase.value)}
                                   className="text-white/20 hover:text-white/60 transition-colors flex-shrink-0"
                                   title={isHidden ? (isVi ? "Hiện hạng mục" : "Show phase") : (isVi ? "Ẩn hạng mục" : "Hide phase")}
                                 >
@@ -1517,7 +1530,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                               <div className="flex items-center gap-2">
                                 <button
                                   type="button"
-                                  onClick={() => toggleHiddenDesignPhaseMutation.mutate(phase.value)}
+                                  onClick={() => toggleHiddenDesignPhase(phase.value)}
                                   className="text-white/20 hover:text-white/60 transition-colors flex-shrink-0"
                                   title={isHiddenDesign ? (isVi ? "Hiện hạng mục" : "Show phase") : (isVi ? "Ẩn hạng mục" : "Hide phase")}
                                 >
