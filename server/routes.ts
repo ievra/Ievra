@@ -693,22 +693,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const normalizedPhone = phone.trim().replace(/[\s\-\.]/g, '');
-      const allClients = await storage.getClients();
-      const client = allClients.find(c => {
-        if (!c.phone) return false;
-        const clientPhone = c.phone.replace(/[\s\-\.]/g, '');
-        return clientPhone === normalizedPhone || clientPhone.endsWith(normalizedPhone) || normalizedPhone.endsWith(clientPhone);
-      });
+      const client = await storage.getClientByPhoneLookup(normalizedPhone);
 
       if (!client) {
         return res.status(404).json({ message: "Không tìm thấy thông tin khách hàng với số điện thoại này" });
       }
 
-      const clientInteractions = await storage.getInteractions(client.id);
-      const clientTransactions = await storage.getTransactions(client.id);
-      const clientWarrantyLogs = await storage.getWarrantyLogs(client.id);
-      const allDesignPhases = await storage.getDesignPhases({});
-      const allConstructionPhases = await storage.getConstructionPhases({});
+      const [clientInteractions, clientTransactions, clientWarrantyLogs, allDesignPhases, allConstructionPhases] = await Promise.all([
+        storage.getInteractions(client.id),
+        storage.getTransactions(client.id),
+        storage.getWarrantyLogs(client.id),
+        storage.getDesignPhases({}),
+        storage.getConstructionPhases({}),
+      ]);
       const hiddenDesign = (client.hiddenDesignPhases as string[]) || [];
       const hiddenConstruction = (client.hiddenConstructionPhases as string[]) || [];
       const designPhases = allDesignPhases.filter((p: any) => !hiddenDesign.includes(p.value));

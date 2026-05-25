@@ -42,7 +42,7 @@ import {
   type DesignPhase, type InsertDesignPhase
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, ne, desc, like, and, or, sql } from "drizzle-orm";
+import { eq, ne, desc, like, and, or, sql, isNotNull } from "drizzle-orm";
 
 export interface IStorage {
   // Users
@@ -65,6 +65,7 @@ export interface IStorage {
   // Clients
   getClients(status?: string): Promise<Client[]>;
   getClient(id: string): Promise<Client | undefined>;
+  getClientByPhoneLookup(normalizedPhone: string): Promise<Client | undefined>;
   getClientByEmail(email: string): Promise<Client | undefined>;
   createClient(client: InsertClient): Promise<Client>;
   updateClient(id: string, client: Partial<InsertClient>): Promise<Client>;
@@ -448,6 +449,15 @@ export class DatabaseStorage implements IStorage {
     
     // Check and update warranty status
     return await this.checkAndUpdateWarrantyStatus(client);
+  }
+
+  async getClientByPhoneLookup(normalizedPhone: string): Promise<Client | undefined> {
+    const allWithPhone = await db.select().from(clients).where(isNotNull(clients.phone));
+    const match = allWithPhone.find(c => {
+      const cp = (c.phone as string).replace(/[\s\-\.]/g, '');
+      return cp === normalizedPhone || cp.endsWith(normalizedPhone) || normalizedPhone.endsWith(cp);
+    });
+    return match as Client | undefined;
   }
 
   async getClientByEmail(email: string): Promise<Client | undefined> {
