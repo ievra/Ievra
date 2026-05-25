@@ -150,12 +150,6 @@ export default function LookupAdminTab({ user }: { user?: any }) {
     queryKey: ['/api/clients'],
   });
 
-  useEffect(() => {
-    if (selectedClient && clients.length > 0) {
-      const fresh = clients.find(c => c.id === selectedClient.id);
-      if (fresh) setSelectedClient(fresh);
-    }
-  }, [clients]);
 
   const { data: allConstructionPhases = [] } = useQuery<ConstructionPhase[]>({
     queryKey: ['/api/construction-phases'],
@@ -562,17 +556,18 @@ export default function LookupAdminTab({ user }: { user?: any }) {
       const next = current.includes(phaseValue)
         ? current.filter(v => v !== phaseValue)
         : [...current, phaseValue];
-      await apiRequest("PUT", `/api/clients/${selectedClient!.id}`, { hiddenDesignPhases: next });
-      return next;
+      const res = await apiRequest("PUT", `/api/clients/${selectedClient!.id}`, { hiddenDesignPhases: next });
+      return await res.json() as Client;
     },
     onMutate: (phaseValue: string) => {
       const current = (selectedClient?.hiddenDesignPhases as string[]) || [];
       const next = current.includes(phaseValue)
         ? current.filter(v => v !== phaseValue)
         : [...current, phaseValue];
-      setSelectedClient({ ...selectedClient!, hiddenDesignPhases: next } as Client);
+      setSelectedClient(prev => prev ? { ...prev, hiddenDesignPhases: next } as Client : prev);
     },
-    onSettled: () => {
+    onSuccess: (updatedClient: Client) => {
+      setSelectedClient(updatedClient);
       queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
     },
   });
@@ -583,17 +578,18 @@ export default function LookupAdminTab({ user }: { user?: any }) {
       const next = current.includes(phaseValue)
         ? current.filter(v => v !== phaseValue)
         : [...current, phaseValue];
-      await apiRequest("PUT", `/api/clients/${selectedClient!.id}`, { hiddenConstructionPhases: next });
-      return next;
+      const res = await apiRequest("PUT", `/api/clients/${selectedClient!.id}`, { hiddenConstructionPhases: next });
+      return await res.json() as Client;
     },
     onMutate: (phaseValue: string) => {
       const current = (selectedClient?.hiddenConstructionPhases as string[]) || [];
       const next = current.includes(phaseValue)
         ? current.filter(v => v !== phaseValue)
         : [...current, phaseValue];
-      setSelectedClient({ ...selectedClient!, hiddenConstructionPhases: next } as Client);
+      setSelectedClient(prev => prev ? { ...prev, hiddenConstructionPhases: next } as Client : prev);
     },
-    onSettled: () => {
+    onSuccess: (updatedClient: Client) => {
+      setSelectedClient(updatedClient);
       queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
     },
   });
