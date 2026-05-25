@@ -576,12 +576,13 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
         return `${baseUrl}${raw}`;
       }
 
-      function resolveImageUrlWithResize(raw: string | null | undefined): string | undefined {
-        if (!raw) return undefined;
-        if (raw.startsWith("data:")) return undefined;
-        const fullUrl = raw.startsWith("http") ? raw : `${baseUrl}${raw}`;
-        const urlWithoutProtocol = fullUrl.replace(/^https?:\/\//, '');
-        return `https://images.weserv.nl/?url=${urlWithoutProtocol}&w=1200&h=630&fit=inside&output=jpg&q=92`;
+      async function resolveDefaultOgImage(): Promise<string | undefined> {
+        try {
+          const s = await getCachedSettings();
+          if (s?.ogImageData && s.ogImageData.startsWith("data:")) return `${baseUrl}/api/og-image`;
+          if (s?.ogImage) return resolveImageUrl(s.ogImage);
+        } catch {}
+        return undefined;
       }
 
       const lang = detectLanguage(req.path);
@@ -606,7 +607,7 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
               const galleryImages = Array.isArray(project.galleryImages) ? project.galleryImages : [];
               const candidates = [project.heroImage, ...coverImages, ...galleryImages];
               const firstImage = candidates.find(img => img && !String(img).startsWith("data:"));
-              imageUrl = resolveImageUrlWithResize(firstImage as string);
+              imageUrl = firstImage ? resolveImageUrl(firstImage as string) : await resolveDefaultOgImage();
             }
             const desc = project.metaDescription || project.description || "Dự án thiết kế nội thất của IEVRA Design & Build";
             const breadcrumbListName = lang === 'en' ? 'Portfolio' : 'Dự Án';
@@ -667,9 +668,14 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
           if (article) {
             contentFound = true;
             const explicitOgImage = (article as any).ogImage as string | undefined;
-            const imageUrl = (explicitOgImage && !explicitOgImage.startsWith("data:"))
-              ? resolveImageUrl(explicitOgImage)
-              : resolveImageUrlWithResize(article.featuredImage);
+            let imageUrl: string | undefined;
+            if (explicitOgImage && !explicitOgImage.startsWith("data:")) {
+              imageUrl = resolveImageUrl(explicitOgImage);
+            } else if (article.featuredImage && !article.featuredImage.startsWith("data:")) {
+              imageUrl = resolveImageUrl(article.featuredImage);
+            } else {
+              imageUrl = await resolveDefaultOgImage();
+            }
             const desc = article.metaDescription || article.excerpt || "Bài viết từ IEVRA Design & Build";
             const breadcrumbListName = lang === 'en' ? 'Blog' : 'Tin Tức';
             const breadcrumbListUrl = `${baseUrl}${lang === 'en' ? '/blog' : '/tin-tuc'}`;
