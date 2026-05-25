@@ -515,7 +515,21 @@ export default function Lookup() {
                   <h3 className="text-sm font-medium text-white/70 tracking-wider uppercase mb-4 pb-2 border-b border-white/10">{isVi ? "Tiến Độ Thiết Kế" : "Design Progress"}</h3>
                   <div className="grid grid-cols-2 gap-4">
                     {renderCircle(
-                      { label: isVi ? "Tiến Độ" : "Progress", progress: (() => { const has = !!result.client.designTimeline; return has ? Math.min(100, Math.round((designInteractions.length / result.client.designTimeline!) * 100)) : 0; })(), type: "design_progress" },
+                      { label: isVi ? "Tiến Độ" : "Progress", progress: (() => {
+                        const phaseTargets = (result.client.designPhaseTargets || {}) as Record<string, number>;
+                        if (designPhases.length > 0) {
+                          const sum = designPhases.reduce((acc, phase) => {
+                            const target = phaseTargets[phase.value] || 0;
+                            const logged = designInteractions.filter(i => i.phase === phase.value).length;
+                            const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 100;
+                            return acc + pct;
+                          }, 0);
+                          return Math.round(sum / designPhases.length);
+                        }
+                        return result.client.designTimeline
+                          ? Math.min(100, Math.round((designInteractions.length / result.client.designTimeline) * 100))
+                          : 0;
+                      })(), type: "design_progress" },
                       designPhases, (result.client.designPhaseTargets || {}), designInteractions
                     )}
                     {renderCircle(
@@ -528,7 +542,21 @@ export default function Lookup() {
                   <h3 className="text-sm font-medium text-white/70 tracking-wider uppercase mb-4 pb-2 border-b border-white/10">{isVi ? "Tiến Độ Thi Công" : "Construction Progress"}</h3>
                   <div className="grid grid-cols-2 gap-4">
                     {renderCircle(
-                      { label: isVi ? "Tiến Độ" : "Progress", progress: (() => { const has = !!result.client.constructionTimeline; return has ? Math.min(100, Math.round((constructionInteractions.length / result.client.constructionTimeline!) * 100)) : 0; })(), type: "construction_progress" },
+                      { label: isVi ? "Tiến Độ" : "Progress", progress: (() => {
+                        const phaseTargets = (result.client.constructionPhaseTargets || {}) as Record<string, number>;
+                        if (constructionPhases.length > 0) {
+                          const sum = constructionPhases.reduce((acc, phase) => {
+                            const target = phaseTargets[phase.value] || 0;
+                            const logged = constructionInteractions.filter(i => i.phase === phase.value).length;
+                            const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 100;
+                            return acc + pct;
+                          }, 0);
+                          return Math.round(sum / constructionPhases.length);
+                        }
+                        return result.client.constructionTimeline
+                          ? Math.min(100, Math.round((constructionInteractions.length / result.client.constructionTimeline) * 100))
+                          : 0;
+                      })(), type: "construction_progress" },
                       constructionPhases, (result.client.constructionPhaseTargets || {}), constructionInteractions
                     )}
                     {renderCircle(
