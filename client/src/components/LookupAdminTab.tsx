@@ -282,9 +282,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
     const raw = phoneSearch.trim().toLowerCase();
     if (!raw) return;
     const matches = clients.filter((c) => matchesSearch(c, raw));
-    if (matches.length >= 1) {
-      selectClient(matches[0]);
-    } else {
+    if (matches.length === 0) {
       setSelectedClient(null);
       toast({ title: isVi ? "Không tìm thấy" : "Not found", description: isVi ? "Không tìm thấy khách hàng phù hợp" : "No matching client found", variant: "destructive" });
     }
