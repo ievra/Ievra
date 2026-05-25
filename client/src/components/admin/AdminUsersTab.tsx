@@ -13,13 +13,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Pencil, Trash2, Plus, Lock, KeyRound } from "lucide-react";
+import { Pencil, Trash2, Plus, Lock, KeyRound, Eye, EyeOff } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const userSchema = z.object({
   username: z.string().min(3, "Username must be at least 3 characters").optional(),
   password: z.string().optional(),
+  confirmPassword: z.string().optional(),
   displayName: z.string().optional(),
   email: z.string().email().optional().or(z.literal('')),
   role: z.enum(["superadmin", "admin", "editor"]).default("admin"),
@@ -81,6 +82,11 @@ export default function AdminUsersTab({ user, hasPermission }: AdminUsersTabProp
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
 
   const { data: adminUsers = [], isLoading: usersLoading } = useQuery<any[]>({
     queryKey: ['/api/users'],
@@ -91,6 +97,7 @@ export default function AdminUsersTab({ user, hasPermission }: AdminUsersTabProp
     defaultValues: {
       username: "",
       password: "",
+      confirmPassword: "",
       displayName: "",
       email: "",
       role: "admin",
@@ -214,7 +221,16 @@ export default function AdminUsersTab({ user, hasPermission }: AdminUsersTabProp
         });
         return;
       }
-      createUserMutation.mutate(data);
+      if (data.password !== data.confirmPassword) {
+        toast({
+          title: language === 'vi' ? 'Mật khẩu không khớp' : 'Passwords do not match',
+          description: language === 'vi' ? 'Mật khẩu xác nhận phải trùng với mật khẩu đã nhập.' : 'Confirm password must match the password.',
+          variant: "destructive",
+        });
+        return;
+      }
+      const { confirmPassword: _cp, ...submitData } = data;
+      createUserMutation.mutate(submitData);
     }
   };
 
@@ -223,6 +239,7 @@ export default function AdminUsersTab({ user, hasPermission }: AdminUsersTabProp
     userForm.reset({
       username: userToEdit.username,
       password: "",
+      confirmPassword: "",
       displayName: userToEdit.displayName || "",
       email: userToEdit.email || "",
       role: userToEdit.role || "admin",
@@ -278,9 +295,12 @@ export default function AdminUsersTab({ user, hasPermission }: AdminUsersTabProp
             <Button
               onClick={() => {
                 setEditingUser(null);
+                setShowPassword(false);
+                setShowConfirmPassword(false);
                 userForm.reset({
                   username: "",
                   password: "",
+                  confirmPassword: "",
                   displayName: "",
                   email: "",
                   role: "admin",
@@ -318,19 +338,44 @@ export default function AdminUsersTab({ user, hasPermission }: AdminUsersTabProp
                     />
 
                     {!editingUser && (
-                      <FormField
-                        control={userForm.control}
-                        name="password"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{language === 'vi' ? 'Mật Khẩu' : 'Password'}</FormLabel>
-                            <FormControl>
-                              <Input {...field} type="password" placeholder={language === 'vi' ? 'Nhập mật khẩu' : 'Enter password'} data-testid="input-user-password" />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
+                      <>
+                        <FormField
+                          control={userForm.control}
+                          name="password"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>{language === 'vi' ? 'Mật Khẩu' : 'Password'}</FormLabel>
+                              <FormControl>
+                                <div className="relative">
+                                  <Input {...field} type={showPassword ? "text" : "password"} placeholder={language === 'vi' ? 'Nhập mật khẩu' : 'Enter password'} data-testid="input-user-password" className="pr-10" />
+                                  <button type="button" onClick={() => setShowPassword(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors">
+                                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                  </button>
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={userForm.control}
+                          name="confirmPassword"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>{language === 'vi' ? 'Xác Nhận Mật Khẩu' : 'Confirm Password'}</FormLabel>
+                              <FormControl>
+                                <div className="relative">
+                                  <Input {...field} type={showConfirmPassword ? "text" : "password"} placeholder={language === 'vi' ? 'Nhập lại mật khẩu' : 'Re-enter password'} data-testid="input-user-confirm-password" className="pr-10" />
+                                  <button type="button" onClick={() => setShowConfirmPassword(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors">
+                                    {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                                  </button>
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </>
                     )}
                   </>
                 )}
@@ -446,33 +491,51 @@ export default function AdminUsersTab({ user, hasPermission }: AdminUsersTabProp
           <div className="space-y-4">
             <div>
               <label className="text-sm font-medium mb-2 block">{language === 'vi' ? 'Mật Khẩu Hiện Tại' : 'Current Password'}</label>
-              <Input
-                type="password"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-                placeholder={language === 'vi' ? 'Nhập mật khẩu hiện tại' : 'Enter current password'}
-                data-testid="input-current-password"
-              />
+              <div className="relative">
+                <Input
+                  type={showCurrentPassword ? "text" : "password"}
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  placeholder={language === 'vi' ? 'Nhập mật khẩu hiện tại' : 'Enter current password'}
+                  data-testid="input-current-password"
+                  className="pr-10"
+                />
+                <button type="button" onClick={() => setShowCurrentPassword(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors">
+                  {showCurrentPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
             </div>
             <div>
               <label className="text-sm font-medium mb-2 block">{language === 'vi' ? 'Mật Khẩu Mới' : 'New Password'}</label>
-              <Input
-                type="password"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                placeholder={language === 'vi' ? 'Nhập mật khẩu mới (tối thiểu 6 ký tự)' : 'Enter new password (min 6 characters)'}
-                data-testid="input-new-password"
-              />
+              <div className="relative">
+                <Input
+                  type={showNewPassword ? "text" : "password"}
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder={language === 'vi' ? 'Nhập mật khẩu mới (tối thiểu 6 ký tự)' : 'Enter new password (min 6 characters)'}
+                  data-testid="input-new-password"
+                  className="pr-10"
+                />
+                <button type="button" onClick={() => setShowNewPassword(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors">
+                  {showNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
             </div>
             <div>
               <label className="text-sm font-medium mb-2 block">{language === 'vi' ? 'Xác Nhận Mật Khẩu Mới' : 'Confirm New Password'}</label>
-              <Input
-                type="password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder={language === 'vi' ? 'Xác nhận mật khẩu mới' : 'Confirm new password'}
-                data-testid="input-confirm-password"
-              />
+              <div className="relative">
+                <Input
+                  type={showConfirmNewPassword ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder={language === 'vi' ? 'Xác nhận mật khẩu mới' : 'Confirm new password'}
+                  data-testid="input-confirm-password"
+                  className="pr-10"
+                />
+                <button type="button" onClick={() => setShowConfirmNewPassword(v => !v)} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors">
+                  {showConfirmNewPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
             </div>
             <div className="flex justify-end space-x-2 pt-2">
               <Button
@@ -483,6 +546,9 @@ export default function AdminUsersTab({ user, hasPermission }: AdminUsersTabProp
                   setCurrentPassword("");
                   setNewPassword("");
                   setConfirmPassword("");
+                  setShowCurrentPassword(false);
+                  setShowNewPassword(false);
+                  setShowConfirmNewPassword(false);
                 }}
               >
                 {language === 'vi' ? 'Hủy' : 'Cancel'}
