@@ -995,7 +995,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
 
   if (activeTab === 'overview') {
     const canProjects = hasPermission(user, 'projects');
-    const canCrm = hasPermission(user, 'crm');
+    const canCrm = hasPermission(user, 'clients');
     const canInquiries = hasPermission(user, 'inquiries');
     const visibleCards = [
       canProjects && (

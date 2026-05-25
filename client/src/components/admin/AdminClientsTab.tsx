@@ -545,7 +545,7 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
     });
   };
 
-  if (!hasPermission(user, 'crm')) {
+  if (!hasPermission(user, 'clients')) {
     return <PermissionDenied feature="CRM / Clients" />;
   }
 
