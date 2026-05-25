@@ -258,7 +258,7 @@ export default function Lookup() {
   const constructionPhases = result?.constructionPhases || [];
   const transactions = result?.transactions || [];
 
-  const renderCircle = (item: { label: string; progress: number; type: string }, phases: LookupPhase[], phaseTargets: Record<string, number>, circleInteractions: LookupInteraction[]) => {
+  const renderCircle = (item: { label: string; progress: number; type: string }, phases: LookupPhase[], phaseTargets: Record<string, number>, circleInteractions: LookupInteraction[], hasTimeline = false) => {
     const vb = 100;
     const sw = 10;
     const r = (vb - sw) / 2;
@@ -284,7 +284,7 @@ export default function Lookup() {
             {phases.map((phase) => {
               const target = phaseTargets[phase.value] || 0;
               const logged = circleInteractions.filter((int) => int.phase === phase.value).length;
-              const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 100;
+              const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : (hasTimeline ? 0 : 100);
               return (
                 <div key={phase.id} className="space-y-0.5">
                   <div className="flex justify-between items-center">
@@ -531,7 +531,7 @@ export default function Lookup() {
                         }
                         return 100;
                       })(), type: "design_progress" },
-                      designPhases, (result.client.designPhaseTargets || {}), designInteractions
+                      designPhases, (result.client.designPhaseTargets || {}), designInteractions, !!result.client.designTimeline
                     )}
                     {renderCircle(
                       { label: isVi ? "Thanh Toán" : "Payment", progress: (() => { const tx = transactions.filter(t => !t.category || t.category === "design"); const done = tx.filter(t => t.status === "completed").length; return tx.length > 0 ? Math.round((done / tx.length) * 100) : 0; })(), type: "design_payment" },
@@ -559,7 +559,7 @@ export default function Lookup() {
                         }
                         return 100;
                       })(), type: "construction_progress" },
-                      constructionPhases, (result.client.constructionPhaseTargets || {}), constructionInteractions
+                      constructionPhases, (result.client.constructionPhaseTargets || {}), constructionInteractions, !!result.client.constructionTimeline
                     )}
                     {renderCircle(
                       { label: isVi ? "Thanh Toán" : "Payment", progress: (() => { const tx = transactions.filter(t => t.category === "construction"); const done = tx.filter(t => t.status === "completed").length; return tx.length > 0 ? Math.round((done / tx.length) * 100) : 0; })(), type: "construction_payment" },

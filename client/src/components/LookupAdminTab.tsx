@@ -1036,7 +1036,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
           <Card className="bg-black border border-white/20 rounded-none">
             <CardContent className="p-6">
               {(() => {
-                const renderCircle = (item: { label: string; progress: number; type: string }, phases: any[], phaseTargets: Record<string, number>, circleInteractions: any[]) => {
+                const renderCircle = (item: { label: string; progress: number; type: string }, phases: any[], phaseTargets: Record<string, number>, circleInteractions: any[], hasTimeline = false) => {
                   const vb = 100;
                   const sw = 10;
                   const r = (vb - sw) / 2;
@@ -1062,7 +1062,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                           {phases.map((phase: any) => {
                             const target = phaseTargets[phase.value] || 0;
                             const logged = circleInteractions.filter((int) => (int as any).phase === phase.value).length;
-                            const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 100;
+                            const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : (hasTimeline ? 0 : 100);
                             return (
                               <div key={phase.id} className="space-y-0.5">
                                 <div className="flex justify-between items-center">
@@ -1113,14 +1113,14 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                     <div>
                       <h3 className="text-sm font-medium text-white/70 tracking-wider uppercase mb-4 pb-2 border-b border-white/10">{isVi ? "Tiến Độ Thiết Kế" : "Design Progress"}</h3>
                       <div className="grid grid-cols-2 gap-4">
-                        {renderCircle(designProgressItem, designPhases.filter(p => !((selectedClient.hiddenDesignPhases as string[]) || []).includes(p.value)), (selectedClient.designPhaseTargets as Record<string, number>) || {}, designInteractions)}
+                        {renderCircle(designProgressItem, designPhases.filter(p => !((selectedClient.hiddenDesignPhases as string[]) || []).includes(p.value)), (selectedClient.designPhaseTargets as Record<string, number>) || {}, designInteractions, !!selectedClient.designTimeline)}
                         {renderCircle(designPaymentItem, [], {}, [])}
                       </div>
                     </div>
                     <div>
                       <h3 className="text-sm font-medium text-white/70 tracking-wider uppercase mb-4 pb-2 border-b border-white/10">{isVi ? "Tiến Độ Thi Công" : "Construction Progress"}</h3>
                       <div className="grid grid-cols-2 gap-4">
-                        {renderCircle(constructionProgressItem, constructionPhases.filter(p => !((selectedClient.hiddenConstructionPhases as string[]) || []).includes(p.value)), (selectedClient.constructionPhaseTargets as Record<string, number>) || {}, constructionInteractions)}
+                        {renderCircle(constructionProgressItem, constructionPhases.filter(p => !((selectedClient.hiddenConstructionPhases as string[]) || []).includes(p.value)), (selectedClient.constructionPhaseTargets as Record<string, number>) || {}, constructionInteractions, !!selectedClient.constructionTimeline)}
                         {renderCircle(constructionPaymentItem, [], {}, [])}
                       </div>
                     </div>
