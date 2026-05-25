@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useRoute, Link, useLocation } from "wouter";
+import { usePageMeta, CANONICAL_BASE_URL } from "@/hooks/use-page-meta";
 import { getProjectPath } from "@/lib/routes";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -292,6 +293,45 @@ export default function ProjectDetail() {
     if (cat) return language === 'vi' ? (cat.nameVi || cat.name) : cat.name;
     return slug;
   };
+
+  const otherProjectLang = language === 'vi' ? 'en' : 'vi';
+  const { data: linkedProject } = useQuery<Project | null>({
+    queryKey: ['/api/projects/slug', projectSlug, otherProjectLang],
+    queryFn: async () => {
+      if (!projectSlug) return null;
+      const response = await fetch(`/api/projects/slug/${projectSlug}?language=${otherProjectLang}`);
+      if (!response.ok) return null;
+      return response.json();
+    },
+    enabled: !!projectSlug,
+    retry: false,
+  });
+
+  const projectHreflang = useMemo(() => {
+    if (!project) return undefined;
+    const currentLang = (project as any).language === 'en' ? 'en' : 'vi';
+    const currentPrefix = currentLang === 'en' ? '/portfolio' : '/du-an';
+    const result: Array<{ lang: string; href: string }> = [
+      { lang: currentLang, href: `${CANONICAL_BASE_URL}${currentPrefix}/${project.slug}` },
+    ];
+    if (linkedProject?.slug) {
+      const linkedLang = (linkedProject as any).language === 'en' ? 'en' : 'vi';
+      if (linkedLang !== currentLang) {
+        const linkedPrefix = linkedLang === 'en' ? '/portfolio' : '/du-an';
+        result.push({ lang: linkedLang, href: `${CANONICAL_BASE_URL}${linkedPrefix}/${linkedProject.slug}` });
+      }
+    }
+    const viEntry = result.find(h => h.lang === 'vi');
+    result.push({ lang: 'x-default', href: viEntry ? viEntry.href : result[0].href });
+    return result;
+  }, [project, linkedProject]);
+
+  usePageMeta({
+    canonical: project
+      ? `${CANONICAL_BASE_URL}${(project as any).language === 'en' ? '/portfolio' : '/du-an'}/${project.slug}`
+      : `${CANONICAL_BASE_URL}${location}`,
+    hreflang: projectHreflang,
+  });
 
   if (isLoading) {
     return (

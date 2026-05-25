@@ -4,6 +4,7 @@ import { storage } from "./storage";
 import { db } from "./db";
 import { articles, projects } from "@shared/schema";
 import { eq, and } from "drizzle-orm";
+import { CANONICAL_BASE_URL } from "@shared/constants";
 
 const STATIC_EXTENSIONS = /\.(js|css|png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|eot|map|json|txt|xml|pdf|zip)$/i;
 
@@ -552,7 +553,7 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
     }
 
     try {
-      const siteUrl = process.env.SITE_URL;
+      const siteUrl = process.env.SITE_URL || CANONICAL_BASE_URL;
       const proto = req.headers["x-forwarded-proto"] || req.protocol;
       const host = (req.headers["x-forwarded-host"] || req.get("host") || '') as string;
       const isLocalhost = host.includes('localhost') || host.includes('127.0.0.1');

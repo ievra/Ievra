@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link, useParams, useLocation } from "wouter";
+import { usePageMeta, CANONICAL_BASE_URL } from "@/hooks/use-page-meta";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -7,7 +8,7 @@ import { Eye, ArrowLeft, Share2, Check } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import OptimizedImage from "@/components/OptimizedImage";
 import type { Article } from "@shared/schema";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { FormattedText, parseBoldTextToHTML } from "@/lib/textUtils";
 import { getArticlePath } from "@/lib/routes";
 
@@ -118,7 +119,7 @@ function RelatedArticles({ currentArticleId, category, language }: { currentArti
 export default function BlogDetail() {
   const { slug } = useParams();
   const { language } = useLanguage();
-  const [, setLocation] = useLocation();
+  const [blogLocation, setLocation] = useLocation();
   const [copied, setCopied] = useState(false);
 
   const handleCopyUrl = () => {
@@ -237,6 +238,44 @@ export default function BlogDetail() {
     return categoryMap[language][category as keyof typeof categoryMap.en] || category;
   };
 
+  const otherArticleLang = language === 'vi' ? 'en' : 'vi';
+  const { data: linkedArticle } = useQuery<Article | null>({
+    queryKey: ['/api/articles/slug', slug, otherArticleLang],
+    queryFn: async () => {
+      if (!slug) return null;
+      const response = await fetch(`/api/articles/slug/${slug}?language=${otherArticleLang}`);
+      if (!response.ok) return null;
+      return response.json();
+    },
+    enabled: !!slug,
+    retry: false,
+  });
+
+  const articleHreflang = useMemo(() => {
+    if (!article) return undefined;
+    const currentLang = (article as any).language === 'en' ? 'en' : 'vi';
+    const currentPrefix = currentLang === 'en' ? '/blog' : '/tin-tuc';
+    const result: Array<{ lang: string; href: string }> = [
+      { lang: currentLang, href: `${CANONICAL_BASE_URL}${currentPrefix}/${article.slug}` },
+    ];
+    if (linkedArticle?.slug) {
+      const linkedLang = (linkedArticle as any).language === 'en' ? 'en' : 'vi';
+      if (linkedLang !== currentLang) {
+        const linkedPrefix = linkedLang === 'en' ? '/blog' : '/tin-tuc';
+        result.push({ lang: linkedLang, href: `${CANONICAL_BASE_URL}${linkedPrefix}/${linkedArticle.slug}` });
+      }
+    }
+    const viEntry = result.find(h => h.lang === 'vi');
+    result.push({ lang: 'x-default', href: viEntry ? viEntry.href : result[0].href });
+    return result;
+  }, [article, linkedArticle]);
+
+  usePageMeta({
+    canonical: article
+      ? `${CANONICAL_BASE_URL}${(article as any).language === 'en' ? '/blog' : '/tin-tuc'}/${article.slug}`
+      : `${CANONICAL_BASE_URL}${blogLocation}`,
+    hreflang: articleHreflang,
+  });
 
   if (isLoading) {
     return (

@@ -101,6 +101,18 @@ const upload = multer({
 });
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Trailing-slash redirect: /about/ → /about (301) to avoid duplicate-URL indexing issues
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    if (!req.path.startsWith("/api") && req.path !== "/" && req.path.endsWith("/")) {
+      const cleanPath = req.path.slice(0, -1);
+      const query = req.originalUrl.includes("?")
+        ? req.originalUrl.slice(req.originalUrl.indexOf("?"))
+        : "";
+      return res.redirect(301, cleanPath + query);
+    }
+    next();
+  });
+
   // Debug endpoint to check paths on server
   app.get("/api/debug-paths", (req, res) => {
     const testFile = "logo.white.png";

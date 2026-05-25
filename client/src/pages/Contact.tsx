@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { useLocation } from "wouter";
+import { usePageMeta, CANONICAL_BASE_URL } from "@/hooks/use-page-meta";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,6 +13,15 @@ import { ArrowRight } from "lucide-react";
 
 export default function Contact() {
   const { t, language } = useLanguage();
+  const [location] = useLocation();
+  usePageMeta({
+    canonical: `${CANONICAL_BASE_URL}${location}`,
+    hreflang: [
+      { lang: "vi", href: `${CANONICAL_BASE_URL}/lien-he` },
+      { lang: "en", href: `${CANONICAL_BASE_URL}/contact` },
+      { lang: "x-default", href: `${CANONICAL_BASE_URL}/lien-he` },
+    ],
+  });
   const [formData, setFormData] = useState({
     name: '',
     email: '',

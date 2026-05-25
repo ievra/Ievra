@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
+import { usePageMeta, CANONICAL_BASE_URL } from "@/hooks/use-page-meta";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -13,6 +14,15 @@ import { getArticlePath } from "@/lib/routes";
 
 export default function Blog() {
   const { language, t } = useLanguage();
+  const [location] = useLocation();
+  usePageMeta({
+    canonical: `${CANONICAL_BASE_URL}${location}`,
+    hreflang: [
+      { lang: "vi", href: `${CANONICAL_BASE_URL}/tin-tuc` },
+      { lang: "en", href: `${CANONICAL_BASE_URL}/blog` },
+      { lang: "x-default", href: `${CANONICAL_BASE_URL}/tin-tuc` },
+    ],
+  });
 
   const { data: dbCategories = [] } = useQuery<Category[]>({
     queryKey: ['/api/categories'],

@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { useLocation } from "wouter";
+import { usePageMeta, CANONICAL_BASE_URL } from "@/hooks/use-page-meta";
 import { createPortal } from "react-dom";
 import { Search, ArrowRight, Clock, ChevronLeft, ChevronRight, X, Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -78,6 +80,15 @@ interface LookupResult {
 
 export default function Lookup() {
   const { language } = useLanguage();
+  const [location] = useLocation();
+  usePageMeta({
+    canonical: `${CANONICAL_BASE_URL}${location}`,
+    hreflang: [
+      { lang: "vi", href: `${CANONICAL_BASE_URL}/tra-cuu` },
+      { lang: "en", href: `${CANONICAL_BASE_URL}/lookup` },
+      { lang: "x-default", href: `${CANONICAL_BASE_URL}/tra-cuu` },
+    ],
+  });
   const isVi = language === "vi";
   const [phone, setPhone] = useState("");
   const [loading, setLoading] = useState(false);

@@ -1,5 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect, useMemo } from "react";
+import { useLocation } from "wouter";
+import { usePageMeta, CANONICAL_BASE_URL } from "@/hooks/use-page-meta";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -64,6 +66,15 @@ function computeSpans(projects: { id: string }[]): number[] {
 
 export default function Portfolio() {
   const { language } = useLanguage();
+  const [location] = useLocation();
+  usePageMeta({
+    canonical: `${CANONICAL_BASE_URL}${location}`,
+    hreflang: [
+      { lang: "vi", href: `${CANONICAL_BASE_URL}/du-an` },
+      { lang: "en", href: `${CANONICAL_BASE_URL}/portfolio` },
+      { lang: "x-default", href: `${CANONICAL_BASE_URL}/du-an` },
+    ],
+  });
 
   const { data: dbCategories = [] } = useQuery<Category[]>({
     queryKey: ['/api/categories'],

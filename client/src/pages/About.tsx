@@ -1,5 +1,7 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "wouter";
+import { usePageMeta, CANONICAL_BASE_URL } from "@/hooks/use-page-meta";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectFade } from 'swiper/modules';
 import type { Project, AboutPageContent, AboutShowcaseService, AboutProcessStep, AboutCoreValue, AboutTeamMember, AboutAward } from '@shared/schema';
@@ -9,6 +11,15 @@ import 'swiper/css/effect-fade';
 
 export default function About() {
   const { language } = useLanguage();
+  const [location] = useLocation();
+  usePageMeta({
+    canonical: `${CANONICAL_BASE_URL}${location}`,
+    hreflang: [
+      { lang: "vi", href: `${CANONICAL_BASE_URL}/gioi-thieu` },
+      { lang: "en", href: `${CANONICAL_BASE_URL}/about` },
+      { lang: "x-default", href: `${CANONICAL_BASE_URL}/gioi-thieu` },
+    ],
+  });
   const [selectedMember, setSelectedMember] = useState<number | null>(null);
   const awardsScrollRef = useRef<HTMLDivElement>(null);
   const [awardsCanScrollLeft, setAwardsCanScrollLeft] = useState(false);

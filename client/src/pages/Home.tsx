@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Link, useLocation } from "wouter";
+import { usePageMeta, CANONICAL_BASE_URL } from "@/hooks/use-page-meta";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -263,6 +264,14 @@ function AdvantageCard({
 export default function Home() {
   const [, navigate] = useLocation();
   const { language, t } = useLanguage();
+  usePageMeta({
+    canonical: `${CANONICAL_BASE_URL}/`,
+    hreflang: [
+      { lang: "vi", href: `${CANONICAL_BASE_URL}/` },
+      { lang: "en", href: `${CANONICAL_BASE_URL}/` },
+      { lang: "x-default", href: `${CANONICAL_BASE_URL}/` },
+    ],
+  });
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
