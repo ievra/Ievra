@@ -707,8 +707,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const clientInteractions = await storage.getInteractions(client.id);
       const clientTransactions = await storage.getTransactions(client.id);
       const clientWarrantyLogs = await storage.getWarrantyLogs(client.id);
-      const designPhases = await storage.getDesignPhases({});
-      const constructionPhases = await storage.getConstructionPhases({});
+      const allDesignPhases = await storage.getDesignPhases({});
+      const allConstructionPhases = await storage.getConstructionPhases({});
+      const hiddenDesign = (client.hiddenDesignPhases as string[]) || [];
+      const hiddenConstruction = (client.hiddenConstructionPhases as string[]) || [];
+      const designPhases = allDesignPhases.filter((p: any) => !hiddenDesign.includes(p.value));
+      const constructionPhases = allConstructionPhases.filter((p: any) => !hiddenConstruction.includes(p.value));
 
       const safeClient = {
         firstName: client.firstName,
