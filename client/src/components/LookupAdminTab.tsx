@@ -84,7 +84,7 @@ const tierLabels: Record<string, { vi: string; en: string }> = {
   vip: { vi: "VIP", en: "VIP" },
 };
 
-export default function LookupAdminTab() {
+export default function LookupAdminTab({ user }: { user?: any }) {
   const { language } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -882,14 +882,16 @@ export default function LookupAdminTab() {
             <Search className="w-4 h-4 mr-2" />
             {isVi ? "Tìm kiếm" : "Search"}
           </Button>
-          <Button
-            variant="outline"
-            onClick={() => setIsSettingsDialogOpen(true)}
-            className="h-10 px-4 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10"
-          >
-            <Settings className="w-4 h-4 mr-2" />
-            {isVi ? "Cài Đặt" : "Settings"}
-          </Button>
+          {user?.role === 'super_admin' && (
+            <Button
+              variant="outline"
+              onClick={() => setIsSettingsDialogOpen(true)}
+              className="h-10 px-4 rounded-none bg-transparent border border-white/20 text-white hover:bg-white/10"
+            >
+              <Settings className="w-4 h-4 mr-2" />
+              {isVi ? "Cài Đặt" : "Settings"}
+            </Button>
+          )}
         </div>
       </div>
       <Dialog open={isSettingsDialogOpen} onOpenChange={setIsSettingsDialogOpen}>

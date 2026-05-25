@@ -1795,7 +1795,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
     if (!hasPermission(user, 'lookup')) {
       return <PermissionDenied feature="Tra Cứu / Lookup" />;
     }
-    return <LookupAdminTab />;
+    return <LookupAdminTab user={user} />;
   }
 
   return (
