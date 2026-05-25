@@ -91,7 +91,6 @@ export default function LookupAdminTab() {
   const isVi = language === "vi";
 
   const [phoneSearch, setPhoneSearch] = useState("");
-  const [searchResults, setSearchResults] = useState<Client[]>([]);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [activeSubTab, setActiveSubTab] = useState<"interactions" | "construction_progress" | "design_progress" | "transactions" | "warranty">("design_progress");
   const [isInteractionDialogOpen, setIsInteractionDialogOpen] = useState(false);
@@ -249,45 +248,43 @@ export default function LookupAdminTab() {
     },
   });
 
+  const matchesSearch = (c: Client, raw: string) => {
+    const normalized = raw.replace(/[\s\-\.]/g, "");
+    const fullName = `${c.lastName || ""} ${c.firstName || ""}`.toLowerCase().trim();
+    const fullNameAlt = `${c.firstName || ""} ${c.lastName || ""}`.toLowerCase().trim();
+    const phone = (c.phone || "").replace(/[\s\-\.]/g, "");
+    const email = (c.email || "").toLowerCase();
+    const company = (c.company || "").toLowerCase();
+    const address = (c.address || "").toLowerCase();
+    const identity = (c.identityCard || "").replace(/[\s\-\.]/g, "");
+    const notes = (c.notes || "").toLowerCase();
+    return (
+      fullName.includes(raw) ||
+      fullNameAlt.includes(raw) ||
+      phone.includes(normalized) ||
+      email.includes(raw) ||
+      company.includes(raw) ||
+      address.includes(raw) ||
+      identity.includes(normalized) ||
+      notes.includes(raw)
+    );
+  };
+
   const selectClient = (c: Client) => {
     setSelectedClient(c);
-    setSearchResults([]);
+    setPhoneSearch(`${c.lastName} ${c.firstName}`.trim());
     setWarrantyExpiry(c.warrantyExpiry ? new Date(c.warrantyExpiry).toISOString().split("T")[0] : "");
     setWarrantyStatus(c.warrantyStatus || "none");
     setActiveSubTab("design_progress");
   };
 
   const handleSearch = () => {
-    if (!phoneSearch.trim()) return;
     const raw = phoneSearch.trim().toLowerCase();
-    const normalized = raw.replace(/[\s\-\.]/g, "");
-    const matches = clients.filter((c) => {
-      const fullName = `${c.lastName || ""} ${c.firstName || ""}`.toLowerCase().trim();
-      const fullNameAlt = `${c.firstName || ""} ${c.lastName || ""}`.toLowerCase().trim();
-      const phone = (c.phone || "").replace(/[\s\-\.]/g, "");
-      const email = (c.email || "").toLowerCase();
-      const company = (c.company || "").toLowerCase();
-      const address = (c.address || "").toLowerCase();
-      const identity = (c.identityCard || "").replace(/[\s\-\.]/g, "");
-      const notes = (c.notes || "").toLowerCase();
-      return (
-        fullName.includes(raw) ||
-        fullNameAlt.includes(raw) ||
-        phone === normalized || phone.endsWith(normalized) || normalized.endsWith(phone) ||
-        email.includes(raw) ||
-        company.includes(raw) ||
-        address.includes(raw) ||
-        identity.includes(normalized) ||
-        notes.includes(raw)
-      );
-    });
-    if (matches.length === 1) {
+    if (!raw) return;
+    const matches = clients.filter((c) => matchesSearch(c, raw));
+    if (matches.length >= 1) {
       selectClient(matches[0]);
-    } else if (matches.length > 1) {
-      setSearchResults(matches);
-      setSelectedClient(null);
     } else {
-      setSearchResults([]);
       setSelectedClient(null);
       toast({ title: isVi ? "Không tìm thấy" : "Not found", description: isVi ? "Không tìm thấy khách hàng phù hợp" : "No matching client found", variant: "destructive" });
     }
@@ -875,7 +872,7 @@ export default function LookupAdminTab() {
             type="text"
             placeholder={isVi ? "Họ tên, SĐT, CCCD, email, công ty..." : "Name, phone, ID card, email, company..."}
             value={phoneSearch}
-            onChange={(e) => setPhoneSearch(e.target.value)}
+            onChange={(e) => { setPhoneSearch(e.target.value); setSelectedClient(null); }}
             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             className="bg-transparent border-white/20 text-white pl-10 rounded-none h-10"
           />
@@ -904,36 +901,41 @@ export default function LookupAdminTab() {
         </DialogContent>
       </Dialog>
 
-      {searchResults.length > 1 && (
-        <div className="border border-white/20 rounded-none">
-          <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/10">
-            <span className="text-xs text-white/50 font-light">
-              {isVi ? `Tìm thấy ${searchResults.length} khách hàng — chọn một:` : `Found ${searchResults.length} clients — select one:`}
-            </span>
-            <button onClick={() => setSearchResults([])} className="text-white/30 hover:text-white/70 transition-colors">
-              <X className="w-3.5 h-3.5" />
-            </button>
+      {(() => {
+        const raw = phoneSearch.trim().toLowerCase();
+        if (!raw || raw.length < 2 || selectedClient) return null;
+        const liveResults = clients.filter((c) => matchesSearch(c, raw));
+        if (liveResults.length === 0) return (
+          <p className="text-xs text-white/30 px-1">{isVi ? "Không tìm thấy khách hàng phù hợp" : "No matching clients"}</p>
+        );
+        return (
+          <div className="border border-white/20">
+            <div className="px-4 py-2 border-b border-white/10">
+              <span className="text-xs text-white/40 font-light">
+                {isVi ? `${liveResults.length} kết quả — chọn một:` : `${liveResults.length} result(s) — select one:`}
+              </span>
+            </div>
+            <div className="max-h-72 overflow-y-auto divide-y divide-white/5">
+              {liveResults.map((c) => (
+                <button
+                  key={c.id}
+                  onClick={() => selectClient(c)}
+                  className="w-full text-left px-4 py-3 hover:bg-white/5 transition-colors flex items-start justify-between gap-4 group"
+                >
+                  <div className="min-w-0">
+                    <p className="text-sm font-light text-white">{c.lastName} {c.firstName}</p>
+                    <p className="text-xs text-white/40 truncate">
+                      {[c.phone, c.email, c.company].filter(Boolean).join(" · ")}
+                    </p>
+                    {c.identityCard && <p className="text-xs text-white/25">CCCD: {c.identityCard}</p>}
+                  </div>
+                  <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-white/50 shrink-0 mt-0.5 transition-colors" />
+                </button>
+              ))}
+            </div>
           </div>
-          <div className="max-h-64 overflow-y-auto divide-y divide-white/5">
-            {searchResults.map((c) => (
-              <button
-                key={c.id}
-                onClick={() => selectClient(c)}
-                className="w-full text-left px-4 py-3 hover:bg-white/5 transition-colors flex items-start justify-between gap-4 group"
-              >
-                <div className="min-w-0">
-                  <p className="text-sm font-light text-white group-hover:text-white/90">{c.lastName} {c.firstName}</p>
-                  <p className="text-xs text-white/40 truncate">
-                    {[c.phone, c.email, c.company].filter(Boolean).join(" · ")}
-                  </p>
-                  {c.identityCard && <p className="text-xs text-white/25">CCCD: {c.identityCard}</p>}
-                </div>
-                <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-white/50 shrink-0 mt-0.5 transition-colors" />
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
+        );
+      })()}
 
       {selectedClient && (
         <>
