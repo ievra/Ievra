@@ -416,6 +416,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       return response.json();
     },
     onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['/api/about-content'] });
       queryClient.invalidateQueries({ queryKey: ['/api/about-page-content'] });
       queryClient.invalidateQueries({ queryKey: ['/api/about-core-values'] });
       queryClient.invalidateQueries({ queryKey: ['/api/about-showcase-services'] });

@@ -365,6 +365,7 @@ export default function AboutAdminTab({
       const data = await response.json();
       setCtaBannerPreview(data.path);
       aboutContentForm.setValue('ctaBannerImage', data.path, { shouldDirty: true });
+      aboutContentForm.setValue('ctaBannerImageData', null, { shouldDirty: true });
       toast({ title: language === 'vi' ? 'Tải lên thành công' : 'Upload successful' });
     } catch {
       toast({ title: language === 'vi' ? 'Lỗi tải lên' : 'Upload failed', variant: 'destructive' });
