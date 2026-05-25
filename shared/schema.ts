@@ -99,6 +99,8 @@ export const clients = pgTable("clients", {
   designTimeline: integer("design_timeline"),
   designPhaseTargets: jsonb("design_phase_targets").default({}),
   constructionPhaseTargets: jsonb("construction_phase_targets").default({}),
+  hiddenDesignPhases: jsonb("hidden_design_phases").default([]),
+  hiddenConstructionPhases: jsonb("hidden_construction_phases").default([]),
   identityCard: text("identity_card"),
   // Warranty & Additional Info
   warrantyStatus: varchar("warranty_status", { length: 30 }).default("none"), // none, active, expired
