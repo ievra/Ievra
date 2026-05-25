@@ -45,13 +45,13 @@ app.use(session({
   }),
   name: 'moderno.sid',
   secret: process.env.SESSION_SECRET || 'U/jU2wbJ9Rm7t+W+m5/N47ihf+DIkzzKXFv5z0/2Xsn5WrltM9NTAps9xnWJBWHYEeqDhph/xait8kLvWDed7g==',
-  resave: true,
+  resave: false,
   saveUninitialized: false,
   rolling: true,
   cookie: {
     secure: false,
     httpOnly: true,
-    maxAge: 30 * 60 * 1000,
+    maxAge: 8 * 60 * 60 * 1000,
     sameSite: 'lax',
     path: '/'
   },
