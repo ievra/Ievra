@@ -65,6 +65,7 @@ function sanitizeContentHtml(html: string): string {
 interface OgTags {
   title: string;
   description?: string;
+  keywords?: string;
   image?: string;
   imageType?: string;
   url?: string;
@@ -77,7 +78,7 @@ interface OgTags {
 }
 
 function injectOgTags(html: string, tags: OgTags): string {
-  const { title, description, image, imageType = "image/jpeg", url, type = "website", siteName = "IEVRA Design & Build", locale = "vi_VN", jsonLd, hreflang, seoContent } = tags;
+  const { title, description, keywords, image, imageType = "image/jpeg", url, type = "website", siteName = "IEVRA Design & Build", locale = "vi_VN", jsonLd, hreflang, seoContent } = tags;
   const lang = locale.startsWith("en") ? "en" : "vi";
 
   const metaTags = [
@@ -90,6 +91,7 @@ function injectOgTags(html: string, tags: OgTags): string {
     `<meta property="og:title" content="${escapeHtml(title)}" />`,
     description ? `<meta name="description" content="${escapeHtml(description)}" />` : "",
     description ? `<meta property="og:description" content="${escapeHtml(description)}" />` : "",
+    keywords ? `<meta name="keywords" content="${escapeHtml(keywords)}" />` : "",
     image ? `<meta property="og:image" content="${escapeHtml(image)}" />` : "",
     image ? `<meta property="og:image:secure_url" content="${escapeHtml(image)}" />` : "",
     image ? `<meta property="og:image:type" content="${escapeHtml(imageType)}" />` : "",
@@ -819,16 +821,26 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
             ogImgUrl = resolveImageUrl(s.ogImage);
             ogImgType = "image/jpeg";
           }
-          const pageTitle = staticMatch
-            ? (lang === 'vi' ? staticMatch.titleVi : staticMatch.titleEn)
+          // Homepage: always use DB settings (admin-controlled)
+          // Other static pages: DB settings override hardcoded if admin filled them in (else fall back to hardcoded)
+          const isHomepage = req.path === '/' || req.path === '';
+          const pageTitle = isHomepage
+            ? (lang === 'vi'
+              ? (s?.siteTitleVi || s?.siteTitle || staticMatch?.titleVi || "IEVRA Design & Build")
+              : (s?.siteTitle || staticMatch?.titleEn || "IEVRA Design & Build"))
             : (lang === 'vi'
-              ? (s?.siteTitleVi || s?.siteTitle || "IEVRA Design & Build")
-              : (s?.siteTitle || "IEVRA Design & Build"));
-          const pageDesc = staticMatch
-            ? (lang === 'vi' ? staticMatch.descVi : staticMatch.descEn)
+              ? (staticMatch?.titleVi || s?.siteTitleVi || s?.siteTitle || "IEVRA Design & Build")
+              : (staticMatch?.titleEn || s?.siteTitle || "IEVRA Design & Build"));
+          const pageDesc = isHomepage
+            ? (lang === 'vi'
+              ? (s?.metaDescriptionVi || s?.metaDescription || staticMatch?.descVi || "Thiết kế nội thất cao cấp - IEVRA Design & Build")
+              : (s?.metaDescription || staticMatch?.descEn || "High-end interior design - IEVRA Design & Build"))
             : (lang === 'vi'
-              ? (s?.metaDescriptionVi || s?.metaDescription || "Thiết kế nội thất cao cấp - IEVRA Design & Build")
-              : (s?.metaDescription || "High-end interior design - IEVRA Design & Build"));
+              ? (staticMatch?.descVi || s?.metaDescriptionVi || s?.metaDescription || "Thiết kế nội thất cao cấp - IEVRA Design & Build")
+              : (staticMatch?.descEn || s?.metaDescription || "High-end interior design - IEVRA Design & Build"));
+          const pageKeywords = lang === 'vi'
+            ? (s?.metaKeywordsVi || s?.metaKeywords || "")
+            : (s?.metaKeywords || s?.metaKeywordsVi || "");
 
           let seoContent: string | undefined;
           if (staticMatch) {
@@ -878,6 +890,7 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
           tags = {
             title: pageTitle,
             description: pageDesc,
+            keywords: pageKeywords || undefined,
             image: ogImgUrl,
             imageType: ogImgType,
             url: currentUrl,
