@@ -77,8 +77,7 @@ export default function Admin() {
       title: "Đăng xuất thành công",
       description: "Bạn đã được đăng xuất khỏi hệ thống.",
     });
-    // Redirect to home page after logout
-    navigate('/');
+    window.location.replace('/login');
   };
 
   return (

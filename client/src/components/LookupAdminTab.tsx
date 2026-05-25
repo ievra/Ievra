@@ -150,6 +150,13 @@ export default function LookupAdminTab({ user }: { user?: any }) {
     queryKey: ['/api/clients'],
   });
 
+  useEffect(() => {
+    if (selectedClient && clients.length > 0) {
+      const fresh = clients.find(c => c.id === selectedClient.id);
+      if (fresh) setSelectedClient(fresh);
+    }
+  }, [clients]);
+
   const { data: allConstructionPhases = [] } = useQuery<ConstructionPhase[]>({
     queryKey: ['/api/construction-phases'],
   });
