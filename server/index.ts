@@ -162,5 +162,15 @@ app.use((req, res, next) => {
     reusePort: true,
   }, () => {
     log(`serving on port ${port}`);
+    // Pre-warm DB connection pool and phases cache so first user request is fast
+    Promise.all([
+      pool.query('SELECT 1'),
+      storage.getDesignPhases({}),
+      storage.getConstructionPhases({}),
+    ]).then(() => {
+      log('DB pool and phases cache warmed up');
+    }).catch((err) => {
+      console.error('Warm-up failed (non-fatal):', err.message);
+    });
   });
 })();

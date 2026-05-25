@@ -693,12 +693,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const normalizedPhone = phone.trim().replace(/[\s\-\.]/g, '');
+      const t0 = Date.now();
       const client = await storage.getClientByPhoneLookup(normalizedPhone);
+      console.log(`[lookup] phone query: ${Date.now() - t0}ms`);
 
       if (!client) {
         return res.status(404).json({ message: "Không tìm thấy thông tin khách hàng với số điện thoại này" });
       }
 
+      const t1 = Date.now();
       const [clientInteractions, clientTransactions, clientWarrantyLogs, allDesignPhases, allConstructionPhases] = await Promise.all([
         storage.getInteractions(client.id),
         storage.getTransactions(client.id),
@@ -706,6 +709,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         storage.getDesignPhases({}),
         storage.getConstructionPhases({}),
       ]);
+      console.log(`[lookup] parallel queries: ${Date.now() - t1}ms`);
       const hiddenDesign = (client.hiddenDesignPhases as string[]) || [];
       const hiddenConstruction = (client.hiddenConstructionPhases as string[]) || [];
       const designPhases = allDesignPhases.filter((p: any) => !hiddenDesign.includes(p.value));

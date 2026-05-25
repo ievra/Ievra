@@ -286,6 +286,17 @@ export interface IStorage {
 }
 
 export class DatabaseStorage implements IStorage {
+  // In-memory cache for rarely-changing lookup data
+  private _phasesCache: {
+    design?: { data: DesignPhase[]; ts: number };
+    construction?: { data: ConstructionPhase[]; ts: number };
+  } = {};
+  private PHASES_TTL = 60_000; // 60 seconds
+
+  // Per-phone lookup result cache (avoids repeated DB full-scan per user session)
+  private _phoneLookupCache: Map<string, { client: Client | null; ts: number }> = new Map();
+  private PHONE_LOOKUP_TTL = 5 * 60_000; // 5 minutes
+
   // Users
   async getUsers(): Promise<User[]> {
     return await db.select().from(users).orderBy(desc(users.createdAt));
@@ -452,12 +463,22 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getClientByPhoneLookup(normalizedPhone: string): Promise<Client | undefined> {
-    const allWithPhone = await db.select().from(clients).where(isNotNull(clients.phone));
-    const match = allWithPhone.find(c => {
-      const cp = (c.phone as string).replace(/[\s\-\.]/g, '');
-      return cp === normalizedPhone || cp.endsWith(normalizedPhone) || normalizedPhone.endsWith(cp);
-    });
-    return match as Client | undefined;
+    const now = Date.now();
+    const cached = this._phoneLookupCache.get(normalizedPhone);
+    if (cached && now - cached.ts < this.PHONE_LOOKUP_TTL) {
+      return cached.client ?? undefined;
+    }
+    // Use regexp_replace in DB to normalize phone and match directly — avoids full table scan in JS
+    const results = await db.select().from(clients).where(
+      sql`phone IS NOT NULL AND (
+        regexp_replace(phone, '[[:space:]\\-\\.]', '', 'g') = ${normalizedPhone}
+        OR regexp_replace(phone, '[[:space:]\\-\\.]', '', 'g') LIKE '%' || ${normalizedPhone}
+        OR ${normalizedPhone} LIKE '%' || regexp_replace(phone, '[[:space:]\\-\\.]', '', 'g')
+      )`
+    ).limit(1);
+    const client = results[0] as Client | undefined;
+    this._phoneLookupCache.set(normalizedPhone, { client: client ?? null, ts: now });
+    return client;
   }
 
   async getClientByEmail(email: string): Promise<Client | undefined> {
@@ -467,6 +488,7 @@ export class DatabaseStorage implements IStorage {
 
   async createClient(client: InsertClient): Promise<Client> {
     const [newClient] = await db.insert(clients).values(client).returning();
+    this._phoneLookupCache.clear();
     return newClient;
   }
 
@@ -476,6 +498,7 @@ export class DatabaseStorage implements IStorage {
       .set({ ...client, updatedAt: new Date() })
       .where(eq(clients.id, id))
       .returning();
+    this._phoneLookupCache.clear();
     return updatedClient;
   }
 
@@ -485,6 +508,7 @@ export class DatabaseStorage implements IStorage {
     await db.delete(interactions).where(eq(interactions.clientId, id));
     await db.update(inquiries).set({ clientId: null }).where(eq(inquiries.clientId, id));
     await db.delete(clients).where(eq(clients.id, id));
+    this._phoneLookupCache.clear();
   }
 
   // Inquiries
@@ -1571,18 +1595,23 @@ export class DatabaseStorage implements IStorage {
 
   // Construction Phases
   async getConstructionPhases(filters?: { active?: boolean }): Promise<ConstructionPhase[]> {
+    const now = Date.now();
+    if (!filters?.active && this._phasesCache.construction && now - this._phasesCache.construction.ts < this.PHASES_TTL) {
+      return this._phasesCache.construction.data;
+    }
     const conditions = [];
     if (filters?.active !== undefined) conditions.push(eq(constructionPhases.active, filters.active));
-
     const query = conditions.length > 0
       ? db.select().from(constructionPhases).where(and(...conditions))
       : db.select().from(constructionPhases);
-
-    return await query.orderBy(constructionPhases.order);
+    const data = await query.orderBy(constructionPhases.order);
+    if (!filters?.active) this._phasesCache.construction = { data, ts: now };
+    return data;
   }
 
   async createConstructionPhase(phase: InsertConstructionPhase): Promise<ConstructionPhase> {
     const [created] = await db.insert(constructionPhases).values(phase).returning();
+    this._phasesCache.construction = undefined;
     return created;
   }
 
@@ -1592,27 +1621,34 @@ export class DatabaseStorage implements IStorage {
       .set({ ...phase, updatedAt: new Date() })
       .where(eq(constructionPhases.id, id))
       .returning();
+    this._phasesCache.construction = undefined;
     return updated;
   }
 
   async deleteConstructionPhase(id: string): Promise<void> {
     await db.delete(constructionPhases).where(eq(constructionPhases.id, id));
+    this._phasesCache.construction = undefined;
   }
 
   // Design Phases
   async getDesignPhases(filters?: { active?: boolean }): Promise<DesignPhase[]> {
+    const now = Date.now();
+    if (!filters?.active && this._phasesCache.design && now - this._phasesCache.design.ts < this.PHASES_TTL) {
+      return this._phasesCache.design.data;
+    }
     const conditions = [];
     if (filters?.active !== undefined) conditions.push(eq(designPhases.active, filters.active));
-
     const query = conditions.length > 0
       ? db.select().from(designPhases).where(and(...conditions))
       : db.select().from(designPhases);
-
-    return await query.orderBy(designPhases.order);
+    const data = await query.orderBy(designPhases.order);
+    if (!filters?.active) this._phasesCache.design = { data, ts: now };
+    return data;
   }
 
   async createDesignPhase(phase: InsertDesignPhase): Promise<DesignPhase> {
     const [created] = await db.insert(designPhases).values(phase).returning();
+    this._phasesCache.design = undefined;
     return created;
   }
 
@@ -1622,11 +1658,13 @@ export class DatabaseStorage implements IStorage {
       .set({ ...phase, updatedAt: new Date() })
       .where(eq(designPhases.id, id))
       .returning();
+    this._phasesCache.design = undefined;
     return updated;
   }
 
   async deleteDesignPhase(id: string): Promise<void> {
     await db.delete(designPhases).where(eq(designPhases.id, id));
+    this._phasesCache.design = undefined;
   }
 
   async getAboutAwards(filters?: { active?: boolean }): Promise<AboutAward[]> {
