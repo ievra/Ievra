@@ -574,12 +574,9 @@ export default function LookupAdminTab({ user }: { user?: any }) {
         queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
       } else {
         setSelectedClient({ ...client, hiddenDesignPhases: current } as Client);
-        const errBody = await res.json().catch(() => ({}));
-        toast({ title: isVi ? "Lỗi" : "Error", description: errBody?.message || `HTTP ${res.status}`, variant: "destructive" });
       }
-    } catch (err) {
+    } catch {
       setSelectedClient({ ...client, hiddenDesignPhases: current } as Client);
-      toast({ title: isVi ? "Lỗi kết nối" : "Connection error", description: String(err), variant: "destructive" });
     }
   };
 
@@ -604,12 +601,9 @@ export default function LookupAdminTab({ user }: { user?: any }) {
         queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
       } else {
         setSelectedClient({ ...client, hiddenConstructionPhases: current } as Client);
-        const errBody = await res.json().catch(() => ({}));
-        toast({ title: isVi ? "Lỗi" : "Error", description: errBody?.message || `HTTP ${res.status}`, variant: "destructive" });
       }
-    } catch (err) {
+    } catch {
       setSelectedClient({ ...client, hiddenConstructionPhases: current } as Client);
-      toast({ title: isVi ? "Lỗi kết nối" : "Connection error", description: String(err), variant: "destructive" });
     }
   };
 

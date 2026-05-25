@@ -45,13 +45,13 @@ app.use(session({
   }),
   name: 'moderno.sid',
   secret: process.env.SESSION_SECRET || 'U/jU2wbJ9Rm7t+W+m5/N47ihf+DIkzzKXFv5z0/2Xsn5WrltM9NTAps9xnWJBWHYEeqDhph/xait8kLvWDed7g==',
-  resave: false,
+  resave: true,
   saveUninitialized: false,
   rolling: true,
   cookie: {
     secure: false,
     httpOnly: true,
-    maxAge: 8 * 60 * 60 * 1000,
+    maxAge: 30 * 60 * 1000,
     sameSite: 'lax',
     path: '/'
   },
@@ -162,15 +162,5 @@ app.use((req, res, next) => {
     reusePort: true,
   }, () => {
     log(`serving on port ${port}`);
-    // Pre-warm DB connection pool and phases cache so first user request is fast
-    Promise.all([
-      pool.query('SELECT 1'),
-      storage.getDesignPhases({}),
-      storage.getConstructionPhases({}),
-    ]).then(() => {
-      log('DB pool and phases cache warmed up');
-    }).catch((err) => {
-      console.error('Warm-up failed (non-fatal):', err.message);
-    });
   });
 })();

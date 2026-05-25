@@ -16,8 +16,8 @@ console.log(`[DB] Host: ${connectionString.match(/@([^:/]+)/)?.[1] ?? 'unknown'}
 
 export const pool = new Pool({
   connectionString,
-  max: 8,
-  idleTimeoutMillis: 30000,
+  max: 5,
+  idleTimeoutMillis: 1000,
   connectionTimeoutMillis: 10000,
   ssl: usingCustomDb ? false : { rejectUnauthorized: false },
 });
