@@ -97,6 +97,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   const [inquiryStatusFilter, setInquiryStatusFilter] = useState('all');
   const [inquiriesPage, setInquiriesPage] = useState(1);
   const inquiriesPerPage = 10;
+  const [quickSearch, setQuickSearch] = useState('');
 
   const [showcaseBannerFile, setShowcaseBannerFile] = useState<File | null>(null);
   const [showcaseBannerPreview, setShowcaseBannerPreview] = useState<string>('');
@@ -1060,8 +1061,107 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       ),
     ].filter(Boolean);
 
+    const qs = quickSearch.trim().toLowerCase();
+    const quickClientResults = canCrm && qs.length >= 2
+      ? clients.filter((c: any) => {
+          const name = `${c.lastName || ''} ${c.firstName || ''}`.toLowerCase();
+          const phone = (c.phone || '').toLowerCase();
+          const email = (c.email || '').toLowerCase();
+          const company = (c.company || '').toLowerCase();
+          const address = (c.address || '').toLowerCase();
+          return name.includes(qs) || phone.includes(qs) || email.includes(qs) || company.includes(qs) || address.includes(qs);
+        }).slice(0, 6)
+      : [];
+    const quickBpResults = canCrm && qs.length >= 2
+      ? businessPartners.filter((bp: any) => {
+          const name = `${bp.lastName || ''} ${bp.firstName || ''}`.toLowerCase();
+          const phone = (bp.phone || '').toLowerCase();
+          const email = (bp.email || '').toLowerCase();
+          const company = (bp.company || '').toLowerCase();
+          return name.includes(qs) || phone.includes(qs) || email.includes(qs) || company.includes(qs);
+        }).slice(0, 4)
+      : [];
+    const quickInquiryResults = canInquiries && qs.length >= 2
+      ? inquiries.filter((inq: any) => {
+          const name = `${inq.firstName || ''} ${inq.lastName || ''}`.toLowerCase();
+          const phone = (inq.phone || '').toLowerCase();
+          const email = (inq.email || '').toLowerCase();
+          const msg = (inq.message || '').toLowerCase();
+          return name.includes(qs) || phone.includes(qs) || email.includes(qs) || msg.includes(qs);
+        }).slice(0, 4)
+      : [];
+    const hasQuickResults = quickClientResults.length > 0 || quickBpResults.length > 0 || quickInquiryResults.length > 0;
+
     return (
       <div className="space-y-6 p-6">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
+          <Input
+            value={quickSearch}
+            onChange={(e) => setQuickSearch(e.target.value)}
+            placeholder={language === 'vi' ? 'Tra cứu nhanh: tên, SĐT, email, công ty...' : 'Quick search: name, phone, email, company...'}
+            className="pl-10 bg-transparent border-0 border-b border-white/30 rounded-none focus-visible:ring-0 focus-visible:border-white/60 placeholder:text-white/40"
+          />
+          {quickSearch && (
+            <button onClick={() => setQuickSearch('')} className="absolute right-3 top-1/2 -translate-y-1/2 text-white/40 hover:text-white text-xs">✕</button>
+          )}
+        </div>
+
+        {qs.length >= 2 && (
+          <Card>
+            <CardContent className="p-0">
+              {!hasQuickResults ? (
+                <p className="text-muted-foreground text-sm py-6 text-center">{language === 'vi' ? 'Không tìm thấy kết quả' : 'No results found'}</p>
+              ) : (
+                <div className="divide-y divide-white/10">
+                  {quickClientResults.length > 0 && (
+                    <div>
+                      <p className="text-xs text-white/40 font-medium uppercase tracking-wider px-4 pt-3 pb-1">{language === 'vi' ? 'Khách Hàng' : 'Clients'}</p>
+                      {quickClientResults.map((c: any) => (
+                        <div key={c.id} className="flex items-center justify-between px-4 py-2.5 hover:bg-white/5 cursor-pointer" onClick={() => {}}>
+                          <div>
+                            <p className="text-sm font-light">{c.lastName} {c.firstName}</p>
+                            <p className="text-xs text-muted-foreground">{[c.phone, c.email, c.company].filter(Boolean).join(' · ')}</p>
+                          </div>
+                          <span className="text-xs text-white/30 shrink-0 ml-2">{language === 'vi' ? 'KH' : 'Client'}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {quickBpResults.length > 0 && (
+                    <div>
+                      <p className="text-xs text-white/40 font-medium uppercase tracking-wider px-4 pt-3 pb-1">{language === 'vi' ? 'Đối Tác' : 'Business Partners'}</p>
+                      {quickBpResults.map((bp: any) => (
+                        <div key={bp.id} className="flex items-center justify-between px-4 py-2.5 hover:bg-white/5 cursor-pointer">
+                          <div>
+                            <p className="text-sm font-light">{bp.lastName} {bp.firstName}</p>
+                            <p className="text-xs text-muted-foreground">{[bp.phone, bp.email, bp.company].filter(Boolean).join(' · ')}</p>
+                          </div>
+                          <span className="text-xs text-white/30 shrink-0 ml-2">{language === 'vi' ? 'ĐT' : 'Partner'}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {quickInquiryResults.length > 0 && (
+                    <div>
+                      <p className="text-xs text-white/40 font-medium uppercase tracking-wider px-4 pt-3 pb-1">{language === 'vi' ? 'Yêu Cầu' : 'Inquiries'}</p>
+                      {quickInquiryResults.map((inq: any) => (
+                        <div key={inq.id} className="flex items-center justify-between px-4 py-2.5 hover:bg-white/5 cursor-pointer">
+                          <div>
+                            <p className="text-sm font-light">{inq.firstName} {inq.lastName}</p>
+                            <p className="text-xs text-muted-foreground">{[inq.phone, inq.email, inq.projectType].filter(Boolean).join(' · ')}</p>
+                          </div>
+                          <span className="text-xs text-white/30 shrink-0 ml-2">{language === 'vi' ? 'YC' : 'Inquiry'}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
         {visibleCards.length > 0 && (
           <div className={`grid grid-cols-1 gap-6 ${visibleCards.length === 1 ? 'md:grid-cols-1 lg:grid-cols-1 max-w-xs' : visibleCards.length === 2 ? 'md:grid-cols-2 lg:grid-cols-2' : visibleCards.length === 3 ? 'md:grid-cols-3 lg:grid-cols-3' : visibleCards.length === 4 ? 'md:grid-cols-2 lg:grid-cols-4' : 'md:grid-cols-3 lg:grid-cols-5'}`}>
             {visibleCards}
