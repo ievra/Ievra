@@ -1062,7 +1062,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                           {phases.map((phase: any) => {
                             const target = phaseTargets[phase.value] || 0;
                             const logged = circleInteractions.filter((int) => (int as any).phase === phase.value).length;
-                            const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 0;
+                            const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 100;
                             return (
                               <div key={phase.id} className="space-y-0.5">
                                 <div className="flex justify-between items-center">
@@ -1104,9 +1104,9 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                     </div>
                   );
                 };
-                const designProgressItem = { label: isVi ? "Tiến Độ" : "Progress", progress: (() => { const has = !!selectedClient.designTimeline; return has ? Math.min(100, Math.round((designInteractions.length / selectedClient.designTimeline!) * 100)) : 0; })(), type: "design_progress" };
+                const designProgressItem = { label: isVi ? "Tiến Độ" : "Progress", progress: (() => { const has = !!selectedClient.designTimeline; return has ? Math.min(100, Math.round((designInteractions.length / selectedClient.designTimeline!) * 100)) : 100; })(), type: "design_progress" };
                 const designPaymentItem = { label: isVi ? "Thanh Toán" : "Payment", progress: (() => { const tx = transactions.filter((t: any) => !t.category || t.category === "design"); const done = tx.filter((t: any) => t.status === "completed").length; return tx.length > 0 ? Math.round((done / tx.length) * 100) : 0; })(), type: "design_payment" };
-                const constructionProgressItem = { label: isVi ? "Tiến Độ" : "Progress", progress: (() => { const has = !!selectedClient.constructionTimeline; return has ? Math.min(100, Math.round((constructionInteractions.length / selectedClient.constructionTimeline!) * 100)) : 0; })(), type: "construction_progress" };
+                const constructionProgressItem = { label: isVi ? "Tiến Độ" : "Progress", progress: (() => { const has = !!selectedClient.constructionTimeline; return has ? Math.min(100, Math.round((constructionInteractions.length / selectedClient.constructionTimeline!) * 100)) : 100; })(), type: "construction_progress" };
                 const constructionPaymentItem = { label: isVi ? "Thanh Toán" : "Payment", progress: (() => { const tx = transactions.filter((t: any) => t.category === "construction"); const done = tx.filter((t: any) => t.status === "completed").length; return tx.length > 0 ? Math.round((done / tx.length) * 100) : 0; })(), type: "construction_payment" };
                 return (
                   <div className="space-y-6">

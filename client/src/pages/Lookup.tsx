@@ -284,7 +284,7 @@ export default function Lookup() {
             {phases.map((phase) => {
               const target = phaseTargets[phase.value] || 0;
               const logged = circleInteractions.filter((int) => int.phase === phase.value).length;
-              const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 0;
+              const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 100;
               return (
                 <div key={phase.id} className="space-y-0.5">
                   <div className="flex justify-between items-center">
@@ -524,12 +524,12 @@ export default function Lookup() {
                           const sum = designPhases.reduce((acc, phase) => {
                             const target = phaseTargets[phase.value] || 0;
                             const logged = designInteractions.filter(i => i.phase === phase.value).length;
-                            const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 0;
+                            const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 100;
                             return acc + pct;
                           }, 0);
                           return Math.round(sum / designPhases.length);
                         }
-                        return 0;
+                        return 100;
                       })(), type: "design_progress" },
                       designPhases, (result.client.designPhaseTargets || {}), designInteractions
                     )}
@@ -552,12 +552,12 @@ export default function Lookup() {
                           const sum = constructionPhases.reduce((acc, phase) => {
                             const target = phaseTargets[phase.value] || 0;
                             const logged = constructionInteractions.filter(i => i.phase === phase.value).length;
-                            const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 0;
+                            const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 100;
                             return acc + pct;
                           }, 0);
                           return Math.round(sum / constructionPhases.length);
                         }
-                        return 0;
+                        return 100;
                       })(), type: "construction_progress" },
                       constructionPhases, (result.client.constructionPhaseTargets || {}), constructionInteractions
                     )}
