@@ -994,102 +994,128 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   };
 
   if (activeTab === 'overview') {
-    return (
-      <div className="space-y-6 p-6">
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
-          <Card>
-            <CardContent className="p-6 min-h-[90px]">
-              <div>
-                <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Tổng Dự Án' : 'Total Projects'}</p>
-                <p className="text-2xl font-semibold" data-testid="stat-total-projects">
-                  {statsLoading ? "..." : stats?.totalProjects || 0}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6 min-h-[90px]">
-              <div>
-                <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Tổng Đối Tác' : 'Total Partners'}</p>
-                <p className="text-2xl font-semibold" data-testid="stat-total-partners">
-                  {businessPartnersLoading ? "..." : businessPartners.length}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6 min-h-[90px]">
-              <div>
-                <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Tổng Khách Hàng' : 'Total Clients'}</p>
-                <p className="text-2xl font-semibold" data-testid="stat-active-clients">
-                  {clientsLoading ? "..." : clients.length}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6 min-h-[90px]">
-              <div>
-                <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Yêu Cầu Mới' : 'New Inquiries'}</p>
-                <p className="text-2xl font-semibold" data-testid="stat-new-inquiries">
-                  {inquiriesLoading ? "..." : inquiries.filter(i => i.status === 'new').length}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent className="p-6 min-h-[90px]">
-              <div>
-                <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Tổng Doanh Thu' : 'Total Revenue'}</p>
-                <p className="text-2xl font-semibold" data-testid="stat-revenue">
-                  {statsLoading ? "..." : stats?.revenue || "0 ₫"}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-        <Card>
-          <CardHeader>
-            <CardTitle>{language === 'vi' ? 'Hoạt Động Gần Đây' : 'Recent Activity'}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {inquiriesLoading ? (
-              <div className="space-y-4">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="flex items-center justify-between py-3 border-b border-white/20 animate-pulse">
-                    <div className="space-y-2">
-                      <div className="h-4 bg-muted rounded w-64" />
-                      <div className="h-3 bg-muted rounded w-32" />
-                    </div>
-                    <div className="h-8 bg-muted rounded w-16" />
-                  </div>
-                ))}
-              </div>
-            ) : inquiries.length === 0 ? (
-              <p className="text-muted-foreground py-8 text-center">{language === 'vi' ? 'Chưa có hoạt động nào' : 'No recent activity'}</p>
-            ) : (
-              <div className="space-y-4">
-                {[...inquiries].filter(i => i.status === 'new').sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 5).map((inquiry) => (
-                  <div key={inquiry.id} className="flex items-center justify-between py-3 border-b border-white/20">
-                    <div>
-                      <p className="font-light">
-                        {language === 'vi' ? 'Yêu cầu mới từ' : 'New inquiry from'} {inquiry.firstName} {inquiry.lastName}
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {formatDate(inquiry.createdAt)} {inquiry.projectType ? ` ${inquiry.projectType}` : ''}
-                      </p>
-                      {(inquiry.phone || inquiry.email) && (
-                        <p className="text-sm text-muted-foreground">
-                          {inquiry.phone}{inquiry.phone && inquiry.email ? ' - ' : ''}{inquiry.email}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
+    const canProjects = hasPermission(user, 'projects');
+    const canCrm = hasPermission(user, 'crm');
+    const canInquiries = hasPermission(user, 'inquiries');
+    const visibleCards = [
+      canProjects && (
+        <Card key="projects">
+          <CardContent className="p-6 min-h-[90px]">
+            <div>
+              <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Tổng Dự Án' : 'Total Projects'}</p>
+              <p className="text-2xl font-semibold" data-testid="stat-total-projects">
+                {statsLoading ? "..." : stats?.totalProjects || 0}
+              </p>
+            </div>
           </CardContent>
         </Card>
+      ),
+      canCrm && (
+        <Card key="partners">
+          <CardContent className="p-6 min-h-[90px]">
+            <div>
+              <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Tổng Đối Tác' : 'Total Partners'}</p>
+              <p className="text-2xl font-semibold" data-testid="stat-total-partners">
+                {businessPartnersLoading ? "..." : businessPartners.length}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      ),
+      canCrm && (
+        <Card key="clients">
+          <CardContent className="p-6 min-h-[90px]">
+            <div>
+              <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Tổng Khách Hàng' : 'Total Clients'}</p>
+              <p className="text-2xl font-semibold" data-testid="stat-active-clients">
+                {clientsLoading ? "..." : clients.length}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      ),
+      canInquiries && (
+        <Card key="inquiries">
+          <CardContent className="p-6 min-h-[90px]">
+            <div>
+              <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Yêu Cầu Mới' : 'New Inquiries'}</p>
+              <p className="text-2xl font-semibold" data-testid="stat-new-inquiries">
+                {inquiriesLoading ? "..." : inquiries.filter(i => i.status === 'new').length}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      ),
+      canCrm && (
+        <Card key="revenue">
+          <CardContent className="p-6 min-h-[90px]">
+            <div>
+              <p className="text-sm font-light text-muted-foreground">{language === 'vi' ? 'Tổng Doanh Thu' : 'Total Revenue'}</p>
+              <p className="text-2xl font-semibold" data-testid="stat-revenue">
+                {statsLoading ? "..." : stats?.revenue || "0 ₫"}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      ),
+    ].filter(Boolean);
+
+    return (
+      <div className="space-y-6 p-6">
+        {visibleCards.length > 0 && (
+          <div className={`grid grid-cols-1 gap-6 ${visibleCards.length === 1 ? 'md:grid-cols-1 lg:grid-cols-1 max-w-xs' : visibleCards.length === 2 ? 'md:grid-cols-2 lg:grid-cols-2' : visibleCards.length === 3 ? 'md:grid-cols-3 lg:grid-cols-3' : visibleCards.length === 4 ? 'md:grid-cols-2 lg:grid-cols-4' : 'md:grid-cols-3 lg:grid-cols-5'}`}>
+            {visibleCards}
+          </div>
+        )}
+        {canInquiries && (
+          <Card>
+            <CardHeader>
+              <CardTitle>{language === 'vi' ? 'Hoạt Động Gần Đây' : 'Recent Activity'}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {inquiriesLoading ? (
+                <div className="space-y-4">
+                  {[1, 2, 3].map((i) => (
+                    <div key={i} className="flex items-center justify-between py-3 border-b border-white/20 animate-pulse">
+                      <div className="space-y-2">
+                        <div className="h-4 bg-muted rounded w-64" />
+                        <div className="h-3 bg-muted rounded w-32" />
+                      </div>
+                      <div className="h-8 bg-muted rounded w-16" />
+                    </div>
+                  ))}
+                </div>
+              ) : inquiries.length === 0 ? (
+                <p className="text-muted-foreground py-8 text-center">{language === 'vi' ? 'Chưa có hoạt động nào' : 'No recent activity'}</p>
+              ) : (
+                <div className="space-y-4">
+                  {[...inquiries].filter(i => i.status === 'new').sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).slice(0, 5).map((inquiry) => (
+                    <div key={inquiry.id} className="flex items-center justify-between py-3 border-b border-white/20">
+                      <div>
+                        <p className="font-light">
+                          {language === 'vi' ? 'Yêu cầu mới từ' : 'New inquiry from'} {inquiry.firstName} {inquiry.lastName}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {formatDate(inquiry.createdAt)} {inquiry.projectType ? ` ${inquiry.projectType}` : ''}
+                        </p>
+                        {(inquiry.phone || inquiry.email) && (
+                          <p className="text-sm text-muted-foreground">
+                            {inquiry.phone}{inquiry.phone && inquiry.email ? ' - ' : ''}{inquiry.email}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        )}
+        {visibleCards.length === 0 && !canInquiries && (
+          <div className="py-16 text-center text-muted-foreground">
+            <p className="font-light">{language === 'vi' ? 'Không có quyền xem thống kê.' : 'No statistics available for your account.'}</p>
+          </div>
+        )}
       </div>
     );
   }
