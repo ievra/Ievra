@@ -1085,14 +1085,14 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                     <div>
                       <h3 className="text-sm font-medium text-white/70 tracking-wider uppercase mb-4 pb-2 border-b border-white/10">{isVi ? "Tiến Độ Thiết Kế" : "Design Progress"}</h3>
                       <div className="grid grid-cols-2 gap-4">
-                        {renderCircle(designProgressItem, designPhases, (selectedClient.designPhaseTargets as Record<string, number>) || {}, designInteractions)}
+                        {renderCircle(designProgressItem, designPhases.filter(p => !((selectedClient.hiddenDesignPhases as string[]) || []).includes(p.value)), (selectedClient.designPhaseTargets as Record<string, number>) || {}, designInteractions)}
                         {renderCircle(designPaymentItem, [], {}, [])}
                       </div>
                     </div>
                     <div>
                       <h3 className="text-sm font-medium text-white/70 tracking-wider uppercase mb-4 pb-2 border-b border-white/10">{isVi ? "Tiến Độ Thi Công" : "Construction Progress"}</h3>
                       <div className="grid grid-cols-2 gap-4">
-                        {renderCircle(constructionProgressItem, constructionPhases, (selectedClient.constructionPhaseTargets as Record<string, number>) || {}, constructionInteractions)}
+                        {renderCircle(constructionProgressItem, constructionPhases.filter(p => !((selectedClient.hiddenConstructionPhases as string[]) || []).includes(p.value)), (selectedClient.constructionPhaseTargets as Record<string, number>) || {}, constructionInteractions)}
                         {renderCircle(constructionPaymentItem, [], {}, [])}
                       </div>
                     </div>
