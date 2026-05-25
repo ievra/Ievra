@@ -558,9 +558,15 @@ export default function LookupAdminTab({ user }: { user?: any }) {
       await apiRequest("PUT", `/api/clients/${selectedClient!.id}`, { hiddenDesignPhases: next });
       return next;
     },
-    onSuccess: (next) => {
-      queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
+    onMutate: (phaseValue: string) => {
+      const current = (selectedClient?.hiddenDesignPhases as string[]) || [];
+      const next = current.includes(phaseValue)
+        ? current.filter(v => v !== phaseValue)
+        : [...current, phaseValue];
       setSelectedClient({ ...selectedClient!, hiddenDesignPhases: next } as Client);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
     },
   });
 
@@ -573,9 +579,15 @@ export default function LookupAdminTab({ user }: { user?: any }) {
       await apiRequest("PUT", `/api/clients/${selectedClient!.id}`, { hiddenConstructionPhases: next });
       return next;
     },
-    onSuccess: (next) => {
-      queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
+    onMutate: (phaseValue: string) => {
+      const current = (selectedClient?.hiddenConstructionPhases as string[]) || [];
+      const next = current.includes(phaseValue)
+        ? current.filter(v => v !== phaseValue)
+        : [...current, phaseValue];
       setSelectedClient({ ...selectedClient!, hiddenConstructionPhases: next } as Client);
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
     },
   });
 
