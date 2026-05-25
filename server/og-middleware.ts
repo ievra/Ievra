@@ -147,6 +147,10 @@ async function getCachedSettings() {
   return s;
 }
 
+export function invalidateOgSettingsCache() {
+  settingsCache = null;
+}
+
 async function findLinkedArticle(article: any, baseUrl: string): Promise<{ lang: string; href: string }[]> {
   const hreflang: { lang: string; href: string }[] = [];
   try {

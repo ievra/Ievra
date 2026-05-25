@@ -1611,6 +1611,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const validatedData = insertSettingsSchema.parse(req.body);
       const settings = await storage.upsertSettings(validatedData);
+      const { invalidateOgSettingsCache } = await import("./og-middleware");
+      invalidateOgSettingsCache();
       res.json(settings);
     } catch (error) {
       if (error instanceof z.ZodError) {
