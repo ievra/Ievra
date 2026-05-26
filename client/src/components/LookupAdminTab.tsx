@@ -17,7 +17,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest, queryClient as qc } from "@/lib/queryClient";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { Search, Plus, Pencil, Trash2, Phone, Mail, User, Shield, Calendar, Clock, Briefcase, CreditCard, X, HardHat, PenTool, Eye, EyeOff, Settings, ChevronLeft, ChevronRight, Check } from "lucide-react";
+import { Search, Plus, Pencil, Trash2, Phone, Mail, User, Shield, Calendar, Clock, Briefcase, CreditCard, X, HardHat, PenTool, Eye, Settings, ChevronLeft, ChevronRight, Check } from "lucide-react";
 import CrmSettingsManager from "@/components/CrmSettingsManager";
 import type { Client, Interaction, Deal, Transaction, WarrantyLog, ConstructionPhase, DesignPhase } from "@shared/schema";
 
@@ -553,59 +553,6 @@ export default function LookupAdminTab({ user }: { user?: any }) {
   const selectedClientRef = useRef<Client | null>(null);
   selectedClientRef.current = selectedClient;
 
-  const toggleHiddenDesignPhase = async (phaseValue: string) => {
-    const client = selectedClientRef.current;
-    if (!client) return;
-    const current = (client.hiddenDesignPhases as string[]) || [];
-    const next = current.includes(phaseValue)
-      ? current.filter(v => v !== phaseValue)
-      : [...current, phaseValue];
-    setSelectedClient({ ...client, hiddenDesignPhases: next } as Client);
-    try {
-      const res = await fetch(`/api/clients/${client.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ hiddenDesignPhases: next }),
-        credentials: 'include',
-      });
-      if (res.ok) {
-        const updated = await res.json() as Client;
-        setSelectedClient(updated);
-        queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
-      } else {
-        setSelectedClient({ ...client, hiddenDesignPhases: current } as Client);
-      }
-    } catch {
-      setSelectedClient({ ...client, hiddenDesignPhases: current } as Client);
-    }
-  };
-
-  const toggleHiddenConstructionPhase = async (phaseValue: string) => {
-    const client = selectedClientRef.current;
-    if (!client) return;
-    const current = (client.hiddenConstructionPhases as string[]) || [];
-    const next = current.includes(phaseValue)
-      ? current.filter(v => v !== phaseValue)
-      : [...current, phaseValue];
-    setSelectedClient({ ...client, hiddenConstructionPhases: next } as Client);
-    try {
-      const res = await fetch(`/api/clients/${client.id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ hiddenConstructionPhases: next }),
-        credentials: 'include',
-      });
-      if (res.ok) {
-        const updated = await res.json() as Client;
-        setSelectedClient(updated);
-        queryClient.invalidateQueries({ queryKey: ['/api/clients'] });
-      } else {
-        setSelectedClient({ ...client, hiddenConstructionPhases: current } as Client);
-      }
-    } catch {
-      setSelectedClient({ ...client, hiddenConstructionPhases: current } as Client);
-    }
-  };
 
   const updateWarrantyMutation = useMutation({
     mutationFn: async () => {
@@ -1113,14 +1060,14 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                     <div>
                       <h3 className="text-sm font-medium text-white/70 tracking-wider uppercase mb-4 pb-2 border-b border-white/10">{isVi ? "Tiến Độ Thiết Kế" : "Design Progress"}</h3>
                       <div className="grid grid-cols-2 gap-4">
-                        {renderCircle(designProgressItem, designPhases.filter(p => !((selectedClient.hiddenDesignPhases as string[]) || []).includes(p.value)), (selectedClient.designPhaseTargets as Record<string, number>) || {}, designInteractions, !!selectedClient.designTimeline)}
+                        {renderCircle(designProgressItem, designPhases, (selectedClient.designPhaseTargets as Record<string, number>) || {}, designInteractions, !!selectedClient.designTimeline)}
                         {renderCircle(designPaymentItem, [], {}, [])}
                       </div>
                     </div>
                     <div>
                       <h3 className="text-sm font-medium text-white/70 tracking-wider uppercase mb-4 pb-2 border-b border-white/10">{isVi ? "Tiến Độ Thi Công" : "Construction Progress"}</h3>
                       <div className="grid grid-cols-2 gap-4">
-                        {renderCircle(constructionProgressItem, constructionPhases.filter(p => !((selectedClient.hiddenConstructionPhases as string[]) || []).includes(p.value)), (selectedClient.constructionPhaseTargets as Record<string, number>) || {}, constructionInteractions, !!selectedClient.constructionTimeline)}
+                        {renderCircle(constructionProgressItem, constructionPhases, (selectedClient.constructionPhaseTargets as Record<string, number>) || {}, constructionInteractions, !!selectedClient.constructionTimeline)}
                         {renderCircle(constructionPaymentItem, [], {}, [])}
                       </div>
                     </div>
@@ -1250,24 +1197,14 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                         const phaseInteractions = constructionInteractions.filter(i => (i as any).phase === phase.value).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
                         const phaseTargets = (selectedClient.constructionPhaseTargets as Record<string, number>) || {};
                         const phaseTarget = phaseTargets[phase.value] || 0;
-                        const hiddenPhases = (selectedClient.hiddenConstructionPhases as string[]) || [];
-                        const isHidden = hiddenPhases.includes(phase.value);
                         return (
                           <div key={phase.id}>
                             {phaseIdx > 0 && <div className="border-t border-white/20 my-0" />}
                             <div className="flex items-center justify-between py-3 px-2">
                               <div className="flex items-center gap-2">
-                                <button
-                                  type="button"
-                                  onClick={() => toggleHiddenConstructionPhase(phase.value)}
-                                  className="text-white/20 hover:text-white/60 transition-colors flex-shrink-0"
-                                  title={isHidden ? (isVi ? "Hiện hạng mục" : "Show phase") : (isVi ? "Ẩn hạng mục" : "Hide phase")}
-                                >
-                                  {isHidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                                </button>
-                                <span className={`text-sm font-medium ${isHidden ? "text-white/30 line-through" : "text-white/70"}`}>{isVi ? phase.labelVi : phase.labelEn}</span>
+                                <span className="text-sm font-medium text-white/70">{isVi ? phase.labelVi : phase.labelEn}</span>
                               </div>
-                              {!isHidden && <div className="flex items-center gap-4">
+                              <div className="flex items-center gap-4">
                                 {(() => {
                                   const constMaxForPhase = Math.max(0, (selectedClient.constructionTimeline || 0) - getConstructionPhaseTargetsSum(phase.value));
                                   return editingPhaseTarget === `construction_${phase.value}` ? (
@@ -1331,9 +1268,9 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                                   </span>
                                 );
                                 })()}
-                              </div>}
+                              </div>
                             </div>
-                            {!isHidden && phaseInteractions.length > 0 && (
+                            {phaseInteractions.length > 0 && (
                               <Table className="min-w-[700px]">
                                 <TableBody>
                                   {phaseInteractions.map((interaction, index) => (
@@ -1521,24 +1458,14 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                         const phaseInteractions = designInteractions.filter(i => (i as any).phase === phase.value).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
                         const phaseTargets = (selectedClient.designPhaseTargets as Record<string, number>) || {};
                         const phaseTarget = phaseTargets[phase.value] || 0;
-                        const hiddenDesignPhasesList = (selectedClient.hiddenDesignPhases as string[]) || [];
-                        const isHiddenDesign = hiddenDesignPhasesList.includes(phase.value);
                         return (
                           <div key={phase.id}>
                             {phaseIdx > 0 && <div className="border-t border-white/20 my-0" />}
                             <div className="flex items-center justify-between py-3 px-2">
                               <div className="flex items-center gap-2">
-                                <button
-                                  type="button"
-                                  onClick={() => toggleHiddenDesignPhase(phase.value)}
-                                  className="text-white/20 hover:text-white/60 transition-colors flex-shrink-0"
-                                  title={isHiddenDesign ? (isVi ? "Hiện hạng mục" : "Show phase") : (isVi ? "Ẩn hạng mục" : "Hide phase")}
-                                >
-                                  {isHiddenDesign ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                                </button>
-                                <span className={`text-sm font-medium ${isHiddenDesign ? "text-white/30 line-through" : "text-white/70"}`}>{isVi ? phase.labelVi : phase.labelEn}</span>
+                                <span className="text-sm font-medium text-white/70">{isVi ? phase.labelVi : phase.labelEn}</span>
                               </div>
-                              {!isHiddenDesign && <div className="flex items-center gap-4">
+                              <div className="flex items-center gap-4">
                                 {(() => {
                                   const designMaxForPhase = Math.max(0, (selectedClient.designTimeline || 0) - getDesignPhaseTargetsSum(phase.value));
                                   return editingPhaseTarget === `design_${phase.value}` ? (
@@ -1602,9 +1529,9 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                                   </span>
                                 );
                                 })()}
-                              </div>}
+                              </div>
                             </div>
-                            {!isHiddenDesign && phaseInteractions.length > 0 && (
+                            {phaseInteractions.length > 0 && (
                               <Table className="min-w-[700px]">
                                 <TableBody>
                                   {phaseInteractions.map((interaction, index) => (
