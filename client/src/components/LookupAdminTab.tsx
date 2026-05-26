@@ -550,8 +550,6 @@ export default function LookupAdminTab({ user }: { user?: any }) {
     },
   });
 
-  const selectedClientRef = useRef<Client | null>(null);
-  selectedClientRef.current = selectedClient;
 
 
   const updateWarrantyMutation = useMutation({
