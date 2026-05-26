@@ -885,7 +885,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
             <Search className="w-4 h-4 mr-2" />
             {isVi ? "Tìm kiếm" : "Search"}
           </Button>
-          {user?.role === 'super_admin' && (
+          {(user?.role === 'super_admin' || user?.role === 'admin') && (
             <Button
               variant="outline"
               onClick={() => setIsSettingsDialogOpen(true)}
