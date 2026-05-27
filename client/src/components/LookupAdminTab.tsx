@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Fragment } from "react";
 import { createPortal } from "react-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
@@ -1181,158 +1181,102 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                   {interactionsLoading ? (
                     <div className="text-center py-8 text-white/40">{isVi ? "Đang tải..." : "Loading..."}</div>
                   ) : (
-                    <div className="space-y-0 overflow-x-auto">
-                      <div className="min-w-[750px] grid grid-cols-[40px_90px_1fr_120px_110px_120px_80px] px-4 py-2 border-b border-white/10">
-                        <span className="text-sm text-white/30">{isVi ? "STT" : "No"}</span>
-                        <span className="text-sm text-white/30">{isVi ? "Ngày" : "Date"}</span>
-                        <span className="text-sm text-white/30">{isVi ? "Tiêu đề" : "Title"}</span>
-                        <span className="text-sm text-white/30">{isVi ? "Phụ trách" : "Assigned"}</span>
-                        <span className="text-sm text-white/30">{isVi ? "Đề xuất" : "Suggestion"}</span>
-                        <span className="text-sm text-white/30">{isVi ? "Hình ảnh" : "Images"}</span>
-                        <span className="text-sm text-white/30"></span>
-                      </div>
-                      {constructionPhases.map((phase, phaseIdx) => {
-                        const phaseInteractions = constructionInteractions.filter(i => (i as any).phase === phase.value).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-                        const phaseTargets = (selectedClient.constructionPhaseTargets as Record<string, number>) || {};
-                        const phaseTarget = phaseTargets[phase.value] || 0;
-                        return (
-                          <div key={phase.id}>
-                            {phaseIdx > 0 && <div className="border-t border-white/20 my-0" />}
-                            <div className="flex items-center justify-between py-3 px-2">
-                              <div className="flex items-center gap-2">
-                                <span className="text-sm font-medium text-white/70">{isVi ? phase.labelVi : phase.labelEn}</span>
-                              </div>
-                              <div className="flex items-center gap-4">
-                                {(() => {
-                                  const constMaxForPhase = Math.max(0, (selectedClient.constructionTimeline || 0) - getConstructionPhaseTargetsSum(phase.value));
-                                  return editingPhaseTarget === `construction_${phase.value}` ? (
-                                  <div className="flex items-center gap-1.5">
-                                    <button
-                                      type="button"
-                                      onClick={() => setPhaseTargetValue(String(Math.max(0, parseInt(phaseTargetValue || "0") - 1)))}
-                                      className="text-white/30 hover:text-white transition-colors p-0.5"
-                                    >
-                                      <ChevronLeft className="w-3.5 h-3.5" />
-                                    </button>
-                                    <input
-                                      type="number"
-                                      min={0}
-                                      max={constMaxForPhase}
-                                      value={phaseTargetValue}
-                                      onChange={(e) => { const v = parseInt(e.target.value || "0"); setPhaseTargetValue(String(Math.min(v, constMaxForPhase))); }}
-                                      className="w-10 h-6 bg-transparent border-b border-white/20 text-white text-center text-xs focus:outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                      autoFocus
-                                      onKeyDown={(e) => {
-                                        if (e.key === "Enter" && phaseTargetValue) {
-                                          updateConstructionPhaseTargetMutation.mutate({ phaseValue: phase.value, target: parseInt(phaseTargetValue) });
-                                          setEditingPhaseTarget(null);
-                                        } else if (e.key === "Escape") {
-                                          setEditingPhaseTarget(null);
-                                        }
-                                      }}
-                                    />
-                                    <button
-                                      type="button"
-                                      onClick={() => setPhaseTargetValue(String(Math.min(constMaxForPhase, parseInt(phaseTargetValue || "0") + 1)))}
-                                      className="text-white/30 hover:text-white transition-colors p-0.5"
-                                    >
-                                      <ChevronRight className="w-3.5 h-3.5" />
-                                    </button>
-                                    <span className="text-[10px] text-white/30 ml-0.5">/{constMaxForPhase}</span>
-                                    <button type="button" onClick={() => { if (phaseTargetValue) { updateConstructionPhaseTargetMutation.mutate({ phaseValue: phase.value, target: parseInt(phaseTargetValue) }); } setEditingPhaseTarget(null); }} className="text-white/40 hover:text-white transition-colors ml-1"><Check className="w-3.5 h-3.5" /></button>
-                                    <button type="button" onClick={() => setEditingPhaseTarget(null)} className="text-white/30 hover:text-white/60 transition-colors"><X className="w-3 h-3" /></button>
-                                  </div>
-                                ) : phaseTarget > 0 ? (
-                                  <div className="flex items-center gap-4">
-                                    <div className="cursor-pointer group" onClick={() => { setPhaseTargetValue(String(phaseTarget)); setEditingPhaseTarget(`construction_${phase.value}`); }}>
-                                      <span className="text-[10px] text-white/40">{isVi ? "Mục tiêu" : "Target"}</span>
-                                      <p className="text-xs text-white font-light group-hover:text-white/70">{phaseTarget} <Pencil className="w-2.5 h-2.5 inline opacity-0 group-hover:opacity-50" /></p>
+                    <div className="overflow-x-auto">
+                      <Table className="min-w-[750px] table-fixed">
+                        <colgroup>
+                          <col style={{width: '40px'}} />
+                          <col style={{width: '90px'}} />
+                          <col />
+                          <col style={{width: '120px'}} />
+                          <col style={{width: '110px'}} />
+                          <col style={{width: '120px'}} />
+                          <col style={{width: '80px'}} />
+                        </colgroup>
+                        <TableHeader>
+                          <TableRow className="border-white/10 hover:bg-transparent">
+                            <TableHead className="text-white/30 font-normal text-sm h-9 py-2">{isVi ? "STT" : "No"}</TableHead>
+                            <TableHead className="text-white/30 font-normal text-sm h-9 py-2">{isVi ? "Ngày" : "Date"}</TableHead>
+                            <TableHead className="text-white/30 font-normal text-sm h-9 py-2">{isVi ? "Tiêu đề" : "Title"}</TableHead>
+                            <TableHead className="text-white/30 font-normal text-sm h-9 py-2">{isVi ? "Phụ trách" : "Assigned"}</TableHead>
+                            <TableHead className="text-white/30 font-normal text-sm h-9 py-2">{isVi ? "Đề xuất" : "Suggestion"}</TableHead>
+                            <TableHead className="text-white/30 font-normal text-sm h-9 py-2">{isVi ? "Hình ảnh" : "Images"}</TableHead>
+                            <TableHead className="h-9 py-2"></TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {constructionPhases.map((phase, phaseIdx) => {
+                            const phaseInteractions = constructionInteractions.filter(i => (i as any).phase === phase.value).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                            const phaseTargets = (selectedClient.constructionPhaseTargets as Record<string, number>) || {};
+                            const phaseTarget = phaseTargets[phase.value] || 0;
+                            return (
+                              <Fragment key={phase.id}>
+                                {phaseIdx > 0 && (
+                                  <TableRow className="border-0 hover:bg-transparent">
+                                    <TableCell colSpan={7} className="p-0 border-t border-white/20 h-px" />
+                                  </TableRow>
+                                )}
+                                <TableRow className="border-0 hover:bg-transparent">
+                                  <TableCell colSpan={7} className="py-3 px-2">
+                                    <div className="flex items-center justify-between">
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-sm font-medium text-white/70">{isVi ? phase.labelVi : phase.labelEn}</span>
+                                      </div>
+                                      <div className="flex items-center gap-4">
+                                        {(() => {
+                                          const constMaxForPhase = Math.max(0, (selectedClient.constructionTimeline || 0) - getConstructionPhaseTargetsSum(phase.value));
+                                          return editingPhaseTarget === `construction_${phase.value}` ? (
+                                            <div className="flex items-center gap-1.5">
+                                              <button type="button" onClick={() => setPhaseTargetValue(String(Math.max(0, parseInt(phaseTargetValue || "0") - 1)))} className="text-white/30 hover:text-white transition-colors p-0.5"><ChevronLeft className="w-3.5 h-3.5" /></button>
+                                              <input type="number" min={0} max={constMaxForPhase} value={phaseTargetValue} onChange={(e) => { const v = parseInt(e.target.value || "0"); setPhaseTargetValue(String(Math.min(v, constMaxForPhase))); }} className="w-10 h-6 bg-transparent border-b border-white/20 text-white text-center text-xs focus:outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" autoFocus onKeyDown={(e) => { if (e.key === "Enter" && phaseTargetValue) { updateConstructionPhaseTargetMutation.mutate({ phaseValue: phase.value, target: parseInt(phaseTargetValue) }); setEditingPhaseTarget(null); } else if (e.key === "Escape") { setEditingPhaseTarget(null); } }} />
+                                              <button type="button" onClick={() => setPhaseTargetValue(String(Math.min(constMaxForPhase, parseInt(phaseTargetValue || "0") + 1)))} className="text-white/30 hover:text-white transition-colors p-0.5"><ChevronRight className="w-3.5 h-3.5" /></button>
+                                              <span className="text-[10px] text-white/30 ml-0.5">/{constMaxForPhase}</span>
+                                              <button type="button" onClick={() => { if (phaseTargetValue) { updateConstructionPhaseTargetMutation.mutate({ phaseValue: phase.value, target: parseInt(phaseTargetValue) }); } setEditingPhaseTarget(null); }} className="text-white/40 hover:text-white transition-colors ml-1"><Check className="w-3.5 h-3.5" /></button>
+                                              <button type="button" onClick={() => setEditingPhaseTarget(null)} className="text-white/30 hover:text-white/60 transition-colors"><X className="w-3 h-3" /></button>
+                                            </div>
+                                          ) : phaseTarget > 0 ? (
+                                            <div className="flex items-center gap-4">
+                                              <div className="cursor-pointer group" onClick={() => { setPhaseTargetValue(String(phaseTarget)); setEditingPhaseTarget(`construction_${phase.value}`); }}>
+                                                <span className="text-[10px] text-white/40">{isVi ? "Mục tiêu" : "Target"}</span>
+                                                <p className="text-xs text-white font-light group-hover:text-white/70">{phaseTarget} <Pencil className="w-2.5 h-2.5 inline opacity-0 group-hover:opacity-50" /></p>
+                                              </div>
+                                              <div>
+                                                <span className="text-[10px] text-white/40">{isVi ? "Đã ghi" : "Logged"}</span>
+                                                <p className="text-xs text-white font-light">{phaseInteractions.length} / {phaseTarget}</p>
+                                              </div>
+                                            </div>
+                                          ) : constMaxForPhase > 0 ? (
+                                            <span className="text-xs text-white/30 cursor-pointer hover:text-white/50 flex items-center gap-1" onClick={() => { setPhaseTargetValue(""); setEditingPhaseTarget(`construction_${phase.value}`); }}>
+                                              <Plus className="w-3 h-3" /> {isVi ? "Mục tiêu" : "Target"}
+                                            </span>
+                                          ) : (
+                                            <span className="text-xs text-white/20 flex items-center gap-1 cursor-not-allowed select-none" title={isVi ? "Đã phân bổ đủ ngày" : "All days allocated"}>
+                                              <Plus className="w-3 h-3" /> {isVi ? "Mục tiêu" : "Target"}
+                                            </span>
+                                          );
+                                        })()}
+                                      </div>
                                     </div>
-                                    <div>
-                                      <span className="text-[10px] text-white/40">{isVi ? "Đã ghi" : "Logged"}</span>
-                                      <p className="text-xs text-white font-light">{phaseInteractions.length} / {phaseTarget}</p>
-                                    </div>
-                                  </div>
-                                ) : constMaxForPhase > 0 ? (
-                                  <span
-                                    className="text-xs text-white/30 cursor-pointer hover:text-white/50 flex items-center gap-1"
-                                    onClick={() => { setPhaseTargetValue(""); setEditingPhaseTarget(`construction_${phase.value}`); }}
-                                  >
-                                    <Plus className="w-3 h-3" /> {isVi ? "Mục tiêu" : "Target"}
-                                  </span>
-                                ) : (
-                                  <span className="text-xs text-white/20 flex items-center gap-1 cursor-not-allowed select-none" title={isVi ? "Đã phân bổ đủ ngày" : "All days allocated"}>
-                                    <Plus className="w-3 h-3" /> {isVi ? "Mục tiêu" : "Target"}
-                                  </span>
-                                );
-                                })()}
-                              </div>
-                            </div>
-                            {phaseInteractions.length > 0 && (
-                              <Table className="min-w-[750px]">
-                                <TableBody>
-                                  {phaseInteractions.map((interaction, index) => (
-                                    <TableRow key={interaction.id} className="border-white/10">
-                                      <TableCell className="text-white/40 text-sm w-[40px]">{index + 1}</TableCell>
-                                      <TableCell className="w-[90px]">
-                                        <p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p>
-                                      </TableCell>
-                                      <TableCell className="text-white">{interaction.title}</TableCell>
-                                      <TableCell className="text-white/60 w-[120px] whitespace-nowrap">{interaction.assignedTo || "—"}</TableCell>
-                                      <TableCell className="text-white/50 w-[110px] truncate">{interaction.nextAction || "—"}</TableCell>
-                                      <TableCell className="w-[120px] overflow-hidden">
-                                        {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
-                                          <div className="flex gap-1 cursor-pointer overflow-hidden" onClick={() => openLightbox(interaction.attachments as string[], 0)}>
-                                            {(interaction.attachments as string[]).slice(0, 3).map((url, idx) => (
-                                              <img key={idx} src={url} alt="" className="w-8 h-8 flex-shrink-0 object-cover border border-white/10 hover:border-white/40 transition-colors" />
-                                            ))}
-                                          </div>
-                                        ) : (
-                                          <span className="text-white/30">—</span>
-                                        )}
-                                      </TableCell>
-                                      <TableCell className="w-[80px]">
-                                        <div className="flex gap-1">
-                                          <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
-                                            <Eye className="w-3.5 h-3.5" />
-                                          </Button>
-                                          <Button variant="ghost" size="icon" onClick={() => openInteractionDialog(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
-                                            <Pencil className="w-3.5 h-3.5" />
-                                          </Button>
-                                        </div>
-                                      </TableCell>
-                                    </TableRow>
-                                  ))}
-                                </TableBody>
-                              </Table>
-                            )}
-                          </div>
-                        );
-                      })}
-                      {(() => {
-                        const orphaned = constructionInteractions.filter(i => !(i as any).phase || !constructionPhases.some(p => p.value === (i as any).phase));
-                        if (orphaned.length === 0) return null;
-                        return (
-                          <div>
-                            <div className="border-t border-white/20 my-0" />
-                            <div className="py-3 px-2">
-                              <span className="text-sm font-medium text-white/40">{isVi ? "Khác" : "Other"}</span>
-                            </div>
-                            <Table className="min-w-[750px]">
-                              <TableBody>
-                                {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
+                                  </TableCell>
+                                </TableRow>
+                                {phaseInteractions.map((interaction, index) => (
                                   <TableRow key={interaction.id} className="border-white/10">
-                                    <TableCell className="text-white/40 text-sm w-[40px]">{index + 1}</TableCell>
-                                    <TableCell className="w-[90px]"><p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p></TableCell>
-                                    <TableCell className="text-white">{interaction.title}</TableCell>
-                                    <TableCell className="text-white/60 w-[120px] whitespace-nowrap">{interaction.assignedTo || "—"}</TableCell>
-                                    <TableCell className="text-white/50 w-[110px] truncate">{interaction.nextAction || "—"}</TableCell>
-                                    <TableCell className="w-[120px] overflow-hidden">
+                                    <TableCell className="text-white/40 text-sm">{index + 1}</TableCell>
+                                    <TableCell><p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p></TableCell>
+                                    <TableCell className="text-white truncate">{interaction.title}</TableCell>
+                                    <TableCell className="text-white/60 whitespace-nowrap overflow-hidden">{interaction.assignedTo || "—"}</TableCell>
+                                    <TableCell className="text-white/50 truncate">{interaction.nextAction || "—"}</TableCell>
+                                    <TableCell className="overflow-hidden">
                                       {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
-                                        <div className="flex gap-1 cursor-pointer overflow-hidden" onClick={() => openLightbox(interaction.attachments as string[], 0)}>{(interaction.attachments as string[]).slice(0, 3).map((url, idx) => (<img key={idx} src={url} alt="" className="w-8 h-8 flex-shrink-0 object-cover border border-white/10 hover:border-white/40 transition-colors" />))}</div>
-                                      ) : (<span className="text-white/30">—</span>)}
+                                        <div className="flex gap-1 cursor-pointer overflow-hidden" onClick={() => openLightbox(interaction.attachments as string[], 0)}>
+                                          {(interaction.attachments as string[]).slice(0, 3).map((url, idx) => (
+                                            <img key={idx} src={url} alt="" className="w-8 h-8 flex-shrink-0 object-cover border border-white/10 hover:border-white/40 transition-colors" />
+                                          ))}
+                                        </div>
+                                      ) : (
+                                        <span className="text-white/30">—</span>
+                                      )}
                                     </TableCell>
-                                    <TableCell className="w-[80px]">
+                                    <TableCell>
                                       <div className="flex gap-1">
                                         <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white"><Eye className="w-3.5 h-3.5" /></Button>
                                         <Button variant="ghost" size="icon" onClick={() => openInteractionDialog(interaction)} className="h-8 w-8 text-white/40 hover:text-white"><Pencil className="w-3.5 h-3.5" /></Button>
@@ -1340,11 +1284,47 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                                     </TableCell>
                                   </TableRow>
                                 ))}
-                              </TableBody>
-                            </Table>
-                          </div>
-                        );
-                      })()}
+                              </Fragment>
+                            );
+                          })}
+                          {(() => {
+                            const orphaned = constructionInteractions.filter(i => !(i as any).phase || !constructionPhases.some(p => p.value === (i as any).phase));
+                            if (orphaned.length === 0) return null;
+                            return (
+                              <Fragment key="orphaned-construction">
+                                <TableRow className="border-0 hover:bg-transparent">
+                                  <TableCell colSpan={7} className="p-0 border-t border-white/20 h-px" />
+                                </TableRow>
+                                <TableRow className="border-0 hover:bg-transparent">
+                                  <TableCell colSpan={7} className="py-3 px-2">
+                                    <span className="text-sm font-medium text-white/40">{isVi ? "Khác" : "Other"}</span>
+                                  </TableCell>
+                                </TableRow>
+                                {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
+                                  <TableRow key={interaction.id} className="border-white/10">
+                                    <TableCell className="text-white/40 text-sm">{index + 1}</TableCell>
+                                    <TableCell><p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p></TableCell>
+                                    <TableCell className="text-white truncate">{interaction.title}</TableCell>
+                                    <TableCell className="text-white/60 whitespace-nowrap overflow-hidden">{interaction.assignedTo || "—"}</TableCell>
+                                    <TableCell className="text-white/50 truncate">{interaction.nextAction || "—"}</TableCell>
+                                    <TableCell className="overflow-hidden">
+                                      {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
+                                        <div className="flex gap-1 cursor-pointer overflow-hidden" onClick={() => openLightbox(interaction.attachments as string[], 0)}>{(interaction.attachments as string[]).slice(0, 3).map((url, idx) => (<img key={idx} src={url} alt="" className="w-8 h-8 flex-shrink-0 object-cover border border-white/10 hover:border-white/40 transition-colors" />))}</div>
+                                      ) : (<span className="text-white/30">—</span>)}
+                                    </TableCell>
+                                    <TableCell>
+                                      <div className="flex gap-1">
+                                        <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white"><Eye className="w-3.5 h-3.5" /></Button>
+                                        <Button variant="ghost" size="icon" onClick={() => openInteractionDialog(interaction)} className="h-8 w-8 text-white/40 hover:text-white"><Pencil className="w-3.5 h-3.5" /></Button>
+                                      </div>
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                              </Fragment>
+                            );
+                          })()}
+                        </TableBody>
+                      </Table>
                       {constructionInteractions.length === 0 && constructionPhases.length === 0 && (
                         <div className="text-center py-12">
                           <p className="text-white/30 font-light">{isVi ? "Chưa có nhật ký thi công" : "No construction logs yet"}</p>
@@ -1442,158 +1422,102 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                   {interactionsLoading ? (
                     <div className="text-center py-8 text-white/40">{isVi ? "Đang tải..." : "Loading..."}</div>
                   ) : (
-                    <div className="space-y-0 overflow-x-auto">
-                      <div className="min-w-[750px] grid grid-cols-[40px_90px_1fr_120px_110px_120px_80px] px-4 py-2 border-b border-white/10">
-                        <span className="text-sm text-white/30">{isVi ? "STT" : "No"}</span>
-                        <span className="text-sm text-white/30">{isVi ? "Ngày" : "Date"}</span>
-                        <span className="text-sm text-white/30">{isVi ? "Tiêu đề" : "Title"}</span>
-                        <span className="text-sm text-white/30">{isVi ? "Phụ trách" : "Assigned"}</span>
-                        <span className="text-sm text-white/30">{isVi ? "Đề xuất" : "Suggestion"}</span>
-                        <span className="text-sm text-white/30">{isVi ? "Hình ảnh" : "Images"}</span>
-                        <span className="text-sm text-white/30"></span>
-                      </div>
-                      {designPhases.map((phase, phaseIdx) => {
-                        const phaseInteractions = designInteractions.filter(i => (i as any).phase === phase.value).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
-                        const phaseTargets = (selectedClient.designPhaseTargets as Record<string, number>) || {};
-                        const phaseTarget = phaseTargets[phase.value] || 0;
-                        return (
-                          <div key={phase.id}>
-                            {phaseIdx > 0 && <div className="border-t border-white/20 my-0" />}
-                            <div className="flex items-center justify-between py-3 px-2">
-                              <div className="flex items-center gap-2">
-                                <span className="text-sm font-medium text-white/70">{isVi ? phase.labelVi : phase.labelEn}</span>
-                              </div>
-                              <div className="flex items-center gap-4">
-                                {(() => {
-                                  const designMaxForPhase = Math.max(0, (selectedClient.designTimeline || 0) - getDesignPhaseTargetsSum(phase.value));
-                                  return editingPhaseTarget === `design_${phase.value}` ? (
-                                  <div className="flex items-center gap-1.5">
-                                    <button
-                                      type="button"
-                                      onClick={() => setPhaseTargetValue(String(Math.max(0, parseInt(phaseTargetValue || "0") - 1)))}
-                                      className="text-white/30 hover:text-white transition-colors p-0.5"
-                                    >
-                                      <ChevronLeft className="w-3.5 h-3.5" />
-                                    </button>
-                                    <input
-                                      type="number"
-                                      min={0}
-                                      max={designMaxForPhase}
-                                      value={phaseTargetValue}
-                                      onChange={(e) => { const v = parseInt(e.target.value || "0"); setPhaseTargetValue(String(Math.min(v, designMaxForPhase))); }}
-                                      className="w-10 h-6 bg-transparent border-b border-white/20 text-white text-center text-xs focus:outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                                      autoFocus
-                                      onKeyDown={(e) => {
-                                        if (e.key === "Enter" && phaseTargetValue) {
-                                          updateDesignPhaseTargetMutation.mutate({ phaseValue: phase.value, target: parseInt(phaseTargetValue) });
-                                          setEditingPhaseTarget(null);
-                                        } else if (e.key === "Escape") {
-                                          setEditingPhaseTarget(null);
-                                        }
-                                      }}
-                                    />
-                                    <button
-                                      type="button"
-                                      onClick={() => setPhaseTargetValue(String(Math.min(designMaxForPhase, parseInt(phaseTargetValue || "0") + 1)))}
-                                      className="text-white/30 hover:text-white transition-colors p-0.5"
-                                    >
-                                      <ChevronRight className="w-3.5 h-3.5" />
-                                    </button>
-                                    <span className="text-[10px] text-white/30 ml-0.5">/{designMaxForPhase}</span>
-                                    <button type="button" onClick={() => { if (phaseTargetValue) { updateDesignPhaseTargetMutation.mutate({ phaseValue: phase.value, target: parseInt(phaseTargetValue) }); } setEditingPhaseTarget(null); }} className="text-white/40 hover:text-white transition-colors ml-1"><Check className="w-3.5 h-3.5" /></button>
-                                    <button type="button" onClick={() => setEditingPhaseTarget(null)} className="text-white/30 hover:text-white/60 transition-colors"><X className="w-3 h-3" /></button>
-                                  </div>
-                                ) : phaseTarget > 0 ? (
-                                  <div className="flex items-center gap-4">
-                                    <div className="cursor-pointer group" onClick={() => { setPhaseTargetValue(String(phaseTarget)); setEditingPhaseTarget(`design_${phase.value}`); }}>
-                                      <span className="text-[10px] text-white/40">{isVi ? "Mục tiêu" : "Target"}</span>
-                                      <p className="text-xs text-white font-light group-hover:text-white/70">{phaseTarget} <Pencil className="w-2.5 h-2.5 inline opacity-0 group-hover:opacity-50" /></p>
+                    <div className="overflow-x-auto">
+                      <Table className="min-w-[750px] table-fixed">
+                        <colgroup>
+                          <col style={{width: '40px'}} />
+                          <col style={{width: '90px'}} />
+                          <col />
+                          <col style={{width: '120px'}} />
+                          <col style={{width: '110px'}} />
+                          <col style={{width: '120px'}} />
+                          <col style={{width: '80px'}} />
+                        </colgroup>
+                        <TableHeader>
+                          <TableRow className="border-white/10 hover:bg-transparent">
+                            <TableHead className="text-white/30 font-normal text-sm h-9 py-2">{isVi ? "STT" : "No"}</TableHead>
+                            <TableHead className="text-white/30 font-normal text-sm h-9 py-2">{isVi ? "Ngày" : "Date"}</TableHead>
+                            <TableHead className="text-white/30 font-normal text-sm h-9 py-2">{isVi ? "Tiêu đề" : "Title"}</TableHead>
+                            <TableHead className="text-white/30 font-normal text-sm h-9 py-2">{isVi ? "Phụ trách" : "Assigned"}</TableHead>
+                            <TableHead className="text-white/30 font-normal text-sm h-9 py-2">{isVi ? "Đề xuất" : "Suggestion"}</TableHead>
+                            <TableHead className="text-white/30 font-normal text-sm h-9 py-2">{isVi ? "Hình ảnh" : "Images"}</TableHead>
+                            <TableHead className="h-9 py-2"></TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {designPhases.map((phase, phaseIdx) => {
+                            const phaseInteractions = designInteractions.filter(i => (i as any).phase === phase.value).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                            const phaseTargets = (selectedClient.designPhaseTargets as Record<string, number>) || {};
+                            const phaseTarget = phaseTargets[phase.value] || 0;
+                            return (
+                              <Fragment key={phase.id}>
+                                {phaseIdx > 0 && (
+                                  <TableRow className="border-0 hover:bg-transparent">
+                                    <TableCell colSpan={7} className="p-0 border-t border-white/20 h-px" />
+                                  </TableRow>
+                                )}
+                                <TableRow className="border-0 hover:bg-transparent">
+                                  <TableCell colSpan={7} className="py-3 px-2">
+                                    <div className="flex items-center justify-between">
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-sm font-medium text-white/70">{isVi ? phase.labelVi : phase.labelEn}</span>
+                                      </div>
+                                      <div className="flex items-center gap-4">
+                                        {(() => {
+                                          const designMaxForPhase = Math.max(0, (selectedClient.designTimeline || 0) - getDesignPhaseTargetsSum(phase.value));
+                                          return editingPhaseTarget === `design_${phase.value}` ? (
+                                            <div className="flex items-center gap-1.5">
+                                              <button type="button" onClick={() => setPhaseTargetValue(String(Math.max(0, parseInt(phaseTargetValue || "0") - 1)))} className="text-white/30 hover:text-white transition-colors p-0.5"><ChevronLeft className="w-3.5 h-3.5" /></button>
+                                              <input type="number" min={0} max={designMaxForPhase} value={phaseTargetValue} onChange={(e) => { const v = parseInt(e.target.value || "0"); setPhaseTargetValue(String(Math.min(v, designMaxForPhase))); }} className="w-10 h-6 bg-transparent border-b border-white/20 text-white text-center text-xs focus:outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" autoFocus onKeyDown={(e) => { if (e.key === "Enter" && phaseTargetValue) { updateDesignPhaseTargetMutation.mutate({ phaseValue: phase.value, target: parseInt(phaseTargetValue) }); setEditingPhaseTarget(null); } else if (e.key === "Escape") { setEditingPhaseTarget(null); } }} />
+                                              <button type="button" onClick={() => setPhaseTargetValue(String(Math.min(designMaxForPhase, parseInt(phaseTargetValue || "0") + 1)))} className="text-white/30 hover:text-white transition-colors p-0.5"><ChevronRight className="w-3.5 h-3.5" /></button>
+                                              <span className="text-[10px] text-white/30 ml-0.5">/{designMaxForPhase}</span>
+                                              <button type="button" onClick={() => { if (phaseTargetValue) { updateDesignPhaseTargetMutation.mutate({ phaseValue: phase.value, target: parseInt(phaseTargetValue) }); } setEditingPhaseTarget(null); }} className="text-white/40 hover:text-white transition-colors ml-1"><Check className="w-3.5 h-3.5" /></button>
+                                              <button type="button" onClick={() => setEditingPhaseTarget(null)} className="text-white/30 hover:text-white/60 transition-colors"><X className="w-3 h-3" /></button>
+                                            </div>
+                                          ) : phaseTarget > 0 ? (
+                                            <div className="flex items-center gap-4">
+                                              <div className="cursor-pointer group" onClick={() => { setPhaseTargetValue(String(phaseTarget)); setEditingPhaseTarget(`design_${phase.value}`); }}>
+                                                <span className="text-[10px] text-white/40">{isVi ? "Mục tiêu" : "Target"}</span>
+                                                <p className="text-xs text-white font-light group-hover:text-white/70">{phaseTarget} <Pencil className="w-2.5 h-2.5 inline opacity-0 group-hover:opacity-50" /></p>
+                                              </div>
+                                              <div>
+                                                <span className="text-[10px] text-white/40">{isVi ? "Đã ghi" : "Logged"}</span>
+                                                <p className="text-xs text-white font-light">{phaseInteractions.length} / {phaseTarget}</p>
+                                              </div>
+                                            </div>
+                                          ) : designMaxForPhase > 0 ? (
+                                            <span className="text-xs text-white/30 cursor-pointer hover:text-white/50 flex items-center gap-1" onClick={() => { setPhaseTargetValue(""); setEditingPhaseTarget(`design_${phase.value}`); }}>
+                                              <Plus className="w-3 h-3" /> {isVi ? "Mục tiêu" : "Target"}
+                                            </span>
+                                          ) : (
+                                            <span className="text-xs text-white/20 flex items-center gap-1 cursor-not-allowed select-none" title={isVi ? "Đã phân bổ đủ ngày" : "All days allocated"}>
+                                              <Plus className="w-3 h-3" /> {isVi ? "Mục tiêu" : "Target"}
+                                            </span>
+                                          );
+                                        })()}
+                                      </div>
                                     </div>
-                                    <div>
-                                      <span className="text-[10px] text-white/40">{isVi ? "Đã ghi" : "Logged"}</span>
-                                      <p className="text-xs text-white font-light">{phaseInteractions.length} / {phaseTarget}</p>
-                                    </div>
-                                  </div>
-                                ) : designMaxForPhase > 0 ? (
-                                  <span
-                                    className="text-xs text-white/30 cursor-pointer hover:text-white/50 flex items-center gap-1"
-                                    onClick={() => { setPhaseTargetValue(""); setEditingPhaseTarget(`design_${phase.value}`); }}
-                                  >
-                                    <Plus className="w-3 h-3" /> {isVi ? "Mục tiêu" : "Target"}
-                                  </span>
-                                ) : (
-                                  <span className="text-xs text-white/20 flex items-center gap-1 cursor-not-allowed select-none" title={isVi ? "Đã phân bổ đủ ngày" : "All days allocated"}>
-                                    <Plus className="w-3 h-3" /> {isVi ? "Mục tiêu" : "Target"}
-                                  </span>
-                                );
-                                })()}
-                              </div>
-                            </div>
-                            {phaseInteractions.length > 0 && (
-                              <Table className="min-w-[750px]">
-                                <TableBody>
-                                  {phaseInteractions.map((interaction, index) => (
-                                    <TableRow key={interaction.id} className="border-white/10">
-                                      <TableCell className="text-white/40 text-sm w-[40px]">{index + 1}</TableCell>
-                                      <TableCell className="w-[90px]">
-                                        <p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p>
-                                      </TableCell>
-                                      <TableCell className="text-white">{interaction.title}</TableCell>
-                                      <TableCell className="text-white/60 w-[120px] whitespace-nowrap">{interaction.assignedTo || "—"}</TableCell>
-                                      <TableCell className="text-white/50 w-[110px] truncate">{interaction.nextAction || "—"}</TableCell>
-                                      <TableCell className="w-[120px] overflow-hidden">
-                                        {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
-                                          <div className="flex gap-1 cursor-pointer overflow-hidden" onClick={() => openLightbox(interaction.attachments as string[], 0)}>
-                                            {(interaction.attachments as string[]).slice(0, 3).map((url, idx) => (
-                                              <img key={idx} src={url} alt="" className="w-8 h-8 flex-shrink-0 object-cover border border-white/10 hover:border-white/40 transition-colors" />
-                                            ))}
-                                          </div>
-                                        ) : (
-                                          <span className="text-white/30">—</span>
-                                        )}
-                                      </TableCell>
-                                      <TableCell className="w-[80px]">
-                                        <div className="flex gap-1">
-                                          <Button variant="ghost" size="icon" onClick={() => setViewingDesignInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
-                                            <Eye className="w-3.5 h-3.5" />
-                                          </Button>
-                                          <Button variant="ghost" size="icon" onClick={() => openDesignInteractionDialog(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
-                                            <Pencil className="w-3.5 h-3.5" />
-                                          </Button>
-                                        </div>
-                                      </TableCell>
-                                    </TableRow>
-                                  ))}
-                                </TableBody>
-                              </Table>
-                            )}
-                          </div>
-                        );
-                      })}
-                      {(() => {
-                        const orphaned = designInteractions.filter(i => !(i as any).phase || !designPhases.some(p => p.value === (i as any).phase));
-                        if (orphaned.length === 0) return null;
-                        return (
-                          <div>
-                            <div className="border-t border-white/20 my-0" />
-                            <div className="py-3 px-2">
-                              <span className="text-sm font-medium text-white/40">{isVi ? "Khác" : "Other"}</span>
-                            </div>
-                            <Table className="min-w-[750px]">
-                              <TableBody>
-                                {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
+                                  </TableCell>
+                                </TableRow>
+                                {phaseInteractions.map((interaction, index) => (
                                   <TableRow key={interaction.id} className="border-white/10">
-                                    <TableCell className="text-white/40 text-sm w-[40px]">{index + 1}</TableCell>
-                                    <TableCell className="w-[90px]"><p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p></TableCell>
-                                    <TableCell className="text-white">{interaction.title}</TableCell>
-                                    <TableCell className="text-white/60 w-[120px] whitespace-nowrap">{interaction.assignedTo || "—"}</TableCell>
-                                    <TableCell className="text-white/50 w-[110px] truncate">{interaction.nextAction || "—"}</TableCell>
-                                    <TableCell className="w-[120px] overflow-hidden">
+                                    <TableCell className="text-white/40 text-sm">{index + 1}</TableCell>
+                                    <TableCell><p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p></TableCell>
+                                    <TableCell className="text-white truncate">{interaction.title}</TableCell>
+                                    <TableCell className="text-white/60 whitespace-nowrap overflow-hidden">{interaction.assignedTo || "—"}</TableCell>
+                                    <TableCell className="text-white/50 truncate">{interaction.nextAction || "—"}</TableCell>
+                                    <TableCell className="overflow-hidden">
                                       {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
-                                        <div className="flex gap-1 cursor-pointer overflow-hidden" onClick={() => openLightbox(interaction.attachments as string[], 0)}>{(interaction.attachments as string[]).slice(0, 3).map((url, idx) => (<img key={idx} src={url} alt="" className="w-8 h-8 flex-shrink-0 object-cover border border-white/10 hover:border-white/40 transition-colors" />))}</div>
-                                      ) : (<span className="text-white/30">—</span>)}
+                                        <div className="flex gap-1 cursor-pointer overflow-hidden" onClick={() => openLightbox(interaction.attachments as string[], 0)}>
+                                          {(interaction.attachments as string[]).slice(0, 3).map((url, idx) => (
+                                            <img key={idx} src={url} alt="" className="w-8 h-8 flex-shrink-0 object-cover border border-white/10 hover:border-white/40 transition-colors" />
+                                          ))}
+                                        </div>
+                                      ) : (
+                                        <span className="text-white/30">—</span>
+                                      )}
                                     </TableCell>
-                                    <TableCell className="w-[80px]">
+                                    <TableCell>
                                       <div className="flex gap-1">
                                         <Button variant="ghost" size="icon" onClick={() => setViewingDesignInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white"><Eye className="w-3.5 h-3.5" /></Button>
                                         <Button variant="ghost" size="icon" onClick={() => openDesignInteractionDialog(interaction)} className="h-8 w-8 text-white/40 hover:text-white"><Pencil className="w-3.5 h-3.5" /></Button>
@@ -1601,11 +1525,47 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                                     </TableCell>
                                   </TableRow>
                                 ))}
-                              </TableBody>
-                            </Table>
-                          </div>
-                        );
-                      })()}
+                              </Fragment>
+                            );
+                          })}
+                          {(() => {
+                            const orphaned = designInteractions.filter(i => !(i as any).phase || !designPhases.some(p => p.value === (i as any).phase));
+                            if (orphaned.length === 0) return null;
+                            return (
+                              <Fragment key="orphaned-design">
+                                <TableRow className="border-0 hover:bg-transparent">
+                                  <TableCell colSpan={7} className="p-0 border-t border-white/20 h-px" />
+                                </TableRow>
+                                <TableRow className="border-0 hover:bg-transparent">
+                                  <TableCell colSpan={7} className="py-3 px-2">
+                                    <span className="text-sm font-medium text-white/40">{isVi ? "Khác" : "Other"}</span>
+                                  </TableCell>
+                                </TableRow>
+                                {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
+                                  <TableRow key={interaction.id} className="border-white/10">
+                                    <TableCell className="text-white/40 text-sm">{index + 1}</TableCell>
+                                    <TableCell><p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p></TableCell>
+                                    <TableCell className="text-white truncate">{interaction.title}</TableCell>
+                                    <TableCell className="text-white/60 whitespace-nowrap overflow-hidden">{interaction.assignedTo || "—"}</TableCell>
+                                    <TableCell className="text-white/50 truncate">{interaction.nextAction || "—"}</TableCell>
+                                    <TableCell className="overflow-hidden">
+                                      {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
+                                        <div className="flex gap-1 cursor-pointer overflow-hidden" onClick={() => openLightbox(interaction.attachments as string[], 0)}>{(interaction.attachments as string[]).slice(0, 3).map((url, idx) => (<img key={idx} src={url} alt="" className="w-8 h-8 flex-shrink-0 object-cover border border-white/10 hover:border-white/40 transition-colors" />))}</div>
+                                      ) : (<span className="text-white/30">—</span>)}
+                                    </TableCell>
+                                    <TableCell>
+                                      <div className="flex gap-1">
+                                        <Button variant="ghost" size="icon" onClick={() => setViewingDesignInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white"><Eye className="w-3.5 h-3.5" /></Button>
+                                        <Button variant="ghost" size="icon" onClick={() => openDesignInteractionDialog(interaction)} className="h-8 w-8 text-white/40 hover:text-white"><Pencil className="w-3.5 h-3.5" /></Button>
+                                      </div>
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                              </Fragment>
+                            );
+                          })()}
+                        </TableBody>
+                      </Table>
                       {designInteractions.length === 0 && designPhases.length === 0 && (
                         <div className="text-center py-12">
                           <p className="text-white/30 font-light">{isVi ? "Chưa có nhật ký thiết kế" : "No design logs yet"}</p>
