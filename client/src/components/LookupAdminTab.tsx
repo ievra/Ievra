@@ -371,7 +371,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
   });
 
   const updateInteractionMutation = useMutation({
-    mutationFn: async (data: InteractionFormData) => {
+    mutationFn: async ({ id, data, attachments }: { id: string, data: InteractionFormData, attachments: string[] }) => {
       const body = {
         title: data.title,
         description: data.description || undefined,
@@ -379,9 +379,9 @@ export default function LookupAdminTab({ user }: { user?: any }) {
         phase: data.phase || undefined,
         assignedTo: data.assignedTo || undefined,
         nextAction: data.nextAction || undefined,
-        attachments: interactionAttachments,
+        attachments,
       };
-      await apiRequest("PUT", `/api/interactions/${editingInteraction!.id}`, body);
+      await apiRequest("PUT", `/api/interactions/${id}`, body);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/interactions', selectedClient?.id] });
@@ -595,12 +595,12 @@ export default function LookupAdminTab({ user }: { user?: any }) {
   });
 
   const updateWarrantyLogMutation = useMutation({
-    mutationFn: async (data: WarrantyLogFormData) => {
-      await apiRequest("PUT", `/api/warranty-logs/${editingWarrantyLog!.id}`, {
+    mutationFn: async ({ id, data, attachments }: { id: string, data: WarrantyLogFormData, attachments: string[] }) => {
+      await apiRequest("PUT", `/api/warranty-logs/${id}`, {
         title: data.title,
         description: data.description || undefined,
         assignedTo: data.assignedTo || undefined,
-        attachments: warrantyLogAttachments,
+        attachments,
         date: data.date,
         status: data.status,
       });
@@ -655,7 +655,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
 
   const onWarrantyLogSubmit = (data: WarrantyLogFormData) => {
     if (editingWarrantyLog) {
-      updateWarrantyLogMutation.mutate(data);
+      updateWarrantyLogMutation.mutate({ id: editingWarrantyLog.id, data, attachments: warrantyLogAttachments });
     } else {
       createWarrantyLogMutation.mutate(data);
     }
@@ -739,7 +739,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
   });
 
   const updateDesignInteractionMutation = useMutation({
-    mutationFn: async (data: InteractionFormData) => {
+    mutationFn: async ({ id, data, attachments }: { id: string, data: InteractionFormData, attachments: string[] }) => {
       const body = {
         title: data.title,
         description: data.description || undefined,
@@ -747,9 +747,9 @@ export default function LookupAdminTab({ user }: { user?: any }) {
         phase: data.phase || undefined,
         assignedTo: data.assignedTo || undefined,
         nextAction: data.nextAction || undefined,
-        attachments: designInteractionAttachments,
+        attachments,
       };
-      await apiRequest("PUT", `/api/interactions/${editingDesignInteraction!.id}`, body);
+      await apiRequest("PUT", `/api/interactions/${id}`, body);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/interactions', selectedClient?.id] });
@@ -776,7 +776,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
 
   const onInteractionSubmit = (data: InteractionFormData) => {
     if (editingInteraction) {
-      updateInteractionMutation.mutate(data);
+      updateInteractionMutation.mutate({ id: editingInteraction.id, data, attachments: interactionAttachments });
     } else {
       createInteractionMutation.mutate(data);
     }
@@ -811,7 +811,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
 
   const onDesignInteractionSubmit = (data: InteractionFormData) => {
     if (editingDesignInteraction) {
-      updateDesignInteractionMutation.mutate(data);
+      updateDesignInteractionMutation.mutate({ id: editingDesignInteraction.id, data, attachments: designInteractionAttachments });
     } else {
       createDesignInteractionMutation.mutate(data);
     }
