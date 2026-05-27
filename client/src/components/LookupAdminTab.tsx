@@ -84,6 +84,46 @@ const tierLabels: Record<string, { vi: string; en: string }> = {
   vip: { vi: "VIP", en: "VIP" },
 };
 
+function DateInputDMY({ value, onChange, className }: { value: string; onChange: (v: string) => void; className?: string }) {
+  const [day, setDay] = useState(value ? value.split('-')[2] || '' : '');
+  const [month, setMonth] = useState(value ? value.split('-')[1] || '' : '');
+  const [year, setYear] = useState(value ? value.split('-')[0] || '' : '');
+
+  useEffect(() => {
+    if (value) {
+      const parts = value.split('-');
+      setYear(parts[0] || '');
+      setMonth(parts[1] || '');
+      setDay(parts[2] || '');
+    } else {
+      setDay(''); setMonth(''); setYear('');
+    }
+  }, [value]);
+
+  const emit = (d: string, m: string, y: string) => {
+    if (d && m && y && y.length === 4) {
+      onChange(`${y}-${m.padStart(2,'0')}-${d.padStart(2,'0')}`);
+    }
+  };
+
+  const base = "w-12 h-10 bg-transparent border border-white/20 text-white text-center text-sm rounded-none focus:outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none";
+  return (
+    <div className={`flex items-center gap-1 ${className || ''}`}>
+      <input type="number" min={1} max={31} placeholder="DD" value={day}
+        onChange={(e) => { const v = e.target.value; setDay(v); emit(v, month, year); }}
+        className={base} />
+      <span className="text-white/30 text-sm select-none">/</span>
+      <input type="number" min={1} max={12} placeholder="MM" value={month}
+        onChange={(e) => { const v = e.target.value; setMonth(v); emit(day, v, year); }}
+        className={base} />
+      <span className="text-white/30 text-sm select-none">/</span>
+      <input type="number" min={2000} max={2099} placeholder="YYYY" value={year}
+        onChange={(e) => { const v = e.target.value; setYear(v); emit(day, month, v); }}
+        className="w-16 h-10 bg-transparent border border-white/20 text-white text-center text-sm rounded-none focus:outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
+    </div>
+  );
+}
+
 export default function LookupAdminTab({ user }: { user?: any }) {
   const { language } = useLanguage();
   const { toast } = useToast();
@@ -1771,7 +1811,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                 <FormItem>
                   <FormLabel className="text-white/60">{isVi ? "Ngày" : "Date"}</FormLabel>
                   <FormControl>
-                    <Input type="date" {...field} className="bg-transparent border-white/20 text-white rounded-none h-10" />
+                    <DateInputDMY value={field.value} onChange={field.onChange} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -1893,7 +1933,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                 <FormItem>
                   <FormLabel className="text-white/60">{isVi ? "Ngày" : "Date"}</FormLabel>
                   <FormControl>
-                    <Input type="date" {...field} className="bg-transparent border-white/20 text-white rounded-none h-10" />
+                    <DateInputDMY value={field.value} onChange={field.onChange} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -2081,7 +2121,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                 <FormItem>
                   <FormLabel className="text-white/60">{isVi ? "Ngày" : "Date"}</FormLabel>
                   <FormControl>
-                    <Input type="date" {...field} className="bg-transparent border-white/20 text-white rounded-none h-10" />
+                    <DateInputDMY value={field.value} onChange={field.onChange} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
