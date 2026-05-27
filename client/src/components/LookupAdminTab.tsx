@@ -1182,7 +1182,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                     <div className="text-center py-8 text-white/40">{isVi ? "Đang tải..." : "Loading..."}</div>
                   ) : (
                     <div className="space-y-0 overflow-x-auto">
-                      <div className="min-w-[700px] grid grid-cols-[40px_80px_1fr_80px_100px_150px_80px] px-4 py-2 border-b border-white/10">
+                      <div className="min-w-[750px] grid grid-cols-[40px_90px_1fr_120px_110px_120px_80px] px-4 py-2 border-b border-white/10">
                         <span className="text-sm text-white/30">{isVi ? "STT" : "No"}</span>
                         <span className="text-sm text-white/30">{isVi ? "Ngày" : "Date"}</span>
                         <span className="text-sm text-white/30">{isVi ? "Tiêu đề" : "Title"}</span>
@@ -1269,18 +1269,18 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                               </div>
                             </div>
                             {phaseInteractions.length > 0 && (
-                              <Table className="min-w-[700px]">
+                              <Table className="min-w-[750px]">
                                 <TableBody>
                                   {phaseInteractions.map((interaction, index) => (
                                     <TableRow key={interaction.id} className="border-white/10">
                                       <TableCell className="text-white/40 text-sm w-[40px]">{index + 1}</TableCell>
-                                      <TableCell className="w-[80px]">
+                                      <TableCell className="w-[90px]">
                                         <p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p>
                                       </TableCell>
                                       <TableCell className="text-white">{interaction.title}</TableCell>
-                                      <TableCell className="text-white/60 w-[80px]">{interaction.assignedTo || "—"}</TableCell>
-                                      <TableCell className="text-white/50 w-[100px] truncate">{interaction.nextAction || "—"}</TableCell>
-                                      <TableCell className="w-[150px] overflow-hidden">
+                                      <TableCell className="text-white/60 w-[120px] whitespace-nowrap">{interaction.assignedTo || "—"}</TableCell>
+                                      <TableCell className="text-white/50 w-[110px] truncate">{interaction.nextAction || "—"}</TableCell>
+                                      <TableCell className="w-[120px] overflow-hidden">
                                         {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
                                           <div className="flex gap-1 cursor-pointer overflow-hidden" onClick={() => openLightbox(interaction.attachments as string[], 0)}>
                                             {(interaction.attachments as string[]).slice(0, 3).map((url, idx) => (
@@ -1318,16 +1318,16 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                             <div className="py-3 px-2">
                               <span className="text-sm font-medium text-white/40">{isVi ? "Khác" : "Other"}</span>
                             </div>
-                            <Table className="min-w-[700px]">
+                            <Table className="min-w-[750px]">
                               <TableBody>
                                 {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
                                   <TableRow key={interaction.id} className="border-white/10">
                                     <TableCell className="text-white/40 text-sm w-[40px]">{index + 1}</TableCell>
-                                    <TableCell className="w-[80px]"><p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p></TableCell>
+                                    <TableCell className="w-[90px]"><p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p></TableCell>
                                     <TableCell className="text-white">{interaction.title}</TableCell>
-                                    <TableCell className="text-white/60 w-[80px]">{interaction.assignedTo || "—"}</TableCell>
-                                    <TableCell className="text-white/50 w-[100px] truncate">{interaction.nextAction || "—"}</TableCell>
-                                    <TableCell className="w-[150px] overflow-hidden">
+                                    <TableCell className="text-white/60 w-[120px] whitespace-nowrap">{interaction.assignedTo || "—"}</TableCell>
+                                    <TableCell className="text-white/50 w-[110px] truncate">{interaction.nextAction || "—"}</TableCell>
+                                    <TableCell className="w-[120px] overflow-hidden">
                                       {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
                                         <div className="flex gap-1 cursor-pointer overflow-hidden" onClick={() => openLightbox(interaction.attachments as string[], 0)}>{(interaction.attachments as string[]).slice(0, 3).map((url, idx) => (<img key={idx} src={url} alt="" className="w-8 h-8 flex-shrink-0 object-cover border border-white/10 hover:border-white/40 transition-colors" />))}</div>
                                       ) : (<span className="text-white/30">—</span>)}
@@ -1443,7 +1443,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                     <div className="text-center py-8 text-white/40">{isVi ? "Đang tải..." : "Loading..."}</div>
                   ) : (
                     <div className="space-y-0 overflow-x-auto">
-                      <div className="min-w-[700px] grid grid-cols-[40px_80px_1fr_80px_100px_150px_80px] px-4 py-2 border-b border-white/10">
+                      <div className="min-w-[750px] grid grid-cols-[40px_90px_1fr_120px_110px_120px_80px] px-4 py-2 border-b border-white/10">
                         <span className="text-sm text-white/30">{isVi ? "STT" : "No"}</span>
                         <span className="text-sm text-white/30">{isVi ? "Ngày" : "Date"}</span>
                         <span className="text-sm text-white/30">{isVi ? "Tiêu đề" : "Title"}</span>
@@ -1530,18 +1530,18 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                               </div>
                             </div>
                             {phaseInteractions.length > 0 && (
-                              <Table className="min-w-[700px]">
+                              <Table className="min-w-[750px]">
                                 <TableBody>
                                   {phaseInteractions.map((interaction, index) => (
                                     <TableRow key={interaction.id} className="border-white/10">
                                       <TableCell className="text-white/40 text-sm w-[40px]">{index + 1}</TableCell>
-                                      <TableCell className="w-[80px]">
+                                      <TableCell className="w-[90px]">
                                         <p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p>
                                       </TableCell>
                                       <TableCell className="text-white">{interaction.title}</TableCell>
-                                      <TableCell className="text-white/60 w-[80px]">{interaction.assignedTo || "—"}</TableCell>
-                                      <TableCell className="text-white/50 w-[100px] truncate">{interaction.nextAction || "—"}</TableCell>
-                                      <TableCell className="w-[150px] overflow-hidden">
+                                      <TableCell className="text-white/60 w-[120px] whitespace-nowrap">{interaction.assignedTo || "—"}</TableCell>
+                                      <TableCell className="text-white/50 w-[110px] truncate">{interaction.nextAction || "—"}</TableCell>
+                                      <TableCell className="w-[120px] overflow-hidden">
                                         {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
                                           <div className="flex gap-1 cursor-pointer overflow-hidden" onClick={() => openLightbox(interaction.attachments as string[], 0)}>
                                             {(interaction.attachments as string[]).slice(0, 3).map((url, idx) => (
@@ -1579,16 +1579,16 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                             <div className="py-3 px-2">
                               <span className="text-sm font-medium text-white/40">{isVi ? "Khác" : "Other"}</span>
                             </div>
-                            <Table className="min-w-[700px]">
+                            <Table className="min-w-[750px]">
                               <TableBody>
                                 {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
                                   <TableRow key={interaction.id} className="border-white/10">
                                     <TableCell className="text-white/40 text-sm w-[40px]">{index + 1}</TableCell>
-                                    <TableCell className="w-[80px]"><p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p></TableCell>
+                                    <TableCell className="w-[90px]"><p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p></TableCell>
                                     <TableCell className="text-white">{interaction.title}</TableCell>
-                                    <TableCell className="text-white/60 w-[80px]">{interaction.assignedTo || "—"}</TableCell>
-                                    <TableCell className="text-white/50 w-[100px] truncate">{interaction.nextAction || "—"}</TableCell>
-                                    <TableCell className="w-[150px] overflow-hidden">
+                                    <TableCell className="text-white/60 w-[120px] whitespace-nowrap">{interaction.assignedTo || "—"}</TableCell>
+                                    <TableCell className="text-white/50 w-[110px] truncate">{interaction.nextAction || "—"}</TableCell>
+                                    <TableCell className="w-[120px] overflow-hidden">
                                       {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
                                         <div className="flex gap-1 cursor-pointer overflow-hidden" onClick={() => openLightbox(interaction.attachments as string[], 0)}>{(interaction.attachments as string[]).slice(0, 3).map((url, idx) => (<img key={idx} src={url} alt="" className="w-8 h-8 flex-shrink-0 object-cover border border-white/10 hover:border-white/40 transition-colors" />))}</div>
                                       ) : (<span className="text-white/30">—</span>)}
