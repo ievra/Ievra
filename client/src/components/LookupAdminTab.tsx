@@ -1182,14 +1182,14 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                     <div className="text-center py-8 text-white/40">{isVi ? "Đang tải..." : "Loading..."}</div>
                   ) : (
                     <div className="overflow-x-auto">
-                      <Table className="min-w-[750px] table-fixed">
+                      <Table className="min-w-[800px] table-fixed">
                         <colgroup>
                           <col style={{width: '40px'}} />
-                          <col style={{width: '90px'}} />
+                          <col style={{width: '110px'}} />
                           <col />
                           <col style={{width: '120px'}} />
                           <col style={{width: '110px'}} />
-                          <col style={{width: '120px'}} />
+                          <col style={{width: '110px'}} />
                           <col style={{width: '80px'}} />
                         </colgroup>
                         <TableHeader>
@@ -1423,14 +1423,14 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                     <div className="text-center py-8 text-white/40">{isVi ? "Đang tải..." : "Loading..."}</div>
                   ) : (
                     <div className="overflow-x-auto">
-                      <Table className="min-w-[750px] table-fixed">
+                      <Table className="min-w-[800px] table-fixed">
                         <colgroup>
                           <col style={{width: '40px'}} />
-                          <col style={{width: '90px'}} />
+                          <col style={{width: '110px'}} />
                           <col />
                           <col style={{width: '120px'}} />
                           <col style={{width: '110px'}} />
-                          <col style={{width: '120px'}} />
+                          <col style={{width: '110px'}} />
                           <col style={{width: '80px'}} />
                         </colgroup>
                         <TableHeader>
