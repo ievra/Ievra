@@ -1882,9 +1882,9 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                     </div>
                   ))}
                 </div>
-                <label className={`inline-flex items-center gap-2 h-10 px-4 border border-white/20 text-sm transition-colors ${interactionAttachments.length >= 5 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer text-white/60 hover:bg-white/10'}`}>
-                  {uploadingImage ? (isVi ? "Đang tải..." : "Uploading...") : (isVi ? `Chọn hình (${interactionAttachments.length}/5)` : `Choose Image (${interactionAttachments.length}/5)`)}
-                  <input type="file" accept="image/*" multiple onChange={handleImageUpload} className="hidden" disabled={uploadingImage || interactionAttachments.length >= 5} />
+                <label className={`inline-flex items-center gap-2 h-10 px-4 border border-white/20 text-sm transition-colors ${interactionAttachments.length >= 10 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer text-white/60 hover:bg-white/10'}`}>
+                  {uploadingImage ? (isVi ? "Đang tải..." : "Uploading...") : (isVi ? `Chọn hình (${interactionAttachments.length}/10)` : `Choose Image (${interactionAttachments.length}/10)`)}
+                  <input type="file" accept="image/*" multiple onChange={handleImageUpload} className="hidden" disabled={uploadingImage || interactionAttachments.length >= 10} />
                 </label>
               </div>
               <div className="flex justify-between pt-2">
@@ -1993,9 +1993,9 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                     </div>
                   ))}
                 </div>
-                <label className={`inline-flex items-center gap-2 h-10 px-4 border border-white/20 text-sm transition-colors ${warrantyLogAttachments.length >= 5 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer text-white/60 hover:bg-white/10'}`}>
-                  {uploadingImage ? (isVi ? "Đang tải..." : "Uploading...") : (isVi ? `Chọn hình (${warrantyLogAttachments.length}/5)` : `Choose Image (${warrantyLogAttachments.length}/5)`)}
-                  <input type="file" accept="image/*" multiple onChange={handleWarrantyImageUpload} className="hidden" disabled={uploadingImage || warrantyLogAttachments.length >= 5} />
+                <label className={`inline-flex items-center gap-2 h-10 px-4 border border-white/20 text-sm transition-colors ${warrantyLogAttachments.length >= 10 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer text-white/60 hover:bg-white/10'}`}>
+                  {uploadingImage ? (isVi ? "Đang tải..." : "Uploading...") : (isVi ? `Chọn hình (${warrantyLogAttachments.length}/10)` : `Choose Image (${warrantyLogAttachments.length}/10)`)}
+                  <input type="file" accept="image/*" multiple onChange={handleWarrantyImageUpload} className="hidden" disabled={uploadingImage || warrantyLogAttachments.length >= 10} />
                 </label>
               </div>
               <div className="flex justify-end gap-3 pt-2">
@@ -2045,7 +2045,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
               </div>
               {Array.isArray(viewingWarrantyLog.attachments) && viewingWarrantyLog.attachments.length > 0 && (
                 <div>
-                  <span className="text-xs text-white/40 block mb-2">{isVi ? "Hình ảnh đính kèm" : "Attachments"} ({(viewingWarrantyLog.attachments as string[]).length}/5)</span>
+                  <span className="text-xs text-white/40 block mb-2">{isVi ? "Hình ảnh đính kèm" : "Attachments"} ({(viewingWarrantyLog.attachments as string[]).length}/10)</span>
                   <div className="grid grid-cols-3 gap-2">
                     {(viewingWarrantyLog.attachments as string[]).map((url, idx) => (
                       <div key={idx} onClick={() => openLightbox(viewingWarrantyLog.attachments as string[], idx)} className="cursor-pointer">
@@ -2094,7 +2094,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
               )}
               {Array.isArray(viewingInteraction.attachments) && viewingInteraction.attachments.length > 0 && (
                 <div>
-                  <span className="text-xs text-white/40 block mb-2">{isVi ? "Hình ảnh đính kèm" : "Attachments"} ({(viewingInteraction.attachments as string[]).length}/5)</span>
+                  <span className="text-xs text-white/40 block mb-2">{isVi ? "Hình ảnh đính kèm" : "Attachments"} ({(viewingInteraction.attachments as string[]).length}/10)</span>
                   <div className="grid grid-cols-3 gap-2">
                     {(viewingInteraction.attachments as string[]).map((url, idx) => (
                       <div key={idx} onClick={() => openLightbox(viewingInteraction.attachments as string[], idx)} className="cursor-pointer">
@@ -2192,9 +2192,9 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                     </div>
                   ))}
                 </div>
-                <label className={`inline-flex items-center gap-2 h-10 px-4 border border-white/20 text-sm transition-colors ${designInteractionAttachments.length >= 5 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer text-white/60 hover:bg-white/10'}`}>
-                  {uploadingImage ? (isVi ? "Đang tải..." : "Uploading...") : (isVi ? `Chọn hình (${designInteractionAttachments.length}/5)` : `Choose Image (${designInteractionAttachments.length}/5)`)}
-                  <input type="file" accept="image/*" multiple onChange={handleDesignImageUpload} className="hidden" disabled={uploadingImage || designInteractionAttachments.length >= 5} />
+                <label className={`inline-flex items-center gap-2 h-10 px-4 border border-white/20 text-sm transition-colors ${designInteractionAttachments.length >= 10 ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer text-white/60 hover:bg-white/10'}`}>
+                  {uploadingImage ? (isVi ? "Đang tải..." : "Uploading...") : (isVi ? `Chọn hình (${designInteractionAttachments.length}/10)` : `Choose Image (${designInteractionAttachments.length}/10)`)}
+                  <input type="file" accept="image/*" multiple onChange={handleDesignImageUpload} className="hidden" disabled={uploadingImage || designInteractionAttachments.length >= 10} />
                 </label>
               </div>
               <div className="flex justify-between pt-2">
@@ -2265,7 +2265,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
               )}
               {Array.isArray(viewingDesignInteraction.attachments) && viewingDesignInteraction.attachments.length > 0 && (
                 <div>
-                  <span className="text-xs text-white/40 block mb-2">{isVi ? "Hình ảnh đính kèm" : "Attachments"} ({(viewingDesignInteraction.attachments as string[]).length}/5)</span>
+                  <span className="text-xs text-white/40 block mb-2">{isVi ? "Hình ảnh đính kèm" : "Attachments"} ({(viewingDesignInteraction.attachments as string[]).length}/10)</span>
                   <div className="grid grid-cols-3 gap-2">
                     {(viewingDesignInteraction.attachments as string[]).map((url, idx) => (
                       <div key={idx} onClick={() => openLightbox(viewingDesignInteraction.attachments as string[], idx)} className="cursor-pointer">
