@@ -2047,7 +2047,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
               {viewingWarrantyLog.description && (
                 <div>
                   <span className="text-xs text-white/40">{isVi ? "Mô tả" : "Description"}</span>
-                  <p className="text-white/70 font-light text-sm">{viewingWarrantyLog.description}</p>
+                  <p className="text-white/70 font-light text-sm whitespace-pre-wrap">{viewingWarrantyLog.description}</p>
                 </div>
               )}
               <div>
@@ -2096,13 +2096,13 @@ export default function LookupAdminTab({ user }: { user?: any }) {
               {viewingInteraction.description && (
                 <div>
                   <span className="text-xs text-white/40">{isVi ? "Mô tả" : "Description"}</span>
-                  <p className="text-white/70 font-light text-sm">{viewingInteraction.description}</p>
+                  <p className="text-white/70 font-light text-sm whitespace-pre-wrap">{viewingInteraction.description}</p>
                 </div>
               )}
               {viewingInteraction.nextAction && (
                 <div>
                   <span className="text-xs text-white/40">{isVi ? "Đề xuất" : "Proposal"}</span>
-                  <p className="text-white/70 font-light text-sm">{viewingInteraction.nextAction}</p>
+                  <p className="text-white/70 font-light text-sm whitespace-pre-wrap">{viewingInteraction.nextAction}</p>
                 </div>
               )}
               {Array.isArray(viewingInteraction.attachments) && viewingInteraction.attachments.length > 0 && (
@@ -2267,13 +2267,13 @@ export default function LookupAdminTab({ user }: { user?: any }) {
               {viewingDesignInteraction.description && (
                 <div>
                   <span className="text-xs text-white/40">{isVi ? "Mô tả" : "Description"}</span>
-                  <p className="text-white/70 font-light text-sm">{viewingDesignInteraction.description}</p>
+                  <p className="text-white/70 font-light text-sm whitespace-pre-wrap">{viewingDesignInteraction.description}</p>
                 </div>
               )}
               {viewingDesignInteraction.nextAction && (
                 <div>
                   <span className="text-xs text-white/40">{isVi ? "Đề xuất" : "Proposal"}</span>
-                  <p className="text-white/70 font-light text-sm">{viewingDesignInteraction.nextAction}</p>
+                  <p className="text-white/70 font-light text-sm whitespace-pre-wrap">{viewingDesignInteraction.nextAction}</p>
                 </div>
               )}
               {Array.isArray(viewingDesignInteraction.attachments) && viewingDesignInteraction.attachments.length > 0 && (
