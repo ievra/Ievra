@@ -341,6 +341,7 @@ export default function Lookup() {
           </div>
           {phases.map((phase, phaseIdx) => {
             const phaseInteractions = interactions.filter(i => i.phase === phase.value).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+            const phaseOffset = phases.slice(0, phaseIdx).reduce((sum, p) => sum + interactions.filter(i => i.phase === p.value).length, 0);
             return (
               <div key={phase.id}>
                 {phaseIdx > 0 && <div className="border-t border-white/20 my-0" />}
@@ -349,7 +350,7 @@ export default function Lookup() {
                 </div>
                 {phaseInteractions.length > 0 && phaseInteractions.map((interaction, index) => (
                   <div key={interaction.id} className="grid grid-cols-[40px_120px_1fr_100px_160px_50px] gap-2 px-4 py-2 border-b border-white/10 items-center">
-                    <span className="text-white/40 text-sm">{index + 1}</span>
+                    <span className="text-white/40 text-sm">{phaseOffset + index + 1}</span>
                     <span className="text-white/70 text-sm">{formatDate(interaction.date)}</span>
                     <span className="text-white text-sm">{interaction.title}</span>
                     <span className="text-white/60 text-sm">{interaction.assignedTo || "—"}</span>
@@ -377,6 +378,7 @@ export default function Lookup() {
           {(() => {
             const orphaned = interactions.filter(i => !i.phase || !phases.some(p => p.value === i.phase));
             if (orphaned.length === 0) return null;
+            const orphanedOffset = phases.reduce((sum, p) => sum + interactions.filter(i => i.phase === p.value).length, 0);
             return (
               <div>
                 <div className="border-t border-white/20 my-0" />
@@ -385,7 +387,7 @@ export default function Lookup() {
                 </div>
                 {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
                   <div key={interaction.id} className="grid grid-cols-[40px_120px_1fr_100px_160px_50px] gap-2 px-4 py-2 border-b border-white/10 items-center">
-                    <span className="text-white/40 text-sm">{index + 1}</span>
+                    <span className="text-white/40 text-sm">{orphanedOffset + index + 1}</span>
                     <span className="text-white/70 text-sm">{formatDate(interaction.date)}</span>
                     <span className="text-white text-sm">{interaction.title}</span>
                     <span className="text-white/60 text-sm">{interaction.assignedTo || "—"}</span>
