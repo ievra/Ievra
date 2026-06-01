@@ -1255,6 +1255,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                         <TableBody>
                           {constructionPhases.map((phase, phaseIdx) => {
                             const phaseInteractions = constructionInteractions.filter(i => (i as any).phase === phase.value).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                            const phaseOffset = constructionPhases.slice(0, phaseIdx).reduce((sum, p) => sum + constructionInteractions.filter(i => (i as any).phase === p.value).length, 0);
                             const phaseTargets = (selectedClient.constructionPhaseTargets as Record<string, number>) || {};
                             const phaseTarget = phaseTargets[phase.value] || 0;
                             return (
@@ -1309,7 +1310,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                                 </TableRow>
                                 {phaseInteractions.map((interaction, index) => (
                                   <TableRow key={interaction.id} className="border-white/10">
-                                    <TableCell className="text-white/40 text-sm">{index + 1}</TableCell>
+                                    <TableCell className="text-white/40 text-sm">{phaseOffset + index + 1}</TableCell>
                                     <TableCell><p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p></TableCell>
                                     <TableCell className="text-white truncate">{interaction.title}</TableCell>
                                     <TableCell className="text-white/60 whitespace-nowrap overflow-hidden">{interaction.assignedTo || "—"}</TableCell>
@@ -1339,6 +1340,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                           {(() => {
                             const orphaned = constructionInteractions.filter(i => !(i as any).phase || !constructionPhases.some(p => p.value === (i as any).phase));
                             if (orphaned.length === 0) return null;
+                            const orphanedOffset = constructionPhases.reduce((sum, p) => sum + constructionInteractions.filter(i => (i as any).phase === p.value).length, 0);
                             return (
                               <Fragment key="orphaned-construction">
                                 <TableRow className="border-0 hover:bg-transparent">
@@ -1351,7 +1353,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                                 </TableRow>
                                 {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
                                   <TableRow key={interaction.id} className="border-white/10">
-                                    <TableCell className="text-white/40 text-sm">{index + 1}</TableCell>
+                                    <TableCell className="text-white/40 text-sm">{orphanedOffset + index + 1}</TableCell>
                                     <TableCell><p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p></TableCell>
                                     <TableCell className="text-white truncate">{interaction.title}</TableCell>
                                     <TableCell className="text-white/60 whitespace-nowrap overflow-hidden">{interaction.assignedTo || "—"}</TableCell>
@@ -1496,6 +1498,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                         <TableBody>
                           {designPhases.map((phase, phaseIdx) => {
                             const phaseInteractions = designInteractions.filter(i => (i as any).phase === phase.value).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                            const phaseOffset = designPhases.slice(0, phaseIdx).reduce((sum, p) => sum + designInteractions.filter(i => (i as any).phase === p.value).length, 0);
                             const phaseTargets = (selectedClient.designPhaseTargets as Record<string, number>) || {};
                             const phaseTarget = phaseTargets[phase.value] || 0;
                             return (
@@ -1550,7 +1553,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                                 </TableRow>
                                 {phaseInteractions.map((interaction, index) => (
                                   <TableRow key={interaction.id} className="border-white/10">
-                                    <TableCell className="text-white/40 text-sm">{index + 1}</TableCell>
+                                    <TableCell className="text-white/40 text-sm">{phaseOffset + index + 1}</TableCell>
                                     <TableCell><p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p></TableCell>
                                     <TableCell className="text-white truncate">{interaction.title}</TableCell>
                                     <TableCell className="text-white/60 whitespace-nowrap overflow-hidden">{interaction.assignedTo || "—"}</TableCell>
@@ -1580,6 +1583,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                           {(() => {
                             const orphaned = designInteractions.filter(i => !(i as any).phase || !designPhases.some(p => p.value === (i as any).phase));
                             if (orphaned.length === 0) return null;
+                            const orphanedOffset = designPhases.reduce((sum, p) => sum + designInteractions.filter(i => (i as any).phase === p.value).length, 0);
                             return (
                               <Fragment key="orphaned-design">
                                 <TableRow className="border-0 hover:bg-transparent">
@@ -1592,7 +1596,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                                 </TableRow>
                                 {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
                                   <TableRow key={interaction.id} className="border-white/10">
-                                    <TableCell className="text-white/40 text-sm">{index + 1}</TableCell>
+                                    <TableCell className="text-white/40 text-sm">{orphanedOffset + index + 1}</TableCell>
                                     <TableCell><p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p></TableCell>
                                     <TableCell className="text-white truncate">{interaction.title}</TableCell>
                                     <TableCell className="text-white/60 whitespace-nowrap overflow-hidden">{interaction.assignedTo || "—"}</TableCell>
