@@ -340,7 +340,7 @@ export default function Lookup() {
             <span className="text-sm text-white/30"></span>
           </div>
           {phases.map((phase, phaseIdx) => {
-            const phaseInteractions = interactions.filter(i => i.phase === phase.value).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+            const phaseInteractions = interactions.filter(i => i.phase === phase.value).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
             const phaseOffset = phases.slice(0, phaseIdx).reduce((sum, p) => sum + interactions.filter(i => i.phase === p.value).length, 0);
             return (
               <div key={phase.id}>
@@ -385,7 +385,7 @@ export default function Lookup() {
                 <div className="py-3 px-2">
                   <span className="text-sm font-medium text-white/40">{isVi ? "Khác" : "Other"}</span>
                 </div>
-                {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
+                {orphaned.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).map((interaction, index) => (
                   <div key={interaction.id} className="grid grid-cols-[40px_120px_1fr_100px_160px_50px] gap-2 px-4 py-2 border-b border-white/10 items-center">
                     <span className="text-white/40 text-sm">{orphanedOffset + index + 1}</span>
                     <span className="text-white/70 text-sm">{formatDate(interaction.date)}</span>
@@ -609,7 +609,7 @@ export default function Lookup() {
                           <span className="text-sm text-white/30">{isVi ? "Hình ảnh" : "Images"}</span>
                           <span className="text-sm text-white/30"></span>
                         </div>
-                        {result.warrantyLogs.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((log, index) => (
+                        {result.warrantyLogs.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).map((log, index) => (
                           <div key={log.id} className="grid grid-cols-[40px_100px_1fr_1fr_100px_120px_50px] gap-2 px-4 py-2 border-b border-white/10 items-center">
                             <span className="text-white/40 text-sm">{index + 1}</span>
                             <span className="text-white/70 text-sm">{formatDate(log.date)}</span>

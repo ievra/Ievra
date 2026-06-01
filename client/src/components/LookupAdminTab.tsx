@@ -1254,7 +1254,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                         </TableHeader>
                         <TableBody>
                           {constructionPhases.map((phase, phaseIdx) => {
-                            const phaseInteractions = constructionInteractions.filter(i => (i as any).phase === phase.value).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                            const phaseInteractions = constructionInteractions.filter(i => (i as any).phase === phase.value).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
                             const phaseOffset = constructionPhases.slice(0, phaseIdx).reduce((sum, p) => sum + constructionInteractions.filter(i => (i as any).phase === p.value).length, 0);
                             const phaseTargets = (selectedClient.constructionPhaseTargets as Record<string, number>) || {};
                             const phaseTarget = phaseTargets[phase.value] || 0;
@@ -1351,7 +1351,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                                     <span className="text-sm font-medium text-white/40">{isVi ? "Khác" : "Other"}</span>
                                   </TableCell>
                                 </TableRow>
-                                {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
+                                {orphaned.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).map((interaction, index) => (
                                   <TableRow key={interaction.id} className="border-white/10">
                                     <TableCell className="text-white/40 text-sm">{orphanedOffset + index + 1}</TableCell>
                                     <TableCell><p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p></TableCell>
@@ -1497,7 +1497,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                         </TableHeader>
                         <TableBody>
                           {designPhases.map((phase, phaseIdx) => {
-                            const phaseInteractions = designInteractions.filter(i => (i as any).phase === phase.value).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+                            const phaseInteractions = designInteractions.filter(i => (i as any).phase === phase.value).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
                             const phaseOffset = designPhases.slice(0, phaseIdx).reduce((sum, p) => sum + designInteractions.filter(i => (i as any).phase === p.value).length, 0);
                             const phaseTargets = (selectedClient.designPhaseTargets as Record<string, number>) || {};
                             const phaseTarget = phaseTargets[phase.value] || 0;
@@ -1594,7 +1594,7 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                                     <span className="text-sm font-medium text-white/40">{isVi ? "Khác" : "Other"}</span>
                                   </TableCell>
                                 </TableRow>
-                                {orphaned.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).map((interaction, index) => (
+                                {orphaned.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).map((interaction, index) => (
                                   <TableRow key={interaction.id} className="border-white/10">
                                     <TableCell className="text-white/40 text-sm">{orphanedOffset + index + 1}</TableCell>
                                     <TableCell><p className="text-white/70 whitespace-nowrap">{formatDate(interaction.date)}</p></TableCell>
