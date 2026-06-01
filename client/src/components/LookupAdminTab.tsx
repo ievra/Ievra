@@ -106,18 +106,27 @@ function DateInputDMY({ value, onChange, className }: { value: string; onChange:
     }
   };
 
+  const clamp = (v: string, min: number, max: number) => {
+    if (v === '') return '';
+    const n = parseInt(v, 10);
+    if (isNaN(n)) return '';
+    return String(Math.min(max, Math.max(min, n)));
+  };
+
   const base = "w-12 h-10 bg-transparent border border-white/20 text-white text-center text-sm rounded-none focus:outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none";
   return (
     <div className={`flex items-center gap-1 ${className || ''}`}>
       <input type="number" min={1} max={31} placeholder="DD" value={day}
-        onChange={(e) => { const v = e.target.value; setDay(v); emit(v, month, year); }}
+        onChange={(e) => { const v = clamp(e.target.value, 1, 31); setDay(v); emit(v, month, year); }}
+        onBlur={(e) => { const v = clamp(e.target.value, 1, 31); setDay(v); emit(v, month, year); }}
         className={base} />
       <span className="text-white/30 text-sm select-none">/</span>
       <input type="number" min={1} max={12} placeholder="MM" value={month}
-        onChange={(e) => { const v = e.target.value; setMonth(v); emit(day, v, year); }}
+        onChange={(e) => { const v = clamp(e.target.value, 1, 12); setMonth(v); emit(day, v, year); }}
+        onBlur={(e) => { const v = clamp(e.target.value, 1, 12); setMonth(v); emit(day, v, year); }}
         className={base} />
       <span className="text-white/30 text-sm select-none">/</span>
-      <input type="number" min={2000} max={2099} placeholder="YYYY" value={year}
+      <input type="number" placeholder="YYYY" value={year}
         onChange={(e) => { const v = e.target.value; setYear(v); emit(day, month, v); }}
         className="w-16 h-10 bg-transparent border border-white/20 text-white text-center text-sm rounded-none focus:outline-none focus:border-white/50 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" />
     </div>
