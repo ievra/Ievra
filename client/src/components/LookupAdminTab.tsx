@@ -341,9 +341,9 @@ export default function LookupAdminTab({ user }: { user?: any }) {
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
-    const remaining = 5 - interactionAttachments.length;
+    const remaining = 10 - interactionAttachments.length;
     if (remaining <= 0) {
-      toast({ title: isVi ? "Giới hạn" : "Limit", description: isVi ? "Tối đa 5 hình ảnh" : "Maximum 5 images", variant: "destructive" });
+      toast({ title: isVi ? "Giới hạn" : "Limit", description: isVi ? "Tối đa 10 hình ảnh" : "Maximum 10 images", variant: "destructive" });
       return;
     }
     const filesToUpload = Array.from(files).slice(0, remaining);
@@ -368,9 +368,9 @@ export default function LookupAdminTab({ user }: { user?: any }) {
   const handleWarrantyImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
-    const remaining = 5 - warrantyLogAttachments.length;
+    const remaining = 10 - warrantyLogAttachments.length;
     if (remaining <= 0) {
-      toast({ title: isVi ? "Giới hạn" : "Limit", description: isVi ? "Tối đa 5 hình ảnh" : "Maximum 5 images", variant: "destructive" });
+      toast({ title: isVi ? "Giới hạn" : "Limit", description: isVi ? "Tối đa 10 hình ảnh" : "Maximum 10 images", variant: "destructive" });
       return;
     }
     const filesToUpload = Array.from(files).slice(0, remaining);
@@ -869,9 +869,9 @@ export default function LookupAdminTab({ user }: { user?: any }) {
   const handleDesignImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
-    const remaining = 5 - designInteractionAttachments.length;
+    const remaining = 10 - designInteractionAttachments.length;
     if (remaining <= 0) {
-      toast({ title: isVi ? "Giới hạn" : "Limit", description: isVi ? "Tối đa 5 hình ảnh" : "Maximum 5 images", variant: "destructive" });
+      toast({ title: isVi ? "Giới hạn" : "Limit", description: isVi ? "Tối đa 10 hình ảnh" : "Maximum 10 images", variant: "destructive" });
       return;
     }
     const filesToUpload = Array.from(files).slice(0, remaining);
