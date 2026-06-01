@@ -768,7 +768,7 @@ export default function Lookup() {
                 {viewingLog.status && <div><span className="text-white/40">{isVi ? "Trạng thái" : "Status"}</span><p className="text-white">{viewingLog.status}</p></div>}
               </div>
               {viewingLog.description && (
-                <div><span className="text-white/40 text-sm">{isVi ? "Mô tả" : "Description"}</span><p className="text-white text-sm mt-1">{viewingLog.description}</p></div>
+                <div><span className="text-white/40 text-sm">{isVi ? "Mô tả" : "Description"}</span><p className="text-white text-sm mt-1 whitespace-pre-wrap">{viewingLog.description}</p></div>
               )}
               {Array.isArray(viewingLog.attachments) && viewingLog.attachments.length > 0 && (
                 <div>
@@ -799,13 +799,13 @@ export default function Lookup() {
                 <div><span className="text-white/40">{isVi ? "Phụ trách" : "Assigned To"}</span><p className="text-white">{viewingInteraction.assignedTo || "—"}</p></div>
               </div>
               {viewingInteraction.description && (
-                <div><span className="text-white/40 text-sm">{isVi ? "Mô tả" : "Description"}</span><p className="text-white text-sm mt-1">{viewingInteraction.description}</p></div>
+                <div><span className="text-white/40 text-sm">{isVi ? "Mô tả" : "Description"}</span><p className="text-white text-sm mt-1 whitespace-pre-wrap">{viewingInteraction.description}</p></div>
               )}
               {viewingInteraction.nextAction && (
-                <div><span className="text-white/40 text-sm">{isVi ? "Đề xuất" : "Suggestion"}</span><p className="text-white text-sm mt-1">{viewingInteraction.nextAction}</p></div>
+                <div><span className="text-white/40 text-sm">{isVi ? "Đề xuất" : "Suggestion"}</span><p className="text-white text-sm mt-1 whitespace-pre-wrap">{viewingInteraction.nextAction}</p></div>
               )}
               {viewingInteraction.outcome && (
-                <div><span className="text-white/40 text-sm">{isVi ? "Kết quả" : "Outcome"}</span><p className="text-white text-sm mt-1">{viewingInteraction.outcome}</p></div>
+                <div><span className="text-white/40 text-sm">{isVi ? "Kết quả" : "Outcome"}</span><p className="text-white text-sm mt-1 whitespace-pre-wrap">{viewingInteraction.outcome}</p></div>
               )}
               {Array.isArray(viewingInteraction.attachments) && viewingInteraction.attachments.length > 0 && (
                 <div>
