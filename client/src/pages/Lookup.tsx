@@ -756,7 +756,7 @@ export default function Lookup() {
       </Dialog>
 
       <Dialog open={!!viewingLog} onOpenChange={() => setViewingLog(null)}>
-        <DialogContent className="max-w-lg bg-black border border-white/20 rounded-none">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-black border border-white/20 rounded-none">
           <DialogHeader>
             <DialogTitle className="text-lg font-light">{viewingLog?.title}</DialogTitle>
           </DialogHeader>
@@ -776,7 +776,7 @@ export default function Lookup() {
                   <div className="flex flex-wrap gap-2 mt-2">
                     {(viewingLog.attachments as string[]).map((url, idx) => (
                       <div key={idx} onClick={() => openLightbox(viewingLog.attachments as string[], idx)} className="cursor-pointer">
-                        <img src={url} alt="" className="w-20 h-20 object-cover border border-white/10 hover:border-white/40 transition-colors" />
+                        <img src={url} alt="" className="w-32 h-32 object-cover border border-white/10 hover:border-white/40 transition-colors" />
                       </div>
                     ))}
                   </div>
@@ -788,7 +788,7 @@ export default function Lookup() {
       </Dialog>
 
       <Dialog open={!!viewingInteraction} onOpenChange={() => setViewingInteraction(null)}>
-        <DialogContent className="max-w-lg bg-black border border-white/20 rounded-none">
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-black border border-white/20 rounded-none">
           <DialogHeader>
             <DialogTitle className="text-lg font-light">{viewingInteraction?.title}</DialogTitle>
           </DialogHeader>
@@ -813,7 +813,7 @@ export default function Lookup() {
                   <div className="flex flex-wrap gap-2 mt-2">
                     {(viewingInteraction.attachments as string[]).map((url, idx) => (
                       <div key={idx} onClick={() => openLightbox(viewingInteraction.attachments as string[], idx)} className="cursor-pointer">
-                        <img src={url} alt="" className="w-20 h-20 object-cover border border-white/10 hover:border-white/40 transition-colors" />
+                        <img src={url} alt="" className="w-32 h-32 object-cover border border-white/10 hover:border-white/40 transition-colors" />
                       </div>
                     ))}
                   </div>
