@@ -1,2 +1,1 @@
 - [URL-driven language (Hướng A)](i18n-url-driven-language.md) — active language derives from URL (not toggle); keep BOTH EN+VI URLs with self-canonical + hreflang; do NOT collapse to VI-only.
-- [Sitemap XSL styling](sitemap-xsl-styling.md) — "sitemap displays an error" = browser's no-style notice on valid XML; fix with an XSLT stylesheet, not by changing the XML.
