@@ -1,7 +1,21 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useLocation } from 'wouter';
+import { ROUTE_MAP } from '@/lib/routes';
 
 export type Language = 'en' | 'vi';
+
+// Derive the active language from the URL so each URL maps to exactly one
+// language (required for correct hreflang / self-canonical SEO). Paths without
+// a language signal (e.g. "/", "/admin") return null and fall back to the
+// user's stored preference.
+function detectLanguageFromPath(path: string): Language | null {
+  for (const key of Object.keys(ROUTE_MAP) as Array<keyof typeof ROUTE_MAP>) {
+    const { en, vi } = ROUTE_MAP[key];
+    if (path === vi || path.startsWith(vi + '/')) return 'vi';
+    if (path === en || path.startsWith(en + '/')) return 'en';
+  }
+  return null;
+}
 
 interface LanguageContextType {
   language: Language;
@@ -481,7 +495,31 @@ const translations = {
 };
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState<Language>('vi');
+  const [location] = useLocation();
+  const [preferred, setPreferred] = useState<Language>(() => {
+    if (typeof window !== 'undefined') {
+      const stored = window.localStorage.getItem('language');
+      if (stored === 'en' || stored === 'vi') return stored;
+    }
+    return 'vi';
+  });
+
+  // URL is the source of truth on language-specific pages; "/" and other
+  // neutral paths fall back to the stored preference.
+  const urlLang = detectLanguageFromPath(location);
+  const language = urlLang ?? preferred;
+
+  useEffect(() => {
+    if (urlLang && urlLang !== preferred) {
+      setPreferred(urlLang);
+      if (typeof window !== 'undefined') window.localStorage.setItem('language', urlLang);
+    }
+  }, [urlLang, preferred]);
+
+  const setLanguage = (lang: Language) => {
+    setPreferred(lang);
+    if (typeof window !== 'undefined') window.localStorage.setItem('language', lang);
+  };
 
   const t = (key: string): string => {
     return translations[language][key as keyof typeof translations['en']] || key;
