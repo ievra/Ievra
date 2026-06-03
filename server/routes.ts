@@ -14,6 +14,7 @@ import { storage } from "./storage";
 import { insertProjectSchema, insertClientSchema, insertInquirySchema, insertServiceSchema, insertArticleSchema, insertHomepageContentSchema, insertPartnerSchema, insertCategorySchema, insertInteractionSchema, insertDealSchema, insertTransactionSchema, insertWarrantyLogSchema, insertSettingsSchema, insertFaqSchema, insertAdvantageSchema, insertJourneyStepSchema, insertAboutPageContentSchema, insertAboutShowcaseServiceSchema, insertAboutProcessStepSchema, insertAboutCoreValueSchema, insertAboutTeamMemberSchema, insertAboutAwardSchema, insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema, insertUserSchema, insertBusinessPartnerSchema, insertBpTransactionSchema, insertBpCategorySchema, insertBpStatusSchema, insertBpTierSchema, insertConstructionPhaseSchema, insertDesignPhaseSchema } from "@shared/schema";
 import { z } from "zod";
 import { createHash } from "crypto";
+import { SITEMAP_XSL } from "./sitemap-stylesheet";
 
 // Simple password hashing function
 function hashPassword(password: string): string {
@@ -276,6 +277,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const today = new Date().toISOString().split('T')[0];
 
       let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+      xml += `<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>\n`;
       xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n`;
       xml += `        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n`;
 
@@ -376,6 +378,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.error('Error generating sitemap:', error);
       res.status(500).send('Error generating sitemap');
     }
+  });
+
+  // XSL stylesheet that renders the sitemap as a readable page in the browser.
+  app.get("/sitemap.xsl", (_req, res) => {
+    res.set('Content-Type', 'text/xsl; charset=utf-8');
+    res.set('Cache-Control', 'public, max-age=3600');
+    res.send(SITEMAP_XSL);
   });
 
   // Plain text sitemap (one URL per line — useful for Google Search Console submission)
