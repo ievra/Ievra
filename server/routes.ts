@@ -225,84 +225,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     return `${proto}://${host}`;
   };
 
-  app.get("/sitemap.xsl", (req, res) => {
-    const xsl = `<?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet version="1.0"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:sm="http://www.sitemaps.org/schemas/sitemap/0.9"
-  xmlns:xhtml="http://www.w3.org/1999/xhtml"
-  exclude-result-prefixes="sm xhtml">
-  <xsl:output method="html" indent="yes" encoding="UTF-8"/>
-  <xsl:template match="/">
-    <html lang="vi">
-      <head>
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <title>Sitemap XML — IEVRA Design &amp; Build</title>
-        <style>
-          * { box-sizing: border-box; margin: 0; padding: 0; }
-          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0a0a0a; color: #e5e5e5; padding: 32px 24px; }
-          h1 { font-size: 1.5rem; font-weight: 600; color: #fff; margin-bottom: 4px; }
-          .sub { font-size: 0.85rem; color: #888; margin-bottom: 28px; }
-          .sub a { color: #c8a45a; text-decoration: none; }
-          .sub a:hover { text-decoration: underline; }
-          table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
-          thead tr { background: #1a1a1a; }
-          th { text-align: left; padding: 10px 14px; color: #999; font-weight: 500; border-bottom: 1px solid #2a2a2a; white-space: nowrap; }
-          tbody tr { border-bottom: 1px solid #1c1c1c; }
-          tbody tr:hover { background: #141414; }
-          td { padding: 9px 14px; vertical-align: top; }
-          td a { color: #c8a45a; text-decoration: none; word-break: break-all; }
-          td a:hover { text-decoration: underline; }
-          .hreflang { display: flex; flex-wrap: wrap; gap: 4px; }
-          .tag { display: inline-block; padding: 1px 7px; border-radius: 4px; font-size: 0.75rem; background: #1e1e1e; border: 1px solid #333; color: #aaa; }
-          .prio { color: #c8a45a; font-weight: 500; }
-          .count { color: #888; font-size: 0.8rem; margin-top: 18px; }
-        </style>
-      </head>
-      <body>
-        <h1>Sitemap XML</h1>
-        <p class="sub">
-          <xsl:value-of select="count(sm:urlset/sm:url)"/> URLs &#183;
-          Dùng để kiểm tra — Google đọc file XML gốc trực tiếp &#183;
-          <a href="/robots.txt">robots.txt</a>
-        </p>
-        <table>
-          <thead>
-            <tr>
-              <th>URL</th>
-              <th>Cập nhật</th>
-              <th>Tần suất</th>
-              <th>Độ ưu tiên</th>
-              <th>Hreflang</th>
-            </tr>
-          </thead>
-          <tbody>
-            <xsl:for-each select="sm:urlset/sm:url">
-              <tr>
-                <td><a href="{sm:loc}"><xsl:value-of select="sm:loc"/></a></td>
-                <td><xsl:value-of select="sm:lastmod"/></td>
-                <td><xsl:value-of select="sm:changefreq"/></td>
-                <td class="prio"><xsl:value-of select="sm:priority"/></td>
-                <td>
-                  <div class="hreflang">
-                    <xsl:for-each select="xhtml:link">
-                      <span class="tag"><xsl:value-of select="@hreflang"/></span>
-                    </xsl:for-each>
-                  </div>
-                </td>
-              </tr>
-            </xsl:for-each>
-          </tbody>
-        </table>
-      </body>
-    </html>
-  </xsl:template>
-</xsl:stylesheet>`;
-    res.set('Content-Type', 'text/xsl; charset=utf-8');
-    res.send(xsl);
-  });
-
   app.get("/robots.txt", (req, res) => {
     const baseUrl = getSiteBaseUrl(req);
     res.set('Content-Type', 'text/plain');
@@ -354,7 +276,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const today = new Date().toISOString().split('T')[0];
 
       let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
-      xml += `<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>\n`;
       xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n`;
       xml += `        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n`;
 
@@ -449,7 +370,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       xml += `</urlset>`;
 
-      res.set('Content-Type', 'text/xml; charset=utf-8');
+      res.set('Content-Type', 'application/xml; charset=utf-8');
       res.send(xml);
     } catch (error) {
       console.error('Error generating sitemap:', error);
