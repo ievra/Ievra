@@ -232,6 +232,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   app.get("/sitemap.xml", async (req, res) => {
+    // Explicitly override any proxy-level noindex headers so crawlers can access the sitemap
+    res.set({
+      'Content-Type': 'application/xml; charset=utf-8',
+      'X-Robots-Tag': 'index, follow',
+      'Cache-Control': 'public, max-age=3600',
+    });
     try {
       const baseUrl = getSiteBaseUrl(req);
 
@@ -370,7 +376,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       xml += `</urlset>`;
 
-      res.set('Content-Type', 'application/xml; charset=utf-8');
       res.send(xml);
     } catch (error) {
       console.error('Error generating sitemap:', error);
