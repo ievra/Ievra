@@ -11,6 +11,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import { storage } from "./storage";
+import { CANONICAL_BASE_URL } from "@shared/constants";
 import { insertProjectSchema, insertClientSchema, insertInquirySchema, insertServiceSchema, insertArticleSchema, insertHomepageContentSchema, insertPartnerSchema, insertCategorySchema, insertInteractionSchema, insertDealSchema, insertTransactionSchema, insertWarrantyLogSchema, insertSettingsSchema, insertFaqSchema, insertAdvantageSchema, insertJourneyStepSchema, insertAboutPageContentSchema, insertAboutShowcaseServiceSchema, insertAboutProcessStepSchema, insertAboutCoreValueSchema, insertAboutTeamMemberSchema, insertAboutAwardSchema, insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema, insertUserSchema, insertBusinessPartnerSchema, insertBpTransactionSchema, insertBpCategorySchema, insertBpStatusSchema, insertBpTierSchema, insertConstructionPhaseSchema, insertDesignPhaseSchema } from "@shared/schema";
 import { z } from "zod";
 import { createHash } from "crypto";
@@ -220,9 +221,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Sitemap.xml endpoint
   const getSiteBaseUrl = (req: any) => {
     if (process.env.SITE_URL) return process.env.SITE_URL.replace(/\/$/, '');
-    const host = req.headers['x-forwarded-host'] || req.headers.host || 'localhost:5000';
-    const proto = req.headers['x-forwarded-proto'] || (req.secure ? 'https' : 'http');
-    return `${proto}://${host}`;
+    // Always use the hardcoded canonical domain so sitemap/robots URLs are
+    // correct on every environment (dev, Replit preview, production).
+    // This prevents Google from receiving *.replit.app or localhost URLs.
+    return CANONICAL_BASE_URL.replace(/\/$/, '');
   };
 
   app.get("/robots.txt", (req, res) => {
