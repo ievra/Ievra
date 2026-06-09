@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import fs from "fs";
+import path from "path";
 import { storage } from "./storage";
 import { db } from "./db";
 import { articles, projects } from "@shared/schema";
@@ -7,6 +8,23 @@ import { eq, and } from "drizzle-orm";
 import { CANONICAL_BASE_URL } from "@shared/constants";
 
 const STATIC_EXTENSIONS = /\.(js|css|png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|eot|map|json|txt|xml|pdf|zip)$/i;
+
+// Check that a local asset file actually exists before building an OG image URL.
+// Prevents broken <meta og:image> tags when files were uploaded on a different
+// server and are not present in this environment.
+function localAssetExists(raw: string): boolean {
+  if (!raw || raw.startsWith("http") || raw.startsWith("data:")) return true;
+  const filename = raw.startsWith("/attached_assets/")
+    ? raw.slice("/attached_assets/".length)
+    : raw.startsWith("/api/assets/")
+      ? raw.slice("/api/assets/".length)
+      : raw.replace(/^\//, "");
+  const candidates = [
+    path.join("/var/www/vhosts/moderno.com.vn/httpdocs/attached_assets", filename),
+    path.join(process.cwd(), "attached_assets", filename),
+  ];
+  return candidates.some((p) => fs.existsSync(p));
+}
 
 const VI_PATH_PREFIXES = [
   '/gioi-thieu', '/du-an', '/tin-tuc', '/tra-cuu', '/lien-he',
@@ -574,6 +592,8 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
         if (!raw) return undefined;
         if (raw.startsWith("data:")) return undefined;
         if (raw.startsWith("http")) return raw;
+        // Skip local paths whose file is missing so we fall back to the default OG image
+        if (!localAssetExists(raw)) return undefined;
         return `${baseUrl}${raw}`;
       }
 
@@ -601,14 +621,21 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
             contentFound = true;
             const explicitOgImage = (project as any).ogImage as string | undefined;
             let imageUrl: string | undefined;
+            // Try explicit OG image first
             if (explicitOgImage && !explicitOgImage.startsWith("data:")) {
               imageUrl = resolveImageUrl(explicitOgImage);
-            } else {
+            }
+            // Fallback to hero/cover/gallery images
+            if (!imageUrl) {
               const coverImages = Array.isArray(project.coverImages) ? project.coverImages : [];
               const galleryImages = Array.isArray(project.galleryImages) ? project.galleryImages : [];
               const candidates = [project.heroImage, ...coverImages, ...galleryImages];
               const firstImage = candidates.find(img => img && !String(img).startsWith("data:"));
-              imageUrl = firstImage ? resolveImageUrl(firstImage as string) : await resolveDefaultOgImage();
+              if (firstImage) imageUrl = resolveImageUrl(firstImage as string);
+            }
+            // Final fallback to site default OG image
+            if (!imageUrl) {
+              imageUrl = await resolveDefaultOgImage();
             }
             const desc = project.metaDescription || project.description || "Dự án thiết kế nội thất của IEVRA Design & Build";
             const breadcrumbListName = lang === 'en' ? 'Portfolio' : 'Dự Án';
@@ -670,11 +697,16 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
             contentFound = true;
             const explicitOgImage = (article as any).ogImage as string | undefined;
             let imageUrl: string | undefined;
+            // Try explicit OG image first
             if (explicitOgImage && !explicitOgImage.startsWith("data:")) {
               imageUrl = resolveImageUrl(explicitOgImage);
-            } else if (article.featuredImage && !article.featuredImage.startsWith("data:")) {
+            }
+            // Fallback to featured image
+            if (!imageUrl && article.featuredImage && !article.featuredImage.startsWith("data:")) {
               imageUrl = resolveImageUrl(article.featuredImage);
-            } else {
+            }
+            // Final fallback to site default OG image
+            if (!imageUrl) {
               imageUrl = await resolveDefaultOgImage();
             }
             const desc = article.metaDescription || article.excerpt || "Bài viết từ IEVRA Design & Build";
