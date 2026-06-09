@@ -46,8 +46,6 @@ const seoSettingsSchema = z.object({
   siteTitleVi: z.string().optional(),
   metaDescription: z.string().optional(),
   metaDescriptionVi: z.string().optional(),
-  metaKeywords: z.string().optional(),
-  metaKeywordsVi: z.string().optional(),
   ogImage: z.string().optional(),
   ogImageData: z.string().optional(),
 });
@@ -191,8 +189,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       siteTitleVi: "",
       metaDescription: "",
       metaDescriptionVi: "",
-      metaKeywords: "",
-      metaKeywordsVi: "",
       ogImage: "",
       ogImageData: "",
     },
@@ -205,8 +201,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         siteTitleVi: settings.siteTitleVi || "",
         metaDescription: settings.metaDescription || "",
         metaDescriptionVi: settings.metaDescriptionVi || "",
-        metaKeywords: settings.metaKeywords || "",
-        metaKeywordsVi: settings.metaKeywordsVi || "",
         ogImage: settings.ogImage || "",
         ogImageData: settings.ogImageData || "",
       });
@@ -743,8 +737,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
         siteTitleVi: data.siteTitleVi,
         metaDescription: data.metaDescription,
         metaDescriptionVi: data.metaDescriptionVi,
-        metaKeywords: data.metaKeywords,
-        metaKeywordsVi: data.metaKeywordsVi,
         ogImage: data.ogImage || existingSettings.ogImage,
         ogImageData: data.ogImageData || existingSettings.ogImageData,
       });
@@ -1553,22 +1545,6 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                         <FormItem>
                           <FormLabel>{language === 'vi' ? 'Mô Tả Meta (VI)' : 'Meta Description (VI)'}</FormLabel>
                           <FormControl><Textarea {...field} rows={3} placeholder="Dịch vụ thiết kế nội thất và kiến trúc cao cấp..." data-testid="textarea-meta-description-vi" /></FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )} />
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <FormField control={seoSettingsForm.control} name="metaKeywords" render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Từ Khóa Meta (EN)' : 'Meta Keywords (EN)'}</FormLabel>
-                          <FormControl><Input {...field} placeholder="interior design, architecture, modern home..." data-testid="input-meta-keywords-en" /></FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )} />
-                      <FormField control={seoSettingsForm.control} name="metaKeywordsVi" render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Từ Khóa Meta (VI)' : 'Meta Keywords (VI)'}</FormLabel>
-                          <FormControl><Input {...field} placeholder="thiết kế nội thất, kiến trúc, nhà hiện đại..." data-testid="input-meta-keywords-vi" /></FormControl>
                           <FormMessage />
                         </FormItem>
                       )} />

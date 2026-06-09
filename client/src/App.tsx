@@ -1,10 +1,10 @@
 import { Switch, Route } from "wouter";
 import { useEffect } from "react";
 import { queryClient } from "./lib/queryClient";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { LanguageProvider } from "@/contexts/LanguageContext";
+import { LanguageProvider, useLanguage } from "@/contexts/LanguageContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Layout from "@/components/Layout";
 import ProtectedRoute from "@/components/ProtectedRoute";
@@ -57,6 +57,26 @@ function Router() {
   );
 }
 
+function SeoSync() {
+  const { language } = useLanguage();
+  const { data: settings } = useQuery<any>({ queryKey: ['/api/settings'] });
+
+  useEffect(() => {
+    if (!settings) return;
+    const title = language === 'vi'
+      ? (settings.siteTitleVi || settings.siteTitle || 'IEVRA Design & Build')
+      : (settings.siteTitle || 'IEVRA Design & Build');
+    const desc = language === 'vi'
+      ? (settings.metaDescriptionVi || settings.metaDescription || '')
+      : (settings.metaDescription || '');
+    if (title) document.title = title;
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc && desc) metaDesc.setAttribute('content', desc);
+  }, [settings, language]);
+
+  return null;
+}
+
 function App() {
   useEffect(() => {
     const preventContextMenu = (e: MouseEvent) => {
@@ -83,6 +103,7 @@ function App() {
         <LanguageProvider>
           <AuthProvider>
             <div className="dark min-h-screen bg-background text-foreground">
+              <SeoSync />
               <Toaster />
               <Router />
             </div>
