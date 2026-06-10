@@ -181,6 +181,73 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.sendFile(filePath);
   });
 
+  // Image CDN endpoint: /api/img/* — WebP conversion + resize + LQIP + disk cache
+  // Query params: ?w=WIDTH (resize), ?lqip=1 (tiny blurred placeholder)
+  app.get("/api/img/*", async (req, res) => {
+    const relativePath = (req.params as Record<string, string>)[0];
+    if (!relativePath || relativePath.includes('..')) {
+      return res.status(400).json({ error: 'Invalid path' });
+    }
+
+    const rawW = parseInt(req.query.w as string);
+    const lqip = req.query.lqip === '1';
+    const targetWidth = lqip ? 20 : (rawW > 0 && rawW <= 3840 ? rawW : 0);
+
+    const possiblePaths = [
+      path.join('/var/www/vhosts/moderno.com.vn/httpdocs/attached_assets', relativePath),
+      path.join(__dirname, '..', 'attached_assets', relativePath),
+      path.join(__dirname, '..', '..', 'attached_assets', relativePath),
+      path.join(process.cwd(), 'attached_assets', relativePath),
+    ];
+    let filePath: string | null = null;
+    for (const p of possiblePaths) {
+      if (fs.existsSync(p)) { filePath = p; break; }
+    }
+    if (!filePath) return res.status(404).json({ error: 'Image not found' });
+
+    const cacheKey = createHash('md5').update(`${filePath}|${targetWidth}|webp|${lqip}`).digest('hex');
+    const cacheDir = '/tmp/ievra-img-cache';
+    const cachePath = path.join(cacheDir, `${cacheKey}.webp`);
+
+    const headers = {
+      'Content-Type': 'image/webp',
+      'Cache-Control': lqip ? 'public, max-age=86400' : 'public, max-age=31536000, immutable',
+      'Vary': 'Accept',
+    };
+
+    try {
+      if (fs.existsSync(cachePath)) {
+        res.set(headers);
+        return res.sendFile(cachePath);
+      }
+
+      const sharpModule = await import('sharp').catch(() => null);
+      if (!sharpModule) {
+        res.set('Cache-Control', 'public, max-age=31536000, immutable');
+        return res.sendFile(filePath);
+      }
+
+      fs.mkdirSync(cacheDir, { recursive: true });
+
+      let pipeline = sharpModule.default(filePath);
+      if (targetWidth > 0) {
+        pipeline = pipeline.resize(targetWidth, undefined, { withoutEnlargement: true });
+      }
+      if (lqip) {
+        pipeline = pipeline.blur(3);
+      }
+      const buffer = await pipeline.webp({ quality: lqip ? 20 : 82, effort: 4 }).toBuffer();
+      fs.writeFileSync(cachePath, buffer);
+
+      res.set({ ...headers, 'Content-Length': String(buffer.length) });
+      return res.end(buffer);
+    } catch (err) {
+      console.error('[img] processing error:', (err as Error).message);
+      res.set('Cache-Control', 'public, max-age=31536000, immutable');
+      return res.sendFile(filePath);
+    }
+  });
+
   // API route to serve images from attached_assets folder (supports subdirectories)
   app.get("/api/assets/*", (req, res) => {
     const relativePath = (req.params as Record<string, string>)[0];

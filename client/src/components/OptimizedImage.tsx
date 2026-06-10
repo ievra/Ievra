@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 
 interface OptimizedImageProps {
   src: string;
@@ -16,6 +16,17 @@ interface OptimizedImageProps {
   onError?: () => void;
 }
 
+const SRCSET_WIDTHS = [640, 960, 1280, 1920];
+
+function toImgUrl(src: string, width?: number, lqip = false): string {
+  if (!src || !src.startsWith('/api/assets/')) return src;
+  const assetPath = src.replace('/api/assets/', '');
+  const params = new URLSearchParams();
+  if (lqip) params.set('lqip', '1');
+  else if (width) params.set('w', String(width));
+  return `/api/img/${assetPath}?${params.toString()}`;
+}
+
 export default function OptimizedImage({
   src,
   alt,
@@ -24,8 +35,7 @@ export default function OptimizedImage({
   className = '',
   wrapperClassName = '',
   priority = false,
-  placeholder,
-  sizes = '100vw',
+  sizes = '(max-width: 640px) 640px, (max-width: 960px) 960px, (max-width: 1280px) 1280px, 1920px',
   objectFit = 'cover',
   'data-testid': testId,
   onLoad,
@@ -35,12 +45,27 @@ export default function OptimizedImage({
   const [isInView, setIsInView] = useState(priority);
   const [hasError, setHasError] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
-  const placeholderRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
-  // Intersection Observer for lazy loading
+  const isApiAsset = !!src?.startsWith('/api/assets/');
+
+  const lqipSrc = useMemo(
+    () => (isApiAsset ? toImgUrl(src, undefined, true) : undefined),
+    [src, isApiAsset]
+  );
+
+  const optimizedSrc = useMemo(
+    () => (isApiAsset ? toImgUrl(src, 1920) : src),
+    [src, isApiAsset]
+  );
+
+  const srcSet = useMemo(() => {
+    if (!isApiAsset) return undefined;
+    return SRCSET_WIDTHS.map(w => `${toImgUrl(src, w)} ${w}w`).join(', ');
+  }, [src, isApiAsset]);
+
   useEffect(() => {
     if (priority) return;
-
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -48,16 +73,9 @@ export default function OptimizedImage({
           observer.disconnect();
         }
       },
-      {
-        rootMargin: '500px',
-        threshold: 0
-      }
+      { rootMargin: '500px', threshold: 0 }
     );
-
-    if (placeholderRef.current) {
-      observer.observe(placeholderRef.current);
-    }
-
+    if (wrapperRef.current) observer.observe(wrapperRef.current);
     return () => observer.disconnect();
   }, [priority]);
 
@@ -67,26 +85,31 @@ export default function OptimizedImage({
   };
 
   const handleError = () => {
-    console.error('❌ Failed to load image:', src);
     setHasError(true);
     onError?.();
   };
 
-  const optimizedSrc = src;
-
-  // Calculate aspect ratio for space reservation
   const aspectRatio = width && height ? height / width : undefined;
 
   return (
-    <div 
-      ref={placeholderRef}
+    <div
+      ref={wrapperRef}
       className={`relative overflow-hidden ${wrapperClassName}`}
-      style={{ 
-        aspectRatio: aspectRatio ? `${width}/${height}` : undefined 
-      }}
+      style={{ aspectRatio: aspectRatio ? `${width}/${height}` : undefined }}
     >
-      {/* Placeholder/Skeleton */}
-      {!isLoaded && !hasError && (
+      {/* LQIP blur-up — shown while full image is loading */}
+      {isInView && lqipSrc && !isLoaded && !hasError && (
+        <img
+          src={lqipSrc}
+          alt=""
+          aria-hidden="true"
+          className={`absolute inset-0 w-full h-full object-${objectFit}`}
+          style={{ filter: 'blur(12px)', transform: 'scale(1.1)' }}
+        />
+      )}
+
+      {/* Spinner fallback for non-asset images */}
+      {!isApiAsset && !isLoaded && !hasError && (
         <div className="absolute inset-0 bg-black animate-pulse flex items-center justify-center">
           <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin" />
         </div>
@@ -95,23 +118,23 @@ export default function OptimizedImage({
       {/* Error fallback */}
       {hasError && (
         <div className="absolute inset-0 bg-black flex items-center justify-center text-gray-400">
-          <div className="text-center">
-            <div className="text-sm">Image unavailable</div>
-          </div>
+          <div className="text-sm">Image unavailable</div>
         </div>
       )}
 
-      {/* Actual image */}
-      {isInView && (
+      {/* Full image */}
+      {isInView && !hasError && (
         <img
           ref={imgRef}
           src={optimizedSrc}
+          srcSet={srcSet}
+          sizes={srcSet ? sizes : undefined}
           alt={alt}
           width={width}
           height={height}
           loading={priority ? 'eager' : 'lazy'}
           decoding={priority ? 'sync' : 'async'}
-          className={`transition-opacity duration-300 object-${objectFit} ${
+          className={`transition-opacity duration-500 object-${objectFit} w-full h-full ${
             isLoaded ? 'opacity-100' : 'opacity-0'
           } ${className}`}
           onLoad={handleLoad}
