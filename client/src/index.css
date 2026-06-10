@@ -257,7 +257,13 @@ img {
     display: none;
   }
 
-  /* IIDA-style Hero Slider */
+  /* IIDA-style Hero Slider — force default cursor, override Swiper's inline grab style */
+  .js-slider,
+  .js-slider .swiper-wrapper,
+  .js-slider .swiper-slide {
+    cursor: default !important;
+  }
+
   .js-slider .swiper-button-next,
   .js-slider .swiper-button-prev {
     color: white;
