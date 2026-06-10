@@ -4,7 +4,8 @@ import { usePageMeta, CANONICAL_BASE_URL } from "@/hooks/use-page-meta";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
-import { Eye, ArrowLeft, Share2, Check } from "lucide-react";
+import { ArrowLeft, Share2, Check, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { createPortal } from "react-dom";
 import { useLanguage } from "@/contexts/LanguageContext";
 import OptimizedImage from "@/components/OptimizedImage";
 import type { Article } from "@shared/schema";
@@ -121,12 +122,21 @@ export default function BlogDetail() {
   const { language } = useLanguage();
   const [blogLocation, setLocation] = useLocation();
   const [copied, setCopied] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [lightboxImages, setLightboxImages] = useState<string[]>([]);
 
   const handleCopyUrl = () => {
     navigator.clipboard.writeText(window.location.href).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
+  };
+
+  const openLightbox = (src: string) => {
+    const idx = lightboxImages.indexOf(src);
+    setLightboxIndex(idx >= 0 ? idx : 0);
+    setLightboxOpen(true);
   };
 
   // Language for fetching is derived from URL path, not UI language context
@@ -153,6 +163,33 @@ export default function BlogDetail() {
       setLocation(getArticlePath(language, article.slug), { replace: true } as any);
     }
   }, [article?.slug, slug, language, setLocation]);
+
+  // Collect all images (featured + content) for lightbox
+  useEffect(() => {
+    if (!article) return;
+    const images: string[] = [];
+    if (article.featuredImage || article.featuredImageData) {
+      images.push(article.featuredImage || article.featuredImageData || '');
+    }
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(String(article.content || ''), 'text/html');
+    doc.querySelectorAll('img').forEach((img) => {
+      if (img.getAttribute('src')) images.push(img.getAttribute('src') as string);
+    });
+    setLightboxImages(images);
+  }, [article]);
+
+  // Keyboard navigation for lightbox
+  useEffect(() => {
+    if (!lightboxOpen) return;
+    const handler = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setLightboxOpen(false);
+      if (e.key === 'ArrowRight') setLightboxIndex((p) => (p + 1) % lightboxImages.length);
+      if (e.key === 'ArrowLeft') setLightboxIndex((p) => (p - 1 + lightboxImages.length) % lightboxImages.length);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [lightboxOpen, lightboxImages.length]);
 
   // Update document title and meta tags for SEO
   useEffect(() => {
@@ -342,7 +379,10 @@ export default function BlogDetail() {
 
         {/* Featured Image Banner - Above Title */}
         {(article.featuredImage || article.featuredImageData) && (
-          <div className="mb-8 -mx-4 sm:-mx-6 lg:-mx-8">
+          <div
+            className="mb-8 -mx-4 sm:-mx-6 lg:-mx-8 cursor-zoom-in"
+            onClick={() => openLightbox(article.featuredImage || article.featuredImageData || '')}
+          >
             <OptimizedImage
               src={article.featuredImage || article.featuredImageData || ''} 
               alt={article.title}
@@ -423,11 +463,18 @@ export default function BlogDetail() {
               [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:my-2 [&_ul]:space-y-1
               [&_ol]:list-decimal [&_ol]:pl-6 [&_ol]:my-2 [&_ol]:space-y-1
               [&_li]:text-white/80
-              [&_img]:max-w-full [&_img]:h-auto [&_img]:my-4 [&_img]:rounded-lg
+              [&_img]:max-w-full [&_img]:h-auto [&_img]:my-4 [&_img]:rounded-lg [&_img]:cursor-zoom-in
               [&_figure]:my-4
               [&_figcaption]:text-center [&_figcaption]:text-sm [&_figcaption]:text-white/50 [&_figcaption]:italic [&_figcaption]:mt-2
               [&_p]:mb-3 [&_p]:leading-relaxed"
             style={{ wordBreak: 'break-word', overflowWrap: 'anywhere' }}
+            onClick={(e) => {
+              const target = e.target as HTMLElement;
+              if (target.tagName === 'IMG') {
+                const src = (target as HTMLImageElement).getAttribute('src') || '';
+                if (src) openLightbox(src);
+              }
+            }}
             dangerouslySetInnerHTML={{ __html: parseBoldTextToHTML(String(article.content)) }}
             data-testid="article-content"
           />
@@ -447,6 +494,56 @@ export default function BlogDetail() {
         {/* Related Articles Section */}
         <RelatedArticles currentArticleId={article.id} category={article.category} language={language} />
       </div>
+
+      {/* Lightbox */}
+      {lightboxOpen && lightboxImages.length > 0 && createPortal(
+        <div
+          className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center"
+          onClick={() => setLightboxOpen(false)}
+        >
+          <button
+            className="absolute top-4 right-4 text-white/70 hover:text-white z-10 p-2"
+            onClick={(e) => { e.stopPropagation(); setLightboxOpen(false); }}
+          >
+            <X className="w-8 h-8" />
+          </button>
+
+          {lightboxImages.length > 1 && (
+            <>
+              <button
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white z-10 p-2"
+                onClick={(e) => { e.stopPropagation(); setLightboxIndex((p) => (p - 1 + lightboxImages.length) % lightboxImages.length); }}
+              >
+                <ChevronLeft className="w-10 h-10" />
+              </button>
+              <button
+                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white z-10 p-2"
+                onClick={(e) => { e.stopPropagation(); setLightboxIndex((p) => (p + 1) % lightboxImages.length); }}
+              >
+                <ChevronRight className="w-10 h-10" />
+              </button>
+            </>
+          )}
+
+          <div
+            className="max-w-[90vw] max-h-[90vh] flex items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img
+              src={lightboxImages[lightboxIndex]}
+              alt={`${article.title} - ${lightboxIndex + 1}`}
+              className="max-w-full max-h-[90vh] object-contain"
+            />
+          </div>
+
+          {lightboxImages.length > 1 && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/60 text-sm">
+              {lightboxIndex + 1} / {lightboxImages.length}
+            </div>
+          )}
+        </div>,
+        document.body
+      )}
     </div>
   );
 }
