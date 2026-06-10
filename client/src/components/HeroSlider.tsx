@@ -71,7 +71,7 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
         slidesPerView={1}
         speed={1000}
         allowTouchMove={true}
-        grabCursor={true}
+        grabCursor={false}
         touchEventsTarget="container"
         simulateTouch={true}
         autoplay={{
