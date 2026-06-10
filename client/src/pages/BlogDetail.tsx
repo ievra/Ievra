@@ -129,11 +129,15 @@ export default function BlogDetail() {
     });
   };
 
+  // Language for fetching is derived from URL path, not UI language context
+  // /blog/:slug → EN, /tin-tuc/:slug → VI (prevents soft 404 when UI lang ≠ content lang)
+  const fetchLang = blogLocation.startsWith('/tin-tuc') ? 'vi' : 'en';
+
   const { data: article, isLoading, error } = useQuery<Article>({
-    queryKey: ['/api/articles/slug', slug, language],
+    queryKey: ['/api/articles/slug', slug, fetchLang],
     queryFn: async () => {
       const params = new URLSearchParams();
-      params.append('language', language);
+      params.append('language', fetchLang);
       const response = await fetch(`/api/articles/slug/${slug}?${params.toString()}`);
       if (!response.ok) {
         throw new Error('Article not found');

@@ -157,13 +157,17 @@ export default function ProjectDetail() {
     }
   };
 
+  // Language for fetching is derived from URL path, not UI language context
+  // /portfolio/:slug → EN, /du-an/:slug → VI (prevents soft 404 when UI lang ≠ content lang)
+  const fetchLang = duAnParams?.slug ? 'vi' : 'en';
+
   const { data: project, isLoading, error } = useQuery<Project>({
     queryKey: isSlugRoute 
-      ? ['/api/projects/slug', projectSlug, language] 
+      ? ['/api/projects/slug', projectSlug, fetchLang] 
       : ['/api/projects', projectId],
     queryFn: async () => {
       if (isSlugRoute) {
-        const response = await fetch(`/api/projects/slug/${projectSlug}?language=${language}`);
+        const response = await fetch(`/api/projects/slug/${projectSlug}?language=${fetchLang}`);
         if (!response.ok) throw new Error("Failed to fetch project");
         return response.json();
       } else {
