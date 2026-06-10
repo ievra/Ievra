@@ -44,6 +44,8 @@ export default function OptimizedImage({
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInView, setIsInView] = useState(priority);
   const [hasError, setHasError] = useState(false);
+  // Track whether we've already tried the fallback (original /api/assets/ URL)
+  const [usedFallback, setUsedFallback] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -54,15 +56,16 @@ export default function OptimizedImage({
     [src, isApiAsset]
   );
 
+  // Use optimized /api/img/ URL first; fall back to original /api/assets/ on error
   const optimizedSrc = useMemo(
-    () => (isApiAsset ? toImgUrl(src, 1920) : src),
-    [src, isApiAsset]
+    () => (isApiAsset && !usedFallback ? toImgUrl(src, 1920) : src),
+    [src, isApiAsset, usedFallback]
   );
 
   const srcSet = useMemo(() => {
-    if (!isApiAsset) return undefined;
+    if (!isApiAsset || usedFallback) return undefined;
     return SRCSET_WIDTHS.map(w => `${toImgUrl(src, w)} ${w}w`).join(', ');
-  }, [src, isApiAsset]);
+  }, [src, isApiAsset, usedFallback]);
 
   useEffect(() => {
     if (priority) return;
@@ -85,6 +88,13 @@ export default function OptimizedImage({
   };
 
   const handleError = () => {
+    // If /api/img/ failed and we haven't tried fallback yet, fall back to original /api/assets/
+    if (isApiAsset && !usedFallback) {
+      setUsedFallback(true);
+      setIsLoaded(false);
+      return;
+    }
+    // Both URLs failed (or non-asset image failed)
     setHasError(true);
     onError?.();
   };
@@ -98,7 +108,7 @@ export default function OptimizedImage({
       style={{ aspectRatio: aspectRatio ? `${width}/${height}` : undefined }}
     >
       {/* LQIP blur-up — shown while full image is loading */}
-      {isInView && lqipSrc && !isLoaded && !hasError && (
+      {isInView && lqipSrc && !usedFallback && !isLoaded && !hasError && (
         <img
           src={lqipSrc}
           alt=""
