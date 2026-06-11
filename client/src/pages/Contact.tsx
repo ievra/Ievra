@@ -393,7 +393,7 @@ export default function Contact() {
                   Email: contact@ievra.com
                 </p>
                 <p className="text-white/60 font-light text-base">
-                  {language === 'vi' ? 'Điện thoại' : 'Phone'}: 0767 5544 80 - 0969 8642 72
+                  {language === 'vi' ? 'Điện thoại' : 'Phone'}: 0767 5544 80
                 </p>
               </div>
             </div>
@@ -409,8 +409,8 @@ export default function Contact() {
                 </p>
                 <p className="text-white/60 font-light text-base leading-relaxed">
                   {language === 'vi'
-                    ? '64 Nguyễn Khoái, Phường 2, Quận 4, Tp. Hồ Chí Minh.'
-                    : '64 Nguyen Khoai, Ward 2, District 4, Ho Chi Minh City.'}
+                    ? '9 Nguyễn Khoái, Phường 2, Quận 4, Tp. Hồ Chí Minh.'
+                    : '9 Nguyen Khoai, Ward 2, District 4, Ho Chi Minh City.'}
                 </p>
               </div>
             </div>
