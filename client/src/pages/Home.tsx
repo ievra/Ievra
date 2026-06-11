@@ -31,6 +31,16 @@ import type {
   Category,
 } from "@shared/schema";
 
+const toCardImg = (src: string, w: number) =>
+  src?.startsWith('/api/assets/')
+    ? `/api/img/${src.replace('/api/assets/', '')}?w=${w}`
+    : src;
+
+const toCardSrcSet = (src: string, widths = [640, 960, 1280]) =>
+  src?.startsWith('/api/assets/')
+    ? widths.map(w => `${toCardImg(src, w)} ${w}w`).join(', ')
+    : undefined;
+
 function TypewriterTitle({ text, className }: { text: string; isActive?: boolean; className?: string }) {
   const [displayed, setDisplayed] = useState('');
   const rafRef = useRef<number | null>(null);
@@ -1060,9 +1070,13 @@ export default function Home() {
                       >
                         {Array.isArray(project.images) && project.images[0] ? (
                           <img
-                            src={project.images[0]}
+                            src={toCardImg(project.images[0], 960)}
+                            srcSet={toCardSrcSet(project.images[0])}
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 55vw, 40vw"
                             alt={project.title}
                             className="w-full h-full object-cover"
+                            loading="lazy"
+                            decoding="async"
                             data-testid={`img-project-${project.id}`}
                           />
                         ) : (
@@ -1326,9 +1340,13 @@ export default function Home() {
                         <div className="relative overflow-hidden" style={{ flex: '3' }}>
                           {(article.featuredImage || article.featuredImageData) ? (
                             <img
-                              src={article.featuredImage || article.featuredImageData || ''}
+                              src={toCardImg(article.featuredImage || article.featuredImageData || '', 960)}
+                              srcSet={toCardSrcSet(article.featuredImage || article.featuredImageData || '')}
+                              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 55vw, 40vw"
                               alt={article.title}
                               className="w-full h-full object-cover"
+                              loading="lazy"
+                              decoding="async"
                               data-testid={`img-article-${article.id}`}
                             />
                           ) : (

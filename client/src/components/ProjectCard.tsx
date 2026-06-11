@@ -42,7 +42,15 @@ export default function ProjectCard({
   const categoryLabel = getCategoryLabel(project.category);
   const subInfoItems = [p.style, p.area].filter(Boolean);
 
-  const optimizedSrc = projectImage || null;
+  const toCardImg = (src: string, w: number) =>
+    src?.startsWith('/api/assets/')
+      ? `/api/img/${src.replace('/api/assets/', '')}?w=${w}`
+      : src;
+
+  const cardSrc = projectImage ? toCardImg(projectImage, 960) : null;
+  const cardSrcSet = projectImage?.startsWith('/api/assets/')
+    ? [640, 960, 1280].map(w => `${toCardImg(projectImage, w)} ${w}w`).join(', ')
+    : undefined;
 
   return (
     <div
@@ -50,9 +58,11 @@ export default function ProjectCard({
       data-index={index}
     >
       <Link href={getProjectPath(language, project.slug, project.id)} className="block w-full h-full">
-        {optimizedSrc ? (
+        {cardSrc ? (
           <img
-            src={optimizedSrc}
+            src={cardSrc}
+            srcSet={cardSrcSet}
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             alt={title}
             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             loading={index < 4 ? 'eager' : 'lazy'}

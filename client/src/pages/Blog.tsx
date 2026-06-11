@@ -12,6 +12,16 @@ import { useState, useEffect, useMemo } from "react";
 import { FormattedText } from "@/lib/textUtils";
 import { getArticlePath } from "@/lib/routes";
 
+const toCardImg = (src: string, w: number) =>
+  src?.startsWith('/api/assets/')
+    ? `/api/img/${src.replace('/api/assets/', '')}?w=${w}`
+    : src;
+
+const toCardSrcSet = (src: string) =>
+  src?.startsWith('/api/assets/')
+    ? [640, 960].map(w => `${toCardImg(src, w)} ${w}w`).join(', ')
+    : undefined;
+
 export default function Blog() {
   const { language, t } = useLanguage();
   const [location] = useLocation();
@@ -455,9 +465,13 @@ export default function Blog() {
                   >
                     {(article.featuredImage || article.featuredImageData) ? (
                       <img
-                        src={article.featuredImage || article.featuredImageData || ''}
+                        src={toCardImg(article.featuredImage || article.featuredImageData || '', 640)}
+                        srcSet={toCardSrcSet(article.featuredImage || article.featuredImageData || '')}
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                         alt={article.title}
                         className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                        loading="lazy"
+                        decoding="async"
                         data-testid={`img-article-${article.id}`}
                       />
                     ) : (
