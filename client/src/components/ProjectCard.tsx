@@ -49,7 +49,7 @@ export default function ProjectCard({
 
   const cardSrc = projectImage ? toCardImg(projectImage, 960) : null;
   const cardSrcSet = projectImage?.startsWith('/api/assets/')
-    ? [640, 960, 1280].map(w => `${toCardImg(projectImage, w)} ${w}w`).join(', ')
+    ? [640, 960, 1280, 1920].map(w => `${toCardImg(projectImage, w)} ${w}w`).join(', ')
     : undefined;
 
   return (
@@ -62,7 +62,7 @@ export default function ProjectCard({
           <img
             src={cardSrc}
             srcSet={cardSrcSet}
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
             alt={title}
             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             loading={index < 4 ? 'eager' : 'lazy'}

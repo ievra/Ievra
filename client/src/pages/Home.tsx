@@ -36,7 +36,7 @@ const toCardImg = (src: string, w: number) =>
     ? `/api/img/${src.replace('/api/assets/', '')}?w=${w}`
     : src;
 
-const toCardSrcSet = (src: string, widths = [640, 960, 1280]) =>
+const toCardSrcSet = (src: string, widths = [640, 960, 1280, 1920]) =>
   src?.startsWith('/api/assets/')
     ? widths.map(w => `${toCardImg(src, w)} ${w}w`).join(', ')
     : undefined;

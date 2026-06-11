@@ -236,7 +236,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       if (lqip) {
         pipeline = pipeline.blur(3);
       }
-      const buffer = await pipeline.webp({ quality: lqip ? 20 : 82, effort: 4 }).toBuffer();
+      const buffer = await pipeline.webp({ quality: lqip ? 20 : 90, effort: 4 }).toBuffer();
       fs.writeFileSync(cachePath, buffer);
 
       res.set({ ...headers, 'Content-Length': String(buffer.length) });

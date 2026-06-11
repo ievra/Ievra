@@ -19,7 +19,7 @@ const toCardImg = (src: string, w: number) =>
 
 const toCardSrcSet = (src: string) =>
   src?.startsWith('/api/assets/')
-    ? [640, 960].map(w => `${toCardImg(src, w)} ${w}w`).join(', ')
+    ? [640, 960, 1280, 1920].map(w => `${toCardImg(src, w)} ${w}w`).join(', ')
     : undefined;
 
 export default function Blog() {
@@ -465,9 +465,9 @@ export default function Blog() {
                   >
                     {(article.featuredImage || article.featuredImageData) ? (
                       <img
-                        src={toCardImg(article.featuredImage || article.featuredImageData || '', 640)}
+                        src={toCardImg(article.featuredImage || article.featuredImageData || '', 960)}
                         srcSet={toCardSrcSet(article.featuredImage || article.featuredImageData || '')}
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 500px"
                         alt={article.title}
                         className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                         loading="lazy"
