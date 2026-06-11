@@ -7,7 +7,7 @@ import { createPortal } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Calendar, MapPin, User, Eye, Share2, Check, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { ArrowLeft, Calendar, MapPin, User, Eye, Share2, Check, X } from "lucide-react";
 import OptimizedImage from "@/components/OptimizedImage";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useToast } from "@/hooks/use-toast";
@@ -406,7 +406,7 @@ export default function ProjectDetail() {
       {/* Hero Section - Full width image with title overlay */}
       <div className="relative w-full aspect-[4/3] md:aspect-video mb-0">
         {heroImage && (
-          <div className="w-full h-full cursor-pointer" onClick={() => openLightbox(heroImage)}>
+          <div className="w-full h-full cursor-zoom-in" onClick={() => openLightbox(heroImage)}>
             <OptimizedImage
               src={heroImage}
               alt={project.title}
@@ -436,7 +436,7 @@ export default function ProjectDetail() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
         <div className="order-2 md:order-1">
           {section1Image && (
-            <div className="aspect-square cursor-pointer" onClick={() => openLightbox(section1Image)}>
+            <div className="aspect-square cursor-zoom-in" onClick={() => openLightbox(section1Image)}>
               <OptimizedImage
                 src={section1Image}
                 alt={`${project.title} - Featured`}
@@ -507,7 +507,7 @@ export default function ProjectDetail() {
           </div>
           <div className="order-2">
             {(project.section2Image || galleryImages[0]) && (
-              <div className="aspect-square cursor-pointer" onClick={() => openLightbox(project.section2Image || galleryImages[0])}>
+              <div className="aspect-square cursor-zoom-in" onClick={() => openLightbox(project.section2Image || galleryImages[0])}>
                 <OptimizedImage
                   src={project.section2Image || galleryImages[0]}
                   alt={`${project.title} - Gallery 1`}
@@ -527,7 +527,7 @@ export default function ProjectDetail() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0">
           <div className="order-2 md:order-1">
             {(project.section3Image || galleryImages[1]) && (
-              <div className="aspect-square cursor-pointer" onClick={() => openLightbox(project.section3Image || galleryImages[1])}>
+              <div className="aspect-square cursor-zoom-in" onClick={() => openLightbox(project.section3Image || galleryImages[1])}>
                 <OptimizedImage
                   src={project.section3Image || galleryImages[1]}
                   alt={`${project.title} - Gallery 2`}
@@ -572,7 +572,7 @@ export default function ProjectDetail() {
               </h2>
             </div>
           )}
-          <div className="w-full aspect-video cursor-pointer" onClick={() => openLightbox(project.bannerImage!)}>
+          <div className="w-full aspect-video cursor-zoom-in" onClick={() => openLightbox(project.bannerImage!)}>
             <OptimizedImage
               src={project.bannerImage}
               alt={project.bannerTitle || project.title}
@@ -589,7 +589,7 @@ export default function ProjectDetail() {
         <div className="w-full" id="additional-gallery" data-testid="section-additional" tabIndex={-1}>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0">
             {galleryImages.map((image: string, index: number) => (
-              <div key={index} className="aspect-[4/3] cursor-pointer" onClick={() => openLightbox(image)}>
+              <div key={index} className="aspect-[4/3] cursor-zoom-in" onClick={() => openLightbox(image)}>
                 <OptimizedImage
                   src={image}
                   alt={`${project.title} - Gallery ${index + 1}`}
@@ -657,23 +657,6 @@ export default function ProjectDetail() {
             <X className="w-8 h-8" />
           </button>
 
-          {allClickableImages.length > 1 && (
-            <>
-              <button
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white z-10 p-2"
-                onClick={(e) => { e.stopPropagation(); setLightboxIndex((prev) => (prev - 1 + allClickableImages.length) % allClickableImages.length); }}
-              >
-                <ChevronLeft className="w-10 h-10" />
-              </button>
-              <button
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/70 hover:text-white z-10 p-2"
-                onClick={(e) => { e.stopPropagation(); setLightboxIndex((prev) => (prev + 1) % allClickableImages.length); }}
-              >
-                <ChevronRight className="w-10 h-10" />
-              </button>
-            </>
-          )}
-
           <div className="max-w-[90vw] max-h-[90vh] flex items-center justify-center" onClick={(e) => e.stopPropagation()}>
             <img
               src={allClickableImages[lightboxIndex]}
@@ -683,12 +666,6 @@ export default function ProjectDetail() {
               onContextMenu={(e) => e.preventDefault()}
             />
           </div>
-
-          {allClickableImages.length > 1 && (
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/60 text-sm">
-              {lightboxIndex + 1} / {allClickableImages.length}
-            </div>
-          )}
         </div>,
         document.body
       )}
