@@ -475,6 +475,9 @@ export default function BlogDetail() {
                 if (src) openLightbox(src);
               }
             }}
+            onContextMenu={(e) => {
+              if ((e.target as HTMLElement).tagName === 'IMG') e.preventDefault();
+            }}
             dangerouslySetInnerHTML={{ __html: parseBoldTextToHTML(String(article.content)) }}
             data-testid="article-content"
           />
@@ -533,6 +536,8 @@ export default function BlogDetail() {
               src={lightboxImages[lightboxIndex]}
               alt={`${article.title} - ${lightboxIndex + 1}`}
               className="max-w-full max-h-[90vh] object-contain"
+              draggable={false}
+              onContextMenu={(e) => e.preventDefault()}
             />
           </div>
 

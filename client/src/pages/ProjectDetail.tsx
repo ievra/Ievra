@@ -679,6 +679,8 @@ export default function ProjectDetail() {
               src={allClickableImages[lightboxIndex]}
               alt={`${project.title} - ${lightboxIndex + 1}`}
               className="max-w-full max-h-[90vh] object-contain"
+              draggable={false}
+              onContextMenu={(e) => e.preventDefault()}
             />
           </div>
 
