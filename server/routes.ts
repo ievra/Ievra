@@ -21,6 +21,44 @@ function hashPassword(password: string): string {
   return createHash('sha256').update(password).digest('hex');
 }
 
+// ─── Asset file cleanup helpers ───────────────────────────────────────────────
+function extractAssetFilename(val: string | null | undefined): string | null {
+  if (!val) return null;
+  const m = val.match(/([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.[a-z0-9]+)/i);
+  return m ? m[1] : null;
+}
+
+function deleteAssetFile(pathOrUrl: string | null | undefined): void {
+  const filename = extractAssetFilename(pathOrUrl || '');
+  if (!filename) return;
+  const candidates = [
+    path.join('/var/www/vhosts/moderno.com.vn/httpdocs/attached_assets', filename),
+    path.join(__dirname, '..', 'attached_assets', filename),
+    path.join(__dirname, '..', '..', 'attached_assets', filename),
+    path.join(process.cwd(), 'attached_assets', filename),
+  ];
+  for (const p of candidates) {
+    if (fs.existsSync(p)) {
+      try { fs.unlinkSync(p); console.log(`[asset-cleanup] deleted ${filename}`); }
+      catch (e) { console.error(`[asset-cleanup] failed ${p}`, e); }
+      break;
+    }
+  }
+}
+
+function deleteAssetFiles(paths: (string | null | undefined)[]): void {
+  for (const p of paths) deleteAssetFile(p);
+}
+
+function galleryPaths(galleryImages: any): string[] {
+  if (!galleryImages) return [];
+  const arr: any[] = Array.isArray(galleryImages) ? galleryImages : (() => {
+    try { return JSON.parse(galleryImages); } catch { return []; }
+  })();
+  return arr.map((i: any) => (typeof i === 'string' ? i : i?.url || i?.src || '')).filter(Boolean);
+}
+// ──────────────────────────────────────────────────────────────────────────────
+
 // Ping Google and Bing to notify them that the sitemap has been updated.
 // Runs fire-and-forget — never blocks the HTTP response.
 function pingSitemap(siteBaseUrl: string) {
@@ -782,16 +820,34 @@ body{padding:16px 24px}
   app.put("/api/projects/:id", requirePermission('projects'), async (req, res) => {
     try {
       const validatedData = insertProjectSchema.partial().parse(req.body);
-      if (validatedData.slug) {
-        const current = await storage.getProject(req.params.id);
-        if (current && current.slug !== validatedData.slug) {
-          const existing = await storage.getProjectBySlug(validatedData.slug);
-          if (existing) {
-            return res.status(409).json({ message: "URL/Slug này đã tồn tại. Vui lòng chọn URL khác." });
-          }
+      const current = await storage.getProject(req.params.id);
+      if (validatedData.slug && current && current.slug !== validatedData.slug) {
+        const existing = await storage.getProjectBySlug(validatedData.slug);
+        if (existing) {
+          return res.status(409).json({ message: "URL/Slug này đã tồn tại. Vui lòng chọn URL khác." });
         }
       }
       const project = await storage.updateProject(req.params.id, validatedData);
+      // Delete replaced image files
+      if (current) {
+        if (validatedData.heroImage !== undefined && validatedData.heroImage !== current.heroImage)
+          deleteAssetFile(current.heroImage);
+        if (validatedData.coverImages !== undefined) {
+          const oldPaths = galleryPaths(current.coverImages);
+          const newPaths = new Set(galleryPaths(validatedData.coverImages));
+          deleteAssetFiles(oldPaths.filter(p => !newPaths.has(p)));
+        }
+        if (validatedData.galleryImages !== undefined) {
+          const oldPaths = galleryPaths(current.galleryImages);
+          const newPaths = new Set(galleryPaths(validatedData.galleryImages));
+          deleteAssetFiles(oldPaths.filter(p => !newPaths.has(p)));
+        }
+        if (validatedData.contentImages !== undefined) {
+          const oldPaths = galleryPaths(current.contentImages);
+          const newPaths = new Set(galleryPaths(validatedData.contentImages));
+          deleteAssetFiles(oldPaths.filter(p => !newPaths.has(p)));
+        }
+      }
       if (validatedData.status === 'published') pingSitemap(getSiteBaseUrl(req));
       res.json(project);
     } catch (error) {
@@ -804,7 +860,17 @@ body{padding:16px 24px}
 
   app.delete("/api/projects/:id", requirePermission('projects'), async (req, res) => {
     try {
+      const project = await storage.getProject(req.params.id);
       await storage.deleteProject(req.params.id);
+      if (project) {
+        deleteAssetFiles([
+          project.heroImage,
+          project.ogImage,
+          ...galleryPaths(project.coverImages),
+          ...galleryPaths(project.galleryImages),
+          ...galleryPaths(project.contentImages),
+        ]);
+      }
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete project" });
@@ -1214,33 +1280,26 @@ body{padding:16px 24px}
   app.put("/api/articles/:id", requirePermission('articles'), async (req, res) => {
     try {
       const validatedData = insertArticleSchema.partial().parse(req.body);
+      const currentArticle = await storage.getArticle(req.params.id);
 
-      if (validatedData.slug) {
-        const currentArticle = await storage.getArticle(req.params.id);
-        if (currentArticle && currentArticle.slug !== validatedData.slug) {
-          const existing = await storage.getArticleBySlug(validatedData.slug);
-          if (existing) {
-            return res.status(409).json({ message: "URL/Slug này đã tồn tại. Vui lòng chọn URL khác." });
-          }
-        }
-        // Update publishedAt if status is being set to published
-        if (validatedData.status === 'published') {
-          const currentArticle2 = await storage.getArticle(req.params.id);
-          if (currentArticle2 && currentArticle2.status !== 'published') {
-            validatedData.publishedAt = new Date();
-          }
-        }
-      } else {
-        // Update publishedAt if status is being set to published
-        if (validatedData.status === 'published') {
-          const currentArticle = await storage.getArticle(req.params.id);
-          if (currentArticle && currentArticle.status !== 'published') {
-            validatedData.publishedAt = new Date();
-          }
+      if (validatedData.slug && currentArticle && currentArticle.slug !== validatedData.slug) {
+        const existing = await storage.getArticleBySlug(validatedData.slug);
+        if (existing) {
+          return res.status(409).json({ message: "URL/Slug này đã tồn tại. Vui lòng chọn URL khác." });
         }
       }
-      
+      if (validatedData.status === 'published' && currentArticle && currentArticle.status !== 'published') {
+        validatedData.publishedAt = new Date();
+      }
+
       const article = await storage.updateArticle(req.params.id, validatedData);
+      // Delete replaced image files
+      if (currentArticle) {
+        if (validatedData.featuredImage !== undefined && validatedData.featuredImage !== currentArticle.featuredImage)
+          deleteAssetFile(currentArticle.featuredImage);
+        if (validatedData.ogImage !== undefined && validatedData.ogImage !== currentArticle.ogImage)
+          deleteAssetFile(currentArticle.ogImage);
+      }
       if (validatedData.status === 'published') pingSitemap(getSiteBaseUrl(req));
       res.json(article);
     } catch (error) {
@@ -1253,7 +1312,11 @@ body{padding:16px 24px}
 
   app.delete("/api/articles/:id", requirePermission('articles'), async (req, res) => {
     try {
+      const article = await storage.getArticle(req.params.id);
       await storage.deleteArticle(req.params.id);
+      if (article) {
+        deleteAssetFiles([article.featuredImage, article.ogImage]);
+      }
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete article" });
@@ -1354,7 +1417,10 @@ body{padding:16px 24px}
   app.put("/api/partners/:id", requirePermission('partners'), async (req, res) => {
     try {
       const validatedData = insertPartnerSchema.partial().parse(req.body);
+      const current = await storage.getPartner(req.params.id);
       const partner = await storage.updatePartner(req.params.id, validatedData);
+      if (current && validatedData.logo !== undefined && validatedData.logo !== current.logo)
+        deleteAssetFile(current.logo);
       res.json(partner);
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -1366,7 +1432,9 @@ body{padding:16px 24px}
 
   app.delete("/api/partners/:id", requirePermission('partners'), async (req, res) => {
     try {
+      const partner = await storage.getPartner(req.params.id);
       await storage.deletePartner(req.params.id);
+      if (partner) deleteAssetFile(partner.logo);
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete partner" });
@@ -1885,7 +1953,9 @@ body{padding:16px 24px}
 
   app.delete("/api/advantages/:id", requirePermission('homepage'), async (req, res) => {
     try {
+      const adv = await storage.getAdvantage(req.params.id);
       await storage.deleteAdvantage(req.params.id);
+      if (adv) deleteAssetFile((adv as any).image);
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete advantage" });
@@ -1947,7 +2017,9 @@ body{padding:16px 24px}
 
   app.delete("/api/journey-steps/:id", requirePermission('homepage'), async (req, res) => {
     try {
+      const step = await storage.getJourneyStep(req.params.id);
       await storage.deleteJourneyStep(req.params.id);
+      if (step) deleteAssetFile((step as any).image);
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete journey step" });
@@ -2062,7 +2134,9 @@ body{padding:16px 24px}
 
   app.delete("/api/about-showcase-services/:id", requirePermission('about'), async (req, res) => {
     try {
+      const svc = await storage.getAboutShowcaseService(req.params.id);
       await storage.deleteAboutShowcaseService(req.params.id);
+      if (svc) deleteAssetFile((svc as any).image);
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete showcase service" });
@@ -2184,7 +2258,9 @@ body{padding:16px 24px}
 
   app.delete("/api/about-team-members/:id", requirePermission('about'), async (req, res) => {
     try {
+      const member = await storage.getAboutTeamMember(req.params.id);
       await storage.deleteAboutTeamMember(req.params.id);
+      if (member) deleteAssetFile((member as any).image);
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete team member" });
@@ -2238,7 +2314,9 @@ body{padding:16px 24px}
 
   app.delete("/api/about-awards/:id", requirePermission('about'), async (req, res) => {
     try {
+      const award = await storage.getAboutAward(req.params.id);
       await storage.deleteAboutAward(req.params.id);
+      if (award) deleteAssetFile((award as any).image);
       res.status(204).send();
     } catch (error) {
       res.status(500).json({ message: "Failed to delete award" });
