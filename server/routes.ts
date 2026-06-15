@@ -300,6 +300,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.send([
       'User-agent: *',
       'Allow: /',
+      'Allow: /api/assets/',
       'Disallow: /admin',
       'Disallow: /login',
       'Disallow: /api/',
