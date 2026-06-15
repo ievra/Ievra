@@ -11,6 +11,9 @@ export default function Footer() {
           <a href="https://www.facebook.com/ievra.archi" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors">
             <SiFacebook size={16} />
           </a>
+          <a href="https://www.facebook.com/ievra.interior" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors">
+            <SiFacebook size={16} />
+          </a>
           <a href="https://www.instagram.com/ievra.vn" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors">
             <SiInstagram size={16} />
           </a>
