@@ -1,0 +1,27 @@
+Act as an Expert Full-Stack Developer & Technical SEO Specialist. I have a Single Page Application (SPA) currently built with Vite. Please audit the repository and implement the following fixes based on a recent Screaming Frog SEO crawl report:
+
+### 1. Fix robots.txt (High Priority - Image Indexing)
+The current `robots.txt` blocks `/api/` which accidentally blocks our image assets at `/api/assets/`. 
+- Please update the `robots.txt` file to explicitly allow `/api/assets/` so search engine bots can crawl our images. 
+- Example format:
+User-agent: *
+Allow: /
+Allow: /api/assets/
+Disallow: /admin
+Disallow: /login
+Disallow: /api/
+
+### 2. Implement Missing Security Headers
+The server responses are missing essential security headers. Please configure our server/middleware (e.g., Express, Vercel config, Netlify config, or Vite config depending on our setup) to inject the following HTTP headers globally:
+- Strict-Transport-Security (HSTS)
+- X-Frame-Options: SAMEORIGIN
+- X-Content-Type-Options: nosniff
+- Referrer-Policy: strict-origin-when-cross-origin
+- Content-Security-Policy (Set up a basic secure policy that allows our current scripts/assets like Google Analytics and our image CDN).
+
+### 3. Fix On-Page SEO Issues
+- **Missing Canonicals:** Ensure there is a dynamic `<link rel="canonical" href="..." />` on every single page component (especially check if any page is missing it).
+- **Missing Internal Outlinks:** Check the global layout (Header/Footer/Navigation). Ensure that no page is an "orphan" or dead-end by verifying that the global navigation/footer with internal links renders correctly on all routes.
+- **Headings (H1/H2) & SPA Rendering:** Screaming Frog reported missing H1/H2s, likely because the raw HTML only serves `<div id="root"></div>`. Please check if we have Server-Side Rendering (SSR) or Static Site Generation (SSG) enabled. If not, suggest or implement a pre-rendering solution (like `vite-plugin-prerender` or React Helmet with react-snap) so that bots can read the actual HTML with H1, H2, and Meta tags without needing to execute JavaScript.
+
+Please review the codebase, tell me which files you are going to modify, and then proceed with the changes.

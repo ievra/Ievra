@@ -27,6 +27,43 @@ app.use(express.urlencoded({ extended: false, limit: '50mb' }));
 
 app.set('trust proxy', 1);
 
+// Security headers
+app.use((_req, res, next) => {
+  // HSTS: enforce HTTPS for 1 year (only meaningful in production behind HTTPS)
+  res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  // Prevent clickjacking
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  // Prevent MIME-type sniffing
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  // Control referrer info sent to other origins
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  // Content Security Policy
+  res.setHeader('Content-Security-Policy', [
+    "default-src 'self'",
+    // Scripts: self + inline (React/Vite HMR) + Google Analytics/Tag Manager
+    "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com",
+    // Styles: self + inline (Tailwind/styled components) + Google Fonts
+    "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+    // Fonts: self + Google Fonts CDN
+    "font-src 'self' https://fonts.gstatic.com",
+    // Images: self + data URIs + Unsplash + any HTTPS source (for user-uploaded CDN images)
+    "img-src 'self' data: blob: https:",
+    // Media: self
+    "media-src 'self'",
+    // Connect: self + Google Analytics
+    "connect-src 'self' https://www.google-analytics.com https://analytics.google.com",
+    // Frames: same origin only
+    "frame-src 'self'",
+    // Object/embed: none
+    "object-src 'none'",
+    // Base URI: self only (prevent base-tag injection)
+    "base-uri 'self'",
+    // Form action: self only
+    "form-action 'self'",
+  ].join('; '));
+  next();
+});
+
 const PgSession = ConnectPgSimple(session);
 const isProduction = process.env.NODE_ENV === 'production';
 
