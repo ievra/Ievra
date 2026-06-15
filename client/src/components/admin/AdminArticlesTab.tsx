@@ -1437,10 +1437,16 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                     name="metaTitleEn"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Meta Title (EN)</FormLabel>
+                        <div className="flex items-center justify-between">
+                          <FormLabel>Meta Title (EN)</FormLabel>
+                          <span className={`text-xs tabular-nums ${(field.value?.length || 0) > 60 ? 'text-destructive' : (field.value?.length || 0) >= 50 ? 'text-green-500' : 'text-muted-foreground'}`}>
+                            {field.value?.length || 0}/60
+                          </span>
+                        </div>
                         <FormControl>
-                          <Input {...field} value={field.value || ''} data-testid="input-article-meta-title-en" placeholder="Custom SEO title in English..." />
+                          <Input {...field} value={field.value || ''} maxLength={60} data-testid="input-article-meta-title-en" placeholder="Custom SEO title in English..." />
                         </FormControl>
+                        <FormDescription className="text-xs">Hiển thị trên Google Search. Lý tưởng: <strong>50–60 ký tự</strong>. Đặt từ khóa chính ở đầu.</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -1451,10 +1457,16 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                     name="metaDescriptionEn"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Meta Description (EN)</FormLabel>
+                        <div className="flex items-center justify-between">
+                          <FormLabel>Meta Description (EN)</FormLabel>
+                          <span className={`text-xs tabular-nums ${(field.value?.length || 0) > 160 ? 'text-destructive' : (field.value?.length || 0) >= 120 ? 'text-green-500' : 'text-muted-foreground'}`}>
+                            {field.value?.length || 0}/160
+                          </span>
+                        </div>
                         <FormControl>
-                          <Textarea {...field} value={field.value || ''} rows={3} data-testid="textarea-article-meta-description-en" placeholder="SEO description in English..." />
+                          <Textarea {...field} value={field.value || ''} rows={3} maxLength={160} data-testid="textarea-article-meta-description-en" placeholder="SEO description in English..." />
                         </FormControl>
+                        <FormDescription className="text-xs">Đoạn mô tả hiện dưới tiêu đề trên Google. Lý tưởng: <strong>120–160 ký tự</strong>. Nêu lợi ích, từ khóa và call-to-action.</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -1467,8 +1479,9 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                       <FormItem>
                         <FormLabel>Meta Keywords (EN)</FormLabel>
                         <FormControl>
-                          <Input {...field} value={field.value || ''} data-testid="input-article-meta-keywords-en" placeholder="keyword1, keyword2, keyword3" />
+                          <Input {...field} value={field.value || ''} maxLength={200} data-testid="input-article-meta-keywords-en" placeholder="keyword1, keyword2, keyword3" />
                         </FormControl>
+                        <FormDescription className="text-xs">Cách nhau bằng dấu phẩy. Nên dùng <strong>3–5 từ khóa</strong> liên quan trực tiếp đến nội dung bài.</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -1482,10 +1495,16 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                     name="metaTitleVi"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Meta Title (VI)</FormLabel>
+                        <div className="flex items-center justify-between">
+                          <FormLabel>Meta Title (VI)</FormLabel>
+                          <span className={`text-xs tabular-nums ${(field.value?.length || 0) > 60 ? 'text-destructive' : (field.value?.length || 0) >= 50 ? 'text-green-500' : 'text-muted-foreground'}`}>
+                            {field.value?.length || 0}/60
+                          </span>
+                        </div>
                         <FormControl>
-                          <Input {...field} value={field.value || ''} data-testid="input-article-meta-title-vi" placeholder="Tiêu đề SEO bằng tiếng Việt..." />
+                          <Input {...field} value={field.value || ''} maxLength={60} data-testid="input-article-meta-title-vi" placeholder="Tiêu đề SEO bằng tiếng Việt..." />
                         </FormControl>
+                        <FormDescription className="text-xs">Hiển thị trên Google Search. Lý tưởng: <strong>50–60 ký tự</strong>. Đặt từ khóa chính ở đầu.</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -1496,10 +1515,16 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                     name="metaDescriptionVi"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Meta Description (VI)</FormLabel>
+                        <div className="flex items-center justify-between">
+                          <FormLabel>Meta Description (VI)</FormLabel>
+                          <span className={`text-xs tabular-nums ${(field.value?.length || 0) > 160 ? 'text-destructive' : (field.value?.length || 0) >= 120 ? 'text-green-500' : 'text-muted-foreground'}`}>
+                            {field.value?.length || 0}/160
+                          </span>
+                        </div>
                         <FormControl>
-                          <Textarea {...field} value={field.value || ''} rows={3} data-testid="textarea-article-meta-description-vi" placeholder="Mô tả SEO bằng tiếng Việt..." />
+                          <Textarea {...field} value={field.value || ''} rows={3} maxLength={160} data-testid="textarea-article-meta-description-vi" placeholder="Mô tả SEO bằng tiếng Việt..." />
                         </FormControl>
+                        <FormDescription className="text-xs">Đoạn mô tả hiện dưới tiêu đề trên Google. Lý tưởng: <strong>120–160 ký tự</strong>. Nêu lợi ích, từ khóa và call-to-action.</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}

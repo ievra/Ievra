@@ -1394,10 +1394,16 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                         name="metaTitleEn"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Meta Title (EN) <span className="text-muted-foreground text-xs font-normal">- Tối đa 60</span></FormLabel>
+                            <div className="flex items-center justify-between">
+                              <FormLabel>Meta Title (EN)</FormLabel>
+                              <span className={`text-xs tabular-nums ${(field.value?.length || 0) > 60 ? 'text-destructive' : (field.value?.length || 0) >= 50 ? 'text-green-500' : 'text-muted-foreground'}`}>
+                                {field.value?.length || 0}/60
+                              </span>
+                            </div>
                             <FormControl>
                               <Input {...field} maxLength={60} placeholder="Tiêu đề SEO tiếng Anh..." data-testid="input-project-meta-title-en" />
                             </FormControl>
+                            <FormDescription className="text-xs">Hiển thị trên Google Search. Lý tưởng: <strong>50–60 ký tự</strong>. Đặt từ khóa chính ở đầu.</FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -1407,10 +1413,16 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                         name="metaDescriptionEn"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Meta Description (EN) <span className="text-muted-foreground text-xs font-normal">- Tối đa 160</span></FormLabel>
+                            <div className="flex items-center justify-between">
+                              <FormLabel>Meta Description (EN)</FormLabel>
+                              <span className={`text-xs tabular-nums ${(field.value?.length || 0) > 160 ? 'text-destructive' : (field.value?.length || 0) >= 120 ? 'text-green-500' : 'text-muted-foreground'}`}>
+                                {field.value?.length || 0}/160
+                              </span>
+                            </div>
                             <FormControl>
                               <Textarea {...field} rows={2} maxLength={160} placeholder="Mô tả SEO tiếng Anh..." data-testid="textarea-project-meta-description-en" />
                             </FormControl>
+                            <FormDescription className="text-xs">Đoạn mô tả hiện dưới tiêu đề trên Google. Lý tưởng: <strong>120–160 ký tự</strong>. Nêu lợi ích, từ khóa và call-to-action.</FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -1420,10 +1432,11 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                         name="metaKeywordsEn"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Meta Keywords (EN) <span className="text-muted-foreground text-xs font-normal">- Tối đa 200</span></FormLabel>
+                            <FormLabel>Meta Keywords (EN)</FormLabel>
                             <FormControl>
                               <Input {...field} maxLength={200} placeholder="từ khóa 1, từ khóa 2, từ khóa 3..." data-testid="input-project-meta-keywords-en" />
                             </FormControl>
+                            <FormDescription className="text-xs">Cách nhau bằng dấu phẩy. Nên dùng <strong>3–5 từ khóa</strong> liên quan trực tiếp đến dự án.</FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -1436,10 +1449,16 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                         name="metaTitleVi"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Meta Title (VI) <span className="text-muted-foreground text-xs font-normal">- Tối đa 60</span></FormLabel>
+                            <div className="flex items-center justify-between">
+                              <FormLabel>Meta Title (VI)</FormLabel>
+                              <span className={`text-xs tabular-nums ${(field.value?.length || 0) > 60 ? 'text-destructive' : (field.value?.length || 0) >= 50 ? 'text-green-500' : 'text-muted-foreground'}`}>
+                                {field.value?.length || 0}/60
+                              </span>
+                            </div>
                             <FormControl>
                               <Input {...field} maxLength={60} placeholder="Tiêu đề SEO tiếng Việt..." data-testid="input-project-meta-title-vi" />
                             </FormControl>
+                            <FormDescription className="text-xs">Hiển thị trên Google Search. Lý tưởng: <strong>50–60 ký tự</strong>. Đặt từ khóa chính ở đầu.</FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -1449,10 +1468,16 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                         name="metaDescriptionVi"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Meta Description (VI) <span className="text-muted-foreground text-xs font-normal">- Tối đa 160</span></FormLabel>
+                            <div className="flex items-center justify-between">
+                              <FormLabel>Meta Description (VI)</FormLabel>
+                              <span className={`text-xs tabular-nums ${(field.value?.length || 0) > 160 ? 'text-destructive' : (field.value?.length || 0) >= 120 ? 'text-green-500' : 'text-muted-foreground'}`}>
+                                {field.value?.length || 0}/160
+                              </span>
+                            </div>
                             <FormControl>
                               <Textarea {...field} rows={2} maxLength={160} placeholder="Mô tả SEO tiếng Việt..." data-testid="textarea-project-meta-description-vi" />
                             </FormControl>
+                            <FormDescription className="text-xs">Đoạn mô tả hiện dưới tiêu đề trên Google. Lý tưởng: <strong>120–160 ký tự</strong>. Nêu lợi ích, từ khóa và call-to-action.</FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
@@ -1462,10 +1487,11 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                         name="metaKeywordsVi"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Meta Keywords (VI) <span className="text-muted-foreground text-xs font-normal">- Tối đa 200</span></FormLabel>
+                            <FormLabel>Meta Keywords (VI)</FormLabel>
                             <FormControl>
                               <Input {...field} maxLength={200} placeholder="từ khóa 1, từ khóa 2, từ khóa 3..." data-testid="input-project-meta-keywords-vi" />
                             </FormControl>
+                            <FormDescription className="text-xs">Cách nhau bằng dấu phẩy. Nên dùng <strong>3–5 từ khóa</strong> liên quan trực tiếp đến dự án.</FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
