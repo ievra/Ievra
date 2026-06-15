@@ -329,6 +329,73 @@ export async function registerRoutes(app: Express): Promise<Server> {
     ].join('\n'));
   });
 
+  app.get("/sitemap.xsl", (req, res) => {
+    res.set('Content-Type', 'text/xsl; charset=utf-8');
+    res.set('Cache-Control', 'public, max-age=86400');
+    res.send(`<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="2.0"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:sitemap="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <xsl:output method="html" version="1.0" encoding="UTF-8" indent="yes"/>
+  <xsl:template match="/">
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <title>Sitemap — IEVRA Design &amp; Build</title>
+        <style>
+          *{box-sizing:border-box;margin:0;padding:0}
+          body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a0a;color:#e5e5e5;padding:40px 20px}
+          h1{font-size:22px;font-weight:300;letter-spacing:.15em;text-transform:uppercase;color:#fff;margin-bottom:6px}
+          p.sub{font-size:13px;color:#666;margin-bottom:32px}
+          p.sub a{color:#a07850;text-decoration:none}
+          table{width:100%;border-collapse:collapse;font-size:13px}
+          thead tr{border-bottom:1px solid #2a2a2a}
+          thead th{text-align:left;padding:10px 14px;font-weight:500;color:#888;text-transform:uppercase;letter-spacing:.08em;font-size:11px}
+          tbody tr{border-bottom:1px solid #161616;transition:background .15s}
+          tbody tr:hover{background:#141414}
+          td{padding:11px 14px;vertical-align:middle}
+          td a{color:#c9a87c;text-decoration:none;word-break:break-all}
+          td a:hover{text-decoration:underline}
+          .badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:11px;font-weight:500;background:#1e1e1e;color:#888;border:1px solid #2a2a2a}
+          .num{color:#555;font-size:12px}
+        </style>
+      </head>
+      <body>
+        <h1>Sitemap</h1>
+        <p class="sub">
+          <xsl:value-of select="count(sitemap:urlset/sitemap:url)"/> URLs —
+          <a href="https://ievra.com">ievra.com</a>
+        </p>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>URL</th>
+              <th>Last Modified</th>
+              <th>Change Freq</th>
+              <th>Priority</th>
+            </tr>
+          </thead>
+          <tbody>
+            <xsl:for-each select="sitemap:urlset/sitemap:url">
+              <tr>
+                <td class="num"><xsl:value-of select="position()"/></td>
+                <td><a href="{sitemap:loc}"><xsl:value-of select="sitemap:loc"/></a></td>
+                <td><xsl:value-of select="sitemap:lastmod"/></td>
+                <td><span class="badge"><xsl:value-of select="sitemap:changefreq"/></span></td>
+                <td><xsl:value-of select="sitemap:priority"/></td>
+              </tr>
+            </xsl:for-each>
+          </tbody>
+        </table>
+      </body>
+    </html>
+  </xsl:template>
+</xsl:stylesheet>`);
+  });
+
   app.get("/sitemap.xml", async (req, res) => {
     res.removeHeader('X-Robots-Tag');
     res.setHeader('Content-Type', 'application/xml; charset=utf-8');
@@ -378,6 +445,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const today = new Date().toISOString().split('T')[0];
 
       let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;
+      xml += `<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>\n`;
       xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"\n`;
       xml += `        xmlns:xhtml="http://www.w3.org/1999/xhtml">\n`;
 
