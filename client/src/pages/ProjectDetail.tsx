@@ -161,22 +161,33 @@ export default function ProjectDetail() {
   // /portfolio/:slug → EN, /du-an/:slug → VI (prevents soft 404 when UI lang ≠ content lang)
   const fetchLang = duAnParams?.slug ? 'vi' : 'en';
 
-  const { data: project, isLoading, error } = useQuery<Project>({
+  const { data: project, isLoading, isFetching, error } = useQuery<Project>({
     queryKey: isSlugRoute 
       ? ['/api/projects/slug', projectSlug, fetchLang] 
       : ['/api/projects', projectId],
     queryFn: async () => {
       if (isSlugRoute) {
         const response = await fetch(`/api/projects/slug/${projectSlug}?language=${fetchLang}`);
-        if (!response.ok) throw new Error("Failed to fetch project");
+        if (!response.ok) {
+          const err: any = new Error("Failed to fetch project");
+          err.status = response.status;
+          throw err;
+        }
         return response.json();
       } else {
         const response = await fetch(`/api/projects/${projectId}`);
-        if (!response.ok) throw new Error("Failed to fetch project");
+        if (!response.ok) {
+          const err: any = new Error("Failed to fetch project");
+          err.status = response.status;
+          throw err;
+        }
         return response.json();
       }
     },
     enabled: !!(projectSlug || projectId),
+    retry: 2,
+    retryDelay: 1000,
+    staleTime: 60_000,
   });
 
   // Redirect to slug-based URL if accessing by ID and project has a slug
@@ -337,7 +348,7 @@ export default function ProjectDetail() {
     hreflang: projectHreflang,
   });
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return (
       <div className="min-h-screen bg-black">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
@@ -355,7 +366,7 @@ export default function ProjectDetail() {
     );
   }
 
-  if (error || !project) {
+  if (!project) {
     return (
       <div className="min-h-screen bg-black flex items-center justify-center">
         <Card className="w-full max-w-md bg-zinc-900 border-zinc-800">

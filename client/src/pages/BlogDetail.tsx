@@ -137,18 +137,23 @@ export default function BlogDetail() {
   // /blog/:slug → EN, /tin-tuc/:slug → VI (prevents soft 404 when UI lang ≠ content lang)
   const fetchLang = blogLocation.startsWith('/tin-tuc') ? 'vi' : 'en';
 
-  const { data: article, isLoading, error } = useQuery<Article>({
+  const { data: article, isLoading, isFetching, error } = useQuery<Article>({
     queryKey: ['/api/articles/slug', slug, fetchLang],
     queryFn: async () => {
       const params = new URLSearchParams();
       params.append('language', fetchLang);
       const response = await fetch(`/api/articles/slug/${slug}?${params.toString()}`);
       if (!response.ok) {
-        throw new Error('Article not found');
+        const err: any = new Error('Article not found');
+        err.status = response.status;
+        throw err;
       }
       return response.json();
     },
     enabled: !!slug,
+    retry: 2,
+    retryDelay: 1000,
+    staleTime: 60_000,
   });
 
   // Redirect to correct language URL when server returns sibling via linkedSlug fallback
@@ -293,7 +298,7 @@ export default function BlogDetail() {
     hreflang: articleHreflang,
   });
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return (
       <div className="min-h-screen pt-24 pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -313,7 +318,7 @@ export default function BlogDetail() {
     );
   }
 
-  if (error || !article) {
+  if (!article) {
     return (
       <div className="min-h-screen pt-24 pb-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-16">

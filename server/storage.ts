@@ -374,6 +374,8 @@ export class DatabaseStorage implements IStorage {
         );
         if (linkedProject) return linkedProject;
       }
+      // Final fallback: slug tồn tại nhưng không có bản dịch theo language → trả về bất kỳ version nào
+      if (anyVersion) return anyVersion;
     }
 
     return undefined;
@@ -596,6 +598,8 @@ export class DatabaseStorage implements IStorage {
         );
         if (linkedArticle) return linkedArticle;
       }
+      // Final fallback: slug tồn tại nhưng không có bản dịch theo language → trả về bất kỳ version nào
+      if (anyVersion) return anyVersion;
     }
 
     return undefined;

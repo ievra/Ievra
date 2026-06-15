@@ -1,0 +1,52 @@
+1. Nguyên nhân chính: Lỗi "Không tìm thấy dự án" (Client-Side Rendering)
+Mặc dù trong thẻ <head> của bạn có đầy đủ thẻ tiêu đề, mô tả và dữ liệu cấu trúc (Schema JSON-LD) rất đẹp về dự án "Yum Yum Thái phong cách Đông Dương", nhưng phần hiển thị thực tế trong thẻ <body> lại là:
+
+HTML
+<main>
+  <div class="min-h-screen bg-black flex items-center justify-center">
+    ...
+    <h2 class="text-xl font-light mb-2 text-white">Không tìm thấy dự án</h2>
+    <p class="text-zinc-400 mb-4">Dự án bạn đang tìm kiếm không tồn tại hoặc đã bị xóa.</p>
+    ...
+  </div>
+</main>
+Tại sao Google lại không index?
+Mâu thuẫn nội dung: Thẻ Meta bảo đây là một bài viết dự án, nhưng khi Googlebot render trang bằng JavaScript, nó lại nhận về giao diện Lỗi 404 (Không tìm thấy trang).
+
+Trùng lặp nội dung (Soft 404): Nếu tất cả các link dự án bị lỗi này đều hiển thị chung một câu "Không tìm thấy dự án", Google sẽ đánh dấu đây là các trang Soft 404 và loại bỏ chúng khỏi danh sách lập chỉ mục để tránh rác tìm kiếm.
+
+2. Nguyên nhân kỹ thuật sâu hơn
+Website của bạn đang dùng React/Vite (nhìn qua cấu trúc file /assets/index-DBb8ESxK.js và các class Tailwind).
+
+Cơ chế lỗi: Bạn đang dùng cơ chế SSR (Server-Side Rendering) hoặc một plugin để "bơm" (inject) các thẻ Meta tĩnh vào <head> dựa trên URL. Tuy nhiên, khi ứng dụng React chạy ở phía Client (Trình duyệt/Googlebot), router hoặc API lấy dữ liệu từ cơ sở dữ liệu (Database) bị lỗi (hoặc chưa kịp load), dẫn đến việc React render ra giao diện lỗi "Không tìm thấy dự án".
+
+Googlebot không kiên nhẫn: Dù Googlebot hiện tại có khả năng cào dữ liệu JavaScript, nhưng nếu API phản hồi quá chậm hoặc Router bị lỗi ngay khi tải, Googlebot sẽ lưu lại nội dung lỗi đó.
+
+3. Cách khắc phục tận gốc
+Để Google lập chỉ mục chính xác, bạn cần xử lý phần kỹ thuật front-end và back-end như sau:
+
+Bước 1: Sửa lỗi lấy dữ liệu (Fetch API / Router)
+Hãy kiểm tra lại logic Client-side của component hiển thị chi tiết dự án:
+
+Đảm bảo URL mã nguồn của bạn (/du-an/lot-xac-khong-gian-dau-an-dong-duong-duong-dai) khớp chính xác với slug trong Database.
+
+Kiểm tra xem API lấy thông tin dự án có bị chặn (CORS), bị lỗi 500, hoặc phản hồi quá chậm hay không.
+
+Bước 2: Đồng bộ hóa Server-Side Rendering (SSR)
+Nếu đã làm SEO chuyên nghiệp với React, bạn nên chuyển hướng sử dụng các Framework hỗ trợ SSR hoàn chỉnh như Next.js hoặc Remix (nếu là PHP/Node thông thường thì đảm bảo HTML trả về từ Server phải chứa cả phần text nội dung bài viết, chứ không chỉ mỗi thẻ <head>).
+
+Nguyên tắc: Server trả về cái gì trong <body>, Googlebot sẽ ưu tiên đọc cái đó trước. Đừng để <body> trống hoặc chứa thông báo lỗi.
+
+Bước 3: Khai báo mã lỗi HTTP chính xác
+Nếu một dự án thực sự không tồn tại, Server phải trả về mã trạng thái HTTP 404 Not Found chứ không phải HTTP 200 OK kèm theo dòng chữ "Không tìm thấy". Việc trả về HTTP 200 cho một trang lỗi sẽ làm rối loạn công cụ tìm kiếm.
+
+Bước 4: Yêu cầu index lại trên Google Search Console
+Sau khi bạn fix để nội dung dự án (hình ảnh, bài viết Yum Yum Thái) hiển thị tràn ngập trên màn hình thay vì thông báo lỗi:
+
+Truy cập vào Google Search Console.
+
+Dán link này vào thanh kiểm tra URL ở trên cùng.
+
+Bấm Kiểm tra URL trực tiếp (Live Test) để xem Google đã thấy nội dung mới chưa.
+
+Nếu ổn, bấm Yêu cầu lập chỉ mục (Request Indexing).
