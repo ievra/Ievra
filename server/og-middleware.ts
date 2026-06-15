@@ -254,9 +254,14 @@ function buildArticleSeoContent(article: any, imageUrl: string | undefined, base
   const excerptText = article.excerpt ? escapeHtml(article.excerpt) : '';
   const tags: string[] = Array.isArray(article.tags) ? article.tags : [];
 
+  // Use metaTitle as H1 if available and shorter (SEO-optimized title)
+  const h1Text = (article.metaTitle && article.metaTitle.length < article.title.length)
+    ? article.metaTitle
+    : article.title;
+
   let html = `<article itemscope itemtype="https://schema.org/Article">`;
   html += `<nav aria-label="breadcrumb"><ol><li><a href="${baseUrl}/">${isVi ? 'Trang Chủ' : 'Home'}</a></li><li><a href="${baseUrl}${breadcrumbPath}">${breadcrumbLabel}</a></li><li>${escapeHtml(article.title)}</li></ol></nav>`;
-  html += `<h1 itemprop="headline">${escapeHtml(article.title)}</h1>`;
+  html += `<h1 itemprop="headline">${escapeHtml(h1Text)}</h1>`;
   if (publishDate) html += `<time itemprop="datePublished" datetime="${article.publishedAt ? new Date(article.publishedAt).toISOString() : ''}">${publishDate}</time>`;
   if (article.category) html += `<span itemprop="articleSection">${escapeHtml(article.category)}</span>`;
   if (imageUrl) html += `<img itemprop="image" src="${escapeHtml(imageUrl)}" alt="${escapeHtml(article.title)}" />`;
