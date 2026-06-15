@@ -460,7 +460,7 @@ export default function Blog() {
               {articles.map((article) => (
                 <Link key={article.id} href={getArticlePath(language, article.slug)}>
                   <div
-                    className="article-card group relative overflow-hidden cursor-pointer w-full h-[420px] transform-gpu backface-hidden"
+                    className="article-card group relative overflow-hidden cursor-pointer w-full h-[280px] md:h-[350px] lg:h-[420px] transform-gpu backface-hidden"
                     data-testid={`card-article-${article.id}`}
                   >
                     {(article.featuredImage || article.featuredImageData) ? (

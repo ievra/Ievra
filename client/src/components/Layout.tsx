@@ -442,7 +442,7 @@ export default function Layout({ children }: LayoutProps) {
 
           {!mobileMenuOpen && (
             <button
-              className="lg:hidden text-white p-2 z-50 transition-opacity duration-500"
+              className="lg:hidden text-white p-3 z-50 transition-opacity duration-500 -mr-1"
               style={{ opacity: location === '/' && !logoSwapped ? (introProgress > 0 ? 1 : 0) : 1 }}
               onClick={() => setMobileMenuOpen(true)}
               aria-label="Toggle menu"
@@ -476,7 +476,7 @@ export default function Layout({ children }: LayoutProps) {
       }`}>
           <div className="flex items-center justify-end py-4 px-6">
             <button
-              className="text-white p-2"
+              className="text-white p-3"
               onClick={() => setMobileMenuOpen(false)}
               aria-label="Close menu"
             >
