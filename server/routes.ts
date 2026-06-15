@@ -297,7 +297,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/robots.txt", (req, res) => {
     const baseUrl = getSiteBaseUrl(req);
     res.set('Content-Type', 'text/plain');
-    res.send(`User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /login\nDisallow: /api/\n\nSitemap: ${baseUrl}/sitemap.xml\n`);
+    res.send([
+      'User-agent: *',
+      'Allow: /',
+      '# Public read-only APIs needed for client-side rendering',
+      'Allow: /api/projects',
+      'Allow: /api/projects/',
+      'Allow: /api/articles',
+      'Allow: /api/articles/',
+      'Allow: /api/categories',
+      'Allow: /api/settings',
+      'Allow: /api/assets/',
+      'Allow: /api/img/',
+      'Allow: /api/homepage-content',
+      'Allow: /api/faqs',
+      'Allow: /api/partners',
+      'Allow: /api/services',
+      '# Block admin and auth endpoints',
+      'Disallow: /admin',
+      'Disallow: /login',
+      'Disallow: /api/auth/',
+      'Disallow: /api/upload',
+      'Disallow: /api/admin/',
+      'Disallow: /api/users/',
+      'Disallow: /api/clients/',
+      'Disallow: /api/inquiries/',
+      'Disallow: /api/business-partners/',
+      '',
+      `Sitemap: ${baseUrl}/sitemap.xml`,
+      '',
+    ].join('\n'));
   });
 
   app.get("/sitemap.xml", async (req, res) => {

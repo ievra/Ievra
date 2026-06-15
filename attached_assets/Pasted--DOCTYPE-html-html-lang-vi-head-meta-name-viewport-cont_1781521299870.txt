@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="vi"><head>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+
+    <!-- Default SEO – overridden server-side for bots/crawlers -->
+    
+    
+    
+
+    <!-- Open Graph -->
+    
+    
+    
+    
+    
+    
+
+    <!-- Twitter Card -->
+    
+    
+    
+    
+
+    <!-- Google tag (gtag.js) -->
+    <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-G0M9TTNYW9"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-G0M9TTNYW9');
+    </script>
+
+    <!-- Preconnect to external image CDN -->
+    <link rel="preconnect" href="https://images.weserv.nl" crossorigin="" />
+
+    <!-- Fonts: only Inter (body) + JetBrains Mono (code) — removed unused 28 families -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&amp;family=JetBrains+Mono:wght@300;400&amp;display=swap" rel="stylesheet" />
+    <script type="module" crossorigin="" src="/assets/index-DBb8ESxK.js"></script>
+    <link rel="stylesheet" crossorigin="" href="/assets/index-BwU3Wj5z.css" />
+      <title>IEVRA Design &amp; Build</title>
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://ievra.com/du-an/bar-phong-tra-phong-cach-co-dien-hoai-niem" />
+    <meta property="og:locale" content="vi_VN" />
+    <meta property="og:site_name" content="IEVRA Design &amp; Build" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="IEVRA Design &amp; Build" />
+    <meta name="description" content="Bar và phòng trà phong cách cổ điển với gỗ trầm, ánh sáng hổ phách và sân khấu piano lãng mạn. Chốn dừng chân hoài niệm thiết kế bởi IEVRA." />
+    <meta property="og:description" content="Bar và phòng trà phong cách cổ điển với gỗ trầm, ánh sáng hổ phách và sân khấu piano lãng mạn. Chốn dừng chân hoài niệm thiết kế bởi IEVRA." />
+    <meta property="og:image" content="https://ievra.com/api/assets/ad71250d-0f5c-4e05-bedd-8085b868ff0e.png" />
+    <meta property="og:image:secure_url" content="https://ievra.com/api/assets/ad71250d-0f5c-4e05-bedd-8085b868ff0e.png" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:url" content="https://ievra.com/du-an/bar-phong-tra-phong-cach-co-dien-hoai-niem" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@ievradesign" />
+    <meta name="twitter:title" content="BAR &amp; PHÒNG TRÀ PHONG CÁCH CỔ ĐIỂN | IEVRA Design &amp; Build" />
+    <meta name="twitter:description" content="Bar và phòng trà phong cách cổ điển với gỗ trầm, ánh sáng hổ phách và sân khấu piano lãng mạn. Chốn dừng chân hoài niệm thiết kế bởi IEVRA." />
+    <meta name="twitter:image" content="https://ievra.com/api/assets/ad71250d-0f5c-4e05-bedd-8085b868ff0e.png" />
+    <link rel="alternate" hreflang="en" href="https://ievra.com/portfolio/classic-style-bar-teahouse-nostalgic-design" />
+    <link rel="alternate" hreflang="vi" href="https://ievra.com/du-an/bar-phong-tra-phong-cach-co-dien-hoai-niem" />
+    <link rel="alternate" hreflang="x-default" href="https://ievra.com/du-an/bar-phong-tra-phong-cach-co-dien-hoai-niem" />
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "BAR & PHÒNG TRÀ PHONG CÁCH CỔ ĐIỂN",
+  "description": "Bar và phòng trà phong cách cổ điển với gỗ trầm, ánh sáng hổ phách và sân khấu piano lãng mạn. Chốn dừng chân hoài niệm thiết kế bởi IEVRA.",
+  "image": [
+    "https://ievra.com/api/assets/ad71250d-0f5c-4e05-bedd-8085b868ff0e.png"
+  ],
+  "url": "https://ievra.com/du-an/bar-phong-tra-phong-cach-co-dien-hoai-niem",
+  "datePublished": "2026-03-18T11:55:58.923Z",
+  "dateModified": "2026-06-09T04:57:20.173Z",
+  "author": {
+    "@type": "Organization",
+    "name": "IEVRA Design & Build",
+    "url": "https://ievra.com"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "IEVRA Design & Build",
+    "url": "https://ievra.com",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://ievra.com/api/assets/logo.white.png"
+    }
+  },
+  "inLanguage": "vi-VN"
+}
+</script>
+    <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://ievra.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Dự Án",
+      "item": "https://ievra.com/du-an"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "BAR & PHÒNG TRÀ PHONG CÁCH CỔ ĐIỂN",
+      "item": "https://ievra.com/du-an/bar-phong-tra-phong-cach-co-dien-hoai-niem"
+    }
+  ]
+}
+</script>
+  </head>
+  <body>
+    <div id="root"><div class="dark min-h-screen bg-background text-foreground"><div role="region" aria-label="Notifications (F8)" tabindex="-1" style="pointer-events: none;"><ol tabindex="-1" class="fixed top-0 z-[100] flex max-h-screen w-full flex-col-reverse p-4 sm:bottom-0 sm:right-0 sm:top-auto sm:flex-col md:max-w-[420px]"></ol></div><div class="min-h-screen relative"><header class="fixed top-0 left-0 right-0 z-50 transition-transform duration-700 ease-in-out translate-y-0"><div class="flex items-center justify-between py-2 px-6 md:py-3 md:px-10 lg:px-16 transition-colors duration-300 "><nav class="hidden lg:flex items-center gap-8 transition-opacity duration-500" style="opacity: 1;"><a data-testid="nav-about" href="/gioi-thieu" class="text-[13px] font-light tracking-widest uppercase transition-colors nav-link-underline text-white/70 hover:text-white">GIỚI THIỆU</a><a data-testid="nav-portfolio" href="/du-an" class="text-[13px] font-light tracking-widest uppercase transition-colors nav-link-underline text-white">DỰ ÁN</a><a data-testid="nav-news" href="/tin-tuc" class="text-[13px] font-light tracking-widest uppercase transition-colors nav-link-underline text-white/70 hover:text-white">TIN TỨC</a><a data-testid="nav-lookup" href="/tra-cuu" class="text-[13px] font-light tracking-widest uppercase transition-colors nav-link-underline text-white/70 hover:text-white">TRA CỨU</a></nav><a href="/" class="lg:absolute lg:left-1/2 lg:-translate-x-1/2 cursor-pointer"><img src="/api/assets/logo.white.png" alt="IEVRA Design &amp; Build" class="h-12 md:h-20 w-auto hover:opacity-80" style="opacity: 1;" /></a><div class="hidden lg:flex items-center gap-4 transition-opacity duration-500" style="opacity: 1;"><div class="relative"><button class="text-[13px] font-light tracking-wider uppercase text-white/70 hover:text-white transition-colors flex items-center gap-1" data-testid="lang-toggle">TIẾNG VIỆT<svg width="10" height="6" viewBox="0 0 10 6" fill="none" class="ml-1 transition-transform duration-300 "><path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"></path></svg></button><div class="absolute top-full right-0 mt-2 bg-black/40 backdrop-blur-md border border-white/10 rounded-lg overflow-hidden transition-all duration-700 ease-in-out origin-top opacity-0 scale-y-0 pointer-events-none"><button class="block w-full text-left px-5 py-2.5 text-[13px] font-light tracking-wider uppercase transition-colors whitespace-nowrap text-white/60 hover:text-white hover:bg-white/5" data-testid="lang-en">ENGLISH</button><button class="block w-full text-left px-5 py-2.5 text-[13px] font-light tracking-wider uppercase transition-colors whitespace-nowrap text-white bg-white/10" data-testid="lang-vi">TIẾNG VIỆT</button></div></div><a data-testid="nav-contact-btn" href="/lien-he" class="text-[13px] font-light tracking-wider text-white border border-white/30 rounded-full px-6 py-2.5 hover:bg-white hover:text-black transition-all duration-300 flex items-center gap-2">LIÊN HỆ<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-arrow-right w-3.5 h-3.5"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg></a></div><button class="lg:hidden text-white p-2 z-50 transition-opacity duration-500" aria-label="Toggle menu" data-testid="button-main-menu" style="opacity: 1;"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-menu w-6 h-6"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button></div></header><div class="fixed inset-0 z-[60] bg-black flex flex-col transition-transform duration-500 ease-in-out translate-x-full pointer-events-none"><div class="flex items-center justify-end py-4 px-6"><button class="text-white p-2" aria-label="Close menu"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-x w-6 h-6"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button></div><div class="flex-1 flex flex-col justify-center px-8"><nav class="space-y-8"><a data-testid="menu-nav-about" href="/gioi-thieu" class="block text-3xl font-light tracking-wider transition-colors text-white/60 hover:text-white">GIỚI THIỆU</a><a data-testid="menu-nav-portfolio" href="/du-an" class="block text-3xl font-light tracking-wider transition-colors text-white">DỰ ÁN</a><a data-testid="menu-nav-news" href="/tin-tuc" class="block text-3xl font-light tracking-wider transition-colors text-white/60 hover:text-white">TIN TỨC</a><a data-testid="menu-nav-lookup" href="/tra-cuu" class="block text-3xl font-light tracking-wider transition-colors text-white/60 hover:text-white">TRA CỨU</a><a data-testid="menu-nav-contact" href="/lien-he" class="block text-3xl font-light tracking-wider transition-colors text-white/60 hover:text-white">LIÊN HỆ</a></nav><div class="mt-12 pt-8 border-t border-white/10"><div class="flex gap-4"><button class="text-sm font-light tracking-wider uppercase transition-colors text-white/40" data-testid="lang-en">ENGLISH</button><span class="text-white/20">|</span><button class="text-sm font-light tracking-wider uppercase transition-colors text-white" data-testid="lang-vi">TIẾNG VIỆT</button></div></div></div></div><main><div class="min-h-screen bg-black flex items-center justify-center"><div class="rounded-none border text-card-foreground shadow-sm w-full max-w-md bg-zinc-900 border-zinc-800"><div class="p-6 pt-6 text-center"><h2 class="text-xl font-light mb-2 text-white">Không tìm thấy dự án</h2><p class="text-zinc-400 mb-4">Dự án bạn đang tìm kiếm không tồn tại hoặc đã bị xóa.</p><a data-testid="button-back-portfolio" href="/du-an" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-none text-sm font-light ring-offset-background transition-all duration-300 ease-in-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&amp;_svg]:pointer-events-none [&amp;_svg]:size-4 [&amp;_svg]:shrink-0 border border-white/30 bg-transparent text-white hover:bg-white/10 hover:border-white h-10 px-4 py-2">Quay lại Danh mục</a></div></div></div></main><footer class="bg-black py-6 px-4 sm:px-6 lg:px-8"><div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0"><div class="flex items-center justify-end sm:order-2 gap-5"><a href="https://www.facebook.com/ievra.archi" target="_blank" rel="noopener noreferrer" class="text-white/40 hover:text-white transition-colors"><svg stroke="currentColor" fill="currentColor" stroke-width="0" role="img" viewBox="0 0 24 24" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"></path></svg></a><a href="https://www.facebook.com/ievra.interior" target="_blank" rel="noopener noreferrer" class="text-white/40 hover:text-white transition-colors"><svg stroke="currentColor" fill="currentColor" stroke-width="0" role="img" viewBox="0 0 24 24" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M9.101 23.691v-7.98H6.627v-3.667h2.474v-1.58c0-4.085 1.848-5.978 5.858-5.978.401 0 .955.042 1.468.103a8.68 8.68 0 0 1 1.141.195v3.325a8.623 8.623 0 0 0-.653-.036 26.805 26.805 0 0 0-.733-.009c-.707 0-1.259.096-1.675.309a1.686 1.686 0 0 0-.679.622c-.258.42-.374.995-.374 1.752v1.297h3.919l-.386 2.103-.287 1.564h-3.246v8.245C19.396 23.238 24 18.179 24 12.044c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.628 3.874 10.35 9.101 11.647Z"></path></svg></a><a href="https://www.instagram.com/ievra.vn" target="_blank" rel="noopener noreferrer" class="text-white/40 hover:text-white transition-colors"><svg stroke="currentColor" fill="currentColor" stroke-width="0" role="img" viewBox="0 0 24 24" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M7.0301.084c-1.2768.0602-2.1487.264-2.911.5634-.7888.3075-1.4575.72-2.1228 1.3877-.6652.6677-1.075 1.3368-1.3802 2.127-.2954.7638-.4956 1.6365-.552 2.914-.0564 1.2775-.0689 1.6882-.0626 4.947.0062 3.2586.0206 3.6671.0825 4.9473.061 1.2765.264 2.1482.5635 2.9107.308.7889.72 1.4573 1.388 2.1228.6679.6655 1.3365 1.0743 2.1285 1.38.7632.295 1.6361.4961 2.9134.552 1.2773.056 1.6884.069 4.9462.0627 3.2578-.0062 3.668-.0207 4.9478-.0814 1.28-.0607 2.147-.2652 2.9098-.5633.7889-.3086 1.4578-.72 2.1228-1.3881.665-.6682 1.0745-1.3378 1.3795-2.1284.2957-.7632.4966-1.636.552-2.9124.056-1.2809.0692-1.6898.063-4.948-.0063-3.2583-.021-3.6668-.0817-4.9465-.0607-1.2797-.264-2.1487-.5633-2.9117-.3084-.7889-.72-1.4568-1.3876-2.1228C21.2982 1.33 20.628.9208 19.8378.6165 19.074.321 18.2017.1197 16.9244.0645 15.6471.0093 15.236-.005 11.977.0014 8.718.0076 8.31.0215 7.0301.0839m.1402 21.6932c-1.17-.0509-1.8053-.2453-2.2287-.408-.5606-.216-.96-.4771-1.3819-.895-.422-.4178-.6811-.8186-.9-1.378-.1644-.4234-.3624-1.058-.4171-2.228-.0595-1.2645-.072-1.6442-.079-4.848-.007-3.2037.0053-3.583.0607-4.848.05-1.169.2456-1.805.408-2.2282.216-.5613.4762-.96.895-1.3816.4188-.4217.8184-.6814 1.3783-.9003.423-.1651 1.0575-.3614 2.227-.4171 1.2655-.06 1.6447-.072 4.848-.079 3.2033-.007 3.5835.005 4.8495.0608 1.169.0508 1.8053.2445 2.228.408.5608.216.96.4754 1.3816.895.4217.4194.6816.8176.9005 1.3787.1653.4217.3617 1.056.4169 2.2263.0602 1.2655.0739 1.645.0796 4.848.0058 3.203-.0055 3.5834-.061 4.848-.051 1.17-.245 1.8055-.408 2.2294-.216.5604-.4763.96-.8954 1.3814-.419.4215-.8181.6811-1.3783.9-.4224.1649-1.0577.3617-2.2262.4174-1.2656.0595-1.6448.072-4.8493.079-3.2045.007-3.5825-.006-4.848-.0608M16.953 5.5864A1.44 1.44 0 1 0 18.39 4.144a1.44 1.44 0 0 0-1.437 1.4424M5.8385 12.012c.0067 3.4032 2.7706 6.1557 6.173 6.1493 3.4026-.0065 6.157-2.7701 6.1506-6.1733-.0065-3.4032-2.771-6.1565-6.174-6.1498-3.403.0067-6.156 2.771-6.1496 6.1738M8 12.0077a4 4 0 1 1 4.008 3.9921A3.9996 3.9996 0 0 1 8 12.0077"></path></svg></a><a href="https://www.tiktok.com/@ievra.vn" target="_blank" rel="noopener noreferrer" class="text-white/40 hover:text-white transition-colors"><svg stroke="currentColor" fill="currentColor" stroke-width="0" role="img" viewBox="0 0 24 24" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"></path></svg></a><a href="https://upsein.com" target="_blank" rel="noopener noreferrer" class="hidden sm:flex items-center gap-1.5 group" title="Developed by UpSEIN"><span class="text-white/30 text-[12px] font-light group-hover:text-white/50 transition-colors">Developed by</span><img src="/assets/UpSEIN_Logo_1774251344290-CJ8dqsND.png" alt="UpSEIN" class="h-6 w-auto grayscale opacity-30 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300" /></a></div><div class="flex items-center justify-between sm:justify-start sm:order-1 gap-4"><p class="text-white/40 text-xs font-light">Copyright © 2026 IEVRA. All rights reserved.</p><a href="https://upsein.com" target="_blank" rel="noopener noreferrer" class="flex sm:hidden items-center gap-1.5 group flex-shrink-0" title="Developed by UpSEIN"><span class="text-white/30 text-[12px] font-light group-hover:text-white/50 transition-colors">Developed by</span><img src="/assets/UpSEIN_Logo_1774251344290-CJ8dqsND.png" alt="UpSEIN" class="h-6 w-auto grayscale opacity-30 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-300" /></a></div></div></footer></div></div></div>
+  
+
+</body></html>
