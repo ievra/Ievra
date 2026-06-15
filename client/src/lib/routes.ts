@@ -26,8 +26,8 @@ export function getArticlePath(language: string, slug?: string | null): string {
 }
 
 export function isRoutePath(location: string, key: RouteKey): boolean {
-  const en = ROUTE_MAP[key].en;
-  const vi = ROUTE_MAP[key].vi;
+  const en: string = ROUTE_MAP[key].en;
+  const vi: string = ROUTE_MAP[key].vi;
   if (en === '/' || vi === '/') {
     return location === en || location === vi;
   }

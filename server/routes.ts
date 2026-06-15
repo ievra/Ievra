@@ -470,7 +470,7 @@ body{padding:16px 24px}
       }
 
       // Project pages (EN + VI with hreflang)
-      for (const [, group] of projectGroups) {
+      for (const [, group] of Array.from(projectGroups)) {
         const enSlug = group.en?.slug;
         const viSlug = group.vi?.slug;
         const enUrl = enSlug ? `${baseUrl}/portfolio/${enSlug}` : null;
@@ -502,7 +502,7 @@ body{padding:16px 24px}
       }
 
       // Article pages (EN + VI with hreflang)
-      for (const [, group] of articleGroups) {
+      for (const [, group] of Array.from(articleGroups)) {
         const enSlug = group.en?.slug;
         const viSlug = group.vi?.slug;
         const enUrl = enSlug ? `${baseUrl}/blog/${enSlug}` : null;
@@ -572,8 +572,8 @@ body{padding:16px 24px}
       const seenProjectSlugs = new Set<string>();
       const projectUrls: string[] = [];
       for (const p of publishedProjects) {
-        if (seenProjectSlugs.has(p.slug)) continue;
-        seenProjectSlugs.add(p.slug);
+        if (seenProjectSlugs.has(p.slug!)) continue;
+        seenProjectSlugs.add(p.slug!);
         if (p.language === 'vi') {
           projectUrls.push(`${baseUrl}/du-an/${p.slug}`);
         } else {

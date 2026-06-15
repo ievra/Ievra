@@ -729,7 +729,7 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
   };
 
   const onSeoSettingsSubmit = async (data: SeoSettingsFormData) => {
-    const existingSettings = settings || {};
+    const existingSettings = (settings || {}) as Record<string, any>;
     try {
       await updateSettingsMutation.mutateAsync({
         ...existingSettings,

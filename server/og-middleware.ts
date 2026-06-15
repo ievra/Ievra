@@ -588,23 +588,23 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
 
       let tags: OgTags | null = null;
 
-      function resolveImageUrl(raw: string | null | undefined): string | undefined {
+      const resolveImageUrl = (raw: string | null | undefined): string | undefined => {
         if (!raw) return undefined;
         if (raw.startsWith("data:")) return undefined;
         if (raw.startsWith("http")) return raw;
         // Skip local paths whose file is missing so we fall back to the default OG image
         if (!localAssetExists(raw)) return undefined;
         return `${baseUrl}${raw}`;
-      }
+      };
 
-      async function resolveDefaultOgImage(): Promise<string | undefined> {
+      const resolveDefaultOgImage = async (): Promise<string | undefined> => {
         try {
           const s = await getCachedSettings();
           if (s?.ogImageData && s.ogImageData.startsWith("data:")) return `${baseUrl}/api/og-image`;
           if (s?.ogImage) return resolveImageUrl(s.ogImage);
         } catch {}
         return undefined;
-      }
+      };
 
       const lang = detectLanguage(req.path);
       const locale = lang === 'en' ? 'en_US' : 'vi_VN';
