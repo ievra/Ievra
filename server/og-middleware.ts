@@ -252,6 +252,7 @@ function buildArticleSeoContent(article: any, imageUrl: string | undefined, base
 
   const contentText = article.content ? sanitizeContentHtml(article.content) : '';
   const excerptText = article.excerpt ? escapeHtml(article.excerpt) : '';
+  const tags: string[] = Array.isArray(article.tags) ? article.tags : [];
 
   let html = `<article itemscope itemtype="https://schema.org/Article">`;
   html += `<nav aria-label="breadcrumb"><ol><li><a href="${baseUrl}/">${isVi ? 'Trang Chủ' : 'Home'}</a></li><li><a href="${baseUrl}${breadcrumbPath}">${breadcrumbLabel}</a></li><li>${escapeHtml(article.title)}</li></ol></nav>`;
@@ -259,8 +260,20 @@ function buildArticleSeoContent(article: any, imageUrl: string | undefined, base
   if (publishDate) html += `<time itemprop="datePublished" datetime="${article.publishedAt ? new Date(article.publishedAt).toISOString() : ''}">${publishDate}</time>`;
   if (article.category) html += `<span itemprop="articleSection">${escapeHtml(article.category)}</span>`;
   if (imageUrl) html += `<img itemprop="image" src="${escapeHtml(imageUrl)}" alt="${escapeHtml(article.title)}" />`;
-  if (excerptText) html += `<p itemprop="description">${excerptText}</p>`;
-  if (contentText) html += `<div itemprop="articleBody">${contentText}</div>`;
+  // H2: Tóm tắt / Summary
+  if (excerptText) {
+    html += `<section><h2>${isVi ? 'Tóm Tắt' : 'Summary'}</h2><p itemprop="description">${excerptText}</p></section>`;
+  }
+  // H2: Nội dung bài viết / Article Content
+  if (contentText) {
+    html += `<section><h2>${isVi ? 'Nội Dung Bài Viết' : 'Article Content'}</h2><div itemprop="articleBody">${contentText}</div></section>`;
+  }
+  // H2: Tags nếu có
+  if (tags.length > 0) {
+    html += `<section><h2>${isVi ? 'Chủ Đề Liên Quan' : 'Related Topics'}</h2><ul>${tags.map((t: string) => `<li>${escapeHtml(t)}</li>`).join('')}</ul></section>`;
+  }
+  // H2: Xem thêm / See more
+  html += `<section><h2>${isVi ? 'Xem Thêm' : 'More Articles'}</h2><p><a href="${baseUrl}${breadcrumbPath}">${isVi ? 'Tất cả bài viết' : 'All articles'}</a></p><p><a href="${baseUrl}/">${isVi ? 'Trang chủ' : 'Home'}</a></p></section>`;
   html += `<span itemprop="author" itemscope itemtype="https://schema.org/Organization"><meta itemprop="name" content="IEVRA Design &amp; Build" /></span>`;
   html += `</article>`;
   return html;
