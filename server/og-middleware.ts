@@ -44,7 +44,7 @@ function detectLanguage(path: string): 'vi' | 'en' {
   return 'vi';
 }
 
-const BOT_USER_AGENTS = /facebookexternalhit|facebookbot|twitterbot|linkedinbot|whatsapp|telegrambot|slackbot|discordbot|applebot|googlebot|bingbot|yandexbot|baiduspider|zalo|viber|line-|pinterest|tumblr|curl|wget/i;
+const BOT_USER_AGENTS = /facebookexternalhit|facebookbot|twitterbot|linkedinbot|whatsapp|telegrambot|slackbot|discordbot|applebot|googlebot|bingbot|yandexbot|baiduspider|zalo|viber|line-|pinterest|tumblr|curl|wget|screaming.frog|screamingfrog|semrushbot|ahrefsbot|mj12bot|dotbot|rogerbot|sistrix|seekport|dataprovider|seokicks|serpstatbot|petalbot|duckduckbot|exabot|ia_archiver|archive\.org_bot/i;
 
 function isBot(req: Request): boolean {
   const ua = req.headers["user-agent"] || "";
