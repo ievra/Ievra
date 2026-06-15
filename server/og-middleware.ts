@@ -690,8 +690,11 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
                 ]
               }
             ];
+            const projectPageTitle = (project.metaTitle && project.metaTitle.trim())
+              ? project.metaTitle
+              : `${project.title} | IEVRA Design & Build`;
             tags = {
-              title: `${project.title} | IEVRA Design & Build`,
+              title: projectPageTitle,
               description: desc,
               image: imageUrl,
               url: currentUrl,
@@ -763,8 +766,11 @@ export function ogMiddleware(indexHtmlPath: string, isDev: boolean) {
                 ]
               }
             ];
+            const articlePageTitle = (article.metaTitle && article.metaTitle.trim())
+              ? article.metaTitle
+              : `${article.title} | IEVRA Design & Build`;
             tags = {
-              title: `${article.title} | IEVRA Design & Build`,
+              title: articlePageTitle,
               description: desc,
               image: imageUrl,
               url: currentUrl,
