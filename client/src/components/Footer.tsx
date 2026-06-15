@@ -8,7 +8,7 @@ export default function Footer() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
         {/* Row 1 on mobile: social icons aligned right */}
         <div className="flex items-center justify-end sm:order-2 gap-5">
-          <a href="https://www.facebook.com/ievra.vn" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors">
+          <a href="https://www.facebook.com/ievra.archi" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors">
             <SiFacebook size={16} />
           </a>
           <a href="https://www.instagram.com/ievra.vn" target="_blank" rel="noopener noreferrer" className="text-white/40 hover:text-white transition-colors">
