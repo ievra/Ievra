@@ -1,0 +1,46 @@
+1. Phân tích nguyên nhân (Tại sao lại bị lỗi?)
+Trang web của bạn được xây dựng theo kiến trúc Single Page Application (SPA) (sử dụng React/Vite dựa vào file index-fCwwnwD0.js và thẻ <div id="root">).
+
+Cơ chế hoạt động của SPA: Khi người dùng hoặc Googlebot truy cập URL https://ievra.com/du-an/lot-xac-khong-gian-dau-an-dong-duong-duong-dai, trình duyệt sẽ tải phần khung HTML về trước. Sau đó, đoạn mã JavaScript (XHR / fetch) sẽ được kích hoạt để gọi lên máy chủ API (https://ievra.com/api/...) nhằm lấy dữ liệu chi tiết của dự án (như tiêu đề, hình ảnh, nội dung) rồi đắp vào giao diện.
+
+Vấn đề xảy ra ở đây: 1. Trong Ảnh 1 (Tab Thông tin khác của Google Search Console), Google báo lỗi: "Googlebot bị chặn bởi robots.txt" đối với tất cả các đường dẫn API dạng:
+
+https://ievra.com/api/categories
+
+https://ievra.com/api/projects/slug/...
+
+https://ievra.com/api/settings
+
+Vì tệp robots.txt của bạn đang chặn (Disallow: /api/), Googlebot không thể lấy được dữ liệu dự án từ API Backend.
+
+Khi không có dữ liệu trả về, đoạn mã JavaScript trên trang của bạn hiểu nhầm là dự án này không tồn tại, lập tức kích hoạt hàm hiển thị giao diện lỗi: "KHÔNG TÌM THẤY DỰ ÁN - Dự án bạn đang tìm kiếm không tồn tại hoặc đã bị xóa" (Như hiển thị trong Ảnh 2 và đoạn mã HTML <h2 class="text-xl font-light mb-2 text-white">Không tìm thấy dự án</h2>).
+
+Do Googlebot chỉ nhìn thấy một trang trống rỗng thông báo lỗi "Không tìm thấy dự án", thuật toán của Google sẽ đánh giá đây là một trang lỗi (Soft 404) và từ chối lập chỉ mục URL này.
+
+2. Cách khắc phục tận gốc
+Để giải quyết vấn đề này, bạn cần thực hiện 2 bước sau:
+
+Bước 1: Sửa tệp robots.txt để cho phép Googlebot truy cập API dữ liệu
+Bạn cần mở tệp robots.txt trên mã nguồn website của mình (thường nằm ở thư mục gốc công khai).
+Nếu bạn đang chặn toàn bộ thư mục /api/ bằng lệnh Disallow: /api/, hãy sửa đổi hoặc thêm dòng Allow cho các API công khai phục vụ việc hiển thị giao diện.
+
+Ví dụ cấu hình tệp robots.txt khuyến nghị:
+
+Plaintext
+User-agent: *
+Allow: /api/projects/
+Allow: /api/categories/
+Allow: /api/settings/
+Allow: /api/assets/
+
+# Nếu có các API bảo mật như đăng nhập, giỏ hàng thì mới chặn:
+Disallow: /api/auth/
+Disallow: /api/admin/
+Lưu ý: Sau khi sửa, bạn có thể vào công cụ kiểm tra robots.txt của Google để xác minh lại xem các đường dẫn API đã được thông qua chưa.
+
+Bước 2: Cấu hình mã trạng thái HTTP (HTTP Status Code) chuẩn cho Bot
+Hiện tại, khi không tìm thấy dữ liệu, trang web của bạn trả về giao diện thông báo lỗi nhưng mã phản hồi HTTP của máy chủ (Server Response) vẫn là 200 OK (vì bản chất file HTML tĩnh vẫn tải thành công). Đây gọi là lỗi Soft 404.
+
+Nếu bạn sử dụng công nghệ SSR (Server-Side Rendering) hoặc Next.js/Nuxt.js, hãy cấu hình để khi API trả về lỗi hoặc không có dữ liệu, Server phải trả về đúng mã 404 Not Found thay vì mã 200.
+
+Với các dữ liệu hợp lệ (sau khi đã mở chặn robots.txt), máy chủ phải đảm bảo trả về mã 200 OK kèm nội dung đầy đủ để Googlebot thu thập.

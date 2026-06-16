@@ -338,10 +338,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.send([
       'User-agent: *',
       'Allow: /',
-      'Allow: /api/assets/',
+      // Public API routes needed for JS rendering (Googlebot WRS)
+      'Allow: /api/projects',
+      'Allow: /api/articles',
+      'Allow: /api/categories',
+      'Allow: /api/settings',
+      'Allow: /api/services',
+      'Allow: /api/faqs',
+      'Allow: /api/partners',
+      'Allow: /api/assets',
+      // Block private/admin API routes
+      'Disallow: /api/auth',
+      'Disallow: /api/users',
+      'Disallow: /api/clients',
+      'Disallow: /api/business-partners',
+      'Disallow: /api/inquiries',
+      'Disallow: /api/',
       'Disallow: /admin',
       'Disallow: /login',
-      'Disallow: /api/',
       '',
       `Sitemap: ${baseUrl}/sitemap.xml`,
     ].join('\n'));
