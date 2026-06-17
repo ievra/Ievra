@@ -347,6 +347,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       'Allow: /api/faqs',
       'Allow: /api/partners',
       'Allow: /api/assets',
+      'Allow: /api/img',
       // Block private/admin API routes
       'Disallow: /api/auth',
       'Disallow: /api/users',
