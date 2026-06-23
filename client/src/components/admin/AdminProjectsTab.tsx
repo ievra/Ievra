@@ -922,14 +922,17 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>{language === 'vi' ? 'Phân Loại' : 'Type'}</FormLabel>
-                        <Select onValueChange={field.onChange} value={field.value || ""}>
+                        <Select
+                          onValueChange={(v) => field.onChange(v === '__none__' ? '' : v)}
+                          value={field.value || '__none__'}
+                        >
                           <FormControl>
                             <SelectTrigger>
                               <SelectValue placeholder={language === 'vi' ? 'Chọn phân loại' : 'Select type'} />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="">{language === 'vi' ? '— Không có —' : '— None —'}</SelectItem>
+                            <SelectItem value="__none__">{language === 'vi' ? '— Không có —' : '— None —'}</SelectItem>
                             {categories
                               .filter(cat => cat.type === 'project_type' && cat.active)
                               .map((pt) => (
