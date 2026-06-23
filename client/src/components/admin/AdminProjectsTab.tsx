@@ -58,7 +58,7 @@ const bilingualProjectSchema = z.object({
   designerVi: z.string().optional(),
   coverImages: z.array(z.string()).max(1, "Maximum 1 cover image allowed").default([]),
   contentImages: z.array(z.string()).max(1, "Maximum 1 content image allowed").default([]),
-  galleryImages: z.array(z.string()).max(10, "Maximum 10 gallery images allowed").default([]),
+  galleryImages: z.array(z.string()).max(20, "Maximum 20 gallery images allowed").default([]),
   featured: z.boolean().default(false),
   heroImage: z.string().optional(),
   images: z.array(z.string()).default([]),
@@ -736,6 +736,16 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
   const projectsStartIndex = (projectsPage - 1) * projectsPerPage;
   const projectsEndIndex = projectsStartIndex + projectsPerPage;
   const paginatedProjectSlugs = uniqueProjectSlugs.slice(projectsStartIndex, projectsEndIndex);
+
+  const selectedCategorySlug = projectForm.watch('category');
+  const galleryMaxImages = (() => {
+    const cat = categories.find(c => c.slug === selectedCategorySlug && c.type === 'project');
+    if (!cat) return 20;
+    const nameCheck = `${cat.name} ${cat.nameVi || ''}`.toLowerCase();
+    if (nameCheck.includes('nội thất') || nameCheck.includes('noi that') || nameCheck.includes('interior')) return 10;
+    if (nameCheck.includes('kiến trúc') || nameCheck.includes('kien truc') || nameCheck.includes('architecture')) return 10;
+    return 20;
+  })();
 
   return (
     <div className="space-y-6 p-6">
