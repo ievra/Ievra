@@ -1145,7 +1145,17 @@ export default function AdminBusinessPartnersTab({ user, hasPermission }: AdminB
                     <FormItem>
                       <FormLabel>{language === 'vi' ? 'Số tiền (đ)' : 'Amount (đ)'}</FormLabel>
                       <FormControl>
-                        <Input {...field} type="text" placeholder="VD: 50000000" maxLength={12} onKeyDown={(e) => { if (!/[0-9]/.test(e.key) && !['Backspace','Delete','ArrowLeft','ArrowRight','Tab'].includes(e.key)) e.preventDefault(); }} />
+                        <Input
+                          {...field}
+                          type="text"
+                          inputMode="numeric"
+                          placeholder="VD: 100.000.000"
+                          value={(() => {
+                            const intPart = String(field.value ?? '').split('.')[0].replace(/\D/g, '');
+                            return intPart ? Number(intPart).toLocaleString('vi-VN') : '';
+                          })()}
+                          onChange={(e) => field.onChange(e.target.value.replace(/\D/g, ''))}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
