@@ -708,6 +708,15 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
     groupedProjectsMap[slug].some(p => p.featured)
   ).length;
 
+  const featuredCountByType = Object.keys(groupedProjectsMap).reduce<Record<string, number>>((acc, slug) => {
+    const group = groupedProjectsMap[slug];
+    if (group.some(p => p.featured)) {
+      const pt = (group[0] as any).projectType || '__none__';
+      acc[pt] = (acc[pt] || 0) + 1;
+    }
+    return acc;
+  }, {});
+
   const projectYears = Array.from(new Set(projects.map(p => p.completionYear).filter(Boolean))).sort((a, b) => String(b).localeCompare(String(a)));
 
   const uniqueProjectSlugs = Object.keys(groupedProjectsMap).sort((a, b) => {
@@ -2119,10 +2128,21 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                           data-testid={`button-edit-project-${primary.id}`}
                         />
                         <span
-                          title={!primary.featured && featuredCount >= 10 ? (language === 'vi' ? 'Đã đạt tối đa 10 bài ghim' : 'Max 10 pinned projects reached') : undefined}
+                          title={(() => {
+                            if (primary.featured) return undefined;
+                            const pt = (primary as any).projectType || '__none__';
+                            const typeCount = featuredCountByType[pt] || 0;
+                            const totalCount = featuredCount;
+                            if (pt !== '__none__' && typeCount >= 10) return language === 'vi' ? `Đã đạt tối đa 10 bài ghim cho phân loại này` : `Max 10 pinned per type reached`;
+                            if (totalCount >= 20) return language === 'vi' ? 'Đã đạt tối đa 20 bài ghim' : 'Max 20 pinned projects reached';
+                            return undefined;
+                          })()}
                           onClick={() => {
                             if ((primary as any).status !== 'published') return;
-                            if (!primary.featured && featuredCount >= 10) return;
+                            const pt = (primary as any).projectType || '__none__';
+                            const typeCount = featuredCountByType[pt] || 0;
+                            if (!primary.featured && pt !== '__none__' && typeCount >= 10) return;
+                            if (!primary.featured && featuredCount >= 20) return;
                             group.forEach(p => {
                               updateProjectMutation.mutate({
                                 id: p.id,
@@ -2133,11 +2153,15 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                           data-testid={`button-toggle-featured-${primary.id}`}
                         >
                           <Star
-                            className={`h-4 w-4 ${
-                              (primary as any).status !== 'published' || (!primary.featured && featuredCount >= 10)
-                                ? 'cursor-not-allowed opacity-30'
-                                : 'cursor-pointer'
-                            } ${primary.featured ? 'text-white fill-white' : 'text-white/50 hover:text-white'}`}
+                            className={`h-4 w-4 ${(() => {
+                              if ((primary as any).status !== 'published') return 'cursor-not-allowed opacity-30';
+                              if (!primary.featured) {
+                                const pt = (primary as any).projectType || '__none__';
+                                const typeCount = featuredCountByType[pt] || 0;
+                                if ((pt !== '__none__' && typeCount >= 10) || featuredCount >= 20) return 'cursor-not-allowed opacity-30';
+                              }
+                              return 'cursor-pointer';
+                            })()} ${primary.featured ? 'text-white fill-white' : 'text-white/50 hover:text-white'}`}
                           />
                         </span>
                         <Trash2
