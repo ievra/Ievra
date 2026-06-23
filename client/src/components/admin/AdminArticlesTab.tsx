@@ -1667,7 +1667,7 @@ export default function AdminArticlesTab({ user, hasPermission }: AdminArticlesT
                           </span>
                         </TableCell>
                         <TableCell className="font-medium">
-                          <span className="truncate">{displayArticle.title}</span>
+                          <span className="truncate">{language === 'vi' ? (viVersion?.title || enVersion?.title || displayArticle.title) : (enVersion?.title || viVersion?.title || displayArticle.title)}</span>
                         </TableCell>
                         <TableCell>
                           <div className="flex space-x-1">
