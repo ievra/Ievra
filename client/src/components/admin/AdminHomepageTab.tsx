@@ -31,6 +31,8 @@ const homepageContentSchema = z.object({
   featuredTitle: z.string().optional(),
   featuredDescription: z.string().optional(),
   featuredDescriptionVi: z.string().optional(),
+  featuredArchDescription: z.string().optional(),
+  featuredArchDescriptionVi: z.string().optional(),
   statsProjectsValue: z.string().optional(),
   statsProjectsLabelEn: z.string().optional(),
   statsProjectsLabelVi: z.string().optional(),
@@ -337,6 +339,8 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
         featuredTitle: homepageContent.featuredTitle || undefined,
         featuredDescription: homepageContent.featuredDescription || "Discover our latest projects where innovation meets elegance.",
         featuredDescriptionVi: homepageContent.featuredDescriptionVi || "Khám phá các dự án mới nhất của chúng tôi nơi sự đổi mới gặp gỡ sự thanh lịch.",
+        featuredArchDescription: (homepageContent as any).featuredArchDescription || "Explore our architecture projects shaping the built environment.",
+        featuredArchDescriptionVi: (homepageContent as any).featuredArchDescriptionVi || "Khám phá các dự án kiến trúc định hình không gian xây dựng.",
         statsProjectsValue: (homepageContent as any).statsProjectsValue || "",
         statsProjectsLabelEn: (homepageContent as any).statsProjectsLabelEn || "",
         statsProjectsLabelVi: (homepageContent as any).statsProjectsLabelVi || "",
@@ -1032,12 +1036,12 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
-              {/* Featured Projects */}
+              {/* Featured Interior Projects */}
               <div className="p-4">
-                <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Mục Dự Án Nổi Bật' : 'Featured Projects Section'}</h3>
+                <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Mục Dự Án Nội Thất' : 'Interior Projects Section'}</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="text-sm font-light mb-2 block">Subtitle (EN)</label>
+                    <label className="text-sm font-light mb-2 block">Tiêu đề (EN)</label>
                     <Textarea 
                       {...homepageContentForm.register("featuredDescription")}
                       placeholder="e.g., Discover our latest projects where innovation meets elegance."
@@ -1046,12 +1050,35 @@ export default function AdminHomepageTab({ user, hasPermission }: AdminHomepageT
                     />
                   </div>
                   <div>
-                    <label className="text-sm font-light mb-2 block">Subtitle (VI)</label>
+                    <label className="text-sm font-light mb-2 block">Tiêu đề (VI)</label>
                     <Textarea 
                       {...homepageContentForm.register("featuredDescriptionVi")}
                       placeholder="e.g., Khám phá các dự án mới nhất của chúng tôi nơi sự đổi mới gặp gỡ sự thanh lịch."
                       rows={2}
                       data-testid="textarea-featured-projects-subtitle-vi"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Featured Architecture Projects */}
+              <div className="p-4 border-t border-white/10">
+                <h3 className="text-sm font-medium mb-4 uppercase tracking-wider">{language === 'vi' ? 'Mục Dự Án Kiến Trúc' : 'Architecture Projects Section'}</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-sm font-light mb-2 block">Tiêu đề (EN)</label>
+                    <Textarea 
+                      {...homepageContentForm.register("featuredArchDescription")}
+                      placeholder="e.g., Explore our architecture projects shaping the built environment."
+                      rows={2}
+                    />
+                  </div>
+                  <div>
+                    <label className="text-sm font-light mb-2 block">Tiêu đề (VI)</label>
+                    <Textarea 
+                      {...homepageContentForm.register("featuredArchDescriptionVi")}
+                      placeholder="e.g., Khám phá các dự án kiến trúc định hình không gian xây dựng."
+                      rows={2}
                     />
                   </div>
                 </div>

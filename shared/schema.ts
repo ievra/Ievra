@@ -227,6 +227,8 @@ export const homepageContent = pgTable("homepage_content", {
   featuredTitle: text("featured_title"),
   featuredDescription: text("featured_description"),
   featuredDescriptionVi: text("featured_description_vi"),
+  featuredArchDescription: text("featured_arch_description"),
+  featuredArchDescriptionVi: text("featured_arch_description_vi"),
   // Stats Section
   statsProjectsValue: text("stats_projects_value"),
   statsProjectsLabelEn: text("stats_projects_label_en"),

@@ -287,6 +287,9 @@ export default function Home() {
   const [activeProjectIndex, setActiveProjectIndex] = useState(0);
   const projectsScrollRef = useRef<HTMLDivElement>(null);
   const [projectsContainerWidth, setProjectsContainerWidth] = useState(0);
+  const [activeArchIndex, setActiveArchIndex] = useState(0);
+  const archScrollRef = useRef<HTMLDivElement>(null);
+  const [archContainerWidth, setArchContainerWidth] = useState(0);
   const [activeArticleIndex, setActiveArticleIndex] = useState(0);
   const articlesScrollRef = useRef<HTMLDivElement>(null);
   const [articlesContainerWidth, setArticlesContainerWidth] = useState(0);
@@ -312,6 +315,7 @@ export default function Home() {
 
   const measureContainers = useCallback(() => {
     if (projectsScrollRef.current) setProjectsContainerWidth(projectsScrollRef.current.offsetWidth);
+    if (archScrollRef.current) setArchContainerWidth(archScrollRef.current.offsetWidth);
     if (articlesScrollRef.current) setArticlesContainerWidth(articlesScrollRef.current.offsetWidth);
   }, []);
 
@@ -319,6 +323,7 @@ export default function Home() {
     const frame = requestAnimationFrame(measureContainers);
     const ro = new ResizeObserver(measureContainers);
     if (projectsScrollRef.current) ro.observe(projectsScrollRef.current);
+    if (archScrollRef.current) ro.observe(archScrollRef.current);
     if (articlesScrollRef.current) ro.observe(articlesScrollRef.current);
     window.addEventListener('resize', measureContainers);
     return () => { cancelAnimationFrame(frame); ro.disconnect(); window.removeEventListener('resize', measureContainers); };
@@ -491,9 +496,18 @@ export default function Home() {
   );
 
   const { data: featuredProjects, isLoading } = useQuery<Project[]>({
-    queryKey: ["/api/projects", "featured", language],
+    queryKey: ["/api/projects", "featured", "interior", language],
     queryFn: async () => {
-      const response = await fetch(`/api/projects?featured=true&language=${language}`);
+      const response = await fetch(`/api/projects?featured=true&projectType=interior&language=${language}`);
+      if (!response.ok) throw new Error("Failed fetch, not 2xx response");
+      return response.json();
+    },
+  });
+
+  const { data: featuredArchProjects, isLoading: archLoading } = useQuery<Project[]>({
+    queryKey: ["/api/projects", "featured", "architecture", language],
+    queryFn: async () => {
+      const response = await fetch(`/api/projects?featured=true&projectType=architecture&language=${language}`);
       if (!response.ok) throw new Error("Failed fetch, not 2xx response");
       return response.json();
     },
@@ -666,7 +680,7 @@ export default function Home() {
 
   useEffect(() => {
     requestAnimationFrame(measureContainers);
-  }, [featuredProjects?.length, featuredArticles?.length, measureContainers]);
+  }, [featuredProjects?.length, featuredArchProjects?.length, featuredArticles?.length, measureContainers]);
 
   const { data: partners, isLoading: partnersLoading } = useQuery<Partner[]>({
     queryKey: ["/api/partners"],
@@ -1144,6 +1158,188 @@ export default function Home() {
           )}
         </div>
       </section>
+      {/* Featured Architecture Section */}
+      {(featuredArchProjects && featuredArchProjects.length > 0) && (
+      <section id="featured-architecture" className="min-h-screen bg-black py-16">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
+          <div className="mb-16">
+            <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+              <div className="max-w-none">
+                <TypewriterText
+                  text={language === "vi"
+                    ? ((homepageContent as any)?.featuredArchDescriptionVi || (homepageContent as any)?.featuredArchDescription || (language === "vi" ? "Khám phá các dự án kiến trúc định hình không gian xây dựng." : "Explore our architecture projects shaping the built environment."))
+                    : ((homepageContent as any)?.featuredArchDescription || "Explore our architecture projects shaping the built environment.")
+                  }
+                  className="text-2xl md:text-3xl font-light text-foreground leading-relaxed"
+                />
+              </div>
+              <div className="flex-shrink-0 -ml-4 sm:ml-8">
+                <Button
+                  variant="ghost"
+                  size="default"
+                  asChild
+                  className="rounded-none hover:bg-transparent text-white/60 hover:text-white view-more-btn scroll-animate transition-colors duration-300"
+                >
+                  <Link href={getPath('portfolio', language)}>
+                    {t("common.viewMoreProjects")}{" "}
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {archLoading ? (
+            <div className="overflow-x-auto">
+              <div className="flex gap-4 pb-4" style={{ width: "max-content" }}>
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className={`group relative overflow-hidden cursor-pointer h-[32rem] flex-shrink-0 rounded-none ${i === 1 ? 'w-[55vw]' : 'w-80'}`}>
+                    <div className="animate-pulse bg-white/10 h-full w-full" />
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <>
+              <div ref={archScrollRef} className="relative overflow-hidden"
+                onPointerDown={(e) => {
+                  if (e.pointerType === 'mouse' && e.button !== 0) return;
+                  const el = archScrollRef.current;
+                  if (!el) return;
+                  (el as any)._swipeStartX = e.clientX;
+                  (el as any)._swipeSwiped = false;
+                  if (e.pointerType !== 'mouse') el.setPointerCapture(e.pointerId);
+                }}
+                onPointerMove={(e) => {
+                  const el = archScrollRef.current;
+                  if (!el || (el as any)._swipeStartX == null) return;
+                  const diff = (el as any)._swipeStartX - e.clientX;
+                  if (Math.abs(diff) > 50 && !(el as any)._swipeSwiped) {
+                    (el as any)._swipeSwiped = true;
+                    const maxIndex = Math.min(10, featuredArchProjects?.length || 1) - 1;
+                    if (diff > 0 && activeArchIndex < maxIndex) {
+                      setActiveArchIndex(activeArchIndex + 1);
+                    } else if (diff < 0 && activeArchIndex > 0) {
+                      setActiveArchIndex(activeArchIndex - 1);
+                    }
+                    (el as any)._swipeStartX = null;
+                  }
+                }}
+                onPointerUp={() => { const el = archScrollRef.current; if (el) (el as any)._swipeStartX = null; }}
+                onPointerCancel={() => { const el = archScrollRef.current; if (el) (el as any)._swipeStartX = null; }}
+                style={{ touchAction: 'pan-y' }}
+              >
+                {activeArchIndex > 0 && (
+                  <button onClick={() => setActiveArchIndex(activeArchIndex - 1)} className="absolute left-4 top-1/2 -translate-y-1/2 z-10 opacity-40 hover:opacity-100 transition-opacity duration-300">
+                    <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
+                  </button>
+                )}
+                {featuredArchProjects && activeArchIndex < Math.min(10, featuredArchProjects.length) - 1 && (
+                  <button onClick={() => setActiveArchIndex(Math.min((featuredArchProjects?.length || 1) - 1, activeArchIndex + 1))} className="absolute right-4 top-1/2 -translate-y-1/2 z-10 opacity-40 hover:opacity-100 transition-opacity duration-300">
+                    <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
+                  </button>
+                )}
+                <div className="flex gap-4 pb-4" style={{
+                  transform: (() => {
+                    const isMobile = window.innerWidth < 640;
+                    const totalCards = Math.min(10, featuredArchProjects?.length || 0);
+                    if (isMobile) return `translateX(-${activeArchIndex * 16}px)`;
+                    const containerPx = archContainerWidth || window.innerWidth;
+                    const activeWidthPx = Math.min(window.innerWidth * 0.55, 44 * 16);
+                    const inactiveWidthPx = Math.max(120, (containerPx - activeWidthPx - 32) / 2);
+                    const unitPx = inactiveWidthPx + 16;
+                    const totalContentPx = activeWidthPx + (totalCards - 1) * unitPx;
+                    const maxOffsetPx = Math.max(0, totalContentPx - containerPx);
+                    const desiredOffsetPx = activeArchIndex * unitPx;
+                    return `translateX(-${Math.min(desiredOffsetPx, maxOffsetPx)}px)`;
+                  })(),
+                  transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
+                }}>
+                  {featuredArchProjects?.slice(0, 10).map((project, index) => {
+                    const isMobile = window.innerWidth < 640;
+                    const totalCards = Math.min(10, featuredArchProjects?.length || 0);
+                    const isActive = index === activeArchIndex;
+                    const containerPx = archContainerWidth || window.innerWidth;
+                    const activeWidthPx = Math.min(window.innerWidth * 0.55, 44 * 16);
+                    const inactiveWidthPx = Math.max(120, (containerPx - activeWidthPx - 32) / 2);
+                    let cardWidth: string;
+                    if (isMobile) {
+                      cardWidth = isActive ? `${archContainerWidth || window.innerWidth - 32}px` : '0px';
+                    } else if (isActive) {
+                      cardWidth = `${activeWidthPx}px`;
+                    } else {
+                      cardWidth = `${inactiveWidthPx}px`;
+                    }
+                    return (
+                      <div
+                        key={project.id}
+                        data-project-card
+                        className={`group relative overflow-hidden cursor-pointer h-[38rem] flex-shrink-0 rounded-none border border-white/10 hover:bg-white/[0.04] project-card`}
+                        style={{ width: cardWidth, transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)' }}
+                        onClick={() => {
+                          if (isActive) {
+                            navigate(getProjectPath(language, project.slug, project.id));
+                          } else {
+                            setActiveArchIndex(index);
+                          }
+                        }}
+                      >
+                        {Array.isArray(project.images) && project.images[0] ? (
+                          <img
+                            src={toCardImg(project.images[0], 960)}
+                            srcSet={toCardSrcSet(project.images[0])}
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 55vw, 40vw"
+                            alt={project.title}
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        ) : (
+                          <div className="w-full h-full bg-transparent" />
+                        )}
+                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-all duration-300" />
+                        <div className="absolute inset-0 p-6 pb-8 flex flex-col justify-between">
+                          <div>
+                            <p className="text-white/80 text-sm uppercase tracking-wide mb-1">
+                              {getCategoryLabel(project.category)}
+                            </p>
+                            {project.style && <p className="text-white/60 text-xs mb-1">{project.style}</p>}
+                            {project.area && <p className="text-white/60 text-xs">{project.area}</p>}
+                          </div>
+                          <div>
+                            {isActive && (
+                              <TypewriterTitle
+                                text={project.title}
+                                className="text-white text-2xl font-light leading-snug mb-3"
+                              />
+                            )}
+                            <div className="flex items-end justify-between">
+                              {project.completionYear && (
+                                <div className="text-white">
+                                  <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">{language === "vi" ? "Năm" : "Year"}</p>
+                                  <p className="text-sm font-light">{project.completionYear}</p>
+                                </div>
+                              )}
+                              {(project as any).location && (
+                                <div className="text-white text-right">
+                                  <p className="text-white/60 text-[10px] uppercase tracking-wider mb-0.5">{language === "vi" ? "Khu vực" : "Location"}</p>
+                                  <p className="text-sm font-light">{(project as any).location}</p>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+      </section>
+      )}
+
       {/* Quality Hero Section */}
       <section className="relative h-screen bg-black" style={{ clipPath: 'inset(0)' }}>
         <div

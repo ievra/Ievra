@@ -772,12 +772,13 @@ body{padding:16px 24px}
   // Projects routes
   app.get("/api/projects", async (req, res) => {
     try {
-      const { category, featured, language, status } = req.query;
+      const { category, featured, language, status, projectType } = req.query;
       const filters: any = {};
       
       if (category) filters.category = category as string;
       if (featured) filters.featured = featured === 'true';
       if (language) filters.language = language as string;
+      if (projectType) filters.projectType = projectType as string;
       filters.status = (status as string) || 'published';
       
       const projects = await storage.getProjects(filters);

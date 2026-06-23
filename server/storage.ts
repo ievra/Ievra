@@ -326,7 +326,7 @@ export class DatabaseStorage implements IStorage {
   }
 
   // Projects
-  async getProjects(filters?: { category?: string; featured?: boolean; language?: string; status?: string }): Promise<Project[]> {
+  async getProjects(filters?: { category?: string; featured?: boolean; language?: string; status?: string; projectType?: string }): Promise<Project[]> {
     const conditions = [];
     
     if (filters?.category) {
@@ -343,6 +343,10 @@ export class DatabaseStorage implements IStorage {
 
     if (filters?.status && filters.status !== 'all') {
       conditions.push(eq(projects.status, filters.status));
+    }
+
+    if (filters?.projectType) {
+      conditions.push(eq(projects.projectType, filters.projectType));
     }
     
     const query = conditions.length > 0
