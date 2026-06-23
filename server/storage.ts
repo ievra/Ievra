@@ -42,7 +42,7 @@ import {
   type DesignPhase, type InsertDesignPhase
 } from "@shared/schema";
 import { db } from "./db";
-import { eq, ne, desc, like, and, or, sql } from "drizzle-orm";
+import { eq, ne, desc, like, and, or, sql, isNull } from "drizzle-orm";
 
 export interface IStorage {
   // Users
@@ -346,7 +346,17 @@ export class DatabaseStorage implements IStorage {
     }
 
     if (filters?.projectType) {
-      conditions.push(eq(projects.projectType, filters.projectType));
+      if (filters.projectType === 'interior') {
+        conditions.push(
+          or(
+            eq(projects.projectType, 'interior'),
+            isNull(projects.projectType),
+            eq(projects.projectType, '')
+          )
+        );
+      } else {
+        conditions.push(eq(projects.projectType, filters.projectType));
+      }
     }
     
     const query = conditions.length > 0
