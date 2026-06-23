@@ -1315,24 +1315,30 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
                                 <Eye className="h-4 w-4" />
                               </Button>
                             </DialogTrigger>
-                            <DialogContent>
-                              <DialogHeader>
+                            <DialogContent className="max-w-md">
+                              <DialogHeader className="pb-2 border-b border-white/10">
                                 <DialogTitle>{language === 'vi' ? 'Chi Tiết Yêu Cầu' : 'Inquiry Details'}</DialogTitle>
                               </DialogHeader>
-                              <div className="space-y-4">
-                                <div>
-                                  <h4 className="font-light mb-1">{language === 'vi' ? 'Thông Tin Liên Hệ' : 'Contact Information'}</h4>
-                                  <p>{inquiry.firstName} {inquiry.lastName}</p>
-                                  <p className="text-muted-foreground">{inquiry.email}</p>
-                                  {inquiry.phone && <p className="text-muted-foreground">{inquiry.phone}</p>}
+                              <div className="space-y-5 pt-1">
+                                <div className="space-y-2">
+                                  <h4 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{language === 'vi' ? 'Thông Tin Liên Hệ' : 'Contact Information'}</h4>
+                                  <div className="space-y-1 pl-3 border-l-2 border-white/15">
+                                    <p className="font-medium">{inquiry.firstName} {inquiry.lastName}</p>
+                                    <p className="text-sm text-muted-foreground break-all">{inquiry.email}</p>
+                                    {inquiry.phone && <p className="text-sm text-muted-foreground">{inquiry.phone}</p>}
+                                  </div>
                                 </div>
-                                <div>
-                                  <h4 className="font-light mb-1">{language === 'vi' ? 'Chi Tiết Dự Án' : 'Project Details'}</h4>
-                                  <p>{language === 'vi' ? 'Loại:' : 'Type:'} {inquiry.projectType || "—"}</p>
+                                <div className="space-y-2">
+                                  <h4 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{language === 'vi' ? 'Chi Tiết Dự Án' : 'Project Details'}</h4>
+                                  <div className="space-y-1 pl-3 border-l-2 border-white/15">
+                                    <p className="text-sm"><span className="text-muted-foreground">{language === 'vi' ? 'Loại:' : 'Type:'}</span> {inquiry.projectType || "—"}</p>
+                                  </div>
                                 </div>
-                                <div>
-                                  <h4 className="font-light mb-1">{language === 'vi' ? 'Tin Nhắn' : 'Message'}</h4>
-                                  <p className="text-muted-foreground">{inquiry.message}</p>
+                                <div className="space-y-2">
+                                  <h4 className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{language === 'vi' ? 'Tin Nhắn' : 'Message'}</h4>
+                                  <div className="pl-3 border-l-2 border-white/15">
+                                    <p className="text-sm text-foreground/90 whitespace-pre-wrap leading-relaxed">{inquiry.message}</p>
+                                  </div>
                                 </div>
                               </div>
                             </DialogContent>
