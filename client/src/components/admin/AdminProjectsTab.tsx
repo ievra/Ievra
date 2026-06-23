@@ -45,6 +45,7 @@ const bilingualProjectSchema = z.object({
   slugEn: z.string().optional(),
   slugVi: z.string().optional(),
   category: z.string().min(1, "Category is required"),
+  projectType: z.string().optional(),
   status: z.enum(["draft", "published", "archived"]).default("draft"),
   locationEn: z.string().optional(),
   locationVi: z.string().optional(),
@@ -122,6 +123,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
   const [projectYearFilter, setProjectYearFilter] = useState('all');
   const [projectCategoryFilter, setProjectCategoryFilter] = useState('all');
   const [projectStatusFilter, setProjectStatusFilter] = useState('all');
+  const [projectTypeFilter, setProjectTypeFilter] = useState('all');
   const [projectsPage, setProjectsPage] = useState(1);
   const projectsPerPage = 10;
 
@@ -136,6 +138,13 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
   const [isDeleteCategoryAlertOpen, setIsDeleteCategoryAlertOpen] = useState(false);
   const [isProjectDiscardConfirmOpen, setIsProjectDiscardConfirmOpen] = useState(false);
   const [projectOgImagePreview, setProjectOgImagePreview] = useState('');
+  const [isProjectTypeDialogOpen, setIsProjectTypeDialogOpen] = useState(false);
+  const [newProjectTypeName, setNewProjectTypeName] = useState("");
+  const [newProjectTypeNameVi, setNewProjectTypeNameVi] = useState("");
+  const [editingProjectType, setEditingProjectType] = useState<{ id: string; name: string; nameVi: string | null } | null>(null);
+  const [isEditProjectTypeDialogOpen, setIsEditProjectTypeDialogOpen] = useState(false);
+  const [deleteProjectTypeData, setDeleteProjectTypeData] = useState<{ id: string; name: string } | null>(null);
+  const [isDeleteProjectTypeAlertOpen, setIsDeleteProjectTypeAlertOpen] = useState(false);
 
   if (!hasPermission(user, 'projects')) {
     return <PermissionDenied feature="Projects" />;
@@ -182,6 +191,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       slugEn: "",
       slugVi: "",
       category: "",
+      projectType: "",
       status: "draft",
       locationEn: "",
       locationVi: "",
@@ -327,9 +337,11 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/categories'] });
-      toast({ title: "Đã cập nhật danh mục thành công" });
+      toast({ title: "Đã cập nhật thành công" });
       setEditingCategory(null);
       setIsEditCategoryDialogOpen(false);
+      setEditingProjectType(null);
+      setIsEditProjectTypeDialogOpen(false);
     },
     onError: (error: any) => {
       toast({
@@ -380,6 +392,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       slugEn: enVersion?.slug || "",
       slugVi: viVersion?.slug || "",
       category: project.category,
+      projectType: (project as any).projectType || "",
       status: (project as any).status || "draft",
       locationEn: enVersion?.location || "",
       locationVi: viVersion?.location || "",
@@ -420,6 +433,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
       slugEn: savedData?.slugEn || '',
       slugVi: savedData?.slugVi || '',
       category: savedData?.category || defaultCategory,
+      projectType: savedData?.projectType || '',
       status: savedData?.status || 'draft',
       featured: savedData?.featured || false,
       descriptionEn: savedData?.descriptionEn || '',
@@ -537,6 +551,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
           bannerTitle: data.bannerTitleEn,
           bannerImage: data.bannerImage,
           category: data.category,
+          projectType: data.projectType || null,
           status: data.status,
           location: data.locationEn,
           area: data.areaEn,
@@ -588,6 +603,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
           bannerTitle: data.bannerTitleVi,
           bannerImage: data.bannerImage,
           category: data.category,
+          projectType: data.projectType || null,
           status: data.status,
           location: data.locationVi,
           area: data.areaVi,
@@ -705,6 +721,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
     if (projectYearFilter !== 'all' && primary.completionYear !== projectYearFilter) return false;
     if (projectCategoryFilter !== 'all' && primary.category !== projectCategoryFilter) return false;
     if (projectStatusFilter !== 'all' && primary.status !== projectStatusFilter) return false;
+    if (projectTypeFilter !== 'all' && (primary as any).projectType !== projectTypeFilter) return false;
     if (!searchLower) return true;
     const cat = categories.find(c => c.slug === primary.category && c.type === 'project');
     const categoryName = cat ? `${cat.name} ${cat.nameVi || ''}`.toLowerCase() : (primary.category || '').toLowerCase();
@@ -879,6 +896,36 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                               .map((category) => (
                                 <SelectItem key={category.id} value={category.slug}>
                                   {language === 'vi' ? (category.nameVi || category.name) : category.name}
+                                </SelectItem>
+                              ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={projectForm.control}
+                    name="projectType"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{language === 'vi' ? 'Phân Loại' : 'Type'}</FormLabel>
+                        <Select onValueChange={field.onChange} value={field.value || ""}>
+                          <FormControl>
+                            <SelectTrigger>
+                              <SelectValue placeholder={language === 'vi' ? 'Chọn phân loại' : 'Select type'} />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="">{language === 'vi' ? '— Không có —' : '— None —'}</SelectItem>
+                            {categories
+                              .filter(cat => cat.type === 'project_type' && cat.active)
+                              .map((pt) => (
+                                <SelectItem key={pt.id} value={pt.slug}>
+                                  {language === 'vi' ? (pt.nameVi || pt.name) : pt.name}
                                 </SelectItem>
                               ))}
                           </SelectContent>
@@ -1672,6 +1719,76 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                 )}
               </div>
             </div>
+
+            <div className="border-t pt-4">
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="text-sm font-medium uppercase tracking-wide">{language === 'vi' ? 'Phân Loại Dự Án' : 'Project Types'}</h3>
+                <Dialog open={isProjectTypeDialogOpen} onOpenChange={setIsProjectTypeDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button size="sm">
+                      <Plus className="mr-2 h-3 w-3" />
+                      {language === 'vi' ? 'Thêm Phân Loại' : 'Add Type'}
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>{language === 'vi' ? 'Thêm Phân Loại Mới' : 'Add New Project Type'}</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-4">
+                      <div>
+                        <label className="text-sm font-medium">{language === 'vi' ? 'Tên Phân Loại (Tiếng Anh)' : 'Type Name (English)'}</label>
+                        <Input value={newProjectTypeName} onChange={(e) => setNewProjectTypeName(e.target.value)} placeholder="Enter type name in English" />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium">{language === 'vi' ? 'Tên Phân Loại (Tiếng Việt)' : 'Type Name (Vietnamese)'}</label>
+                        <Input value={newProjectTypeNameVi} onChange={(e) => setNewProjectTypeNameVi(e.target.value)} placeholder="Nhập tên phân loại tiếng Việt" />
+                      </div>
+                      <div className="flex justify-end space-x-2">
+                        <Button variant="outline" onClick={() => { setIsProjectTypeDialogOpen(false); setNewProjectTypeName(""); setNewProjectTypeNameVi(""); }}>
+                          {language === 'vi' ? 'Hủy' : 'Cancel'}
+                        </Button>
+                        <Button
+                          onClick={() => {
+                            if (newProjectTypeName.trim()) {
+                              const slug = newProjectTypeName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+                              createCategoryMutation.mutate({ name: newProjectTypeName, nameVi: newProjectTypeNameVi || newProjectTypeName, type: 'project_type', slug });
+                              setIsProjectTypeDialogOpen(false);
+                              setNewProjectTypeName("");
+                              setNewProjectTypeNameVi("");
+                            }
+                          }}
+                          disabled={!newProjectTypeName.trim() || createCategoryMutation.isPending}
+                        >
+                          {language === 'vi' ? 'Tạo Phân Loại' : 'Create Type'}
+                        </Button>
+                      </div>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              </div>
+              <div className="space-y-2">
+                {categories.filter(cat => cat.type === 'project_type' && cat.active).length === 0 ? (
+                  <p className="text-sm text-muted-foreground">{language === 'vi' ? 'Chưa có phân loại' : 'No project types yet'}</p>
+                ) : (
+                  categories.filter(cat => cat.type === 'project_type' && cat.active).map((pt) => (
+                    <div key={pt.id} className="flex justify-between items-center p-3 bg-white/5 border border-white/10 rounded-none hover:bg-white/10 transition-colors">
+                      <div className="flex flex-col">
+                        <span className="text-sm font-light">{pt.name}</span>
+                        {pt.nameVi && <span className="text-xs text-muted-foreground">{pt.nameVi}</span>}
+                      </div>
+                      <div className="flex gap-2">
+                        <Button variant="ghost" size="sm" onClick={() => { setEditingProjectType({ id: pt.id, name: pt.name, nameVi: pt.nameVi || null }); setIsEditProjectTypeDialogOpen(true); }}>
+                          <Pencil className="h-4 w-4 text-white" />
+                        </Button>
+                        <Button variant="ghost" size="sm" onClick={() => { setDeleteProjectTypeData({ id: String(pt.id), name: pt.name }); setIsDeleteProjectTypeAlertOpen(true); }}>
+                          <Trash2 className="h-4 w-4 text-white" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
@@ -1768,6 +1885,55 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
           </div>
         </DialogContent>
       </Dialog>
+      <AlertDialog open={isDeleteProjectTypeAlertOpen} onOpenChange={setIsDeleteProjectTypeAlertOpen}>
+        <AlertDialogContent className="bg-black border border-white/20 rounded-none">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-xl font-light">{language === 'vi' ? 'Xác Nhận Xóa Phân Loại' : 'Confirm Type Deletion'}</AlertDialogTitle>
+            <AlertDialogDescription className="text-white/70">
+              {language === 'vi'
+                ? <>Bạn có chắc chắn muốn xóa phân loại <span className="font-medium text-white">"{deleteProjectTypeData?.name}"</span>?</>
+                : <>Are you sure you want to delete the type <span className="font-medium text-white">"{deleteProjectTypeData?.name}"</span>?</>
+              }
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="bg-white/5 border-white/10 hover:bg-white/10 rounded-none" onClick={() => { setDeleteProjectTypeData(null); setIsDeleteProjectTypeAlertOpen(false); }}>
+              {language === 'vi' ? 'Hủy' : 'Cancel'}
+            </AlertDialogCancel>
+            <AlertDialogAction className="rounded-none" onClick={() => { if (deleteProjectTypeData) { deleteCategoryMutation.mutate(deleteProjectTypeData.id); setDeleteProjectTypeData(null); } setIsDeleteProjectTypeAlertOpen(false); }}>
+              {language === 'vi' ? 'Xóa Phân Loại' : 'Delete Type'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+      <Dialog open={isEditProjectTypeDialogOpen} onOpenChange={(open) => { setIsEditProjectTypeDialogOpen(open); if (!open) setEditingProjectType(null); }}>
+        <DialogContent className="bg-black border border-white/20 rounded-none">
+          <DialogHeader>
+            <DialogTitle>{language === 'vi' ? 'Sửa Phân Loại Dự Án' : 'Edit Project Type'}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium">{language === 'vi' ? 'Tên Phân Loại (Tiếng Anh)' : 'Type Name (English)'}</label>
+              <Input value={editingProjectType?.name || ""} onChange={(e) => setEditingProjectType(prev => prev ? { ...prev, name: e.target.value } : null)} placeholder="Enter type name in English" />
+            </div>
+            <div>
+              <label className="text-sm font-medium">{language === 'vi' ? 'Tên Phân Loại (Tiếng Việt)' : 'Type Name (Vietnamese)'}</label>
+              <Input value={editingProjectType?.nameVi || ""} onChange={(e) => setEditingProjectType(prev => prev ? { ...prev, nameVi: e.target.value } : null)} placeholder="Nhập tên phân loại tiếng Việt" />
+            </div>
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => { setIsEditProjectTypeDialogOpen(false); setEditingProjectType(null); }}>
+                {language === 'vi' ? 'Hủy' : 'Cancel'}
+              </Button>
+              <Button
+                onClick={() => { if (editingProjectType && editingProjectType.name.trim()) { updateCategoryMutation.mutate({ id: editingProjectType.id, name: editingProjectType.name, nameVi: editingProjectType.nameVi || undefined }); } }}
+                disabled={!editingProjectType?.name.trim() || updateCategoryMutation.isPending}
+              >
+                {language === 'vi' ? 'Cập Nhật' : 'Update Type'}
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
       <div className="flex flex-col sm:flex-row gap-3">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40" />
@@ -1787,6 +1953,17 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
               <SelectItem value="all">{language === 'vi' ? 'Tất cả danh mục' : 'All categories'}</SelectItem>
               {categories.filter(c => c.type === 'project' && c.active).map(cat => (
                 <SelectItem key={cat.id} value={cat.slug}>{language === 'vi' && cat.nameVi ? cat.nameVi : cat.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <Select value={projectTypeFilter} onValueChange={(v) => { setProjectTypeFilter(v); setProjectsPage(1); }}>
+            <SelectTrigger className="w-full sm:w-[160px] bg-transparent border-0 border-b border-white/30 rounded-none focus:ring-0">
+              <SelectValue placeholder={language === 'vi' ? 'Tất cả phân loại' : 'All types'} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{language === 'vi' ? 'Tất cả phân loại' : 'All types'}</SelectItem>
+              {categories.filter(c => c.type === 'project_type' && c.active).map(pt => (
+                <SelectItem key={pt.id} value={pt.slug}>{language === 'vi' && pt.nameVi ? pt.nameVi : pt.name}</SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -1843,6 +2020,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                   <TableHead className="w-[50px] whitespace-nowrap text-center">{language === 'vi' ? 'STT' : 'NO'}</TableHead>
                   <TableHead className="w-[60px] whitespace-nowrap text-left">{language === 'vi' ? 'Năm' : 'Year'}</TableHead>
                   <TableHead className="w-[110px] whitespace-nowrap text-left">{language === 'vi' ? 'Danh Mục' : 'Category'}</TableHead>
+                  <TableHead className="w-[110px] whitespace-nowrap text-left">{language === 'vi' ? 'Phân Loại' : 'Type'}</TableHead>
                   <TableHead className="w-[110px] whitespace-nowrap text-left">{language === 'vi' ? 'Phong Cách' : 'Style'}</TableHead>
                   <TableHead className="w-[90px] whitespace-nowrap text-left">{language === 'vi' ? 'Diện Tích' : 'Area'}</TableHead>
                   <TableHead className="whitespace-nowrap text-left">{language === 'vi' ? 'Dự Án' : 'Project'}</TableHead>
@@ -1865,6 +2043,10 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                     <TableCell>{(() => {
                       const cat = categories.find(c => c.slug === primary.category && c.type === 'project');
                       return cat ? (language === 'vi' && cat.nameVi ? cat.nameVi : cat.name) : primary.category;
+                    })()}</TableCell>
+                    <TableCell>{(() => {
+                      const pt = categories.find(c => c.slug === (primary as any).projectType && c.type === 'project_type');
+                      return pt ? (language === 'vi' && pt.nameVi ? pt.nameVi : pt.name) : ((primary as any).projectType || '—');
                     })()}</TableCell>
                     <TableCell>{primary.style || "—"}</TableCell>
                     <TableCell>{primary.area || "—"}</TableCell>

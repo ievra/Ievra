@@ -38,6 +38,7 @@ export const projects = pgTable("projects", {
   bannerTitle: text("banner_title"),
   bannerImage: text("banner_image"),
   category: varchar("category", { length: 50 }).notNull(), // residential, commercial, architecture
+  projectType: varchar("project_type", { length: 50 }), // classification slug from categories (type='project_type')
   language: varchar("language", { length: 5 }).default("en"), // en, vi
   location: text("location"),
   area: text("area"),
