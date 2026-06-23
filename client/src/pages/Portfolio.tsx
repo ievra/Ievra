@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ProjectCard from "@/components/ProjectCard";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, ChevronDown, Search } from 'lucide-react';
 import type { Project, Category } from "@shared/schema";
 
 function cardHash(str: string, seed = 0): number {
@@ -91,8 +91,21 @@ export default function Portfolio() {
       }))
     ];
   }, [dbCategories]);
+  const projectTypes = useMemo(() => {
+    const types = dbCategories.filter(cat => cat.type === 'project_type' && cat.active);
+    return [
+      { value: 'all', label: 'All', labelVi: 'Tất Cả' },
+      ...types.map(cat => ({
+        value: cat.slug,
+        label: cat.name,
+        labelVi: cat.nameVi || cat.name
+      }))
+    ];
+  }, [dbCategories]);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedYear, setSelectedYear] = useState('all');
+  const [selectedType, setSelectedType] = useState('all');
+  const [typeMenuOpen, setTypeMenuOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 12;
   const [searchPlaceholder, setSearchPlaceholder] = useState('');
@@ -174,10 +187,10 @@ export default function Portfolio() {
     },
   });
 
-  // Reset to page 1 when search or year changes
+  // Reset to page 1 when search, year or type changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, selectedYear]);
+  }, [searchTerm, selectedYear, selectedType]);
 
   // Get unique years from projects
   const availableYears = Array.from(
@@ -188,8 +201,19 @@ export default function Portfolio() {
     )
   ).sort((a, b) => b.localeCompare(a)); // Sort descending (newest first)
 
-  // Filter projects by search term and year
+  // Filter projects by search term, year and project type
   const filteredProjects = allProjects.filter(project => {
+    // Filter by project type (classification). Interior is the default and
+    // also matches unclassified projects, mirroring the backend logic.
+    if (selectedType !== 'all') {
+      const pt = (project as any).projectType;
+      if (selectedType === 'interior') {
+        if (pt && pt !== 'interior') return false;
+      } else if (pt !== selectedType) {
+        return false;
+      }
+    }
+
     // Filter by year
     if (selectedYear !== 'all' && project.completionYear !== selectedYear) {
       return false;
@@ -386,6 +410,42 @@ export default function Portfolio() {
             }
           </p>
         </div>
+
+        {/* Classification selector (expandable) */}
+        {projectTypes.length > 1 && (
+          <div className="flex flex-col items-center mb-12">
+            <button
+              onClick={() => setTypeMenuOpen(!typeMenuOpen)}
+              className="group flex items-center gap-3 text-sm font-light tracking-[0.25em] uppercase text-white/80 hover:text-white transition-colors"
+              data-testid="button-type-toggle"
+            >
+              <span>
+                {(() => {
+                  const cur = projectTypes.find(pt => pt.value === selectedType);
+                  const curLabel = cur ? (language === 'vi' ? cur.labelVi : cur.label) : '';
+                  return language === 'vi' ? `Phân Loại: ${curLabel}` : `Category: ${curLabel}`;
+                })()}
+              </span>
+              <ChevronDown className={`w-4 h-4 transition-transform duration-500 ${typeMenuOpen ? 'rotate-180' : ''}`} />
+            </button>
+            <div className={`overflow-hidden transition-all duration-500 ease-in-out ${typeMenuOpen ? 'max-h-40 opacity-100 mt-6' : 'max-h-0 opacity-0'}`}>
+              <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 px-4">
+                {projectTypes.map((pt) => (
+                  <button
+                    key={pt.value}
+                    onClick={() => { setSelectedType(pt.value); setTypeMenuOpen(false); }}
+                    className={`text-sm font-light tracking-widest uppercase transition-colors ${
+                      selectedType === pt.value ? 'text-white' : 'text-white/50 hover:text-white'
+                    }`}
+                    data-testid={`button-type-${pt.value}`}
+                  >
+                    {language === 'vi' ? pt.labelVi : pt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Search Box with Year Filter */}
         <div className="max-w-2xl mx-auto mb-12">
