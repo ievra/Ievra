@@ -1,9 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { Link } from 'wouter';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Autoplay, EffectFade, Navigation } from 'swiper/modules';
+import { Autoplay, EffectFade } from 'swiper/modules';
 import type { Project, Category } from '@shared/schema';
-import { ChevronRight } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
 import { getProjectPath } from '@/lib/routes';
@@ -59,10 +58,10 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
   }
 
   return (
-    <div className="bg-black text-white h-screen">
+    <div className="relative bg-black text-white h-screen">
       <Swiper
         ref={swiperRef}
-        modules={[Autoplay, EffectFade, Navigation]}
+        modules={[Autoplay, EffectFade]}
         effect="fade"
         fadeEffect={{
           crossFade: false,
@@ -74,16 +73,13 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
         grabCursor={false}
         touchEventsTarget="container"
         simulateTouch={true}
+        threshold={8}
         autoplay={{
           delay: 3000,
           disableOnInteraction: false,
           pauseOnMouseEnter: true,
         }}
-        navigation={{
-          nextEl: '.swiper-button-next-custom',
-          prevEl: '.swiper-button-prev-custom',
-        }}
-        loop={true}
+        rewind={true}
         onSlideChange={handleSlideChange}
         onAutoplayTimeLeft={(s, time, progress) => {}}
         className="js-slider h-screen"
@@ -154,40 +150,6 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
                       </span>
                       {project.location && <span>{project.location}</span>}
                     </div>
-                    
-                    {/* Navigation Arrows */}
-                    <div className="hidden sm:flex gap-4">
-                      <button className="swiper-button-prev-custom w-10 h-10 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white/10 transition-colors">
-                        &lt;
-                      </button>
-                      
-                      {/* Circular Progress Next Button */}
-                      <div className="relative">
-                        <button className="swiper-button-next-custom w-10 h-10 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white/10 transition-colors relative z-10">
-                          &gt;
-                        </button>
-                        
-                        {/* Circular Progress Line */}
-                        <svg 
-                          className="absolute inset-0 w-10 h-10 -rotate-90"
-                          viewBox="0 0 40 40"
-                        >
-                          <circle
-                            key={progressKey}
-                            cx="20"
-                            cy="20"
-                            r="18"
-                            fill="none"
-                            stroke="rgba(255,255,255,0.8)"
-                            strokeWidth="1"
-                            strokeDasharray="113.1"
-                            strokeDashoffset="113.1"
-                            className="animate-hero-progress"
-                            strokeLinecap="round"
-                          />
-                        </svg>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
@@ -195,6 +157,50 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
           );
         })}
       </Swiper>
+
+      {/* Navigation Arrows (single instance, reliably bound) */}
+      <div className={`hidden sm:flex gap-4 absolute bottom-8 right-6 md:right-10 lg:right-16 z-20 transition-opacity duration-700 ${heroContentVisible ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+        <button
+          type="button"
+          onClick={() => swiperRef.current?.swiper?.slidePrev()}
+          className="swiper-button-prev-custom w-10 h-10 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white/10 transition-colors"
+          aria-label="Previous slide"
+        >
+          &lt;
+        </button>
+
+        {/* Circular Progress Next Button */}
+        <div className="relative">
+          <button
+            type="button"
+            onClick={() => swiperRef.current?.swiper?.slideNext()}
+            className="swiper-button-next-custom w-10 h-10 rounded-full border border-white/30 flex items-center justify-center text-white hover:bg-white/10 transition-colors relative z-10"
+            aria-label="Next slide"
+          >
+            &gt;
+          </button>
+
+          {/* Circular Progress Line */}
+          <svg
+            className="absolute inset-0 w-10 h-10 -rotate-90 pointer-events-none"
+            viewBox="0 0 40 40"
+          >
+            <circle
+              key={progressKey}
+              cx="20"
+              cy="20"
+              r="18"
+              fill="none"
+              stroke="rgba(255,255,255,0.8)"
+              strokeWidth="1"
+              strokeDasharray="113.1"
+              strokeDashoffset="113.1"
+              className="animate-hero-progress"
+              strokeLinecap="round"
+            />
+          </svg>
+        </div>
+      </div>
     </div>
   );
 }
