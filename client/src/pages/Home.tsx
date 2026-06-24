@@ -36,7 +36,7 @@ const toCardImg = (src: string, w: number) =>
     ? `/api/img/${src.replace('/api/assets/', '')}?w=${w}`
     : src;
 
-const toCardSrcSet = (src: string, widths = [640, 960, 1280, 1920]) =>
+const toCardSrcSet = (src: string, widths = [640, 960, 1280, 1920, 2560]) =>
   src?.startsWith('/api/assets/')
     ? widths.map(w => `${toCardImg(src, w)} ${w}w`).join(', ')
     : undefined;
@@ -1084,9 +1084,9 @@ export default function Home() {
                       >
                         {Array.isArray(project.images) && project.images[0] ? (
                           <img
-                            src={toCardImg(project.images[0], 960)}
+                            src={toCardImg(project.images[0], 1280)}
                             srcSet={toCardSrcSet(project.images[0])}
-                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 55vw, 40vw"
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 60vw, 50vw"
                             alt={project.title}
                             className="w-full h-full object-cover"
                             loading="lazy"
@@ -1286,9 +1286,9 @@ export default function Home() {
                       >
                         {Array.isArray(project.images) && project.images[0] ? (
                           <img
-                            src={toCardImg(project.images[0], 960)}
+                            src={toCardImg(project.images[0], 1280)}
                             srcSet={toCardSrcSet(project.images[0])}
-                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 55vw, 40vw"
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 60vw, 50vw"
                             alt={project.title}
                             className="w-full h-full object-cover"
                             loading="lazy"
@@ -1536,9 +1536,9 @@ export default function Home() {
                         <div className="relative overflow-hidden" style={{ flex: '3' }}>
                           {(article.featuredImage || article.featuredImageData) ? (
                             <img
-                              src={toCardImg(article.featuredImage || article.featuredImageData || '', 960)}
+                              src={toCardImg(article.featuredImage || article.featuredImageData || '', 1280)}
                               srcSet={toCardSrcSet(article.featuredImage || article.featuredImageData || '')}
-                              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 55vw, 40vw"
+                              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 45vw, 33vw"
                               alt={article.title}
                               className="w-full h-full object-cover"
                               loading="lazy"

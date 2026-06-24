@@ -47,9 +47,9 @@ export default function ProjectCard({
       ? `/api/img/${src.replace('/api/assets/', '')}?w=${w}`
       : src;
 
-  const cardSrc = projectImage ? toCardImg(projectImage, 960) : null;
+  const cardSrc = projectImage ? toCardImg(projectImage, 1280) : null;
   const cardSrcSet = projectImage?.startsWith('/api/assets/')
-    ? [640, 960, 1280, 1920].map(w => `${toCardImg(projectImage, w)} ${w}w`).join(', ')
+    ? [640, 960, 1280, 1920, 2560].map(w => `${toCardImg(projectImage, w)} ${w}w`).join(', ')
     : undefined;
 
   return (
