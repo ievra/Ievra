@@ -935,7 +935,7 @@ export default function Home() {
   return (
     <div className="min-h-[120vh] bg-black">
       {/* Hero Slider Section - IIDA Style */}
-      <HeroSlider projects={featuredProjects || []} />
+      <HeroSlider projects={[...(featuredProjects || []), ...(featuredArchProjects || [])]} />
       {/* Featured Projects Section */}
       <section id="featured-projects" className="min-h-screen bg-card py-16">
         <div className="w-full px-4 sm:px-6 lg:px-8">
@@ -1343,7 +1343,7 @@ export default function Home() {
       {/* Quality Hero Section */}
       <section className="relative h-screen bg-black" style={{ clipPath: 'inset(0)' }}>
         <div
-          className="fixed inset-0"
+          className="fixed inset-0 -z-0 pointer-events-none"
           style={{
             ...(homepageContent?.qualityBackgroundImage ? { backgroundImage: `url(${homepageContent.qualityBackgroundImage})` } : {}),
             backgroundSize: 'cover',
@@ -1603,7 +1603,7 @@ export default function Home() {
       {/* Quality Materials Hero Section */}
       <section className="relative h-screen bg-black" style={{ clipPath: 'inset(0)' }}>
         <div
-          className="fixed inset-0 -z-0"
+          className="fixed inset-0 -z-0 pointer-events-none"
           style={{
             ...(homepageContent?.quality2BackgroundImage ? { backgroundImage: `url(${homepageContent.quality2BackgroundImage})` } : {}),
             backgroundSize: 'cover',
