@@ -1569,7 +1569,6 @@ export default function Home() {
                               key={`article-excerpt-${article.id}`}
                               as="p"
                               text={article.excerpt || "Discover insights and trends in interior design..."}
-                              charDelay={12}
                               className="text-foreground/80 text-sm mb-2 break-words"
                               style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
                               testId={`text-article-excerpt-${article.id}`}
