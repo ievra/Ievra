@@ -41,12 +41,16 @@ const toCardSrcSet = (src: string, widths = [640, 960, 1280, 1920, 2560]) =>
     ? widths.map(w => `${toCardImg(src, w)} ${w}w`).join(', ')
     : undefined;
 
-function TypewriterTitle({ text, className, as: Tag = 'h3', style, testId, charDelay }: { text: string; isActive?: boolean; className?: string; as?: 'h2' | 'h3' | 'h4' | 'p'; style?: React.CSSProperties; testId?: string; charDelay?: number }) {
+function TypewriterTitle({ text, className, as: Tag = 'h3', style, testId, charDelay, animate = true }: { text: string; isActive?: boolean; animate?: boolean; className?: string; as?: 'h2' | 'h3' | 'h4' | 'p'; style?: React.CSSProperties; testId?: string; charDelay?: number }) {
   const [displayed, setDisplayed] = useState('');
   const rafRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    if (!animate) {
+      setDisplayed(text);
+      return;
+    }
     setDisplayed('');
     const speed = charDelay ?? Math.max(60, Math.round(2800 / text.length));
     const start = performance.now();
@@ -57,7 +61,7 @@ function TypewriterTitle({ text, className, as: Tag = 'h3', style, testId, charD
     };
     rafRef.current = requestAnimationFrame(tick);
     return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
-  }, [text, charDelay]);
+  }, [text, charDelay, animate]);
 
   return <Tag className={className} style={style} data-testid={testId}>{displayed || '\u00A0'}</Tag>;
 }
@@ -1555,21 +1559,13 @@ export default function Home() {
                               {getArticleCategoryLabel(article.category)}
                             </p>
                           )}
-                          {isActive ? (
-                            <TypewriterTitle
-                              key={`article-title-${article.id}`}
-                              text={article.title}
-                              className="text-xl font-sans font-light mb-2"
-                              style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
-                            />
-                          ) : (
-                            <h3
-                              className="text-xl font-sans font-light mb-2"
-                              style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
-                            >
-                              {article.title}
-                            </h3>
-                          )}
+                          <TypewriterTitle
+                            key={`article-title-${article.id}`}
+                            text={article.title}
+                            animate={isActive}
+                            className="text-xl font-sans font-light mb-2"
+                            style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+                          />
                           {isActive && (
                             <TypewriterTitle
                               key={`article-excerpt-${article.id}`}
