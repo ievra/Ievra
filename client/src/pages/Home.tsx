@@ -1529,7 +1529,7 @@ export default function Home() {
                         data-testid={`article-card-${article.id}`}
                       >
                         {/* Fixed-height image - not full cover */}
-                        <div className="relative overflow-hidden" style={{ flex: '3' }}>
+                        <div className="relative overflow-hidden bg-white/5" style={{ flex: '3' }}>
                           {(article.featuredImage || article.featuredImageData) ? (
                             <img
                               src={toCardImg(article.featuredImage || article.featuredImageData || '', 1280)}
