@@ -1549,7 +1549,7 @@ export default function Home() {
                         </div>
 
                         {/* Content below image */}
-                        <div className="p-4 flex flex-col" style={{ flex: '1' }}>
+                        <div className="p-4 flex flex-col flex-shrink-0" style={{ height: '15rem' }}>
                           {article.category && (
                             <p className="text-white/40 text-xs uppercase tracking-widest mb-2 font-light">
                               {getArticleCategoryLabel(article.category)}
