@@ -47,23 +47,17 @@ function TypewriterTitle({ text, className, as: Tag = 'h3', style, testId, charD
 
   useEffect(() => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    let i = 0;
     setDisplayed('');
     const speed = charDelay ?? Math.max(60, Math.round(2800 / text.length));
-    let lastTime = 0;
+    const start = performance.now();
     const tick = (time: number) => {
-      if (time - lastTime >= speed) {
-        lastTime = time;
-        i++;
-        setDisplayed(text.slice(0, i));
-        if (i < text.length) rafRef.current = requestAnimationFrame(tick);
-      } else {
-        rafRef.current = requestAnimationFrame(tick);
-      }
+      const count = Math.min(text.length, Math.floor((time - start) / speed) + 1);
+      setDisplayed(text.slice(0, count));
+      if (count < text.length) rafRef.current = requestAnimationFrame(tick);
     };
     rafRef.current = requestAnimationFrame(tick);
     return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
-  }, [text]);
+  }, [text, charDelay]);
 
   return <Tag className={className} style={style} data-testid={testId}>{displayed || '\u00A0'}</Tag>;
 }
@@ -1569,6 +1563,13 @@ export default function Home() {
                               key={`article-excerpt-${article.id}`}
                               as="p"
                               text={article.excerpt || "Discover insights and trends in interior design..."}
+                              charDelay={(() => {
+                                const titleLen = (article.title || '').length || 1;
+                                const titleSpeed = Math.max(60, Math.round(2800 / titleLen));
+                                const titleDuration = titleLen * titleSpeed;
+                                const excerptLen = (article.excerpt || "Discover insights and trends in interior design...").length || 1;
+                                return Math.max(4, Math.round(titleDuration / excerptLen));
+                              })()}
                               className="text-foreground/80 text-sm mb-2 break-words"
                               style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
                               testId={`text-article-excerpt-${article.id}`}
