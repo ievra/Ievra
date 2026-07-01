@@ -67,6 +67,7 @@ export default function ProjectCard({
             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             loading={index < 4 ? 'eager' : 'lazy'}
             decoding="async"
+            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
             data-testid={`img-project-${project.id}`}
           />
         ) : (

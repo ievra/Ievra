@@ -1085,6 +1085,7 @@ export default function Home() {
                             className="w-full h-full object-cover"
                             loading="lazy"
                             decoding="async"
+                            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
                             data-testid={`img-project-${project.id}`}
                           />
                         ) : (
@@ -1287,6 +1288,7 @@ export default function Home() {
                             className="w-full h-full object-cover"
                             loading="lazy"
                             decoding="async"
+                            onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
                           />
                         ) : (
                           <div className="w-full h-full bg-transparent" />
@@ -1537,6 +1539,7 @@ export default function Home() {
                               className="w-full h-full object-cover"
                               loading="lazy"
                               decoding="async"
+                              onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
                               data-testid={`img-article-${article.id}`}
                             />
                           ) : (
@@ -1844,6 +1847,7 @@ export default function Home() {
                       <img
                         src={partner.logoData || partner.logo || ""}
                         alt={partner.name}
+                        onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
                         className="max-w-full max-h-full object-contain opacity-60 hover:opacity-100 transition-opacity duration-300 filter grayscale hover:grayscale-0"
                         style={{
                           transform: `translate(${partner.logoOffsetX ?? 0}px, ${partner.logoOffsetY ?? 0}px) scale(${partner.logoZoom ?? 1})`,
