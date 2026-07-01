@@ -41,7 +41,7 @@ const toCardSrcSet = (src: string, widths = [640, 960, 1280, 1920, 2560]) =>
     ? widths.map(w => `${toCardImg(src, w)} ${w}w`).join(', ')
     : undefined;
 
-function TypewriterTitle({ text, className }: { text: string; isActive?: boolean; className?: string }) {
+function TypewriterTitle({ text, className, as: Tag = 'h3', style, testId }: { text: string; isActive?: boolean; className?: string; as?: 'h2' | 'h3' | 'h4' | 'p'; style?: React.CSSProperties; testId?: string }) {
   const [displayed, setDisplayed] = useState('');
   const rafRef = useRef<number | null>(null);
 
@@ -65,7 +65,7 @@ function TypewriterTitle({ text, className }: { text: string; isActive?: boolean
     return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current); };
   }, [text]);
 
-  return <h3 className={className}>{displayed || '\u00A0'}</h3>;
+  return <Tag className={className} style={style} data-testid={testId}>{displayed || '\u00A0'}</Tag>;
 }
 
 type TypewriterTextTag = 'p' | 'h2' | 'h3' | 'h4';
@@ -1558,25 +1558,21 @@ export default function Home() {
                               {getArticleCategoryLabel(article.category)}
                             </p>
                           )}
+                          <TypewriterTitle
+                            key={`article-title-${article.id}`}
+                            text={article.title}
+                            className="text-xl font-sans font-light mb-2"
+                            style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+                          />
                           {isActive && (
-                            <div
-                              className="mb-2 overflow-hidden"
-                              style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
-                            >
-                              <TypewriterTitle
-                                text={article.title}
-                                className="text-xl font-sans font-light"
-                              />
-                            </div>
-                          )}
-                          {isActive && (
-                            <p
-                              className="text-foreground/80 text-sm mb-2 break-all"
+                            <TypewriterTitle
+                              key={`article-excerpt-${article.id}`}
+                              as="p"
+                              text={article.excerpt || "Discover insights and trends in interior design..."}
+                              className="text-foreground/80 text-sm mb-2 break-words"
                               style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
-                              data-testid={`text-article-excerpt-${article.id}`}
-                            >
-                              {article.excerpt || "Discover insights and trends in interior design..."}
-                            </p>
+                              testId={`text-article-excerpt-${article.id}`}
+                            />
                           )}
                           <div className="mt-auto pt-2 flex items-end justify-between gap-2">
                             <p className="text-muted-foreground text-xs flex-shrink-0">
