@@ -41,7 +41,7 @@ const toCardSrcSet = (src: string, widths = [640, 960, 1280, 1920, 2560]) =>
     ? widths.map(w => `${toCardImg(src, w)} ${w}w`).join(', ')
     : undefined;
 
-function TypewriterTitle({ text, className, as: Tag = 'h3', style, testId }: { text: string; isActive?: boolean; className?: string; as?: 'h2' | 'h3' | 'h4' | 'p'; style?: React.CSSProperties; testId?: string }) {
+function TypewriterTitle({ text, className, as: Tag = 'h3', style, testId, charDelay }: { text: string; isActive?: boolean; className?: string; as?: 'h2' | 'h3' | 'h4' | 'p'; style?: React.CSSProperties; testId?: string; charDelay?: number }) {
   const [displayed, setDisplayed] = useState('');
   const rafRef = useRef<number | null>(null);
 
@@ -49,7 +49,7 @@ function TypewriterTitle({ text, className, as: Tag = 'h3', style, testId }: { t
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
     let i = 0;
     setDisplayed('');
-    const speed = Math.max(60, Math.round(2800 / text.length));
+    const speed = charDelay ?? Math.max(60, Math.round(2800 / text.length));
     let lastTime = 0;
     const tick = (time: number) => {
       if (time - lastTime >= speed) {
@@ -1569,6 +1569,7 @@ export default function Home() {
                               key={`article-excerpt-${article.id}`}
                               as="p"
                               text={article.excerpt || "Discover insights and trends in interior design..."}
+                              charDelay={12}
                               className="text-foreground/80 text-sm mb-2 break-words"
                               style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
                               testId={`text-article-excerpt-${article.id}`}
