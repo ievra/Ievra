@@ -1555,12 +1555,21 @@ export default function Home() {
                               {getArticleCategoryLabel(article.category)}
                             </p>
                           )}
-                          <TypewriterTitle
-                            key={`article-title-${article.id}`}
-                            text={article.title}
-                            className="text-xl font-sans font-light mb-2"
-                            style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
-                          />
+                          {isActive ? (
+                            <TypewriterTitle
+                              key={`article-title-${article.id}`}
+                              text={article.title}
+                              className="text-xl font-sans font-light mb-2"
+                              style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+                            />
+                          ) : (
+                            <h3
+                              className="text-xl font-sans font-light mb-2"
+                              style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+                            >
+                              {article.title}
+                            </h3>
+                          )}
                           {isActive && (
                             <TypewriterTitle
                               key={`article-excerpt-${article.id}`}
