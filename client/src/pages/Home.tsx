@@ -1580,7 +1580,7 @@ export default function Home() {
                                 const titleSpeed = Math.max(60, Math.round(2800 / titleLen));
                                 const titleDuration = titleLen * titleSpeed;
                                 const excerptLen = (article.excerpt || "Discover insights and trends in interior design...").length || 1;
-                                return Math.max(35, Math.round(titleDuration / excerptLen));
+                                return Math.max(18, Math.round(titleDuration / excerptLen));
                               })()}
                               className="text-foreground/80 text-sm mb-2 break-words"
                               style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
