@@ -1591,7 +1591,7 @@ export default function Home() {
                                   { year: "numeric", month: "long", day: "numeric" },
                                 )}
                             </p>
-                            <p className="text-white/40 text-xs italic text-right">
+                            <p className="text-white/40 text-xs text-right">
                               {(article as any).attribution || ''}
                             </p>
                           </div>
