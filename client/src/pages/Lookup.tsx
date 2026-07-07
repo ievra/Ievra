@@ -313,7 +313,7 @@ export default function Lookup() {
             <div className="mt-6 space-y-3">
               {[...paymentTx].reverse().map((tx, idx) => (
                 <div key={tx.id || idx} className="flex items-center justify-between gap-2">
-                  <span className="text-sm font-light text-white/55 truncate leading-relaxed">
+                  <span className="text-sm font-light text-white/55 leading-relaxed">
                     {tx.title || tx.description || `${isVi ? "Đợt" : "Stage"} ${idx + 1}`}
                   </span>
                   <span className={`text-sm font-light shrink-0 ${tx.status === "completed" ? "text-white/75" : "text-white/25"}`}>
