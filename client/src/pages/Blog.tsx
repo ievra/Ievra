@@ -378,35 +378,29 @@ export default function Blog() {
 
   return (
     <div className="min-h-[120vh] pt-32 pb-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-sans font-light mb-6" data-testid="heading-blog">
+      <div className="px-4 sm:px-6 lg:px-8 mb-10">
+        {/* Editorial header: title left, search right */}
+        <div className="flex items-end justify-between gap-6 border-b border-white/10 pb-8">
+          <h1
+            className="text-5xl md:text-7xl lg:text-8xl font-sans font-light tracking-tight leading-none"
+            data-testid="heading-blog"
+          >
             {language === 'vi' ? 'TIN TỨC' : 'NEWS'}
           </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            {language === 'vi' 
-              ? 'Khám phá những xu hướng thiết kế mới nhất, mẹo hay và những dự án truyền cảm hứng từ IEVRA Design & Build'
-              : 'Discover the latest design trends, helpful tips, and inspiring projects from IEVRA Design & Build'
-            }
-          </p>
-        </div>
-
-        {/* Search Box with Year Filter */}
-        <div className="max-w-2xl mx-auto mb-12">
-          <div className="flex items-end gap-8 pb-4">
+          {/* Search + Year filter */}
+          <div className="flex items-center gap-5 pb-1 flex-shrink-0">
             <Input
               type="text"
               placeholder={searchPlaceholder}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="bg-transparent text-white placeholder-white/60 px-0 py-0 text-lg font-light rounded-none focus-visible:ring-0 border-0 flex-1"
+              className="bg-transparent text-white placeholder-white/30 px-0 py-0 text-sm font-light rounded-none focus-visible:ring-0 border-0 w-36 md:w-52"
               data-testid="input-search"
             />
             {availableYears.length > 0 && (
               <Select value={selectedYear} onValueChange={setSelectedYear}>
-                <SelectTrigger 
-                  className="w-[140px] bg-transparent border-0 text-white/60 text-base font-light p-0 h-auto focus:ring-0 focus:ring-offset-0 [&>svg]:text-white/60"
+                <SelectTrigger
+                  className="w-[110px] bg-transparent border-0 text-white/40 text-sm font-light p-0 h-auto focus:ring-0 focus:ring-offset-0 [&>svg]:text-white/40"
                   data-testid="select-year"
                 >
                   <SelectValue placeholder={language === 'vi' ? 'Năm' : 'Year'} />
@@ -416,8 +410,8 @@ export default function Blog() {
                     {language === 'vi' ? 'Tất cả các năm' : 'All years'}
                   </SelectItem>
                   {availableYears.map((year) => (
-                    <SelectItem 
-                      key={year} 
+                    <SelectItem
+                      key={year}
                       value={year}
                       className="focus:bg-white/10 focus:text-white"
                     >
@@ -429,6 +423,12 @@ export default function Blog() {
             )}
           </div>
         </div>
+        {/* Description below divider */}
+        <p className="text-sm text-white/40 font-light leading-relaxed mt-5 max-w-lg">
+          {language === 'vi'
+            ? 'Khám phá những xu hướng thiết kế mới nhất, mẹo hay và những dự án truyền cảm hứng từ IEVRA Design & Build'
+            : 'Discover the latest design trends, helpful tips, and inspiring projects from IEVRA Design & Build'}
+        </p>
       </div>
 
       {/* Articles Grid */}
