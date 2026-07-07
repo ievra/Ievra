@@ -382,12 +382,22 @@ export default function Blog() {
       <div className="px-4 sm:px-6 lg:px-8 mb-10">
         {/* Editorial header: title left, search right */}
         <div className="flex items-end justify-between gap-6 border-b border-white/10 pb-8">
-          <h1
-            className="text-5xl md:text-7xl lg:text-8xl font-sans font-light tracking-tight leading-none"
-            data-testid="heading-blog"
-          >
-            {language === 'vi' ? 'TIN TỨC' : 'NEWS'}
-          </h1>
+          <div>
+            {/* Breadcrumb */}
+            <div className="flex items-center gap-2 mb-4 text-[11px] uppercase tracking-widest font-light text-white/30">
+              <Link href={language === 'vi' ? '/' : '/en'} className="hover:text-white/60 transition-colors duration-200">
+                {language === 'vi' ? 'Trang Chủ' : 'Home'}
+              </Link>
+              <span>›</span>
+              <span className="text-white/50">{language === 'vi' ? 'Tin Tức' : 'News'}</span>
+            </div>
+            <h1
+              className="text-5xl md:text-7xl lg:text-8xl font-sans font-light tracking-tight leading-none"
+              data-testid="heading-blog"
+            >
+              {language === 'vi' ? 'TIN TỨC' : 'NEWS'}
+            </h1>
+          </div>
           {/* Search + Year filter */}
           <div className="flex items-center gap-5 pb-1 flex-shrink-0">
             {/* Search icon → expands input on click */}
