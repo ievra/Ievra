@@ -1406,200 +1406,83 @@ export default function Home() {
           </div>
 
           {articlesLoading ? (
-            <div className="overflow-x-auto">
-              <div className="flex gap-4 pb-4" style={{ width: "max-content" }}>
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <Card
-                    key={i}
-                    className="overflow-hidden h-[38rem] w-72 flex-shrink-0 rounded-none"
-                  >
-                    <div className="animate-pulse bg-white/10 h-48 w-full" />
-                    <CardContent className="p-6">
-                      <div className="animate-pulse space-y-3">
-                        <div className="h-5 bg-white/10 rounded w-3/4" />
-                        <div className="h-3 bg-white/10 rounded w-1/2" />
-                        <div className="space-y-2">
-                          <div className="h-3 bg-white/10 rounded" />
-                          <div className="h-3 bg-white/10 rounded w-5/6" />
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="flex flex-col h-[34rem] border border-white/10">
+                  <div className="animate-pulse bg-white/10 flex-1" />
+                  <div className="p-4 space-y-3 flex-shrink-0">
+                    <div className="h-3 bg-white/10 rounded w-1/3" />
+                    <div className="h-5 bg-white/10 rounded w-3/4" />
+                    <div className="h-3 bg-white/10 rounded" />
+                    <div className="h-3 bg-white/10 rounded w-5/6" />
+                  </div>
+                </div>
+              ))}
             </div>
           ) : (
             <>
-              <div
-                ref={articlesScrollRef}
-                className="relative overflow-hidden"
-                onPointerDown={(e) => {
-                  if (e.pointerType === 'mouse' && e.button !== 0) return;
-                  const el = articlesScrollRef.current;
-                  if (!el) return;
-                  (el as any)._swipeStartX = e.clientX;
-                  (el as any)._swipeSwiped = false;
-                  if (e.pointerType !== 'mouse') el.setPointerCapture(e.pointerId);
-                }}
-                onPointerMove={(e) => {
-                  const el = articlesScrollRef.current;
-                  if (!el || (el as any)._swipeStartX == null) return;
-                  const diff = (el as any)._swipeStartX - e.clientX;
-                  if (Math.abs(diff) > 50 && !(el as any)._swipeSwiped) {
-                    (el as any)._swipeSwiped = true;
-                    const maxIndex = Math.min(10, featuredArticles?.length || 1) - 1;
-                    if (diff > 0 && activeArticleIndex < maxIndex) {
-                      setActiveArticleIndex(activeArticleIndex + 1);
-                    } else if (diff < 0 && activeArticleIndex > 0) {
-                      setActiveArticleIndex(activeArticleIndex - 1);
-                    }
-                    (el as any)._swipeStartX = null;
-                  }
-                }}
-                onPointerUp={() => {
-                  const el = articlesScrollRef.current;
-                  if (el) (el as any)._swipeStartX = null;
-                }}
-                onPointerCancel={() => {
-                  const el = articlesScrollRef.current;
-                  if (el) (el as any)._swipeStartX = null;
-                }}
-                style={{ touchAction: 'pan-y' }}
-              >
-                {activeArticleIndex > 0 && (
-                  <button
-                    onClick={() => setActiveArticleIndex(activeArticleIndex - 1)}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 z-10 opacity-40 hover:opacity-100 transition-opacity duration-300"
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {featuredArticles?.slice(0, 8).map((article, index) => (
+                  <div
+                    key={article.id}
+                    className="group overflow-hidden cursor-pointer rounded-none border border-white/10 hover:bg-white/[0.04] transition-colors duration-300 article-card flex flex-col h-[34rem]"
+                    onClick={() => navigate(getArticlePath(language, article.slug))}
+                    data-testid={`article-card-${article.id}`}
                   >
-                    <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 18l-6-6 6-6"/></svg>
-                  </button>
-                )}
-                {featuredArticles && activeArticleIndex < Math.min(10, featuredArticles.length) - 1 && (
-                  <button
-                    onClick={() => setActiveArticleIndex(Math.min((featuredArticles?.length || 1) - 1, activeArticleIndex + 1))}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 z-10 opacity-40 hover:opacity-100 transition-opacity duration-300"
-                  >
-                    <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 18l6-6-6-6"/></svg>
-                  </button>
-                )}
-                <div className="flex gap-4 pb-4" style={{
-                  transform: (() => {
-                    const isMobile = window.innerWidth < 640;
-                    const totalCards = Math.min(10, featuredArticles?.length || 0);
-                    if (isMobile) {
-                      return `translateX(-${activeArticleIndex * 16}px)`;
-                    }
-                    const containerPx = articlesContainerWidth || window.innerWidth;
-                    const activeWidthPx = Math.min(window.innerWidth * 0.55, 44 * 16);
-                    const inactiveWidthPx = Math.max(120, (containerPx - activeWidthPx - 32) / 2);
-                    const unitPx = inactiveWidthPx + 16;
-                    const totalContentPx = activeWidthPx + (totalCards - 1) * unitPx;
-                    const maxOffsetPx = Math.max(0, totalContentPx - containerPx);
-                    const desiredOffsetPx = activeArticleIndex * unitPx;
-                    return `translateX(-${Math.min(desiredOffsetPx, maxOffsetPx)}px)`;
-                  })(),
-                  transition: 'transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                }}>
-                  {featuredArticles?.slice(0, 10).map((article, index) => {
-                    const isMobile = window.innerWidth < 640;
-                    const totalCards = Math.min(10, featuredArticles?.length || 0);
-                    const isActive = index === activeArticleIndex;
-                    const containerPx = articlesContainerWidth || window.innerWidth;
-                    const activeWidthPx = Math.min(window.innerWidth * 0.55, 44 * 16);
-                    const inactiveWidthPx = Math.max(120, (containerPx - activeWidthPx - 32) / 2);
-                    let cardWidth: string;
-                    if (isMobile) {
-                      cardWidth = isActive ? `${articlesContainerWidth || window.innerWidth - 32}px` : '0px';
-                    } else if (isActive) {
-                      cardWidth = `${activeWidthPx}px`;
-                    } else {
-                      cardWidth = `${inactiveWidthPx}px`;
-                    }
-                    return (
-                      <div
-                        key={article.id}
-                        className="group overflow-hidden cursor-pointer flex-shrink-0 rounded-none border border-white/10 hover:bg-white/[0.04] transition-colors duration-300 article-card flex flex-col h-[38rem]"
-                        style={{
-                          width: cardWidth,
-                          transition: 'width 0.6s cubic-bezier(0.4, 0, 0.2, 1)',
-                        }}
-                        onClick={() => {
-                          if (isActive) {
-                            navigate(getArticlePath(language, article.slug));
-                          } else {
-                            setActiveArticleIndex(index);
-                          }
-                        }}
-                        data-testid={`article-card-${article.id}`}
-                      >
-                        {/* Image fills remaining space above the fixed-height content */}
-                        <div className="relative overflow-hidden bg-white/5" style={{ flex: '1' }}>
-                          {(article.featuredImage || article.featuredImageData) ? (
-                            <img
-                              src={toCardImg(article.featuredImage || article.featuredImageData || '', 1280)}
-                              srcSet={toCardSrcSet(article.featuredImage || article.featuredImageData || '')}
-                              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 45vw, 33vw"
-                              alt={article.title}
-                              className="w-full h-full object-cover"
-                              loading="lazy"
-                              decoding="async"
-                              onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
-                              data-testid={`img-article-${article.id}`}
-                            />
-                          ) : (
-                            <div className="w-full h-full bg-white/5" data-testid={`img-article-${article.id}`} />
-                          )}
-                          <div className="absolute inset-0 bg-white/[0.06] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                        </div>
+                    {/* Image */}
+                    <div className="relative overflow-hidden bg-white/5" style={{ flex: '1' }}>
+                      {(article.featuredImage || article.featuredImageData) ? (
+                        <img
+                          src={toCardImg(article.featuredImage || article.featuredImageData || '', 1280)}
+                          srcSet={toCardSrcSet(article.featuredImage || article.featuredImageData || '')}
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
+                          alt={article.title}
+                          className="w-full h-full object-cover"
+                          loading={index < 4 ? 'eager' : 'lazy'}
+                          decoding="async"
+                          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+                          data-testid={`img-article-${article.id}`}
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-white/5" data-testid={`img-article-${article.id}`} />
+                      )}
+                      <div className="absolute inset-0 bg-white/[0.06] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </div>
 
-                        {/* Content below image — fixed slots so the typewriter effect never shifts layout */}
-                        <div className="p-4 flex flex-col flex-shrink-0">
-                          <p className="text-white/40 text-xs uppercase tracking-widest mb-2 font-light" style={{ minHeight: '1rem' }}>
-                            {article.category ? getArticleCategoryLabel(article.category) : ''}
-                          </p>
-                          <TypewriterTitle
-                            key={`article-title-${article.id}`}
-                            text={article.title}
-                            animate={isActive}
-                            className="text-xl font-sans font-light mb-2"
-                            style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '3.5rem', lineHeight: '1.75rem' }}
-                          />
-                          <div className="mb-2" style={{ height: '3.75rem' }}>
-                            {isActive && (
-                              <TypewriterTitle
-                                key={`article-excerpt-${article.id}`}
-                                as="p"
-                                text={article.excerpt || "Discover insights and trends in interior design..."}
-                                charDelay={(() => {
-                                  const titleLen = (article.title || '').length || 1;
-                                  const titleSpeed = Math.max(60, Math.round(2800 / titleLen));
-                                  const titleDuration = titleLen * titleSpeed;
-                                  const excerptLen = (article.excerpt || "Discover insights and trends in interior design...").length || 1;
-                                  return Math.max(18, Math.round(titleDuration / excerptLen));
-                                })()}
-                                className="text-foreground/80 text-sm break-words"
-                                style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: '1.25rem' }}
-                                testId={`text-article-excerpt-${article.id}`}
-                              />
-                            )}
-                          </div>
-                          <div className="pt-2 flex items-end justify-between gap-2">
-                            <p className="text-muted-foreground text-xs flex-shrink-0">
-                              {article.publishedAt &&
-                                new Date(article.publishedAt).toLocaleDateString(
-                                  language === "vi" ? "vi-VN" : "en-US",
-                                  { year: "numeric", month: "long", day: "numeric" },
-                                )}
-                            </p>
-                            <p className="text-white/40 text-xs text-right">
-                              {(article as any).attribution || ''}
-                            </p>
-                          </div>
-                        </div>
+                    {/* Content — fixed slots so layout stays stable */}
+                    <div className="p-4 flex flex-col flex-shrink-0">
+                      <p className="text-white/40 text-xs uppercase tracking-widest mb-2 font-light" style={{ minHeight: '1rem' }}>
+                        {article.category ? getArticleCategoryLabel(article.category) : ''}
+                      </p>
+                      <h3
+                        className="text-base font-sans font-light mb-2"
+                        style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '3rem', lineHeight: '1.5rem' }}
+                      >
+                        {article.title}
+                      </h3>
+                      <div className="mb-2" style={{ height: '3.75rem' }}>
+                        <p
+                          className="text-foreground/80 text-sm break-words"
+                          style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: '1.25rem' }}
+                        >
+                          {article.excerpt || ''}
+                        </p>
                       </div>
-                    );
-                  })}
-                </div>
+                      <div className="pt-2 flex items-end justify-between gap-2">
+                        <p className="text-muted-foreground text-xs flex-shrink-0">
+                          {article.publishedAt &&
+                            new Date(article.publishedAt).toLocaleDateString(
+                              language === "vi" ? "vi-VN" : "en-US",
+                              { year: "numeric", month: "long", day: "numeric" },
+                            )}
+                        </p>
+                        <p className="text-white/40 text-xs text-right">
+                          {(article as any).attribution || ''}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </>
           )}
