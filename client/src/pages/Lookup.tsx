@@ -285,7 +285,7 @@ export default function Lookup() {
     hasTimeline = false
   ) => {
     const vb = 120;
-    const sw = 6;
+    const sw = 10;
     const r = (vb - sw) / 2;
     const circ = 2 * Math.PI * r;
     const filled = (item.progress / 100) * circ;
@@ -305,7 +305,7 @@ export default function Lookup() {
               {item.progress}<span className="text-xl font-light">%</span>
             </p>
             <p className="text-xs uppercase tracking-[0.14em] text-white/55 mt-5">{item.label}</p>
-            <div className="mt-4 w-full h-[2px] bg-white/10 rounded-full">
+            <div className="mt-4 w-full h-[4px] bg-white/10 rounded-full">
               <div className="h-full bg-white/55 rounded-full transition-all duration-700 ease-out" style={{ width: `${item.progress}%` }} />
             </div>
           </div>
@@ -330,7 +330,7 @@ export default function Lookup() {
     return (
       <div className="flex flex-col items-center">
         {/* Circle */}
-        <div className="relative w-full aspect-square max-w-[200px]">
+        <div className="relative w-full aspect-square max-w-[240px]">
           <svg viewBox={`0 0 ${vb} ${vb}`} className="w-full h-full -rotate-90">
             <circle cx={60} cy={60} r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={sw} />
             <circle cx={60} cy={60} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={sw + 8} />
@@ -345,7 +345,7 @@ export default function Lookup() {
             )}
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-3xl font-thin text-white tabular-nums leading-none">{item.progress}<span className="text-base font-light text-white/50">%</span></span>
+            <span className="text-4xl font-thin text-white tabular-nums leading-none">{item.progress}<span className="text-lg font-light text-white/50">%</span></span>
           </div>
         </div>
         <p className="text-xs font-light text-white/45 mt-4 tracking-[0.14em] text-center uppercase">{item.label}</p>
@@ -362,7 +362,7 @@ export default function Lookup() {
                     <span className="text-sm font-light text-white/45 truncate max-w-[68%]">{isVi ? phase.labelVi : phase.labelEn}</span>
                     <span className="text-sm font-light text-white/45 tabular-nums">{p}%</span>
                   </div>
-                  <div className="w-full h-[2px] bg-white/10 rounded-full">
+                  <div className="w-full h-[4px] bg-white/10 rounded-full">
                     <div className="h-full bg-white/60 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
                   </div>
                 </div>
@@ -710,7 +710,7 @@ export default function Lookup() {
                           {pct}<span className="text-xl sm:text-2xl font-light">%</span>
                         </p>
                         <p className="text-xs uppercase tracking-[0.14em] font-light text-white/45 mt-4 flex-1">{label}</p>
-                        <div className="mt-4 w-full h-[3px] bg-white/10 rounded-full">
+                        <div className="mt-4 w-full h-[5px] bg-white/10 rounded-full">
                           <div className="h-full bg-white/55 rounded-full transition-all duration-1000 ease-out" style={{ width: `${pct}%` }} />
                         </div>
                       </div>
@@ -819,7 +819,7 @@ export default function Lookup() {
                               <span className="text-sm font-light text-white/45">{isVi ? phase.labelVi : phase.labelEn}</span>
                               <span className="text-sm font-light text-white/45 tabular-nums shrink-0 ml-4">{p}%</span>
                             </div>
-                            <div className="w-full h-[3px] bg-white/10 rounded-full">
+                            <div className="w-full h-[5px] bg-white/10 rounded-full">
                               <div className="h-full bg-white/60 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
                             </div>
                           </div>
@@ -841,7 +841,7 @@ export default function Lookup() {
                               <span className="text-sm font-light text-white/45">{isVi ? phase.labelVi : phase.labelEn}</span>
                               <span className="text-sm font-light text-white/45 tabular-nums shrink-0 ml-4">{p}%</span>
                             </div>
-                            <div className="w-full h-[3px] bg-white/10 rounded-full">
+                            <div className="w-full h-[5px] bg-white/10 rounded-full">
                               <div className="h-full bg-white/60 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
                             </div>
                           </div>
@@ -872,7 +872,7 @@ export default function Lookup() {
                           return (
                             <div key={phase.id} className="flex items-center gap-6">
                               <span className="text-sm font-light text-white/65 w-28 sm:w-40 md:w-52 shrink-0 truncate">{isVi ? phase.labelVi : phase.labelEn}</span>
-                              <div className="flex-1 h-[3px] bg-white/10 rounded-full">
+                              <div className="flex-1 h-[5px] bg-white/10 rounded-full">
                                 <div className="h-full bg-white/65 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
                               </div>
                               <span className="text-sm font-light text-white/45 w-12 text-right tabular-nums shrink-0">{p}%</span>
@@ -894,7 +894,7 @@ export default function Lookup() {
                           return (
                             <div key={phase.id} className="flex items-center gap-6">
                               <span className="text-sm font-light text-white/65 w-28 sm:w-40 md:w-52 shrink-0 truncate">{isVi ? phase.labelVi : phase.labelEn}</span>
-                              <div className="flex-1 h-[3px] bg-white/10 rounded-full">
+                              <div className="flex-1 h-[5px] bg-white/10 rounded-full">
                                 <div className="h-full bg-white/65 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
                               </div>
                               <span className="text-sm font-light text-white/45 w-12 text-right tabular-nums shrink-0">{p}%</span>
