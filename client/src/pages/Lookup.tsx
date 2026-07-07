@@ -700,8 +700,8 @@ export default function Lookup() {
               const cPayPct = cTx.length > 0 ? Math.round((cTx.filter(t => t.status === "completed").length / cTx.length) * 100) : 0;
               const renderKpiSection = (sectionLabel: string, items: { label: string; pct: number }[]) => (
                 <div>
-                  <div className="px-5 sm:px-8 pt-5 sm:pt-6 pb-3">
-                    <p className="text-xs uppercase tracking-[0.14em] font-light text-white/35">{sectionLabel}</p>
+                  <div className="pb-5 sm:pb-6">
+                    <p className="text-base font-light text-white tracking-wide">{sectionLabel}</p>
                   </div>
                   <div className="grid grid-cols-2 gap-12 sm:gap-16">
                     {items.map(({ label, pct }, i) => (
@@ -738,7 +738,7 @@ export default function Lookup() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
                 {/* ── Thiết kế circles ── */}
                 <div>
-                  <p className="text-xs font-light text-white/45 mb-6 sm:mb-8 uppercase tracking-[0.14em]">
+                  <p className="text-base font-light text-white mb-6 sm:mb-8 tracking-wide">
                     {isVi ? "Thiết kế" : "Design"}
                   </p>
                   <div className="grid grid-cols-2 gap-6 items-start">
@@ -769,7 +769,7 @@ export default function Lookup() {
                 </div>
                 {/* ── Thi công circles ── */}
                 <div>
-                  <p className="text-xs font-light text-white/45 mb-6 sm:mb-8 uppercase tracking-[0.14em]">
+                  <p className="text-base font-light text-white mb-6 sm:mb-8 tracking-wide">
                     {isVi ? "Thi công" : "Construction"}
                   </p>
                   <div className="grid grid-cols-2 gap-6 items-start">
@@ -854,7 +854,7 @@ export default function Lookup() {
             {/* ── Phase Overview ── */}
             {(designPhases.length > 0 || constructionPhases.length > 0) && (
               <div className="py-14">
-                <p className="text-base font-light text-white/80 mb-6 sm:mb-8 tracking-wide">
+                <p className="text-base font-light text-white mb-6 sm:mb-8 tracking-wide">
                   {isVi ? "Tổng quan giai đoạn" : "Phase Overview"}
                 </p>
                 <div className="space-y-8">
@@ -915,7 +915,7 @@ export default function Lookup() {
               if (allActivity.length === 0) return null;
               return (
                 <div className="py-14">
-                  <p className="text-xs font-light text-white/45 uppercase tracking-[0.14em] mb-6">{isVi ? "Hoạt động gần đây" : "Recent Activity"}</p>
+                  <p className="text-base font-light text-white mb-6 tracking-wide">{isVi ? "Hoạt động gần đây" : "Recent Activity"}</p>
                   <div className="divide-y divide-white/8">
                     {allActivity.map((item, idx) => (
                       <div key={item.id || idx} className="flex items-center gap-3 sm:gap-5 px-4 sm:px-8 py-4 sm:py-5">
@@ -1073,7 +1073,7 @@ export default function Lookup() {
 
             <div className="py-14">
               <div className="mb-6">
-                <p className="text-xs font-light text-white/45 uppercase tracking-[0.14em]">{isVi ? "Yêu cầu hỗ trợ" : "Support Request"}</p>
+                <p className="text-base font-light text-white tracking-wide">{isVi ? "Yêu cầu hỗ trợ" : "Support Request"}</p>
                 <p className="text-xs font-light text-white/35 mt-2">
                   {isVi ? "Gửi câu hỏi hoặc yêu cầu hỗ trợ tới đội ngũ IEVRA" : "Send a question or request to the IEVRA team"}
                 </p>
