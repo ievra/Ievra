@@ -213,7 +213,7 @@ export default function Contact() {
         <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
 
           {/* Breadcrumb */}
-          <div className="flex items-center gap-2 mb-8 text-[11px] uppercase tracking-widest font-light text-white/30">
+          <div className="flex items-center gap-2 mb-8 text-[11px] tracking-widest font-light text-white/30">
             <Link href={language === 'vi' ? '/' : '/en'} className="hover:text-white/60 transition-colors duration-200">
               {language === 'vi' ? 'Trang Chủ' : 'Home'}
             </Link>
