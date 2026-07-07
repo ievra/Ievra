@@ -1071,9 +1071,6 @@ export default function Lookup() {
             <div className="py-14">
               <div className="mb-6">
                 <p className="text-lg font-light text-white mb-6 sm:mb-8 tracking-wide uppercase">{isVi ? "Yêu cầu hỗ trợ" : "Support Request"}</p>
-                <p className="text-xs font-light text-white/35 mt-2">
-                  {isVi ? "Gửi câu hỏi hoặc yêu cầu hỗ trợ tới đội ngũ IEVRA" : "Send a question or request to the IEVRA team"}
-                </p>
               </div>
               <form onSubmit={handleSupportSubmit}>
                 <div>
