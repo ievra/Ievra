@@ -284,13 +284,15 @@ export default function Lookup() {
     /* ── Payment: flat KPI-card style (no SVG circle) ── */
     if (item.type === "design_payment" || item.type === "construction_payment") {
       return (
-        <div className="flex flex-col">
-          <p className="text-5xl font-thin text-white tabular-nums leading-none">
-            {item.progress}<span className="text-xl font-light">%</span>
-          </p>
-          <p className="text-xs uppercase tracking-[0.14em] text-white/55 mt-5">{item.label}</p>
-          <div className="mt-4 w-full h-[2px] bg-white/10 rounded-full">
-            <div className="h-full bg-white/55 rounded-full transition-all duration-700 ease-out" style={{ width: `${item.progress}%` }} />
+        <div className="flex flex-col h-full justify-between">
+          <div>
+            <p className="text-5xl font-thin text-white tabular-nums leading-none">
+              {item.progress}<span className="text-xl font-light">%</span>
+            </p>
+            <p className="text-xs uppercase tracking-[0.14em] text-white/55 mt-5">{item.label}</p>
+            <div className="mt-4 w-full h-[2px] bg-white/10 rounded-full">
+              <div className="h-full bg-white/55 rounded-full transition-all duration-700 ease-out" style={{ width: `${item.progress}%` }} />
+            </div>
           </div>
           {paymentTx.length > 0 && (
             <div className="mt-6 space-y-3">
@@ -659,7 +661,7 @@ export default function Lookup() {
                 <p className="text-base font-light text-white/80 mb-8">
                   {isVi ? "Thiết kế" : "Design"}
                 </p>
-                <div className="grid grid-cols-2 gap-6 items-start">
+                <div className="grid grid-cols-2 gap-6 items-stretch">
                   {renderCircle(
                     { label: isVi ? "Tiến Độ" : "Progress", progress: (() => {
                       if (result.client.designTimeline) return Math.min(100, Math.round((designInteractions.length / result.client.designTimeline) * 100));
@@ -691,7 +693,7 @@ export default function Lookup() {
                 <p className="text-base font-light text-white/80 mb-8">
                   {isVi ? "Thi công" : "Construction"}
                 </p>
-                <div className="grid grid-cols-2 gap-6 items-start">
+                <div className="grid grid-cols-2 gap-6 items-stretch">
                   {renderCircle(
                     { label: isVi ? "Tiến Độ" : "Progress", progress: (() => {
                       if (result.client.constructionTimeline) return Math.min(100, Math.round((constructionInteractions.length / result.client.constructionTimeline) * 100));
