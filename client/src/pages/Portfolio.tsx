@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect, useMemo } from "react";
-import { useLocation } from "wouter";
+import { Link, useLocation } from "wouter";
 import { usePageMeta, CANONICAL_BASE_URL } from "@/hooks/use-page-meta";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ProjectCard from "@/components/ProjectCard";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search, X } from 'lucide-react';
 import type { Project, Category } from "@shared/schema";
 
 function cardHash(str: string, seed = 0): number {
@@ -108,6 +108,7 @@ export default function Portfolio() {
   const [currentPage, setCurrentPage] = useState(1);
   const projectsPerPage = 12;
   const [searchPlaceholder, setSearchPlaceholder] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false);
 
   // Animation - reset when back to top, slower timing
   useEffect(() => {
@@ -396,35 +397,55 @@ export default function Portfolio() {
 
   return (
     <div className="min-h-[120vh] pt-32 pb-20">
-      <div className="max-w-[1600px] mx-auto px-2 sm:px-3 lg:px-4">
-        {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-6xl font-sans font-light mb-6" data-testid="heading-portfolio">
-            {language === 'vi' ? 'DỰ ÁN' : 'PROJECT'}
-          </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-            {language === 'vi' 
-              ? 'Khám phá bộ sưu tập toàn diện các dự án thiết kế nội thất của chúng tôi qua nhiều danh mục khác nhau'
-              : 'Explore our comprehensive collection of interior design projects across various categories'
-            }
-          </p>
-        </div>
-
-        {/* Search Box with Year Filter */}
-        <div className="max-w-2xl mx-auto mb-8">
-          <div className="flex items-end gap-8 pb-4">
-            <Input
-              type="text"
-              placeholder={searchPlaceholder}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="bg-transparent text-white placeholder-white/60 px-0 py-0 text-lg font-light rounded-none focus-visible:ring-0 border-0 flex-1"
-              data-testid="input-search"
-            />
+      {/* Editorial header */}
+      <div className="px-4 sm:px-6 lg:px-8 mb-10">
+        <div className="flex items-end justify-between gap-6 border-b border-white/10 pb-8">
+          <div>
+            {/* Breadcrumb */}
+            <div className="flex items-center gap-2 mb-4 text-[11px] uppercase tracking-widest font-light text-white/30">
+              <Link href={language === 'vi' ? '/' : '/en'} className="hover:text-white/60 transition-colors duration-200">
+                {language === 'vi' ? 'Trang Chủ' : 'Home'}
+              </Link>
+              <span>›</span>
+              <span className="text-white/50">{language === 'vi' ? 'Dự Án' : 'Projects'}</span>
+            </div>
+            <h1
+              className="text-5xl md:text-7xl lg:text-8xl font-sans font-light tracking-tight leading-none"
+              data-testid="heading-portfolio"
+            >
+              {language === 'vi' ? 'DỰ ÁN' : 'PROJECTS'}
+            </h1>
+          </div>
+          {/* Search + Year filter */}
+          <div className="flex items-center gap-5 pb-1 flex-shrink-0">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => { setSearchOpen(o => !o); if (searchOpen) setSearchTerm(''); }}
+                className="text-white/50 hover:text-white transition-colors duration-200"
+                aria-label="Search"
+                data-testid="button-search-toggle"
+              >
+                {searchOpen ? <X className="w-4 h-4" /> : <Search className="w-4 h-4" />}
+              </button>
+              <div
+                className="overflow-hidden transition-all duration-300 ease-in-out"
+                style={{ width: searchOpen ? '22rem' : '0', opacity: searchOpen ? 1 : 0 }}
+              >
+                <Input
+                  type="text"
+                  placeholder={searchPlaceholder}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  autoFocus={searchOpen}
+                  className="bg-transparent text-white placeholder-white/30 px-0 py-0 text-sm font-light rounded-none focus-visible:ring-0 border-0 w-full"
+                  data-testid="input-search"
+                />
+              </div>
+            </div>
             {availableYears.length > 0 && (
               <Select value={selectedYear} onValueChange={setSelectedYear}>
-                <SelectTrigger 
-                  className="w-[140px] bg-transparent border-0 text-white/60 text-base font-light p-0 h-auto focus:ring-0 focus:ring-offset-0 [&>svg]:text-white/60"
+                <SelectTrigger
+                  className="w-[110px] bg-transparent border-0 text-white/40 text-sm font-light p-0 h-auto focus:ring-0 focus:ring-offset-0 [&>svg]:text-white/40"
                   data-testid="select-year"
                 >
                   <SelectValue placeholder={language === 'vi' ? 'Năm' : 'Year'} />
@@ -434,11 +455,7 @@ export default function Portfolio() {
                     {language === 'vi' ? 'Tất cả các năm' : 'All years'}
                   </SelectItem>
                   {availableYears.map((year) => (
-                    <SelectItem 
-                      key={year} 
-                      value={year}
-                      className="focus:bg-white/10 focus:text-white"
-                    >
+                    <SelectItem key={year} value={year} className="focus:bg-white/10 focus:text-white">
                       {year}
                     </SelectItem>
                   ))}
@@ -447,7 +464,15 @@ export default function Portfolio() {
             )}
           </div>
         </div>
+        {/* Description below divider */}
+        <p className="text-sm text-white/40 font-light leading-relaxed mt-5 max-w-lg">
+          {language === 'vi'
+            ? 'Khám phá bộ sưu tập toàn diện các dự án thiết kế nội thất của chúng tôi qua nhiều danh mục khác nhau'
+            : 'Explore our comprehensive collection of interior design projects across various categories'}
+        </p>
+      </div>
 
+      <div className="max-w-[1600px] mx-auto px-2 sm:px-3 lg:px-4">
         {/* Classification filter (always visible) */}
         {projectTypes.length > 1 && (
           <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 mb-12">
