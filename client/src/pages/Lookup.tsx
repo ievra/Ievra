@@ -110,6 +110,10 @@ export default function Lookup() {
   const [supportMessage, setSupportMessage] = useState("");
   const [submittingSupport, setSubmittingSupport] = useState(false);
   const [supportSent, setSupportSent] = useState(false);
+  const [tableSearch, setTableSearch] = useState("");
+  const [tablePhaseFilter, setTablePhaseFilter] = useState("");
+  const [designShowAll, setDesignShowAll] = useState(false);
+  const [constructionShowAll, setConstructionShowAll] = useState(false);
   const { toast } = useToast();
 
   const openLightbox = (images: string[], index: number) => {
@@ -354,7 +358,48 @@ export default function Lookup() {
     );
   };
 
-  const renderInteractionTable = (interactions: LookupInteraction[], phases: LookupPhase[]) => {
+  const renderInteractionTable = (
+    interactions: LookupInteraction[],
+    phases: LookupPhase[],
+    search: string,
+    phaseFilter: string,
+    showAll: boolean,
+    onToggleShowAll: () => void
+  ) => {
+    const PAGE_SIZE = 10;
+
+    // Build flat numbered list (phase-ordered)
+    type FlatRow = { interaction: LookupInteraction; num: number; phaseLabel: string; phaseValue: string };
+    const allRows: FlatRow[] = [];
+    let num = 0;
+    for (const phase of phases) {
+      const pRows = interactions.filter(i => i.phase === phase.value).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+      for (const interaction of pRows) allRows.push({ interaction, num: ++num, phaseLabel: isVi ? phase.labelVi : phase.labelEn, phaseValue: phase.value });
+    }
+    const orphaned = interactions.filter(i => !i.phase || !phases.some(p => p.value === i.phase)).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    for (const interaction of orphaned) allRows.push({ interaction, num: ++num, phaseLabel: isVi ? "Khác" : "Other", phaseValue: "__other__" });
+
+    // Apply filters
+    const q = search.trim().toLowerCase();
+    const filtered = allRows.filter(r => {
+      const matchSearch = !q || r.interaction.title.toLowerCase().includes(q) || (r.interaction.description || "").toLowerCase().includes(q);
+      const matchPhase = !phaseFilter || r.phaseValue === phaseFilter;
+      return matchSearch && matchPhase;
+    });
+
+    const total = filtered.length;
+    const visible = showAll ? filtered : filtered.slice(0, PAGE_SIZE);
+
+    // Group visible rows by phase (preserving order)
+    const grouped: Array<{ phaseLabel: string; phaseValue: string; rows: FlatRow[] }> = [];
+    for (const row of visible) {
+      const last = grouped[grouped.length - 1];
+      if (last && last.phaseValue === row.phaseValue) last.rows.push(row);
+      else grouped.push({ phaseLabel: row.phaseLabel, phaseValue: row.phaseValue, rows: [row] });
+    }
+
+    const showPhaseHeaders = phases.length > 0;
+
     return (
       <div className="space-y-0 overflow-x-auto">
         <div className="min-w-[700px]">
@@ -366,80 +411,60 @@ export default function Lookup() {
             <span className="text-sm text-white/30">{isVi ? "Hình ảnh" : "Images"}</span>
             <span className="text-sm text-white/30"></span>
           </div>
-          {phases.map((phase, phaseIdx) => {
-            const phaseInteractions = interactions.filter(i => i.phase === phase.value).sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-            const phaseOffset = phases.slice(0, phaseIdx).reduce((sum, p) => sum + interactions.filter(i => i.phase === p.value).length, 0);
-            return (
-              <div key={phase.id}>
-                {phaseIdx > 0 && <div className="border-t border-white/20 my-0" />}
-                <div className="py-3 px-2">
-                  <span className="text-sm font-medium text-white/70">{isVi ? phase.labelVi : phase.labelEn}</span>
-                </div>
-                {phaseInteractions.length > 0 && phaseInteractions.map((interaction, index) => (
-                  <div key={interaction.id} className="grid grid-cols-[40px_120px_1fr_100px_160px_50px] gap-2 px-4 py-2 border-b border-white/10 items-center">
-                    <span className="text-white/40 text-sm">{phaseOffset + index + 1}</span>
-                    <span className="text-white/70 text-sm">{formatDate(interaction.date)}</span>
-                    <span className="text-white text-sm">{interaction.title}</span>
-                    <span className="text-white/60 text-sm">{interaction.assignedTo || "—"}</span>
-                    <span>
-                      {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
-                        <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>
-                          {(interaction.attachments as string[]).slice(0, 3).map((url, idx) => (
-                            <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />
-                          ))}
-                        </div>
-                      ) : (
-                        <span className="text-white/30">—</span>
-                      )}
-                    </span>
-                    <span>
-                      <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white">
-                        <Eye className="w-3.5 h-3.5" />
-                      </Button>
-                    </span>
-                  </div>
-                ))}
-              </div>
-            );
-          })}
-          {(() => {
-            const orphaned = interactions.filter(i => !i.phase || !phases.some(p => p.value === i.phase));
-            if (orphaned.length === 0) return null;
-            const orphanedOffset = phases.reduce((sum, p) => sum + interactions.filter(i => i.phase === p.value).length, 0);
-            return (
-              <div>
-                <div className="border-t border-white/20 my-0" />
-                <div className="py-3 px-2">
-                  <span className="text-sm font-medium text-white/40">{isVi ? "Khác" : "Other"}</span>
-                </div>
-                {orphaned.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).map((interaction, index) => (
-                  <div key={interaction.id} className="grid grid-cols-[40px_120px_1fr_100px_160px_50px] gap-2 px-4 py-2 border-b border-white/10 items-center">
-                    <span className="text-white/40 text-sm">{orphanedOffset + index + 1}</span>
-                    <span className="text-white/70 text-sm">{formatDate(interaction.date)}</span>
-                    <span className="text-white text-sm">{interaction.title}</span>
-                    <span className="text-white/60 text-sm">{interaction.assignedTo || "—"}</span>
-                    <span>
-                      {Array.isArray(interaction.attachments) && interaction.attachments.length > 0 ? (
-                        <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(interaction.attachments as string[], 0)}>{(interaction.attachments as string[]).slice(0, 3).map((url, idx) => (<img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />))}</div>
-                      ) : (<span className="text-white/30">—</span>)}
-                    </span>
-                    <span>
-                      <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(interaction)} className="h-8 w-8 text-white/40 hover:text-white"><Eye className="w-3.5 h-3.5" /></Button>
-                    </span>
-                  </div>
-                ))}
-              </div>
-            );
-          })()}
-          {interactions.length === 0 && phases.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-white/30 font-light">{isVi ? "Chưa có nhật ký" : "No logs yet"}</p>
+          {visible.length === 0 && (
+            <div className="text-center py-10">
+              <p className="text-white/30 font-light text-sm">{isVi ? "Không tìm thấy kết quả" : "No results found"}</p>
             </div>
           )}
+          {grouped.map((group, gi) => (
+            <div key={group.phaseValue + gi}>
+              {showPhaseHeaders && (
+                <>
+                  {gi > 0 && <div className="border-t border-white/15" />}
+                  <div className="py-3 px-2">
+                    <span className="text-sm font-light text-white/55">{group.phaseLabel}</span>
+                  </div>
+                </>
+              )}
+              {group.rows.map((row) => (
+                <div key={row.interaction.id} className="grid grid-cols-[40px_120px_1fr_100px_160px_50px] gap-2 px-4 py-2 border-b border-white/10 items-center">
+                  <span className="text-white/40 text-sm tabular-nums">{row.num}</span>
+                  <span className="text-white/70 text-sm">{formatDate(row.interaction.date)}</span>
+                  <span className="text-white text-sm">{row.interaction.title}</span>
+                  <span className="text-white/60 text-sm">{row.interaction.assignedTo || "—"}</span>
+                  <span>
+                    {Array.isArray(row.interaction.attachments) && row.interaction.attachments.length > 0 ? (
+                      <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(row.interaction.attachments as string[], 0)}>
+                        {(row.interaction.attachments as string[]).slice(0, 3).map((url, idx) => (
+                          <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10 hover:border-white/40 transition-colors" />
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-white/30">—</span>
+                    )}
+                  </span>
+                  <span>
+                    <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(row.interaction)} className="h-8 w-8 text-white/40 hover:text-white">
+                      <Eye className="w-3.5 h-3.5" />
+                    </Button>
+                  </span>
+                </div>
+              ))}
+            </div>
+          ))}
         </div>
+        {total > PAGE_SIZE && (
+          <div className="flex items-center justify-between px-4 py-4 border-t border-white/10">
+            <span className="text-xs text-white/35 tabular-nums">{showAll ? total : Math.min(PAGE_SIZE, total)} / {total} {isVi ? "mục" : "items"}</span>
+            <button onClick={onToggleShowAll} className="text-xs font-light text-white/55 hover:text-white transition-colors">
+              {showAll ? (isVi ? "↑ Thu gọn" : "↑ Collapse") : (isVi ? `Xem thêm ${total - PAGE_SIZE} mục →` : `Show ${total - PAGE_SIZE} more →`)}
+            </button>
+          </div>
+        )}
       </div>
     );
   };
+
 
   return (
     <div className="min-h-screen bg-black pt-32 pb-20">
@@ -782,6 +807,7 @@ export default function Lookup() {
             })()}
 
             <div className="border border-white/10 bg-black">
+              {/* Tab headers */}
               <div className="flex flex-wrap border-b border-white/10">
                 {([
                   { key: "design" as const, vi: "Tiến độ thiết kế", en: "Design Progress" },
@@ -790,7 +816,13 @@ export default function Lookup() {
                 ]).map((tab) => (
                   <button
                     key={tab.key}
-                    onClick={() => setActiveTab(tab.key)}
+                    onClick={() => {
+                      setActiveTab(tab.key);
+                      setTableSearch("");
+                      setTablePhaseFilter("");
+                      setDesignShowAll(false);
+                      setConstructionShowAll(false);
+                    }}
                     className={`flex items-center gap-2 px-5 py-3.5 text-sm font-light tracking-wide whitespace-nowrap transition-colors ${activeTab === tab.key ? "text-white border-b border-white/60 -mb-px" : "text-white/35 hover:text-white/65"}`}
                   >
                     {isVi ? tab.vi : tab.en}
@@ -798,9 +830,54 @@ export default function Lookup() {
                 ))}
               </div>
 
+              {/* Filter bar — chỉ hiện cho design & construction tabs */}
+              {(activeTab === "design" || activeTab === "construction") && (() => {
+                const currentPhases = activeTab === "design" ? designPhases : constructionPhases;
+                return (
+                  <div className="px-4 pt-4 pb-2 space-y-3">
+                    {/* Search input */}
+                    <div className="flex items-center gap-3 border-b border-white/15 pb-2">
+                      <Search className="w-3.5 h-3.5 text-white/30 shrink-0" />
+                      <input
+                        type="text"
+                        value={tableSearch}
+                        onChange={(e) => { setTableSearch(e.target.value); setDesignShowAll(false); setConstructionShowAll(false); }}
+                        placeholder={isVi ? "Tìm theo tiêu đề..." : "Search by title..."}
+                        className="flex-1 bg-transparent text-sm font-light text-white placeholder-white/25 outline-none"
+                      />
+                      {tableSearch && (
+                        <button onClick={() => setTableSearch("")} className="text-white/30 hover:text-white transition-colors">
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
+                    {/* Phase filter chips */}
+                    {currentPhases.length > 0 && (
+                      <div className="flex flex-wrap gap-2">
+                        <button
+                          onClick={() => { setTablePhaseFilter(""); setDesignShowAll(false); setConstructionShowAll(false); }}
+                          className={`text-[10px] uppercase tracking-[0.12em] font-light px-3 py-1.5 transition-colors ${!tablePhaseFilter ? "text-white bg-white/10" : "text-white/40 hover:text-white/70"}`}
+                        >
+                          {isVi ? "Tất cả" : "All"}
+                        </button>
+                        {currentPhases.map((phase) => (
+                          <button
+                            key={phase.id}
+                            onClick={() => { setTablePhaseFilter(phase.value === tablePhaseFilter ? "" : phase.value); setDesignShowAll(false); setConstructionShowAll(false); }}
+                            className={`text-[10px] uppercase tracking-[0.12em] font-light px-3 py-1.5 transition-colors ${tablePhaseFilter === phase.value ? "text-white bg-white/10" : "text-white/40 hover:text-white/70"}`}
+                          >
+                            {isVi ? phase.labelVi : phase.labelEn}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+
               <div className="p-4">
-                {activeTab === "design" && renderInteractionTable(designInteractions, designPhases)}
-                {activeTab === "construction" && renderInteractionTable(constructionInteractions, constructionPhases)}
+                {activeTab === "design" && renderInteractionTable(designInteractions, designPhases, tableSearch, tablePhaseFilter, designShowAll, () => setDesignShowAll(v => !v))}
+                {activeTab === "construction" && renderInteractionTable(constructionInteractions, constructionPhases, tableSearch, tablePhaseFilter, constructionShowAll, () => setConstructionShowAll(v => !v))}
                 {activeTab === "warranty" && (
                   <div className="space-y-0 overflow-x-auto">
                     {(result.warrantyLogs || []).length === 0 ? (
