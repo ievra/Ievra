@@ -153,7 +153,7 @@ const translations = {
     'services.lightingFeatures': 'Ambient Lighting,Task Lighting,Accent Features,Smart Controls',
     
     // Contact Page
-    'contact.title': 'SEND CONSULTATION REQUEST',
+    'contact.title': 'CONSULTATION & CONTACT',
     'contact.subtitle': 'Thank you for your trust. We are a high-end interior design and construction contractor, focusing on in-depth spatial execution. Total solutions from concept to turnkey construction, committed to an aesthetic mindset and professionalism.',
     'contact.getInTouch': 'Get In Touch',
     'contact.getInTouchDesc': 'We\'d love to hear about your project and discuss how we can help bring your vision to life.',
@@ -386,7 +386,7 @@ const translations = {
     'services.lightingFeatures': 'Ánh Sáng Xâm Quanh,Ánh Sáng Công Việc,Đặc Tính Nhấn Mạnh,Điều Khiển Thông Minh',
     
     // Contact Page
-    'contact.title': 'GỬI YÊU CẦU TƯ VẤN',
+    'contact.title': 'TƯ VẤN HOẶC LIÊN HỆ',
     'contact.subtitle': 'Cảm ơn quý khách đã tin tưởng. Chúng tôi là đơn vị thiết kế và thi công nội thất cao cấp, tập trung thực thi không gian sống chuyên sâu. Giải pháp toàn diện từ ý tưởng đến thi công trọn gói, cam kết đồng hành bằng tư duy thẩm mỹ và sự chuyên nghiệp.',
     'contact.getInTouch': 'Liên Lạc',
     'contact.getInTouchDesc': 'Chúng tôi rất muốn nghe về dự án của bạn và thảo luận cách chúng tôi có thể giúp biến tầm nhìn của bạn thành hiện thực.',
