@@ -935,7 +935,7 @@ export default function Home() {
       {/* Hero Slider Section - IIDA Style */}
       <HeroSlider projects={Array.from(new Map([...(featuredProjects || []), ...(featuredArchProjects || [])].map((p) => [p.id, p])).values())} />
       {/* Featured Projects Section */}
-      <section id="featured-projects" className="min-h-screen bg-card py-16">
+      <section id="featured-projects" className="min-h-screen bg-card py-16 fade-reveal">
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="mb-16">
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
@@ -1159,7 +1159,7 @@ export default function Home() {
       </section>
       {/* Featured Architecture Section */}
       {(featuredArchProjects && featuredArchProjects.length > 0) && (
-      <section id="featured-architecture" className="min-h-screen bg-black py-16">
+      <section id="featured-architecture" className="min-h-screen bg-black py-16 fade-reveal">
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="mb-16">
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
@@ -1375,7 +1375,7 @@ export default function Home() {
         </div>
       </section>
       {/* Featured News Section */}
-      <section id="featured-news" className="min-h-screen bg-background py-16">
+      <section id="featured-news" className="min-h-screen bg-background py-16 fade-reveal">
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="mb-16">
             <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
@@ -1531,7 +1531,7 @@ export default function Home() {
       {/* Process Section */}
       <section
         ref={processSectionRef}
-        className="min-h-screen bg-black py-16"
+        className="min-h-screen bg-black py-16 fade-reveal"
       >
         <div className="w-full px-4 sm:px-6 lg:px-8">
           {/* Section Title */}
@@ -1617,7 +1617,7 @@ export default function Home() {
         </div>
       </section>
       {/* Why Choose Us Section */}
-      <section className="min-h-screen bg-black py-16">
+      <section className="min-h-screen bg-black py-16 fade-reveal">
         <div className="w-full px-4 sm:px-6 lg:px-8">
           {/* Section Header */}
           <div className="mb-16">
@@ -1695,7 +1695,7 @@ export default function Home() {
         </div>
       </section>
       {/* Partners Section */}
-      <section className="bg-black overflow-hidden py-16">
+      <section className="bg-black overflow-hidden py-16 fade-reveal">
         <div className="w-full px-4 sm:px-6 lg:px-8 mb-16">
           <div className="flex justify-end">
             <div className="max-w-none">
@@ -1779,7 +1779,7 @@ export default function Home() {
         )}
       </section>
       {/* Quick Contact Section */}
-      <section className="bg-black py-16">
+      <section className="bg-black py-16 fade-reveal">
         <div
           className="w-full px-4 sm:px-6 lg:px-8"
           onMouseEnter={handleContactMouseEnter}
@@ -1974,7 +1974,7 @@ export default function Home() {
       {/* FAQ Section */}
       <section
         ref={faqSectionRef}
-        className="bg-black py-16"
+        className="bg-black py-16 fade-reveal"
       >
         <div className="w-full px-4 sm:px-6 lg:px-8">
           {/* Section Title */}

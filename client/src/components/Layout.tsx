@@ -29,6 +29,7 @@ export default function Layout({ children }: LayoutProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isInHero, setIsInHero] = useState(true);
   const [isIdle, setIsIdle] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [noTransition, setNoTransition] = useState(false);
   const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [introProgress, setIntroProgress] = useState(skipIntro ? 1 : 0);
@@ -154,6 +155,8 @@ export default function Layout({ children }: LayoutProps) {
       setIsScrolled(scrollY > 80);
       setIsInHero(scrollY < window.innerHeight * 0.8);
       if (scrollY > 10) setLangDropdownOpen(false);
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      setScrollProgress(maxScroll > 0 ? Math.min(1, scrollY / maxScroll) : 0);
       resetIdleTimer();
     };
 
@@ -192,6 +195,28 @@ export default function Layout({ children }: LayoutProps) {
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
     };
   }, []);
+
+  // Global scroll-reveal observer: fade-reveal → .in-view
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('in-view');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.08, rootMargin: '0px 0px -40px 0px' }
+    );
+    const observe = () => {
+      document.querySelectorAll('.fade-reveal:not(.in-view)').forEach(el => observer.observe(el));
+    };
+    observe();
+    // Re-scan after route changes give DOM time to settle
+    const t = setTimeout(observe, 400);
+    return () => { observer.disconnect(); clearTimeout(t); };
+  }, [location]);
 
   useEffect(() => {
     if (location !== '/') return;
@@ -356,6 +381,12 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div className="min-h-screen relative">
+      {/* Scroll progress bar */}
+      <div
+        className="fixed top-0 left-0 z-[60] h-[2px] bg-amber-400/70 pointer-events-none origin-left"
+        style={{ transform: `scaleX(${scrollProgress})`, transition: 'transform 80ms linear' }}
+        aria-hidden="true"
+      />
       <header ref={headerRef} className={`fixed top-0 left-0 right-0 z-50 ${
         noTransition ? '' : `transition-transform ${logoSwapped ? 'duration-700 ease-in-out' : ''}`
       } ${
