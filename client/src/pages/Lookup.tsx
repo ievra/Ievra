@@ -878,7 +878,7 @@ export default function Lookup() {
                 return (
                   <div className="px-4 pt-4 pb-2 space-y-3">
                     {/* Search input */}
-                    <div className="flex items-center gap-3 border-b border-white/15 pb-2">
+                    <div className="flex items-center gap-3">
                       <Search className="w-3.5 h-3.5 text-white/30 shrink-0" />
                       <input
                         type="text"
@@ -895,10 +895,10 @@ export default function Lookup() {
                     </div>
                     {/* Phase filter chips */}
                     {currentPhases.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
+                      <div className="flex flex-wrap gap-4">
                         <button
                           onClick={() => { setTablePhaseFilter(""); setDesignShowAll(false); setConstructionShowAll(false); }}
-                          className={`text-[10px] uppercase tracking-[0.12em] font-light px-3 py-1.5 transition-colors ${!tablePhaseFilter ? "text-white bg-white/10" : "text-white/40 hover:text-white/70"}`}
+                          className={`text-[10px] uppercase tracking-[0.12em] font-light transition-colors ${!tablePhaseFilter ? "text-white" : "text-white/35 hover:text-white/65"}`}
                         >
                           {isVi ? "Tất cả" : "All"}
                         </button>
@@ -906,7 +906,7 @@ export default function Lookup() {
                           <button
                             key={phase.id}
                             onClick={() => { setTablePhaseFilter(phase.value === tablePhaseFilter ? "" : phase.value); setDesignShowAll(false); setConstructionShowAll(false); }}
-                            className={`text-[10px] uppercase tracking-[0.12em] font-light px-3 py-1.5 transition-colors ${tablePhaseFilter === phase.value ? "text-white bg-white/10" : "text-white/40 hover:text-white/70"}`}
+                            className={`text-[10px] uppercase tracking-[0.12em] font-light transition-colors ${tablePhaseFilter === phase.value ? "text-white" : "text-white/35 hover:text-white/65"}`}
                           >
                             {isVi ? phase.labelVi : phase.labelEn}
                           </button>
