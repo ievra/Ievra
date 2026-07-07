@@ -570,7 +570,7 @@ export default function Lookup() {
 
         {error && searched && (
           <div className="max-w-3xl mx-auto">
-            <div className="border border-white/10 p-8 text-center">
+            <div className="p-8 text-center">
               <Search className="w-12 h-12 text-white/20 mx-auto mb-4" />
               <p className="text-white/60 font-light">{error}</p>
             </div>
@@ -578,7 +578,7 @@ export default function Lookup() {
         )}
 
         {result && (
-          <div className="max-w-[1400px] mx-auto space-y-5 animate-in fade-in duration-500">
+          <div className="max-w-[1400px] mx-auto space-y-14 animate-in fade-in duration-500">
             {/* Client info card */}
             {(() => {
               const stageLabel = result.crmStages.find(s => s.value === result.client.stage);
@@ -591,9 +591,9 @@ export default function Lookup() {
               };
               const warrantyLabel = warrantyMap[result.client.warrantyStatus || "none"] || warrantyMap["none"];
               return (
-                <div className="border border-white/10 bg-black">
+                <div>
                   {/* Header row: name + verify button */}
-                  <div className="px-5 pt-6 pb-5 sm:px-8 sm:pt-8 sm:pb-6 flex items-start justify-between gap-4">
+                  <div className="pb-5 sm:pb-6 flex items-start justify-between gap-4">
                     <div>
                       <p className="text-xs uppercase tracking-[0.14em] font-light text-white/35 mb-3">
                         {isVi ? "Khách hàng" : "Client"}
@@ -625,14 +625,14 @@ export default function Lookup() {
                   </div>
 
                   {/* Contact details grid */}
-                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/8">
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-6">
                     {[
                       { label: isVi ? "Điện thoại" : "Phone", value: result.client.phone, hidden: result.client.phone ? result.client.phone.slice(0, 3) + "*".repeat(Math.max(0, result.client.phone.length - 3)) : null },
                       { label: "Email", value: result.client.email, hidden: result.client.email ? (() => { const i = result.client.email!.indexOf("@"); const local = result.client.email!.slice(0, i); return local.slice(0, 3) + "*".repeat(Math.max(0, local.length - 3)) + result.client.email!.slice(i); })() : null },
                       { label: isVi ? "Công ty" : "Company", value: result.client.company, hidden: result.client.company ? "*".repeat(Math.min(16, result.client.company.length)) : null },
                       { label: isVi ? "Địa chỉ" : "Address", value: result.client.address, hidden: result.client.address ? "*".repeat(Math.min(16, result.client.address.length)) : null },
                     ].map(({ label, value, hidden }, i) => value ? (
-                      <div key={i} className="bg-black px-4 py-4 sm:px-6 sm:py-5">
+                      <div key={i}>
                         <p className="text-xs uppercase tracking-[0.14em] font-light text-white/30 mb-2">{label}</p>
                         <p className="text-sm font-light text-white/75 truncate">{infoRevealed ? value : hidden}</p>
                       </div>
@@ -641,15 +641,15 @@ export default function Lookup() {
 
                   {/* Meta info row: stage / status / warranty */}
                   {(stageLabel || result.client.warrantyExpiry || result.client.intakeDate) && (
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/8 border-t border-white/8">
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-6 mt-6">
                       {stageLabel && (
-                        <div className="bg-black px-4 py-4 sm:px-6 sm:py-5">
+                        <div>
                           <p className="text-xs uppercase tracking-[0.14em] font-light text-white/30 mb-2">{isVi ? "Giai đoạn" : "Stage"}</p>
                           <p className="text-sm font-light text-white/80">{isVi ? stageLabel.labelVi : stageLabel.labelEn}</p>
                         </div>
                       )}
                       {result.client.warrantyExpiry && (
-                        <div className="bg-black px-4 py-4 sm:px-6 sm:py-5">
+                        <div>
                           <p className="text-xs uppercase tracking-[0.14em] font-light text-white/30 mb-2">{isVi ? "Ngày bảo hành" : "Warranty Expiry"}</p>
                           <p className={`text-sm font-light ${result.client.warrantyStatus === "expired" ? "text-white/35 line-through" : "text-white/80"}`}>
                             {formatDate(result.client.warrantyExpiry)}
@@ -657,7 +657,7 @@ export default function Lookup() {
                         </div>
                       )}
                       {result.client.warrantyExpiry && (
-                        <div className="bg-black px-4 py-4 sm:px-6 sm:py-5">
+                        <div>
                           <p className="text-xs uppercase tracking-[0.14em] font-light text-white/30 mb-2">{isVi ? "Trạng thái bảo hành" : "Warranty Status"}</p>
                           <p className={`text-sm font-light ${result.client.warrantyStatus === "expired" ? "text-white/40" : result.client.warrantyStatus === "active" ? "text-white/80" : "text-white/45"}`}>
                             {result.client.warrantyStatus === "expired"
@@ -669,7 +669,7 @@ export default function Lookup() {
                         </div>
                       )}
                       {result.client.intakeDate && (
-                        <div className="bg-black px-4 py-4 sm:px-6 sm:py-5">
+                        <div>
                           <p className="text-xs uppercase tracking-[0.14em] font-light text-white/30 mb-2">{isVi ? "Ngày tiếp nhận" : "Intake Date"}</p>
                           <p className="text-sm font-light text-white/75">{formatDate(result.client.intakeDate)}</p>
                         </div>
@@ -703,9 +703,9 @@ export default function Lookup() {
                   <div className="px-5 sm:px-8 pt-5 sm:pt-6 pb-3">
                     <p className="text-xs uppercase tracking-[0.14em] font-light text-white/35">{sectionLabel}</p>
                   </div>
-                  <div className="grid grid-cols-2 gap-px bg-white/8">
+                  <div className="grid grid-cols-2 gap-12 sm:gap-16">
                     {items.map(({ label, pct }, i) => (
-                      <div key={i} className="bg-black px-5 py-6 sm:px-8 sm:py-8 flex flex-col">
+                      <div key={i} className="flex flex-col">
                         <p className="text-4xl sm:text-5xl lg:text-6xl font-thin text-white tabular-nums leading-none">
                           {pct}<span className="text-xl sm:text-2xl font-light">%</span>
                         </p>
@@ -719,7 +719,7 @@ export default function Lookup() {
                 </div>
               );
               return (
-                <div className="border border-white/10 space-y-0 divide-y divide-white/10">
+                <div className="space-y-10">
                   {renderKpiSection(isVi ? "Thiết kế" : "Design", [
                     { label: isVi ? "Tiến độ" : "Progress", pct: dProgress },
                     { label: isVi ? "Thanh toán" : "Payment", pct: dPayPct },
@@ -735,9 +735,9 @@ export default function Lookup() {
             {/* Progress — 2 col (Design | Construction) */}
             <div>
               {/* Row 1: Circles */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-white/8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
                 {/* ── Thiết kế circles ── */}
-                <div className="py-6 sm:py-10 lg:pr-10">
+                <div>
                   <p className="text-xs font-light text-white/45 mb-6 sm:mb-8 uppercase tracking-[0.14em]">
                     {isVi ? "Thiết kế" : "Design"}
                   </p>
@@ -768,7 +768,7 @@ export default function Lookup() {
                   </div>
                 </div>
                 {/* ── Thi công circles ── */}
-                <div className="py-6 sm:py-10 lg:pl-10">
+                <div>
                   <p className="text-xs font-light text-white/45 mb-6 sm:mb-8 uppercase tracking-[0.14em]">
                     {isVi ? "Thi công" : "Construction"}
                   </p>
@@ -802,9 +802,9 @@ export default function Lookup() {
 
               {/* Row 2: Phase bars — separate grid so both columns are always equal height */}
               {(designPhases.length > 0 || constructionPhases.length > 0) && (
-                <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-white/8 border-t border-white/8 items-start">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start mt-10">
                   {/* Design phase bars */}
-                  <div className="py-6 sm:py-8 lg:pr-10">
+                  <div>
                     <div className="space-y-4">
                       {designPhases.map((phase) => {
                         const pt = (result.client.designPhaseTargets || {}) as Record<string, number>;
@@ -826,7 +826,7 @@ export default function Lookup() {
                     </div>
                   </div>
                   {/* Construction phase bars */}
-                  <div className="py-6 sm:py-8 lg:pl-10">
+                  <div>
                     <div className="space-y-4">
                       {constructionPhases.map((phase) => {
                         const pt = (result.client.constructionPhaseTargets || {}) as Record<string, number>;
@@ -853,7 +853,7 @@ export default function Lookup() {
 
             {/* ── Phase Overview ── */}
             {(designPhases.length > 0 || constructionPhases.length > 0) && (
-              <div className="border border-white/10 p-5 sm:p-8">
+              <div>
                 <p className="text-base font-light text-white/80 mb-6 sm:mb-8 tracking-wide">
                   {isVi ? "Tổng quan giai đoạn" : "Phase Overview"}
                 </p>
@@ -881,7 +881,7 @@ export default function Lookup() {
                     </div>
                   )}
                   {constructionPhases.length > 0 && (
-                    <div className={designPhases.length > 0 ? "pt-6 border-t border-white/10" : ""}>
+                    <div className={designPhases.length > 0 ? "pt-6" : ""}>
                       <p className="text-xs uppercase tracking-[0.14em] font-light text-white/35 mb-5">{isVi ? "Thi công" : "Construction"}</p>
                       <div className="space-y-5">
                         {constructionPhases.map((phase) => {
@@ -914,10 +914,8 @@ export default function Lookup() {
               ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 5);
               if (allActivity.length === 0) return null;
               return (
-                <div className="border border-white/10">
-                  <div className="px-4 sm:px-8 py-5 sm:py-6 border-b border-white/10">
-                    <p className="text-xs font-light text-white/45 uppercase tracking-[0.14em]">{isVi ? "Hoạt động gần đây" : "Recent Activity"}</p>
-                  </div>
+                <div>
+                  <p className="text-xs font-light text-white/45 uppercase tracking-[0.14em] mb-6">{isVi ? "Hoạt động gần đây" : "Recent Activity"}</p>
                   <div className="divide-y divide-white/8">
                     {allActivity.map((item, idx) => (
                       <div key={item.id || idx} className="flex items-center gap-3 sm:gap-5 px-4 sm:px-8 py-4 sm:py-5">
@@ -937,9 +935,9 @@ export default function Lookup() {
               );
             })()}
 
-            <div className="border border-white/10 bg-black">
+            <div>
               {/* Tab headers */}
-              <div className="flex flex-wrap border-b border-white/10">
+              <div className="flex flex-wrap border-b border-white/8">
                 {([
                   { key: "design" as const, vi: "Tiến độ thiết kế", en: "Design Progress" },
                   { key: "construction" as const, vi: "Tiến độ thi công", en: "Construction Progress" },
@@ -965,7 +963,7 @@ export default function Lookup() {
               {(activeTab === "design" || activeTab === "construction") && (() => {
                 const currentPhases = activeTab === "design" ? designPhases : constructionPhases;
                 return (
-                  <div className="px-4 pt-4 pb-4 space-y-3 border-b border-white/10">
+                  <div className="px-4 pt-4 pb-4 space-y-3">
                     {/* Search input */}
                     <div className="flex items-center gap-3">
                       <Search className="w-3.5 h-3.5 text-white/30 shrink-0" />
@@ -1073,17 +1071,15 @@ export default function Lookup() {
               </div>
             </div>
 
-            <div className="border border-white/10 bg-black">
-              <div className="px-5 py-5 sm:px-8 sm:py-6 border-b border-white/10 flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-xs font-light text-white/45 uppercase tracking-[0.14em]">{isVi ? "Yêu cầu hỗ trợ" : "Support Request"}</p>
-                  <p className="text-xs font-light text-white/35 mt-2">
-                    {isVi ? "Gửi câu hỏi hoặc yêu cầu hỗ trợ tới đội ngũ IEVRA" : "Send a question or request to the IEVRA team"}
-                  </p>
-                </div>
+            <div>
+              <div className="mb-6">
+                <p className="text-xs font-light text-white/45 uppercase tracking-[0.14em]">{isVi ? "Yêu cầu hỗ trợ" : "Support Request"}</p>
+                <p className="text-xs font-light text-white/35 mt-2">
+                  {isVi ? "Gửi câu hỏi hoặc yêu cầu hỗ trợ tới đội ngũ IEVRA" : "Send a question or request to the IEVRA team"}
+                </p>
               </div>
               <form onSubmit={handleSupportSubmit}>
-                <div className="px-5 pt-5 pb-6 sm:px-8 sm:pt-6 sm:pb-8">
+                <div>
                   <textarea
                     placeholder={isVi ? "Nhập yêu cầu hoặc ghi chú của bạn..." : "Type your request or notes here..."}
                     value={supportMessage}
