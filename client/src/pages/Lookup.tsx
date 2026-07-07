@@ -929,79 +929,42 @@ export default function Lookup() {
               </div>
             </div>
 
-            <div className="border border-white/10 p-6 bg-black">
-              <h3 className="text-base font-light text-white/80 mb-6">
-                {isVi ? "Yêu cầu hỗ trợ" : "Support Request"}
-              </h3>
+            <div className="border border-white/10 bg-black">
+              <div className="px-8 py-6 border-b border-white/10 flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-base font-light text-white/80">{isVi ? "Yêu cầu hỗ trợ" : "Support Request"}</p>
+                  <p className="text-xs font-light text-white/35 mt-1">
+                    {isVi ? "Gửi câu hỏi hoặc yêu cầu hỗ trợ tới đội ngũ IEVRA" : "Send a question or request to the IEVRA team"}
+                  </p>
+                </div>
+              </div>
               <form onSubmit={handleSupportSubmit}>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Input
-                      type="text"
-                      value={infoRevealed
-                        ? `${result.client.lastName} ${result.client.firstName}`.trim()
-                        : (() => {
-                            const nameParts = `${result.client.lastName || ""} ${result.client.firstName || ""}`.trim().split(" ");
-                            return nameParts.map((p, i) => i === 0 ? p : "*".repeat(p.length)).join(" ");
-                          })()}
-                      readOnly
-                      className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 py-4 text-white/50 focus-visible:ring-0 cursor-default"
-                    />
-                    <Input
-                      type="text"
-                      value={infoRevealed
-                        ? (result.client.email || "")
-                        : (() => {
-                            const em = result.client.email || "";
-                            if (!em) return "";
-                            const atIdx = em.indexOf("@");
-                            if (atIdx <= 0) return "*".repeat(em.length);
-                            const local = em.slice(0, atIdx);
-                            const domain = em.slice(atIdx);
-                            return local.slice(0, 3) + "*".repeat(Math.max(0, local.length - 3)) + domain;
-                          })()}
-                      readOnly
-                      placeholder={isVi ? "Email" : "Email"}
-                      className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 py-4 text-white/50 placeholder-white/30 focus-visible:ring-0 cursor-default"
-                    />
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <Input
-                      type="text"
-                      value={infoRevealed
-                        ? (result.client.phone || phone.trim())
-                        : (() => {
-                            const ph = result.client.phone || phone.trim();
-                            if (!ph) return "";
-                            return ph.slice(0, 3) + "*".repeat(Math.max(0, ph.length - 3));
-                          })()}
-                      readOnly
-                      className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 py-4 text-white/50 focus-visible:ring-0 cursor-default"
-                    />
-                    <Input
-                      type="text"
-                      value={infoRevealed
-                        ? (result.client.address || "")
-                        : (result.client.address ? "*".repeat(16) : "")}
-                      readOnly
-                      placeholder={isVi ? "Địa chỉ dự án" : "Project address"}
-                      className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 py-4 text-white/50 placeholder-white/30 focus-visible:ring-0 cursor-default"
-                    />
-                  </div>
-                  <Textarea
-                    placeholder={isVi ? "Nhập yêu cầu hoặc ghi chú..." : "Enter your request or notes..."}
+                <div className="px-8 pt-6 pb-8">
+                  <textarea
+                    placeholder={isVi ? "Nhập yêu cầu hoặc ghi chú của bạn..." : "Type your request or notes here..."}
                     value={supportMessage}
                     onChange={(e) => setSupportMessage(e.target.value)}
-                    className="bg-transparent border border-white/20 rounded-none px-0 py-4 text-white placeholder-white/40 focus:border-white/50 focus-visible:ring-0 min-h-[120px] resize-none"
+                    rows={5}
+                    className="w-full bg-transparent border-b border-white/15 py-4 text-sm font-light text-white placeholder-white/25 focus:outline-none focus:border-white/40 resize-none transition-colors leading-relaxed"
                   />
-                  <div className="flex justify-center pt-2">
-                    <Button
+                  <div className="flex items-center justify-between mt-6">
+                    <span className="text-xs font-light text-white/25 tabular-nums">
+                      {supportMessage.length > 0 ? `${supportMessage.length} ${isVi ? "ký tự" : "chars"}` : ""}
+                    </span>
+                    <button
                       type="submit"
                       disabled={submittingSupport || !supportMessage.trim()}
-                      className="bg-transparent border border-white/30 text-white hover:border-white hover:bg-white/10 px-8 py-3 font-light tracking-widest uppercase transition-all duration-300 rounded-none"
+                      className="flex items-center gap-3 text-xs uppercase tracking-[0.18em] font-light text-white/60 hover:text-white disabled:text-white/20 disabled:cursor-not-allowed transition-colors"
                     >
-                      {submittingSupport ? (isVi ? "Đang gửi..." : "Sending...") : (isVi ? "GỬI YÊU CẦU" : "SEND REQUEST")}
-                    </Button>
+                      {submittingSupport ? (
+                        <span>{isVi ? "Đang gửi..." : "Sending..."}</span>
+                      ) : (
+                        <>
+                          <span>{isVi ? "Gửi yêu cầu" : "Send request"}</span>
+                          <span className="text-white/30">→</span>
+                        </>
+                      )}
+                    </button>
                   </div>
                 </div>
               </form>
