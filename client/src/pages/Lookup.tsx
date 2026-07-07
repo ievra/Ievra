@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useLocation } from "wouter";
+import { Link, useLocation } from "wouter";
 import { usePageMeta, CANONICAL_BASE_URL } from "@/hooks/use-page-meta";
 import { createPortal } from "react-dom";
 import { Search, ArrowRight, Clock, ChevronLeft, ChevronRight, X, Eye, EyeOff } from "lucide-react";
@@ -269,9 +269,9 @@ export default function Lookup() {
       <div className="flex flex-col items-center p-4">
         <div className="relative w-full aspect-square max-w-[240px]">
           <svg viewBox={`0 0 ${vb} ${vb}`} className="w-full h-full transform -rotate-90">
-            <circle cx={vb/2} cy={vb/2} r={r} fill="none" stroke="#555" strokeWidth={sw} />
+            <circle cx={vb/2} cy={vb/2} r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={sw} />
             {item.progress > 0 && (
-              <circle cx={vb/2} cy={vb/2} r={r} fill="none" stroke="#bbb" strokeWidth={sw} strokeDasharray={`${filled} ${gap}`} className="transition-all duration-700 ease-out" />
+              <circle cx={vb/2} cy={vb/2} r={r} fill="none" stroke="#d97706" strokeWidth={sw} strokeDasharray={`${filled} ${gap}`} className="transition-all duration-700 ease-out" />
             )}
           </svg>
           <div className="absolute inset-0 flex items-center justify-center">
@@ -291,8 +291,8 @@ export default function Lookup() {
                     <span className="text-[11px] text-white/50 truncate max-w-[70%]">{isVi ? phase.labelVi : phase.labelEn}</span>
                     <span className="text-[11px] text-white/40">{pct}%</span>
                   </div>
-                  <div className="w-full h-2 bg-white/10 overflow-hidden">
-                    <div className="h-full bg-white/50 transition-all duration-700 ease-out" style={{ width: `${pct}%` }} />
+                  <div className="w-full h-[3px] bg-white/8 overflow-hidden">
+                    <div className="h-full bg-amber-500/70 transition-all duration-700 ease-out" style={{ width: `${pct}%` }} />
                   </div>
                 </div>
               );
@@ -314,8 +314,8 @@ export default function Lookup() {
                       <span className="text-[11px] text-white/50 truncate max-w-[70%]">{tx.title || tx.description || `${isVi ? "Giao dịch" : "Transaction"} ${txIdx + 1}`}</span>
                       <span className="text-[11px] text-white/40">{pct}%</span>
                     </div>
-                    <div className="w-full h-2 bg-white/10 overflow-hidden">
-                      <div className="h-full bg-white/50 transition-all duration-700 ease-out" style={{ width: `${pct}%` }} />
+                    <div className="w-full h-[3px] bg-white/8 overflow-hidden">
+                      <div className="h-full bg-amber-500/70 transition-all duration-700 ease-out" style={{ width: `${pct}%` }} />
                     </div>
                   </div>
                 );
@@ -415,42 +415,56 @@ export default function Lookup() {
   };
 
   return (
-    <div className="min-h-screen bg-black flex flex-col justify-center py-16">
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="max-w-3xl mx-auto mb-16">
-          <h1 className="text-4xl md:text-5xl font-light text-white mb-4 tracking-wide text-center">
-            {isVi ? "TRA CỨU" : "LOOKUP"}
-          </h1>
-          <p className="text-white/60 font-light text-lg mb-10 text-center">
-            {isVi
-              ? "Nhập số điện thoại để tra cứu tiến độ dự án, nhật ký công trình và thông tin bảo hành."
-              : "Enter your phone number to check project progress, construction log and warranty information."}
-          </p>
-
-          <form onSubmit={handleSearch}>
-            <div className="flex items-end gap-2 pb-4">
-              <Input
-                ref={inputRef}
-                type="tel"
-                placeholder={typedPlaceholder}
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="bg-transparent text-white placeholder-white/60 px-0 py-0 text-lg font-light rounded-none focus-visible:ring-0 flex-1 border-0 border-b border-white/30"
-              />
-              <button
-                type="submit"
-                disabled={loading || phone.trim().length < 6}
-                className="text-white/40 hover:text-white transition-colors disabled:opacity-30 pb-0.5 -ml-1"
-              >
-                {loading ? (
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : (
-                  <ArrowRight className="w-5 h-5" />
-                )}
-              </button>
+    <div className="min-h-screen bg-black pt-32 pb-20">
+      <div className="px-4 sm:px-6 lg:px-8 mb-12">
+        {/* Editorial header */}
+        <div className="flex items-end justify-between gap-6 border-b border-white/10 pb-8">
+          <div>
+            <div className="flex items-center gap-2 mb-4 text-[11px] uppercase tracking-widest font-light text-white/30">
+              <Link href={language === 'vi' ? '/' : '/en'} className="hover:text-white/60 transition-colors duration-200">
+                {isVi ? 'Trang Chủ' : 'Home'}
+              </Link>
+              <span>›</span>
+              <span className="text-white/50">{isVi ? 'Tra Cứu' : 'Lookup'}</span>
             </div>
-          </form>
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-sans font-light tracking-tight leading-none">
+              {isVi ? 'TRA CỨU' : 'LOOKUP'}
+            </h1>
+          </div>
         </div>
+        <p className="text-sm text-white/40 font-light leading-relaxed mt-5 max-w-lg">
+          {isVi
+            ? 'Nhập số điện thoại để tra cứu tiến độ dự án, nhật ký công trình và thông tin bảo hành.'
+            : 'Enter your phone number to check project progress, construction log and warranty information.'}
+        </p>
+
+        {/* Search form */}
+        <form onSubmit={handleSearch} className="mt-10 max-w-lg">
+          <div className="flex items-end gap-3 border-b border-white/20 pb-3">
+            <Input
+              ref={inputRef}
+              type="tel"
+              placeholder={typedPlaceholder}
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="bg-transparent text-white placeholder-white/30 px-0 py-0 text-base font-light rounded-none focus-visible:ring-0 flex-1 border-0"
+            />
+            <button
+              type="submit"
+              disabled={loading || phone.trim().length < 6}
+              className="text-white/40 hover:text-white transition-colors disabled:opacity-30 pb-0.5"
+            >
+              {loading ? (
+                <div className="w-4 h-4 border border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <ArrowRight className="w-4 h-4" />
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <div className="px-4 sm:px-6 lg:px-8">
 
         {error && searched && (
           <div className="max-w-3xl mx-auto">
@@ -462,8 +476,9 @@ export default function Lookup() {
         )}
 
         {result && (
-          <div className="max-w-7xl mx-auto space-y-6 animate-in fade-in duration-500">
-            <div className="border border-white/20 p-6">
+          <div className="max-w-7xl mx-auto space-y-5 animate-in fade-in duration-500">
+            {/* Client info card */}
+            <div className="border-l-2 border-amber-500/60 pl-6 py-4 bg-white/[0.02]">
               <div className="space-y-1">
                 <div className="flex items-center gap-3">
                   <h3 className="text-2xl font-light text-white">
@@ -511,10 +526,10 @@ export default function Lookup() {
               </div>
             </div>
 
-            <div className="border border-white/20 p-6">
+            <div className="border border-white/10 p-6 bg-white/[0.02]">
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-sm font-medium text-white/70 tracking-wider uppercase mb-4 pb-2 border-b border-white/10">{isVi ? "Tiến Độ Thiết Kế" : "Design Progress"}</h3>
+                  <h3 className="text-[11px] font-light tracking-[0.18em] text-white/40 mb-5 pb-2 border-b border-white/10">{isVi ? "Tiến độ thiết kế" : "Design Progress"}</h3>
                   <div className="grid grid-cols-2 gap-4">
                     {renderCircle(
                       { label: isVi ? "Tiến Độ" : "Progress", progress: (() => {
@@ -542,7 +557,7 @@ export default function Lookup() {
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-white/70 tracking-wider uppercase mb-4 pb-2 border-b border-white/10">{isVi ? "Tiến Độ Thi Công" : "Construction Progress"}</h3>
+                  <h3 className="text-[11px] font-light tracking-[0.18em] text-white/40 mb-5 pb-2 border-b border-white/10">{isVi ? "Tiến độ thi công" : "Construction Progress"}</h3>
                   <div className="grid grid-cols-2 gap-4">
                     {renderCircle(
                       { label: isVi ? "Tiến Độ" : "Progress", progress: (() => {
@@ -572,8 +587,8 @@ export default function Lookup() {
               </div>
             </div>
 
-            <div className="border border-white/20">
-              <div className="flex flex-wrap border-b border-white/20">
+            <div className="border border-white/10 bg-white/[0.02]">
+              <div className="flex flex-wrap border-b border-white/10">
                 {([
                   { key: "design" as const, vi: "Tiến độ thiết kế", en: "Design Progress" },
                   { key: "construction" as const, vi: "Tiến độ thi công", en: "Construction Progress" },
@@ -582,7 +597,7 @@ export default function Lookup() {
                   <button
                     key={tab.key}
                     onClick={() => setActiveTab(tab.key)}
-                    className={`flex items-center gap-2 px-5 py-3 text-sm font-light tracking-wider whitespace-nowrap transition-colors ${activeTab === tab.key ? "text-white border-b-2 border-white -mb-[1px]" : "text-white/40 hover:text-white/70"}`}
+                    className={`flex items-center gap-2 px-5 py-3.5 text-sm font-light tracking-wide whitespace-nowrap transition-colors ${activeTab === tab.key ? "text-white border-b border-amber-500/70 -mb-px" : "text-white/35 hover:text-white/65"}`}
                   >
                     {isVi ? tab.vi : tab.en}
                   </button>
@@ -641,9 +656,9 @@ export default function Lookup() {
               </div>
             </div>
 
-            <div className="border border-white/20 p-6">
-              <h3 className="text-sm font-medium text-white/70 tracking-wider uppercase mb-6 pb-2 border-b border-white/10">
-                {isVi ? "Yêu Cầu Hỗ Trợ" : "Support Request"}
+            <div className="border border-white/10 p-6 bg-white/[0.02]">
+              <h3 className="text-[11px] font-light tracking-[0.18em] text-white/40 mb-5 pb-2 border-b border-white/10">
+                {isVi ? "Yêu cầu hỗ trợ" : "Support Request"}
               </h3>
               <form onSubmit={handleSupportSubmit}>
                 <div className="space-y-4">
