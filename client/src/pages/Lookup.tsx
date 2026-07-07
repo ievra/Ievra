@@ -333,7 +333,6 @@ export default function Lookup() {
         <div className="relative w-full aspect-square max-w-[240px]">
           <svg viewBox={`0 0 ${vb} ${vb}`} className="w-full h-full -rotate-90">
             <circle cx={60} cy={60} r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={sw} />
-            <circle cx={60} cy={60} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={sw + 8} />
             {item.progress > 0 && (
               <circle
                 cx={60} cy={60} r={r} fill="none"
