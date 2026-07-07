@@ -721,7 +721,7 @@ export default function Lookup() {
               );
               return (
                 <div className="space-y-10 py-14">
-                  <p className="text-base font-light text-white mb-2 tracking-wide">{isVi ? "Tóm tắt tiến độ" : "Progress Summary"}</p>
+                  <p className="text-base font-light text-white mb-6 sm:mb-8 tracking-wide">{isVi ? "Tóm tắt tiến độ" : "Progress Summary"}</p>
                   {renderKpiSection(isVi ? "Thiết kế" : "Design", [
                     { label: isVi ? "Tiến độ" : "Progress", pct: dProgress },
                     { label: isVi ? "Thanh toán" : "Payment", pct: dPayPct },
@@ -918,7 +918,7 @@ export default function Lookup() {
               if (allActivity.length === 0) return null;
               return (
                 <div className="py-14">
-                  <p className="text-base font-light text-white mb-6 tracking-wide">{isVi ? "Hoạt động gần đây" : "Recent Activity"}</p>
+                  <p className="text-base font-light text-white mb-6 sm:mb-8 tracking-wide">{isVi ? "Hoạt động gần đây" : "Recent Activity"}</p>
                   <div className="divide-y divide-white/8">
                     {allActivity.map((item, idx) => (
                       <div key={item.id || idx} className="flex items-center gap-3 sm:gap-5 px-4 sm:px-8 py-4 sm:py-5">
@@ -1077,7 +1077,7 @@ export default function Lookup() {
 
             <div className="py-14">
               <div className="mb-6">
-                <p className="text-base font-light text-white tracking-wide">{isVi ? "Yêu cầu hỗ trợ" : "Support Request"}</p>
+                <p className="text-base font-light text-white mb-6 sm:mb-8 tracking-wide">{isVi ? "Yêu cầu hỗ trợ" : "Support Request"}</p>
                 <p className="text-xs font-light text-white/35 mt-2">
                   {isVi ? "Gửi câu hỏi hoặc yêu cầu hỗ trợ tới đội ngũ IEVRA" : "Send a question or request to the IEVRA team"}
                 </p>
