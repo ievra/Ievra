@@ -516,7 +516,7 @@ export default function Portfolio() {
                       <button
                         key={cat.value}
                         onClick={() => setSelectedCategory(cat.value)}
-                        className={`text-sm font-light transition-colors duration-200 ${
+                        className={`text-left text-sm font-light transition-colors duration-200 ${
                           selectedCategory === cat.value ? 'text-white' : 'text-white/45 hover:text-white/80'
                         }`}
                         data-testid={`button-cat-${cat.value}`}
