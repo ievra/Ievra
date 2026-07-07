@@ -455,7 +455,7 @@ export default function Portfolio() {
                 {/* Clear all */}
                 {activeCount > 0 && (
                   <button
-                    onClick={() => { setSelectedYear('all'); setSelectedCategory('all'); setSelectedType('all'); }}
+                    onClick={() => { setSelectedYear('all'); setSelectedCategory('all'); setSelectedType('all'); setFilterOpen(false); }}
                     className="text-[10px] uppercase tracking-widest text-white/30 hover:text-white/60 transition-colors duration-200"
                     data-testid="button-filter-clear"
                   >
