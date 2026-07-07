@@ -483,7 +483,7 @@ export default function Portfolio() {
             {projectTypes.length > 1 && (
               <>
                 <div className="flex-shrink-0 pr-10">
-                  <p className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-4">
+                  <p className="text-[10px] tracking-[0.15em] text-white/40 mb-4">
                     {language === 'vi' ? 'Loại' : 'Type'}
                   </p>
                   <div className="flex flex-col gap-3">
@@ -508,7 +508,7 @@ export default function Portfolio() {
             {categories.length > 1 && (
               <>
                 <div className="flex-1 px-10">
-                  <p className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-4">
+                  <p className="text-[10px] tracking-[0.15em] text-white/40 mb-4">
                     {language === 'vi' ? 'Danh mục' : 'Category'}
                   </p>
                   <div className="flex flex-wrap gap-x-8 gap-y-3">
@@ -532,7 +532,7 @@ export default function Portfolio() {
             {/* Year */}
             {availableYears.length > 0 && (
               <div className="flex-shrink-0 pl-10">
-                <p className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-4">
+                <p className="text-[10px] tracking-[0.15em] text-white/40 mb-4">
                   {language === 'vi' ? 'Năm' : 'Year'}
                 </p>
                 <div className="flex flex-col gap-3">
