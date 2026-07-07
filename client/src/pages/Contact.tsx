@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import { usePageMeta, CANONICAL_BASE_URL } from "@/hooks/use-page-meta";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -211,6 +211,15 @@ export default function Contact() {
       {/* ── Hero + Form Section ── */}
       <section className="pt-36 pb-16">
         <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
+
+          {/* Breadcrumb */}
+          <div className="flex items-center gap-2 mb-8 text-[11px] uppercase tracking-widest font-light text-white/30">
+            <Link href={language === 'vi' ? '/' : '/en'} className="hover:text-white/60 transition-colors duration-200">
+              {language === 'vi' ? 'Trang Chủ' : 'Home'}
+            </Link>
+            <span>›</span>
+            <span className="text-white/50">{language === 'vi' ? 'Liên Hệ' : 'Contact'}</span>
+          </div>
 
           {/* Top label */}
           <p className="text-xs uppercase tracking-[0.22em] font-light text-white/35 mb-10" data-testid="heading-questions">
