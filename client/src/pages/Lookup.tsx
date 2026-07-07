@@ -732,114 +732,123 @@ export default function Lookup() {
               );
             })()}
 
-            {/* Progress — 2 col (Design | Construction), mỗi cột 2 vòng tròn (Tiến độ | Thanh toán) */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-white/8">
-              {/* ── Thiết kế ── */}
-              <div className="py-6 sm:py-10 lg:pr-10">
-                <p className="text-xs font-light text-white/45 mb-6 sm:mb-8 uppercase tracking-[0.14em]">
-                  {isVi ? "Thiết kế" : "Design"}
-                </p>
-                <div className="grid grid-cols-2 gap-6 items-start">
-                  {renderCircle(
-                    { label: isVi ? "Tiến Độ" : "Progress", progress: (() => {
-                      if (result.client.designTimeline) return Math.min(100, Math.round((designInteractions.length / result.client.designTimeline) * 100));
-                      const pt = (result.client.designPhaseTargets || {}) as Record<string, number>;
-                      if (designPhases.length > 0) {
-                        const sum = designPhases.reduce((acc, ph) => {
-                          const t = pt[ph.value] || 0;
-                          const l = designInteractions.filter(i => i.phase === ph.value).length;
-                          return acc + (t > 0 ? Math.min(100, Math.round((l / t) * 100)) : 100);
-                        }, 0);
-                        return Math.round(sum / designPhases.length);
-                      }
-                      return 100;
-                    })(), type: "design_progress" },
-                    [], {}, [], false
-                  )}
-                  {renderCircle(
-                    { label: isVi ? "Thanh Toán" : "Payment", progress: (() => {
-                      const tx = transactions.filter(t => !t.category || t.category === "design");
-                      return tx.length > 0 ? Math.round((tx.filter(t => t.status === "completed").length / tx.length) * 100) : 0;
-                    })(), type: "design_payment" },
-                    [], {}, []
-                  )}
-                </div>
-                {/* Phase bars — full width below circles */}
-                {designPhases.length > 0 && (
-                  <div className="mt-8 space-y-4">
-                    {designPhases.map((phase) => {
-                      const pt = (result.client.designPhaseTargets || {}) as Record<string, number>;
-                      const target = pt[phase.value] || 0;
-                      const logged = designInteractions.filter(i => i.phase === phase.value).length;
-                      const p = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : (result.client.designTimeline ? 0 : 100);
-                      return (
-                        <div key={phase.id}>
-                          <div className="flex items-baseline justify-between mb-2">
-                            <span className="text-sm font-light text-white/45">{isVi ? phase.labelVi : phase.labelEn}</span>
-                            <span className="text-sm font-light text-white/45 tabular-nums shrink-0 ml-4">{p}%</span>
-                          </div>
-                          <div className="w-full h-[2px] bg-white/10 rounded-full">
-                            <div className="h-full bg-white/60 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
-                          </div>
-                        </div>
-                      );
-                    })}
+            {/* Progress — 2 col (Design | Construction) */}
+            <div>
+              {/* Row 1: Circles */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-white/8">
+                {/* ── Thiết kế circles ── */}
+                <div className="py-6 sm:py-10 lg:pr-10">
+                  <p className="text-xs font-light text-white/45 mb-6 sm:mb-8 uppercase tracking-[0.14em]">
+                    {isVi ? "Thiết kế" : "Design"}
+                  </p>
+                  <div className="grid grid-cols-2 gap-6 items-start">
+                    {renderCircle(
+                      { label: isVi ? "Tiến Độ" : "Progress", progress: (() => {
+                        if (result.client.designTimeline) return Math.min(100, Math.round((designInteractions.length / result.client.designTimeline) * 100));
+                        const pt = (result.client.designPhaseTargets || {}) as Record<string, number>;
+                        if (designPhases.length > 0) {
+                          const sum = designPhases.reduce((acc, ph) => {
+                            const t = pt[ph.value] || 0;
+                            const l = designInteractions.filter(i => i.phase === ph.value).length;
+                            return acc + (t > 0 ? Math.min(100, Math.round((l / t) * 100)) : 100);
+                          }, 0);
+                          return Math.round(sum / designPhases.length);
+                        }
+                        return 100;
+                      })(), type: "design_progress" },
+                      [], {}, [], false
+                    )}
+                    {renderCircle(
+                      { label: isVi ? "Thanh Toán" : "Payment", progress: (() => {
+                        const tx = transactions.filter(t => !t.category || t.category === "design");
+                        return tx.length > 0 ? Math.round((tx.filter(t => t.status === "completed").length / tx.length) * 100) : 0;
+                      })(), type: "design_payment" },
+                      [], {}, []
+                    )}
                   </div>
-                )}
-              </div>
-              {/* ── Thi công ── */}
-              <div className="py-6 sm:py-10 lg:pl-10">
-                <p className="text-xs font-light text-white/45 mb-6 sm:mb-8 uppercase tracking-[0.14em]">
-                  {isVi ? "Thi công" : "Construction"}
-                </p>
-                <div className="grid grid-cols-2 gap-6 items-start">
-                  {renderCircle(
-                    { label: isVi ? "Tiến Độ" : "Progress", progress: (() => {
-                      if (result.client.constructionTimeline) return Math.min(100, Math.round((constructionInteractions.length / result.client.constructionTimeline) * 100));
-                      const pt = (result.client.constructionPhaseTargets || {}) as Record<string, number>;
-                      if (constructionPhases.length > 0) {
-                        const sum = constructionPhases.reduce((acc, ph) => {
-                          const t = pt[ph.value] || 0;
-                          const l = constructionInteractions.filter(i => i.phase === ph.value).length;
-                          return acc + (t > 0 ? Math.min(100, Math.round((l / t) * 100)) : 100);
-                        }, 0);
-                        return Math.round(sum / constructionPhases.length);
-                      }
-                      return 100;
-                    })(), type: "construction_progress" },
-                    [], {}, [], false
-                  )}
-                  {renderCircle(
-                    { label: isVi ? "Thanh Toán" : "Payment", progress: (() => {
-                      const tx = transactions.filter(t => t.category === "construction");
-                      return tx.length > 0 ? Math.round((tx.filter(t => t.status === "completed").length / tx.length) * 100) : 0;
-                    })(), type: "construction_payment" },
-                    [], {}, []
-                  )}
                 </div>
-                {/* Phase bars — full width below circles */}
-                {constructionPhases.length > 0 && (
-                  <div className="mt-8 space-y-4">
-                    {constructionPhases.map((phase) => {
-                      const pt = (result.client.constructionPhaseTargets || {}) as Record<string, number>;
-                      const target = pt[phase.value] || 0;
-                      const logged = constructionInteractions.filter(i => i.phase === phase.value).length;
-                      const p = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : (result.client.constructionTimeline ? 0 : 100);
-                      return (
-                        <div key={phase.id}>
-                          <div className="flex items-baseline justify-between mb-2">
-                            <span className="text-sm font-light text-white/45">{isVi ? phase.labelVi : phase.labelEn}</span>
-                            <span className="text-sm font-light text-white/45 tabular-nums shrink-0 ml-4">{p}%</span>
-                          </div>
-                          <div className="w-full h-[2px] bg-white/10 rounded-full">
-                            <div className="h-full bg-white/60 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
-                          </div>
-                        </div>
-                      );
-                    })}
+                {/* ── Thi công circles ── */}
+                <div className="py-6 sm:py-10 lg:pl-10">
+                  <p className="text-xs font-light text-white/45 mb-6 sm:mb-8 uppercase tracking-[0.14em]">
+                    {isVi ? "Thi công" : "Construction"}
+                  </p>
+                  <div className="grid grid-cols-2 gap-6 items-start">
+                    {renderCircle(
+                      { label: isVi ? "Tiến Độ" : "Progress", progress: (() => {
+                        if (result.client.constructionTimeline) return Math.min(100, Math.round((constructionInteractions.length / result.client.constructionTimeline) * 100));
+                        const pt = (result.client.constructionPhaseTargets || {}) as Record<string, number>;
+                        if (constructionPhases.length > 0) {
+                          const sum = constructionPhases.reduce((acc, ph) => {
+                            const t = pt[ph.value] || 0;
+                            const l = constructionInteractions.filter(i => i.phase === ph.value).length;
+                            return acc + (t > 0 ? Math.min(100, Math.round((l / t) * 100)) : 100);
+                          }, 0);
+                          return Math.round(sum / constructionPhases.length);
+                        }
+                        return 100;
+                      })(), type: "construction_progress" },
+                      [], {}, [], false
+                    )}
+                    {renderCircle(
+                      { label: isVi ? "Thanh Toán" : "Payment", progress: (() => {
+                        const tx = transactions.filter(t => t.category === "construction");
+                        return tx.length > 0 ? Math.round((tx.filter(t => t.status === "completed").length / tx.length) * 100) : 0;
+                      })(), type: "construction_payment" },
+                      [], {}, []
+                    )}
                   </div>
-                )}
+                </div>
               </div>
+
+              {/* Row 2: Phase bars — separate grid so both columns are always equal height */}
+              {(designPhases.length > 0 || constructionPhases.length > 0) && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-white/8 border-t border-white/8 items-start">
+                  {/* Design phase bars */}
+                  <div className="py-6 sm:py-8 lg:pr-10">
+                    <div className="space-y-4">
+                      {designPhases.map((phase) => {
+                        const pt = (result.client.designPhaseTargets || {}) as Record<string, number>;
+                        const target = pt[phase.value] || 0;
+                        const logged = designInteractions.filter(i => i.phase === phase.value).length;
+                        const p = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : (result.client.designTimeline ? 0 : 100);
+                        return (
+                          <div key={phase.id}>
+                            <div className="flex items-baseline justify-between mb-2">
+                              <span className="text-sm font-light text-white/45">{isVi ? phase.labelVi : phase.labelEn}</span>
+                              <span className="text-sm font-light text-white/45 tabular-nums shrink-0 ml-4">{p}%</span>
+                            </div>
+                            <div className="w-full h-[2px] bg-white/10 rounded-full">
+                              <div className="h-full bg-white/60 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                  {/* Construction phase bars */}
+                  <div className="py-6 sm:py-8 lg:pl-10">
+                    <div className="space-y-4">
+                      {constructionPhases.map((phase) => {
+                        const pt = (result.client.constructionPhaseTargets || {}) as Record<string, number>;
+                        const target = pt[phase.value] || 0;
+                        const logged = constructionInteractions.filter(i => i.phase === phase.value).length;
+                        const p = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : (result.client.constructionTimeline ? 0 : 100);
+                        return (
+                          <div key={phase.id}>
+                            <div className="flex items-baseline justify-between mb-2">
+                              <span className="text-sm font-light text-white/45">{isVi ? phase.labelVi : phase.labelEn}</span>
+                              <span className="text-sm font-light text-white/45 tabular-nums shrink-0 ml-4">{p}%</span>
+                            </div>
+                            <div className="w-full h-[2px] bg-white/10 rounded-full">
+                              <div className="h-full bg-white/60 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* ── Phase Overview ── */}
