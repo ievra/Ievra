@@ -265,8 +265,8 @@ export default function Lookup() {
     circleInteractions: LookupInteraction[],
     hasTimeline = false
   ) => {
-    const vb = 100;
-    const sw = 7;
+    const vb = 120;
+    const sw = 6;
     const r = (vb - sw) / 2;
     const circ = 2 * Math.PI * r;
     const filled = (item.progress / 100) * circ;
@@ -279,13 +279,14 @@ export default function Lookup() {
     return (
       <div className="flex flex-col items-center">
         {/* Circle */}
-        <div className="relative w-full aspect-square max-w-[160px]">
+        <div className="relative w-full aspect-square max-w-[200px]">
           <svg viewBox={`0 0 ${vb} ${vb}`} className="w-full h-full -rotate-90">
-            <circle cx={50} cy={50} r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={sw} />
+            <circle cx={60} cy={60} r={r} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth={sw} />
+            <circle cx={60} cy={60} r={r} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={sw + 8} />
             {item.progress > 0 && (
               <circle
-                cx={50} cy={50} r={r} fill="none"
-                stroke="rgba(255,255,255,0.80)" strokeWidth={sw}
+                cx={60} cy={60} r={r} fill="none"
+                stroke="rgba(255,255,255,0.85)" strokeWidth={sw}
                 strokeLinecap="round"
                 strokeDasharray={`${filled} ${gap}`}
                 className="transition-all duration-700 ease-out"
@@ -293,13 +294,14 @@ export default function Lookup() {
             )}
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-2xl font-thin text-white tabular-nums leading-none">{item.progress}<span className="text-sm">%</span></span>
+            <span className="text-3xl font-thin text-white tabular-nums leading-none">{item.progress}</span>
+            <span className="text-sm font-light text-white/50 mt-0.5">%</span>
           </div>
         </div>
-        <p className="text-[11px] font-light text-white/45 mt-3 tracking-wide text-center">{item.label}</p>
+        <p className="text-[11px] font-light text-white/50 mt-4 tracking-wide text-center uppercase">{item.label}</p>
         {/* Phase breakdown bars */}
         {phases.length > 0 && (
-          <div className="w-full mt-5 space-y-3">
+          <div className="w-full mt-6 space-y-3.5">
             {phases.map((phase) => {
               const target = phaseTargets[phase.value] || 0;
               const logged = circleInteractions.filter(i => i.phase === phase.value).length;
@@ -308,10 +310,10 @@ export default function Lookup() {
                 <div key={phase.id}>
                   <div className="flex items-baseline justify-between mb-1.5">
                     <span className="text-[10px] font-light text-white/40 truncate max-w-[68%]">{isVi ? phase.labelVi : phase.labelEn}</span>
-                    <span className="text-[10px] font-light text-white/35">{p}%</span>
+                    <span className="text-[10px] font-light text-white/40 tabular-nums">{p}%</span>
                   </div>
-                  <div className="w-full h-px bg-white/10">
-                    <div className="h-px bg-white/50 transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
+                  <div className="w-full h-[2px] bg-white/8 rounded-full">
+                    <div className="h-full bg-white/55 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
                   </div>
                 </div>
               );
@@ -320,13 +322,13 @@ export default function Lookup() {
         )}
         {/* Payment transaction list */}
         {paymentTx.length > 0 && (
-          <div className="w-full mt-4 space-y-2.5">
+          <div className="w-full mt-5 space-y-2.5 border-t border-white/8 pt-4">
             {[...paymentTx].reverse().map((tx, idx) => (
               <div key={tx.id || idx} className="flex items-center justify-between gap-2">
-                <span className="text-[10px] font-light text-white/40 truncate">
+                <span className="text-[10px] font-light text-white/40 truncate leading-relaxed">
                   {tx.title || tx.description || `${isVi ? "Đợt" : "Stage"} ${idx + 1}`}
                 </span>
-                <span className={`text-[10px] font-light shrink-0 ${tx.status === "completed" ? "text-white/65" : "text-white/20"}`}>
+                <span className={`text-[11px] font-light shrink-0 ${tx.status === "completed" ? "text-white/70" : "text-white/20"}`}>
                   {tx.status === "completed" ? "✓" : "○"}
                 </span>
               </div>
@@ -540,6 +542,47 @@ export default function Lookup() {
               </div>
             </div>
 
+            {/* ── KPI Summary Row ── */}
+            {(() => {
+              const dPt = (result.client.designPhaseTargets || {}) as Record<string, number>;
+              const cPt = (result.client.constructionPhaseTargets || {}) as Record<string, number>;
+              const dProgress = result.client.designTimeline
+                ? Math.min(100, Math.round((designInteractions.length / result.client.designTimeline) * 100))
+                : designPhases.length > 0
+                  ? Math.round(designPhases.reduce((acc, ph) => { const t = dPt[ph.value] || 0; const l = designInteractions.filter(i => i.phase === ph.value).length; return acc + (t > 0 ? Math.min(100, Math.round((l / t) * 100)) : 100); }, 0) / designPhases.length)
+                  : 100;
+              const cProgress = result.client.constructionTimeline
+                ? Math.min(100, Math.round((constructionInteractions.length / result.client.constructionTimeline) * 100))
+                : constructionPhases.length > 0
+                  ? Math.round(constructionPhases.reduce((acc, ph) => { const t = cPt[ph.value] || 0; const l = constructionInteractions.filter(i => i.phase === ph.value).length; return acc + (t > 0 ? Math.min(100, Math.round((l / t) * 100)) : 100); }, 0) / constructionPhases.length)
+                  : 100;
+              const dTx = transactions.filter(t => !t.category || t.category === "design");
+              const cTx = transactions.filter(t => t.category === "construction");
+              const dPayPct = dTx.length > 0 ? Math.round((dTx.filter(t => t.status === "completed").length / dTx.length) * 100) : 0;
+              const cPayPct = cTx.length > 0 ? Math.round((cTx.filter(t => t.status === "completed").length / cTx.length) * 100) : 0;
+              const kpis = [
+                { label: isVi ? "Tiến độ\nThiết kế" : "Design\nProgress", pct: dProgress },
+                { label: isVi ? "Thanh toán\nThiết kế" : "Design\nPayment", pct: dPayPct },
+                { label: isVi ? "Tiến độ\nThi công" : "Construction\nProgress", pct: cProgress },
+                { label: isVi ? "Thanh toán\nThi công" : "Construction\nPayment", pct: cPayPct },
+              ];
+              return (
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/8">
+                  {kpis.map(({ label, pct }, i) => (
+                    <div key={i} className="bg-black px-8 py-8">
+                      <p className="text-5xl lg:text-6xl font-thin text-white tabular-nums leading-none">
+                        {pct}<span className="text-2xl font-light">%</span>
+                      </p>
+                      <p className="text-[10px] uppercase tracking-[0.16em] text-white/35 mt-5 whitespace-pre-line leading-relaxed">{label}</p>
+                      <div className="mt-4 w-full h-px bg-white/10">
+                        <div className="h-px bg-white/50 transition-all duration-1000 ease-out" style={{ width: `${pct}%` }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              );
+            })()}
+
             {/* Progress — 2 col (Design | Construction), mỗi cột 2 vòng tròn (Tiến độ | Thanh toán) */}
             <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-white/8">
               {/* ── Thiết kế ── */}
@@ -607,6 +650,92 @@ export default function Lookup() {
                 </div>
               </div>
             </div>
+
+            {/* ── Phase Overview ── */}
+            {(designPhases.length > 0 || constructionPhases.length > 0) && (
+              <div className="border border-white/10 p-8">
+                <p className="text-[9px] uppercase tracking-[0.22em] text-white/30 mb-8 pb-3 border-b border-white/8">
+                  {isVi ? "Tổng quan giai đoạn" : "Phase Overview"}
+                </p>
+                <div className="space-y-8">
+                  {designPhases.length > 0 && (
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.18em] text-white/25 mb-5">{isVi ? "Thiết kế" : "Design"}</p>
+                      <div className="space-y-5">
+                        {designPhases.map((phase) => {
+                          const pt = (result.client.designPhaseTargets || {}) as Record<string, number>;
+                          const target = pt[phase.value] || 0;
+                          const logged = designInteractions.filter(i => i.phase === phase.value).length;
+                          const p = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : (result.client.designTimeline ? 0 : 100);
+                          return (
+                            <div key={phase.id} className="flex items-center gap-6">
+                              <span className="text-sm font-light text-white/65 w-48 shrink-0 truncate">{isVi ? phase.labelVi : phase.labelEn}</span>
+                              <div className="flex-1 h-[2px] bg-white/8 rounded-full">
+                                <div className="h-full bg-white/60 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
+                              </div>
+                              <span className="text-sm font-thin text-white/50 w-10 text-right tabular-nums shrink-0">{p}%</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                  {constructionPhases.length > 0 && (
+                    <div className={designPhases.length > 0 ? "pt-6 border-t border-white/8" : ""}>
+                      <p className="text-[10px] uppercase tracking-[0.18em] text-white/25 mb-5">{isVi ? "Thi công" : "Construction"}</p>
+                      <div className="space-y-5">
+                        {constructionPhases.map((phase) => {
+                          const pt = (result.client.constructionPhaseTargets || {}) as Record<string, number>;
+                          const target = pt[phase.value] || 0;
+                          const logged = constructionInteractions.filter(i => i.phase === phase.value).length;
+                          const p = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : (result.client.constructionTimeline ? 0 : 100);
+                          return (
+                            <div key={phase.id} className="flex items-center gap-6">
+                              <span className="text-sm font-light text-white/65 w-48 shrink-0 truncate">{isVi ? phase.labelVi : phase.labelEn}</span>
+                              <div className="flex-1 h-[2px] bg-white/8 rounded-full">
+                                <div className="h-full bg-white/60 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
+                              </div>
+                              <span className="text-sm font-thin text-white/50 w-10 text-right tabular-nums shrink-0">{p}%</span>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {/* ── Recent Activity ── */}
+            {(() => {
+              const allActivity = [
+                ...designInteractions.map(i => ({ ...i, _type: "design" as const })),
+                ...constructionInteractions.map(i => ({ ...i, _type: "construction" as const })),
+              ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 5);
+              if (allActivity.length === 0) return null;
+              return (
+                <div className="border border-white/10">
+                  <div className="px-8 py-5 border-b border-white/10">
+                    <p className="text-[9px] uppercase tracking-[0.22em] text-white/30">{isVi ? "Hoạt động gần đây" : "Recent Activity"}</p>
+                  </div>
+                  <div className="divide-y divide-white/8">
+                    {allActivity.map((item, idx) => (
+                      <div key={item.id || idx} className="flex items-center gap-5 px-8 py-4">
+                        <span className="text-[11px] font-light text-white/30 w-24 shrink-0 tabular-nums">{formatDate(item.date)}</span>
+                        <span className={`text-[9px] uppercase tracking-[0.15em] font-light px-2 py-0.5 border shrink-0 ${item._type === "design" ? "border-white/25 text-white/50" : "border-white/12 text-white/30"}`}>
+                          {item._type === "design" ? (isVi ? "Thiết kế" : "Design") : (isVi ? "Thi công" : "Const.")}
+                        </span>
+                        <span className="text-sm font-light text-white/75 truncate flex-1">{item.title}</span>
+                        {item.assignedTo && <span className="text-[11px] font-light text-white/35 shrink-0 hidden sm:block">{item.assignedTo}</span>}
+                        <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(item)} className="h-7 w-7 text-white/30 hover:text-white shrink-0">
+                          <Eye className="w-3.5 h-3.5" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            })()}
 
             <div className="border border-white/10 bg-white/[0.02]">
               <div className="flex flex-wrap border-b border-white/10">
