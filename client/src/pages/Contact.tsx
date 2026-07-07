@@ -209,33 +209,30 @@ export default function Contact() {
     <div className="bg-black text-white">
 
       {/* ── Hero + Form Section ── */}
-      <section className="pt-52 pb-20 lg:pb-32">
+      <section className="pt-36 pb-16">
         <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
 
           {/* Top label */}
-          <p className="text-xs uppercase tracking-[0.22em] font-light text-white/35 mb-12" data-testid="heading-questions">
+          <p className="text-xs uppercase tracking-[0.22em] font-light text-white/35 mb-10" data-testid="heading-questions">
             {language === 'vi' ? 'Tư vấn & Liên hệ' : 'Consultation & Contact'}
           </p>
 
           {/* 2-col layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 xl:gap-32 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
 
             {/* Left — intro */}
             <div className="lg:sticky lg:top-32">
-              <h1 className="text-4xl md:text-5xl xl:text-6xl font-light leading-[1.1] tracking-tight mb-8" data-testid="text-consultation">
+              <h1 className="text-4xl md:text-5xl font-light leading-[1.15] tracking-tight mb-10" data-testid="text-consultation">
                 {t('contact.title')}
               </h1>
-              <p className="text-sm font-light text-white/50 leading-relaxed mb-12 max-w-sm">
-                {t('contact.subtitle')}
-              </p>
 
               {/* Contact info */}
-              <div className="space-y-8 border-t border-white/10 pt-10">
+              <div className="space-y-6 border-t border-white/10 pt-8">
                 <div>
                   <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-3">
                     {language === 'vi' ? 'Liên hệ trực tiếp' : 'Direct Contact'}
                   </p>
-                  <div className="space-y-2">
+                  <div className="space-y-1.5">
                     <a href="tel:0767554480" className="block text-sm font-light text-white/70 hover:text-white transition-colors">0767 5544 80</a>
                     <a href="mailto:contact@ievra.com" className="block text-sm font-light text-white/70 hover:text-white transition-colors">contact@ievra.com</a>
                   </div>
@@ -244,11 +241,11 @@ export default function Contact() {
                   <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-3">
                     {language === 'vi' ? 'Văn phòng' : 'Office'}
                   </p>
-                  <div className="space-y-2">
-                    <p className="text-sm font-light text-white/60 leading-relaxed">
+                  <div className="space-y-1.5">
+                    <p className="text-sm font-light text-white/60">
                       {language === 'vi' ? '422 Đào Trí, P. Phú Thuận, Q. 7, TP.HCM' : '422 Dao Tri, Phu Thuan, Dist. 7, HCMC'}
                     </p>
-                    <p className="text-sm font-light text-white/60 leading-relaxed">
+                    <p className="text-sm font-light text-white/60">
                       {language === 'vi' ? '9 Nguyễn Khoái, P. 2, Q. 4, TP.HCM' : '9 Nguyen Khoai, Ward 2, Dist. 4, HCMC'}
                     </p>
                   </div>
