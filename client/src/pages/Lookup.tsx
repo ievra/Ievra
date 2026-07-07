@@ -276,6 +276,36 @@ export default function Lookup() {
       : item.type === "construction_payment"
       ? transactions.filter(t => t.category === "construction")
       : [];
+
+    /* ── Payment: flat KPI-card style (no SVG circle) ── */
+    if (item.type === "design_payment" || item.type === "construction_payment") {
+      return (
+        <div className="flex flex-col">
+          <p className="text-5xl font-thin text-white tabular-nums leading-none">
+            {item.progress}<span className="text-xl font-light">%</span>
+          </p>
+          <p className="text-xs uppercase tracking-[0.14em] text-white/55 mt-5">{item.label}</p>
+          <div className="mt-4 w-full h-[2px] bg-white/10 rounded-full">
+            <div className="h-full bg-white/55 rounded-full transition-all duration-700 ease-out" style={{ width: `${item.progress}%` }} />
+          </div>
+          {paymentTx.length > 0 && (
+            <div className="mt-6 space-y-3">
+              {[...paymentTx].reverse().map((tx, idx) => (
+                <div key={tx.id || idx} className="flex items-center justify-between gap-2">
+                  <span className="text-xs font-light text-white/55 truncate leading-relaxed">
+                    {tx.title || tx.description || `${isVi ? "Đợt" : "Stage"} ${idx + 1}`}
+                  </span>
+                  <span className={`text-sm font-light shrink-0 ${tx.status === "completed" ? "text-white/75" : "text-white/25"}`}>
+                    {tx.status === "completed" ? "✓" : "○"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
     return (
       <div className="flex flex-col items-center">
         {/* Circle */}
@@ -318,21 +348,6 @@ export default function Lookup() {
                 </div>
               );
             })}
-          </div>
-        )}
-        {/* Payment transaction list */}
-        {paymentTx.length > 0 && (
-          <div className="w-full mt-5 space-y-3 border-t border-white/10 pt-5">
-            {[...paymentTx].reverse().map((tx, idx) => (
-              <div key={tx.id || idx} className="flex items-center justify-between gap-2">
-                <span className="text-xs font-light text-white/55 truncate leading-relaxed">
-                  {tx.title || tx.description || `${isVi ? "Đợt" : "Stage"} ${idx + 1}`}
-                </span>
-                <span className={`text-sm font-light shrink-0 ${tx.status === "completed" ? "text-white/75" : "text-white/25"}`}>
-                  {tx.status === "completed" ? "✓" : "○"}
-                </span>
-              </div>
-            ))}
           </div>
         )}
       </div>
@@ -616,7 +631,7 @@ export default function Lookup() {
             <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-white/8">
               {/* ── Thiết kế ── */}
               <div className="py-10 lg:pr-10">
-                <p className="text-xs uppercase tracking-[0.18em] text-white/50 mb-8 pb-4 border-b border-white/10">
+                <p className="text-base font-light text-white/80 mb-8">
                   {isVi ? "Thiết kế" : "Design"}
                 </p>
                 <div className="grid grid-cols-2 gap-6 items-start">
@@ -648,7 +663,7 @@ export default function Lookup() {
               </div>
               {/* ── Thi công ── */}
               <div className="py-10 lg:pl-10">
-                <p className="text-xs uppercase tracking-[0.18em] text-white/50 mb-8 pb-4 border-b border-white/10">
+                <p className="text-base font-light text-white/80 mb-8">
                   {isVi ? "Thi công" : "Construction"}
                 </p>
                 <div className="grid grid-cols-2 gap-6 items-start">
@@ -683,7 +698,7 @@ export default function Lookup() {
             {/* ── Phase Overview ── */}
             {(designPhases.length > 0 || constructionPhases.length > 0) && (
               <div className="border border-white/10 p-8">
-                <p className="text-xs uppercase tracking-[0.18em] text-white/55 mb-8 pb-4 border-b border-white/10">
+                <p className="text-base font-light text-white/80 mb-8">
                   {isVi ? "Tổng quan giai đoạn" : "Phase Overview"}
                 </p>
                 <div className="space-y-8">
@@ -744,14 +759,14 @@ export default function Lookup() {
               if (allActivity.length === 0) return null;
               return (
                 <div className="border border-white/10">
-                  <div className="px-8 py-5 border-b border-white/10">
-                    <p className="text-xs uppercase tracking-[0.18em] text-white/55">{isVi ? "Hoạt động gần đây" : "Recent Activity"}</p>
+                  <div className="px-8 py-6 border-b border-white/10">
+                    <p className="text-base font-light text-white/80">{isVi ? "Hoạt động gần đây" : "Recent Activity"}</p>
                   </div>
                   <div className="divide-y divide-white/8">
                     {allActivity.map((item, idx) => (
                       <div key={item.id || idx} className="flex items-center gap-5 px-8 py-5">
                         <span className="text-xs font-light text-white/50 w-24 shrink-0 tabular-nums">{formatDate(item.date)}</span>
-                        <span className={`text-[10px] uppercase tracking-[0.12em] font-light px-2.5 py-1 border shrink-0 ${item._type === "design" ? "border-white/30 text-white/60" : "border-white/15 text-white/40"}`}>
+                        <span className={`text-[10px] uppercase tracking-[0.12em] font-light shrink-0 ${item._type === "design" ? "text-white/60" : "text-white/35"}`}>
                           {item._type === "design" ? (isVi ? "Thiết kế" : "Design") : (isVi ? "Thi công" : "Const.")}
                         </span>
                         <span className="text-sm font-light text-white/80 truncate flex-1">{item.title}</span>
@@ -836,7 +851,7 @@ export default function Lookup() {
             </div>
 
             <div className="border border-white/10 p-6 bg-white/[0.02]">
-              <h3 className="text-[11px] font-light tracking-[0.18em] text-white/40 mb-5 pb-2 border-b border-white/10">
+              <h3 className="text-base font-light text-white/80 mb-6">
                 {isVi ? "Yêu cầu hỗ trợ" : "Support Request"}
               </h3>
               <form onSubmit={handleSupportSubmit}>
