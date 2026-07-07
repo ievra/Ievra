@@ -348,7 +348,7 @@ export default function Lookup() {
             <span className="text-sm font-light text-white/50 mt-0.5">%</span>
           </div>
         </div>
-        <p className="text-sm font-light text-white/65 mt-4 tracking-widest text-center uppercase">{item.label}</p>
+        <p className="text-[10px] font-light text-white/45 mt-4 tracking-[0.14em] text-center uppercase">{item.label}</p>
         {/* Phase breakdown bars */}
         {phases.length > 0 && (
           <div className="w-full mt-6 space-y-4">
@@ -359,8 +359,8 @@ export default function Lookup() {
               return (
                 <div key={phase.id}>
                   <div className="flex items-baseline justify-between mb-2">
-                    <span className="text-xs font-light text-white/60 truncate max-w-[68%]">{isVi ? phase.labelVi : phase.labelEn}</span>
-                    <span className="text-xs font-light text-white/60 tabular-nums">{p}%</span>
+                    <span className="text-xs font-light text-white/45 truncate max-w-[68%]">{isVi ? phase.labelVi : phase.labelEn}</span>
+                    <span className="text-xs font-light text-white/45 tabular-nums">{p}%</span>
                   </div>
                   <div className="w-full h-[2px] bg-white/10 rounded-full">
                     <div className="h-full bg-white/60 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
@@ -420,16 +420,16 @@ export default function Lookup() {
       <div className="space-y-0 overflow-x-auto">
         <div className="min-w-[700px]">
           <div className="grid grid-cols-[40px_120px_1fr_100px_160px_50px] gap-2 px-4 py-2 border-b border-white/10">
-            <span className="text-sm text-white/30">{isVi ? "STT" : "No"}</span>
-            <span className="text-sm text-white/30">{isVi ? "Ngày" : "Date"}</span>
-            <span className="text-sm text-white/30">{isVi ? "Tiêu đề" : "Title"}</span>
-            <span className="text-sm text-white/30">{isVi ? "Phụ trách" : "Assigned"}</span>
-            <span className="text-sm text-white/30">{isVi ? "Hình ảnh" : "Images"}</span>
-            <span className="text-sm text-white/30"></span>
+            <span className="text-[10px] font-light text-white/30 uppercase tracking-[0.12em]">{isVi ? "STT" : "No"}</span>
+            <span className="text-[10px] font-light text-white/30 uppercase tracking-[0.12em]">{isVi ? "Ngày" : "Date"}</span>
+            <span className="text-[10px] font-light text-white/30 uppercase tracking-[0.12em]">{isVi ? "Tiêu đề" : "Title"}</span>
+            <span className="text-[10px] font-light text-white/30 uppercase tracking-[0.12em]">{isVi ? "Phụ trách" : "Assigned"}</span>
+            <span className="text-[10px] font-light text-white/30 uppercase tracking-[0.12em]">{isVi ? "Hình ảnh" : "Images"}</span>
+            <span></span>
           </div>
           {visible.length === 0 && (
             <div className="text-center py-10">
-              <p className="text-white/30 font-light text-sm">{isVi ? "Không tìm thấy kết quả" : "No results found"}</p>
+              <p className="text-xs font-light text-white/30">{isVi ? "Không tìm thấy kết quả" : "No results found"}</p>
             </div>
           )}
           {grouped.map((group, gi) => (
@@ -438,16 +438,16 @@ export default function Lookup() {
                 <>
                   {gi > 0 && <div className="border-t border-white/15" />}
                   <div className="py-3 px-2">
-                    <span className="text-sm font-light text-white/55">{group.phaseLabel}</span>
+                    <span className="text-[10px] font-light text-white/40 uppercase tracking-[0.14em]">{group.phaseLabel}</span>
                   </div>
                 </>
               )}
               {group.rows.map((row) => (
                 <div key={row.interaction.id} className="grid grid-cols-[40px_120px_1fr_100px_160px_50px] gap-2 px-4 py-2 border-b border-white/10 items-center">
-                  <span className="text-white/40 text-sm tabular-nums">{row.num}</span>
-                  <span className="text-white/70 text-sm">{formatDate(row.interaction.date)}</span>
-                  <span className="text-white text-sm">{row.interaction.title}</span>
-                  <span className="text-white/60 text-sm">{row.interaction.assignedTo || "—"}</span>
+                  <span className="text-xs font-light text-white/35 tabular-nums">{row.num}</span>
+                  <span className="text-xs font-light text-white/50">{formatDate(row.interaction.date)}</span>
+                  <span className="text-sm font-light text-white/80">{row.interaction.title}</span>
+                  <span className="text-xs font-light text-white/45">{row.interaction.assignedTo || "—"}</span>
                   <span>
                     {Array.isArray(row.interaction.attachments) && row.interaction.attachments.length > 0 ? (
                       <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(row.interaction.attachments as string[], 0)}>
@@ -565,7 +565,7 @@ export default function Lookup() {
                   {/* Header row: name + verify button */}
                   <div className="px-8 pt-8 pb-6 flex items-start justify-between gap-4">
                     <div>
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-white/35 mb-3">
+                      <p className="text-[10px] uppercase tracking-[0.14em] font-light text-white/35 mb-3">
                         {isVi ? "Khách hàng" : "Client"}
                       </p>
                       <h3 className="text-3xl font-light text-white leading-tight">
@@ -579,22 +579,22 @@ export default function Lookup() {
                       {/* Status badges row */}
                       <div className="flex flex-wrap items-center gap-2 mt-4">
                         {stageLabel && (
-                          <span className="text-[10px] uppercase tracking-[0.12em] font-light px-2.5 py-1 border border-white/15 text-white/60">
+                          <span className="text-[10px] uppercase tracking-[0.14em] font-light px-2.5 py-1 border border-white/15 text-white/55">
                             {isVi ? stageLabel.labelVi : stageLabel.labelEn}
                           </span>
                         )}
                         {tierLabel && (
-                          <span className="text-[10px] uppercase tracking-[0.12em] font-light px-2.5 py-1 border border-white/15 text-white/60">
+                          <span className="text-[10px] uppercase tracking-[0.14em] font-light px-2.5 py-1 border border-white/15 text-white/55">
                             {isVi ? tierLabel.labelVi : tierLabel.labelEn}
                           </span>
                         )}
                         {statusLabel && (
-                          <span className="text-[10px] uppercase tracking-[0.12em] font-light px-2.5 py-1 border border-white/15 text-white/60">
+                          <span className="text-[10px] uppercase tracking-[0.14em] font-light px-2.5 py-1 border border-white/15 text-white/55">
                             {isVi ? statusLabel.labelVi : statusLabel.labelEn}
                           </span>
                         )}
                         {result.client.warrantyStatus && result.client.warrantyStatus !== "none" && (
-                          <span className={`text-[10px] uppercase tracking-[0.12em] font-light px-2.5 py-1 border ${result.client.warrantyStatus === "active" ? "border-white/25 text-white/75" : "border-white/10 text-white/30"}`}>
+                          <span className={`text-[10px] uppercase tracking-[0.14em] font-light px-2.5 py-1 border ${result.client.warrantyStatus === "active" ? "border-white/25 text-white/75" : "border-white/10 text-white/30"}`}>
                             {isVi ? warrantyLabel.vi : warrantyLabel.en}
                           </span>
                         )}
@@ -626,7 +626,7 @@ export default function Lookup() {
                       { label: isVi ? "Địa chỉ" : "Address", value: result.client.address, hidden: result.client.address ? "*".repeat(Math.min(16, result.client.address.length)) : null },
                     ].map(({ label, value, hidden }, i) => value ? (
                       <div key={i} className="bg-black px-6 py-5">
-                        <p className="text-[10px] uppercase tracking-[0.15em] text-white/30 mb-2">{label}</p>
+                        <p className="text-[10px] uppercase tracking-[0.14em] font-light text-white/30 mb-2">{label}</p>
                         <p className="text-sm font-light text-white/75 truncate">{infoRevealed ? value : hidden}</p>
                       </div>
                     ) : null)}
@@ -637,13 +637,13 @@ export default function Lookup() {
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/8 border-t border-white/8">
                       {result.client.intakeDate && (
                         <div className="bg-black px-6 py-5">
-                          <p className="text-[10px] uppercase tracking-[0.15em] text-white/30 mb-2">{isVi ? "Ngày tiếp nhận" : "Intake Date"}</p>
+                          <p className="text-[10px] uppercase tracking-[0.14em] font-light text-white/30 mb-2">{isVi ? "Ngày tiếp nhận" : "Intake Date"}</p>
                           <p className="text-sm font-light text-white/75">{formatDate(result.client.intakeDate)}</p>
                         </div>
                       )}
                       {result.client.warrantyExpiry && (
                         <div className="bg-black px-6 py-5">
-                          <p className="text-[10px] uppercase tracking-[0.15em] text-white/30 mb-2">{isVi ? "Hết hạn bảo hành" : "Warranty Expiry"}</p>
+                          <p className="text-[10px] uppercase tracking-[0.14em] font-light text-white/30 mb-2">{isVi ? "Hết hạn bảo hành" : "Warranty Expiry"}</p>
                           <p className={`text-sm font-light ${result.client.warrantyStatus === "expired" ? "text-white/35" : "text-white/75"}`}>{formatDate(result.client.warrantyExpiry)}</p>
                         </div>
                       )}
@@ -684,7 +684,7 @@ export default function Lookup() {
                       <p className="text-5xl lg:text-6xl font-thin text-white tabular-nums leading-none">
                         {pct}<span className="text-2xl font-light">%</span>
                       </p>
-                      <p className="text-xs uppercase tracking-[0.14em] text-white/55 mt-5">{label}</p>
+                      <p className="text-[10px] uppercase tracking-[0.14em] font-light text-white/45 mt-5">{label}</p>
                       <div className="mt-4 w-full h-[2px] bg-white/10 rounded-full">
                         <div className="h-full bg-white/55 rounded-full transition-all duration-1000 ease-out" style={{ width: `${pct}%` }} />
                       </div>
@@ -698,7 +698,7 @@ export default function Lookup() {
             <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-white/8">
               {/* ── Thiết kế ── */}
               <div className="py-10 lg:pr-10">
-                <p className="text-base font-light text-white/80 mb-8">
+                <p className="text-[10px] font-light text-white/45 mb-8 uppercase tracking-[0.14em]">
                   {isVi ? "Thiết kế" : "Design"}
                 </p>
                 <div className="grid grid-cols-2 gap-6 items-stretch">
@@ -730,7 +730,7 @@ export default function Lookup() {
               </div>
               {/* ── Thi công ── */}
               <div className="py-10 lg:pl-10">
-                <p className="text-base font-light text-white/80 mb-8">
+                <p className="text-[10px] font-light text-white/45 mb-8 uppercase tracking-[0.14em]">
                   {isVi ? "Thi công" : "Construction"}
                 </p>
                 <div className="grid grid-cols-2 gap-6 items-stretch">
@@ -765,13 +765,13 @@ export default function Lookup() {
             {/* ── Phase Overview ── */}
             {(designPhases.length > 0 || constructionPhases.length > 0) && (
               <div className="border border-white/10 p-8">
-                <p className="text-base font-light text-white/80 mb-8">
+                <p className="text-[10px] font-light text-white/45 mb-8 uppercase tracking-[0.14em]">
                   {isVi ? "Tổng quan giai đoạn" : "Phase Overview"}
                 </p>
                 <div className="space-y-8">
                   {designPhases.length > 0 && (
                     <div>
-                      <p className="text-xs uppercase tracking-[0.14em] text-white/45 mb-5">{isVi ? "Thiết kế" : "Design"}</p>
+                      <p className="text-[10px] uppercase tracking-[0.14em] font-light text-white/35 mb-5">{isVi ? "Thiết kế" : "Design"}</p>
                       <div className="space-y-5">
                         {designPhases.map((phase) => {
                           const pt = (result.client.designPhaseTargets || {}) as Record<string, number>;
@@ -780,11 +780,11 @@ export default function Lookup() {
                           const p = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : (result.client.designTimeline ? 0 : 100);
                           return (
                             <div key={phase.id} className="flex items-center gap-6">
-                              <span className="text-sm font-light text-white/75 w-52 shrink-0 truncate">{isVi ? phase.labelVi : phase.labelEn}</span>
+                              <span className="text-xs font-light text-white/65 w-52 shrink-0 truncate">{isVi ? phase.labelVi : phase.labelEn}</span>
                               <div className="flex-1 h-[2px] bg-white/10 rounded-full">
                                 <div className="h-full bg-white/65 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
                               </div>
-                              <span className="text-sm font-light text-white/65 w-12 text-right tabular-nums shrink-0">{p}%</span>
+                              <span className="text-xs font-light text-white/45 w-12 text-right tabular-nums shrink-0">{p}%</span>
                             </div>
                           );
                         })}
@@ -793,7 +793,7 @@ export default function Lookup() {
                   )}
                   {constructionPhases.length > 0 && (
                     <div className={designPhases.length > 0 ? "pt-6 border-t border-white/10" : ""}>
-                      <p className="text-xs uppercase tracking-[0.14em] text-white/45 mb-5">{isVi ? "Thi công" : "Construction"}</p>
+                      <p className="text-[10px] uppercase tracking-[0.14em] font-light text-white/35 mb-5">{isVi ? "Thi công" : "Construction"}</p>
                       <div className="space-y-5">
                         {constructionPhases.map((phase) => {
                           const pt = (result.client.constructionPhaseTargets || {}) as Record<string, number>;
@@ -802,11 +802,11 @@ export default function Lookup() {
                           const p = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : (result.client.constructionTimeline ? 0 : 100);
                           return (
                             <div key={phase.id} className="flex items-center gap-6">
-                              <span className="text-sm font-light text-white/75 w-52 shrink-0 truncate">{isVi ? phase.labelVi : phase.labelEn}</span>
+                              <span className="text-xs font-light text-white/65 w-52 shrink-0 truncate">{isVi ? phase.labelVi : phase.labelEn}</span>
                               <div className="flex-1 h-[2px] bg-white/10 rounded-full">
                                 <div className="h-full bg-white/65 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
                               </div>
-                              <span className="text-sm font-light text-white/65 w-12 text-right tabular-nums shrink-0">{p}%</span>
+                              <span className="text-xs font-light text-white/45 w-12 text-right tabular-nums shrink-0">{p}%</span>
                             </div>
                           );
                         })}
@@ -827,17 +827,17 @@ export default function Lookup() {
               return (
                 <div className="border border-white/10">
                   <div className="px-8 py-6 border-b border-white/10">
-                    <p className="text-base font-light text-white/80">{isVi ? "Hoạt động gần đây" : "Recent Activity"}</p>
+                    <p className="text-[10px] font-light text-white/45 uppercase tracking-[0.14em]">{isVi ? "Hoạt động gần đây" : "Recent Activity"}</p>
                   </div>
                   <div className="divide-y divide-white/8">
                     {allActivity.map((item, idx) => (
                       <div key={item.id || idx} className="flex items-center gap-5 px-8 py-5">
-                        <span className="text-xs font-light text-white/50 w-24 shrink-0 tabular-nums">{formatDate(item.date)}</span>
-                        <span className={`text-[10px] uppercase tracking-[0.12em] font-light shrink-0 ${item._type === "design" ? "text-white/60" : "text-white/35"}`}>
+                        <span className="text-xs font-light text-white/45 w-24 shrink-0 tabular-nums">{formatDate(item.date)}</span>
+                        <span className={`text-[10px] uppercase tracking-[0.14em] font-light shrink-0 ${item._type === "design" ? "text-white/50" : "text-white/30"}`}>
                           {item._type === "design" ? (isVi ? "Thiết kế" : "Design") : (isVi ? "Thi công" : "Const.")}
                         </span>
-                        <span className="text-sm font-light text-white/80 truncate flex-1">{item.title}</span>
-                        {item.assignedTo && <span className="text-xs font-light text-white/50 shrink-0 hidden sm:block">{item.assignedTo}</span>}
+                        <span className="text-sm font-light text-white/75 truncate flex-1">{item.title}</span>
+                        {item.assignedTo && <span className="text-xs font-light text-white/40 shrink-0 hidden sm:block">{item.assignedTo}</span>}
                         <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(item)} className="h-7 w-7 text-white/40 hover:text-white shrink-0">
                           <Eye className="w-3.5 h-3.5" />
                         </Button>
@@ -929,21 +929,21 @@ export default function Lookup() {
                     ) : (
                       <div className="min-w-[700px]">
                         <div className="grid grid-cols-[40px_100px_1fr_1fr_100px_120px_50px] gap-2 px-4 py-2 border-b border-white/10">
-                          <span className="text-sm text-white/30">{isVi ? "STT" : "No"}</span>
-                          <span className="text-sm text-white/30">{isVi ? "Ngày" : "Date"}</span>
-                          <span className="text-sm text-white/30">{isVi ? "Tiêu đề" : "Title"}</span>
-                          <span className="text-sm text-white/30">{isVi ? "Mô tả" : "Description"}</span>
-                          <span className="text-sm text-white/30">{isVi ? "Phụ trách" : "Assigned"}</span>
-                          <span className="text-sm text-white/30">{isVi ? "Hình ảnh" : "Images"}</span>
-                          <span className="text-sm text-white/30"></span>
+                          <span className="text-[10px] font-light text-white/30 uppercase tracking-[0.12em]">{isVi ? "STT" : "No"}</span>
+                          <span className="text-[10px] font-light text-white/30 uppercase tracking-[0.12em]">{isVi ? "Ngày" : "Date"}</span>
+                          <span className="text-[10px] font-light text-white/30 uppercase tracking-[0.12em]">{isVi ? "Tiêu đề" : "Title"}</span>
+                          <span className="text-[10px] font-light text-white/30 uppercase tracking-[0.12em]">{isVi ? "Mô tả" : "Description"}</span>
+                          <span className="text-[10px] font-light text-white/30 uppercase tracking-[0.12em]">{isVi ? "Phụ trách" : "Assigned"}</span>
+                          <span className="text-[10px] font-light text-white/30 uppercase tracking-[0.12em]">{isVi ? "Hình ảnh" : "Images"}</span>
+                          <span></span>
                         </div>
                         {result.warrantyLogs.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).map((log, index) => (
                           <div key={log.id} className="grid grid-cols-[40px_100px_1fr_1fr_100px_120px_50px] gap-2 px-4 py-2 border-b border-white/10 items-center">
-                            <span className="text-white/40 text-sm">{index + 1}</span>
-                            <span className="text-white/70 text-sm">{formatDate(log.date)}</span>
-                            <span className="text-white text-sm">{log.title}</span>
-                            <span className="text-white/50 text-sm">{log.description ? (log.description.length > 50 ? log.description.substring(0, 50) + "..." : log.description) : "—"}</span>
-                            <span className="text-white/60 text-sm">{log.assignedTo || "—"}</span>
+                            <span className="text-xs font-light text-white/35">{index + 1}</span>
+                            <span className="text-xs font-light text-white/50">{formatDate(log.date)}</span>
+                            <span className="text-sm font-light text-white/80">{log.title}</span>
+                            <span className="text-xs font-light text-white/45">{log.description ? (log.description.length > 50 ? log.description.substring(0, 50) + "..." : log.description) : "—"}</span>
+                            <span className="text-xs font-light text-white/45">{log.assignedTo || "—"}</span>
                             <span>
                               {Array.isArray(log.attachments) && log.attachments.length > 0 ? (
                                 <div className="flex gap-1 cursor-pointer" onClick={() => openLightbox(log.attachments as string[], 0)}>
@@ -972,8 +972,8 @@ export default function Lookup() {
             <div className="border border-white/10 bg-black">
               <div className="px-8 py-6 border-b border-white/10 flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-base font-light text-white/80">{isVi ? "Yêu cầu hỗ trợ" : "Support Request"}</p>
-                  <p className="text-xs font-light text-white/35 mt-1">
+                  <p className="text-[10px] font-light text-white/45 uppercase tracking-[0.14em]">{isVi ? "Yêu cầu hỗ trợ" : "Support Request"}</p>
+                  <p className="text-xs font-light text-white/35 mt-2">
                     {isVi ? "Gửi câu hỏi hoặc yêu cầu hỗ trợ tới đội ngũ IEVRA" : "Send a question or request to the IEVRA team"}
                   </p>
                 </div>
