@@ -607,38 +607,6 @@ export default function Lookup() {
                               return nameParts.map((p, i) => i === 0 ? p : "*".repeat(p.length)).join(" ");
                             })()}
                       </h3>
-                      {/* Stage / status as plain text */}
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3">
-                        {stageLabel && (
-                          <span className="text-sm font-light text-white/55">
-                            {isVi ? stageLabel.labelVi : stageLabel.labelEn}
-                          </span>
-                        )}
-                        {statusLabel && (
-                          <span className="text-sm font-light text-white/40">
-                            {isVi ? statusLabel.labelVi : statusLabel.labelEn}
-                          </span>
-                        )}
-                        {tierLabel && (
-                          <span className="text-sm font-light text-white/35">
-                            {isVi ? tierLabel.labelVi : tierLabel.labelEn}
-                          </span>
-                        )}
-                      </div>
-                      {/* Warranty date */}
-                      {result.client.warrantyExpiry && (
-                        <div className="flex items-baseline gap-2 mt-2">
-                          <span className="text-xs font-light text-white/30 uppercase tracking-[0.12em]">
-                            {isVi ? "Bảo hành đến" : "Warranty until"}
-                          </span>
-                          <span className={`text-sm font-light ${result.client.warrantyStatus === "expired" ? "text-white/30 line-through" : "text-white/65"}`}>
-                            {formatDate(result.client.warrantyExpiry)}
-                          </span>
-                          {result.client.warrantyStatus === "expired" && (
-                            <span className="text-xs font-light text-white/30">{isVi ? "(hết hạn)" : "(expired)"}</span>
-                          )}
-                        </div>
-                      )}
                     </div>
                     <button
                       type="button"
@@ -672,19 +640,39 @@ export default function Lookup() {
                     ) : null)}
                   </div>
 
-                  {/* Extra info row: intake date + warranty expiry */}
-                  {(result.client.intakeDate || result.client.warrantyExpiry) && (
+                  {/* Meta info row: stage / status / warranty */}
+                  {(stageLabel || result.client.warrantyExpiry || result.client.intakeDate) && (
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/8 border-t border-white/8">
-                      {result.client.intakeDate && (
-                        <div className="bg-black px-6 py-5">
-                          <p className="text-xs uppercase tracking-[0.14em] font-light text-white/30 mb-2">{isVi ? "Ngày tiếp nhận" : "Intake Date"}</p>
-                          <p className="text-sm font-light text-white/75">{formatDate(result.client.intakeDate)}</p>
+                      {stageLabel && (
+                        <div className="bg-black px-4 py-4 sm:px-6 sm:py-5">
+                          <p className="text-xs uppercase tracking-[0.14em] font-light text-white/30 mb-2">{isVi ? "Giai đoạn" : "Stage"}</p>
+                          <p className="text-sm font-light text-white/80">{isVi ? stageLabel.labelVi : stageLabel.labelEn}</p>
                         </div>
                       )}
                       {result.client.warrantyExpiry && (
-                        <div className="bg-black px-6 py-5">
-                          <p className="text-xs uppercase tracking-[0.14em] font-light text-white/30 mb-2">{isVi ? "Hết hạn bảo hành" : "Warranty Expiry"}</p>
-                          <p className={`text-sm font-light ${result.client.warrantyStatus === "expired" ? "text-white/35" : "text-white/75"}`}>{formatDate(result.client.warrantyExpiry)}</p>
+                        <div className="bg-black px-4 py-4 sm:px-6 sm:py-5">
+                          <p className="text-xs uppercase tracking-[0.14em] font-light text-white/30 mb-2">{isVi ? "Ngày bảo hành" : "Warranty Expiry"}</p>
+                          <p className={`text-sm font-light ${result.client.warrantyStatus === "expired" ? "text-white/35 line-through" : "text-white/80"}`}>
+                            {formatDate(result.client.warrantyExpiry)}
+                          </p>
+                        </div>
+                      )}
+                      {result.client.warrantyExpiry && (
+                        <div className="bg-black px-4 py-4 sm:px-6 sm:py-5">
+                          <p className="text-xs uppercase tracking-[0.14em] font-light text-white/30 mb-2">{isVi ? "Trạng thái bảo hành" : "Warranty Status"}</p>
+                          <p className={`text-sm font-light ${result.client.warrantyStatus === "expired" ? "text-white/40" : result.client.warrantyStatus === "active" ? "text-white/80" : "text-white/45"}`}>
+                            {result.client.warrantyStatus === "expired"
+                              ? (isVi ? "Hết hạn" : "Expired")
+                              : result.client.warrantyStatus === "active"
+                              ? (isVi ? "Còn hạn" : "Active")
+                              : (isVi ? "Chưa thiết lập" : "None")}
+                          </p>
+                        </div>
+                      )}
+                      {result.client.intakeDate && (
+                        <div className="bg-black px-4 py-4 sm:px-6 sm:py-5">
+                          <p className="text-xs uppercase tracking-[0.14em] font-light text-white/30 mb-2">{isVi ? "Ngày tiếp nhận" : "Intake Date"}</p>
+                          <p className="text-sm font-light text-white/75">{formatDate(result.client.intakeDate)}</p>
                         </div>
                       )}
                     </div>
