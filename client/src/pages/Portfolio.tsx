@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import ProjectCard from "@/components/ProjectCard";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search, X, SlidersHorizontal } from 'lucide-react';
 import type { Project, Category } from "@shared/schema";
 
 function cardHash(str: string, seed = 0): number {
@@ -109,6 +109,8 @@ export default function Portfolio() {
   const projectsPerPage = 12;
   const [searchPlaceholder, setSearchPlaceholder] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
   // Animation - reset when back to top, slower timing
   useEffect(() => {
@@ -187,10 +189,10 @@ export default function Portfolio() {
     },
   });
 
-  // Reset to page 1 when search, year or type changes
+  // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, selectedYear, selectedType]);
+  }, [searchTerm, selectedYear, selectedType, selectedCategory]);
 
   // Get unique years from projects
   const availableYears = Array.from(
@@ -201,10 +203,9 @@ export default function Portfolio() {
     )
   ).sort((a, b) => b.localeCompare(a)); // Sort descending (newest first)
 
-  // Filter projects by search term, year and project type
+  // Filter projects by search term, year, project type and category
   const filteredProjects = allProjects.filter(project => {
-    // Filter by project type (classification). Interior is the default and
-    // also matches unclassified projects, mirroring the backend logic.
+    // Filter by project type
     if (selectedType !== 'all') {
       const pt = (project as any).projectType;
       if (selectedType === 'interior') {
@@ -218,29 +219,21 @@ export default function Portfolio() {
     if (selectedYear !== 'all' && project.completionYear !== selectedYear) {
       return false;
     }
-    
+
+    // Filter by category
+    if (selectedCategory !== 'all' && project.category !== selectedCategory) {
+      return false;
+    }
+
     // Filter by search term
     if (!searchTerm) return true;
     const searchLower = searchTerm.toLowerCase();
-    
-    const matchesCategory = categories.some(cat => {
-      if (cat.value === 'all') return false;
-      if (project.category !== cat.value) return false;
-      return (
-        cat.label.toLowerCase().includes(searchLower) ||
-        cat.labelVi.toLowerCase().includes(searchLower) ||
-        cat.value.toLowerCase().includes(searchLower)
-      );
-    });
-
     const matchesYear = project.completionYear?.includes(searchLower);
-    
     return (
       project.title.toLowerCase().includes(searchLower) ||
       project.location?.toLowerCase().includes(searchLower) ||
       project.description?.toLowerCase().includes(searchLower) ||
       project.category?.toLowerCase().includes(searchLower) ||
-      matchesCategory ||
       matchesYear
     );
   });
@@ -416,53 +409,65 @@ export default function Portfolio() {
               {language === 'vi' ? 'DỰ ÁN' : 'PROJECTS'}
             </h1>
           </div>
-          {/* Search + Year filter */}
-          <div className="flex items-center gap-5 pb-1 flex-shrink-0">
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => { setSearchOpen(o => !o); if (searchOpen) setSearchTerm(''); }}
-                className="text-white/50 hover:text-white transition-colors duration-200"
-                aria-label="Search"
-                data-testid="button-search-toggle"
-              >
-                {searchOpen ? <X className="w-4 h-4" /> : <Search className="w-4 h-4" />}
-              </button>
-              <div
-                className="overflow-hidden transition-all duration-300 ease-in-out"
-                style={{ width: searchOpen ? '22rem' : '0', opacity: searchOpen ? 1 : 0 }}
-              >
-                <Input
-                  type="text"
-                  placeholder={searchPlaceholder}
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  autoFocus={searchOpen}
-                  className="bg-transparent text-white placeholder-white/30 px-0 py-0 text-sm font-light rounded-none focus-visible:ring-0 border-0 w-full"
-                  data-testid="input-search"
-                />
-              </div>
-            </div>
-            {availableYears.length > 0 && (
-              <Select value={selectedYear} onValueChange={setSelectedYear}>
-                <SelectTrigger
-                  className="w-[110px] bg-transparent border-0 text-white/40 text-sm font-light p-0 h-auto focus:ring-0 focus:ring-offset-0 [&>svg]:text-white/40"
-                  data-testid="select-year"
+          {/* Search + Filter */}
+          {(() => {
+            const activeCount = [
+              selectedYear !== 'all',
+              selectedCategory !== 'all',
+              selectedType !== 'all',
+            ].filter(Boolean).length;
+            return (
+              <div className="flex items-center gap-4 pb-1 flex-shrink-0">
+                {/* Search toggle */}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => { setSearchOpen(o => !o); if (searchOpen) setSearchTerm(''); }}
+                    className="text-white/50 hover:text-white transition-colors duration-200"
+                    aria-label="Search"
+                    data-testid="button-search-toggle"
+                  >
+                    {searchOpen ? <X className="w-4 h-4" /> : <Search className="w-4 h-4" />}
+                  </button>
+                  <div
+                    className="overflow-hidden transition-all duration-300 ease-in-out"
+                    style={{ width: searchOpen ? '22rem' : '0', opacity: searchOpen ? 1 : 0 }}
+                  >
+                    <Input
+                      type="text"
+                      placeholder={searchPlaceholder}
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      autoFocus={searchOpen}
+                      className="bg-transparent text-white placeholder-white/30 px-0 py-0 text-sm font-light rounded-none focus-visible:ring-0 border-0 w-full"
+                      data-testid="input-search"
+                    />
+                  </div>
+                </div>
+                {/* Filter toggle */}
+                <button
+                  onClick={() => setFilterOpen(o => !o)}
+                  className="relative flex items-center gap-1.5 text-white/50 hover:text-white transition-colors duration-200"
+                  aria-label="Filter"
+                  data-testid="button-filter-toggle"
                 >
-                  <SelectValue placeholder={language === 'vi' ? 'Năm' : 'Year'} />
-                </SelectTrigger>
-                <SelectContent className="bg-black border-white/30 text-white rounded-none">
-                  <SelectItem value="all" className="focus:bg-white/10 focus:text-white">
-                    {language === 'vi' ? 'Tất cả các năm' : 'All years'}
-                  </SelectItem>
-                  {availableYears.map((year) => (
-                    <SelectItem key={year} value={year} className="focus:bg-white/10 focus:text-white">
-                      {year}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
-          </div>
+                  <SlidersHorizontal className="w-4 h-4" />
+                  {activeCount > 0 && (
+                    <span className="text-[10px] font-light text-amber-400">{activeCount}</span>
+                  )}
+                </button>
+                {/* Clear all */}
+                {activeCount > 0 && (
+                  <button
+                    onClick={() => { setSelectedYear('all'); setSelectedCategory('all'); setSelectedType('all'); }}
+                    className="text-[10px] uppercase tracking-widest text-white/30 hover:text-white/60 transition-colors duration-200"
+                    data-testid="button-filter-clear"
+                  >
+                    {language === 'vi' ? 'Xoá' : 'Clear'}
+                  </button>
+                )}
+              </div>
+            );
+          })()}
         </div>
         {/* Description below divider */}
         <p className="text-sm text-white/40 font-light leading-relaxed mt-5 max-w-lg">
@@ -470,26 +475,95 @@ export default function Portfolio() {
             ? 'Khám phá bộ sưu tập toàn diện các dự án thiết kế nội thất của chúng tôi qua nhiều danh mục khác nhau'
             : 'Explore our comprehensive collection of interior design projects across various categories'}
         </p>
+
+        {/* Expandable filter panel */}
+        <div
+          className="overflow-hidden transition-all duration-500 ease-in-out"
+          style={{ maxHeight: filterOpen ? '400px' : '0', opacity: filterOpen ? 1 : 0 }}
+        >
+          <div className="pt-6 pb-2 space-y-5">
+            {/* Project type */}
+            {projectTypes.length > 1 && (
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="text-[10px] uppercase tracking-widest text-white/30 w-20 flex-shrink-0">
+                  {language === 'vi' ? 'Loại' : 'Type'}
+                </span>
+                {projectTypes.map((pt) => (
+                  <button
+                    key={pt.value}
+                    onClick={() => setSelectedType(pt.value)}
+                    className={`text-[11px] uppercase tracking-widest font-light px-3 py-1 border transition-colors duration-200 ${
+                      selectedType === pt.value
+                        ? 'border-white text-white'
+                        : 'border-white/20 text-white/40 hover:border-white/50 hover:text-white/70'
+                    }`}
+                    data-testid={`button-type-${pt.value}`}
+                  >
+                    {language === 'vi' ? pt.labelVi : pt.label}
+                  </button>
+                ))}
+              </div>
+            )}
+            {/* Category */}
+            {categories.length > 1 && (
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="text-[10px] uppercase tracking-widest text-white/30 w-20 flex-shrink-0">
+                  {language === 'vi' ? 'Danh mục' : 'Category'}
+                </span>
+                {categories.map((cat) => (
+                  <button
+                    key={cat.value}
+                    onClick={() => setSelectedCategory(cat.value)}
+                    className={`text-[11px] uppercase tracking-widest font-light px-3 py-1 border transition-colors duration-200 ${
+                      selectedCategory === cat.value
+                        ? 'border-white text-white'
+                        : 'border-white/20 text-white/40 hover:border-white/50 hover:text-white/70'
+                    }`}
+                    data-testid={`button-cat-${cat.value}`}
+                  >
+                    {language === 'vi' ? cat.labelVi : cat.label}
+                  </button>
+                ))}
+              </div>
+            )}
+            {/* Year */}
+            {availableYears.length > 0 && (
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="text-[10px] uppercase tracking-widest text-white/30 w-20 flex-shrink-0">
+                  {language === 'vi' ? 'Năm' : 'Year'}
+                </span>
+                <button
+                  onClick={() => setSelectedYear('all')}
+                  className={`text-[11px] uppercase tracking-widest font-light px-3 py-1 border transition-colors duration-200 ${
+                    selectedYear === 'all'
+                      ? 'border-white text-white'
+                      : 'border-white/20 text-white/40 hover:border-white/50 hover:text-white/70'
+                  }`}
+                >
+                  {language === 'vi' ? 'Tất cả' : 'All'}
+                </button>
+                {availableYears.map((year) => (
+                  <button
+                    key={year}
+                    onClick={() => setSelectedYear(year)}
+                    className={`text-[11px] uppercase tracking-widest font-light px-3 py-1 border transition-colors duration-200 ${
+                      selectedYear === year
+                        ? 'border-white text-white'
+                        : 'border-white/20 text-white/40 hover:border-white/50 hover:text-white/70'
+                    }`}
+                    data-testid={`button-year-${year}`}
+                  >
+                    {year}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       <div className="max-w-[1600px] mx-auto px-2 sm:px-3 lg:px-4">
-        {/* Classification filter (always visible) */}
-        {projectTypes.length > 1 && (
-          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 mb-12">
-            {projectTypes.map((pt) => (
-              <button
-                key={pt.value}
-                onClick={() => setSelectedType(pt.value)}
-                className={`text-sm font-light tracking-widest uppercase transition-colors ${
-                  selectedType === pt.value ? 'text-white' : 'text-white/50 hover:text-white'
-                }`}
-                data-testid={`button-type-${pt.value}`}
-              >
-                {language === 'vi' ? pt.labelVi : pt.label}
-              </button>
-            ))}
-          </div>
-        )}
+        {/* Projects Grid */}
 
         {/* Projects Grid */}
         {isLoading ? (
