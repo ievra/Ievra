@@ -634,7 +634,7 @@ export default function Lookup() {
                     ].map(({ label, value, hidden }, i) => value ? (
                       <div key={i}>
                         <p className="text-xs uppercase tracking-[0.14em] font-light text-white/30 mb-2">{label}</p>
-                        <p className="text-sm font-light text-white/75 truncate">{infoRevealed ? value : hidden}</p>
+                        <p className="text-sm font-light text-white/75 leading-relaxed">{infoRevealed ? value : hidden}</p>
                       </div>
                     ) : null)}
                   </div>
