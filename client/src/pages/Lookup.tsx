@@ -960,9 +960,9 @@ export default function Lookup() {
               {(activeTab === "design" || activeTab === "construction") && (() => {
                 const currentPhases = activeTab === "design" ? designPhases : constructionPhases;
                 return (
-                  <div className="py-7 sm:py-8 space-y-5">
+                  <div className="py-7 sm:py-8 flex items-center gap-6">
                     {/* Search input */}
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 flex-1">
                       <Search className="w-3.5 h-3.5 text-white/30 shrink-0" />
                       <input
                         type="text"
