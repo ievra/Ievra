@@ -441,37 +441,41 @@ export default function Lookup() {
               {isVi ? 'TRA CỨU' : 'LOOKUP'}
             </h1>
           </div>
+          {/* Search form — top right */}
+          <form onSubmit={handleSearch} className="flex-shrink-0 pb-1">
+            <div className="flex items-end gap-3 border-b border-white/20 pb-2">
+              <div
+                className="overflow-hidden transition-all duration-300 ease-in-out"
+                style={{ width: '18rem' }}
+              >
+                <Input
+                  ref={inputRef}
+                  type="tel"
+                  placeholder={typedPlaceholder}
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="bg-transparent text-white placeholder-white/30 px-0 py-0 text-sm font-light rounded-none focus-visible:ring-0 flex-1 border-0 w-full"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={loading || phone.trim().length < 6}
+                className="text-white/40 hover:text-white transition-colors disabled:opacity-30 pb-0.5"
+              >
+                {loading ? (
+                  <div className="w-4 h-4 border border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <ArrowRight className="w-4 h-4" />
+                )}
+              </button>
+            </div>
+          </form>
         </div>
         <p className="text-sm text-white/40 font-light leading-relaxed mt-5 max-w-lg">
           {isVi
             ? 'Nhập số điện thoại để tra cứu tiến độ dự án, nhật ký công trình và thông tin bảo hành.'
             : 'Enter your phone number to check project progress, construction log and warranty information.'}
         </p>
-
-        {/* Search form */}
-        <form onSubmit={handleSearch} className="mt-10 max-w-lg">
-          <div className="flex items-end gap-3 border-b border-white/20 pb-3">
-            <Input
-              ref={inputRef}
-              type="tel"
-              placeholder={typedPlaceholder}
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="bg-transparent text-white placeholder-white/30 px-0 py-0 text-base font-light rounded-none focus-visible:ring-0 flex-1 border-0"
-            />
-            <button
-              type="submit"
-              disabled={loading || phone.trim().length < 6}
-              className="text-white/40 hover:text-white transition-colors disabled:opacity-30 pb-0.5"
-            >
-              {loading ? (
-                <div className="w-4 h-4 border border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                <ArrowRight className="w-4 h-4" />
-              )}
-            </button>
-          </div>
-        </form>
       </div>
 
       <div className="px-4 sm:px-6 lg:px-8">
