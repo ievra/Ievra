@@ -990,7 +990,7 @@ export default function Lookup() {
                           <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${phaseDropdownOpen ? "rotate-180" : ""}`} />
                         </button>
                         {phaseDropdownOpen && (
-                          <div className="absolute left-0 top-full mt-1 z-20 bg-[#111] border border-white/15 min-w-[220px] shadow-lg">
+                          <div className="absolute left-0 top-full mt-1 z-20 bg-black border border-white/15 min-w-[220px] shadow-lg">
                             <button
                               onClick={() => { setTablePhaseFilter(""); setDesignShowAll(false); setConstructionShowAll(false); setPhaseDropdownOpen(false); }}
                               className={`w-full text-left px-4 py-2.5 text-xs uppercase tracking-[0.12em] font-light transition-colors ${!tablePhaseFilter ? "text-white bg-white/5" : "text-white/45 hover:text-white hover:bg-white/5"}`}
