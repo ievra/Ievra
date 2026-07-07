@@ -509,7 +509,7 @@ export default function Lookup() {
         {result && (
           <div className="max-w-7xl mx-auto space-y-5 animate-in fade-in duration-500">
             {/* Client info card */}
-            <div className="border border-white/10 p-8 bg-white/[0.02]">
+            <div className="border border-white/10 p-8 bg-black">
               {/* Name row */}
               <div className="flex items-start justify-between gap-4 mb-8">
                 <div>
@@ -781,7 +781,7 @@ export default function Lookup() {
               );
             })()}
 
-            <div className="border border-white/10 bg-white/[0.02]">
+            <div className="border border-white/10 bg-black">
               <div className="flex flex-wrap border-b border-white/10">
                 {([
                   { key: "design" as const, vi: "Tiến độ thiết kế", en: "Design Progress" },
@@ -850,7 +850,7 @@ export default function Lookup() {
               </div>
             </div>
 
-            <div className="border border-white/10 p-6 bg-white/[0.02]">
+            <div className="border border-white/10 p-6 bg-black">
               <h3 className="text-base font-light text-white/80 mb-6">
                 {isVi ? "Yêu cầu hỗ trợ" : "Support Request"}
               </h3>
