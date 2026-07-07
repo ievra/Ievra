@@ -209,7 +209,7 @@ export default function Contact() {
     <div className="bg-black text-white">
 
       {/* ── Hero + Form Section ── */}
-      <section className="pt-36 pb-16">
+      <section className="pt-36 pb-24">
         <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
 
           {/* Breadcrumb */}
@@ -222,16 +222,16 @@ export default function Contact() {
           </div>
 
           {/* 2-col layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
 
             {/* Left — intro */}
             <div className="lg:sticky lg:top-32">
-              <h1 className="text-4xl md:text-5xl font-light leading-[1.15] tracking-tight mb-10" data-testid="text-consultation">
+              <h1 className="text-4xl md:text-5xl font-light leading-[1.15] tracking-tight mb-12" data-testid="text-consultation">
                 {t('contact.title')}
               </h1>
 
               {/* Company info */}
-              <div className="border-t border-white/10 pt-8 space-y-6">
+              <div className="border-t border-white/10 pt-10 space-y-8">
                 <div>
                   <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-3">
                     {language === 'vi' ? 'Pháp nhân' : 'Legal Entity'}
@@ -271,7 +271,7 @@ export default function Contact() {
             {/* Right — form */}
             <div>
               <form onSubmit={handleSubmit} className="space-y-0">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10">
                   <div>
                     <Input
                       type="text"
@@ -293,7 +293,7 @@ export default function Contact() {
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10">
                   <div>
                     <Input
                       type="email"
@@ -330,7 +330,7 @@ export default function Contact() {
                     placeholder={placeholders.requirements}
                     value={formData.requirements}
                     onChange={(e) => setFormData(prev => ({ ...prev, requirements: e.target.value }))}
-                    className={`${inputCls} border border-white/10 border-x-0 border-t-0 min-h-[260px] resize-none`}
+                    className={`${inputCls} border border-white/10 border-x-0 border-t-0 min-h-[200px] resize-none`}
                     data-testid="textarea-requirements"
                   />
                 </div>
