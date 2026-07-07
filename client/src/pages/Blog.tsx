@@ -484,11 +484,10 @@ export default function Blog() {
                       )}
                     </div>
                     {/* Text below image — fixed height to prevent layout shift */}
-                    <div className="pt-3 pb-3 flex flex-col" style={{ height: '5.4rem' }}>
-                      {/* Title — fixed 2-line height */}
+                    <div className="pt-3 pb-3 flex flex-col overflow-hidden" style={{ height: '5.4rem' }}>
+                      {/* Title — clamp to 2 lines, no fixed height */}
                       <h3
                         className="text-foreground text-sm md:text-[15px] font-light uppercase tracking-wide leading-snug line-clamp-2"
-                        style={{ height: '2.8rem' }}
                         data-testid={`text-title-${article.id}`}
                       >
                         {article.title}
