@@ -3,8 +3,7 @@ import { Link, useLocation } from "wouter";
 import { usePageMeta, CANONICAL_BASE_URL } from "@/hooks/use-page-meta";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search, SlidersHorizontal, X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import OptimizedImage from "@/components/OptimizedImage";
 import type { Article, Category } from "@shared/schema";
@@ -52,6 +51,8 @@ export default function Blog() {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedYear, setSelectedYear] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [filterOpen, setFilterOpen] = useState(false);
   const articlesPerPage = 12;
   const [searchPlaceholder, setSearchPlaceholder] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
@@ -197,28 +198,27 @@ export default function Blog() {
   // Filter articles based on search, category, and year
   const filteredArticles = useMemo(() => {
     return allArticles.filter(article => {
-      // Search filter - search in title, excerpt, and content
       const searchLower = searchTerm.toLowerCase();
       const articleYear = new Date(article.publishedAt || article.createdAt).getFullYear().toString();
-      const matchesSearch = !searchTerm || 
+      const matchesSearch = !searchTerm ||
         article.title.toLowerCase().includes(searchLower) ||
         article.excerpt?.toLowerCase().includes(searchLower) ||
         article.content?.toLowerCase().includes(searchLower) ||
         (categories.find(c => c.value === article.category)?.label || article.category).toLowerCase().includes(searchLower) ||
         (categories.find(c => c.value === article.category)?.labelVi || '').toLowerCase().includes(searchLower) ||
         articleYear.includes(searchLower);
-
-      // Year filter
       const matchesYear = selectedYear === 'all' || articleYear === selectedYear;
-
-      return matchesSearch && matchesYear;
+      const matchesCategory = selectedCategory === 'all' || article.category === selectedCategory;
+      return matchesSearch && matchesYear && matchesCategory;
     });
-  }, [allArticles, searchTerm, selectedYear]);
+  }, [allArticles, searchTerm, selectedYear, selectedCategory]);
 
   // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, selectedYear]);
+  }, [searchTerm, selectedYear, selectedCategory]);
+
+  const activeCount = (selectedYear !== 'all' ? 1 : 0) + (selectedCategory !== 'all' ? 1 : 0);
 
   // Calculate pagination
   const totalPages = Math.ceil(filteredArticles.length / articlesPerPage);
@@ -398,9 +398,9 @@ export default function Blog() {
               {language === 'vi' ? 'TIN TỨC' : 'NEWS'}
             </h1>
           </div>
-          {/* Search + Year filter */}
+          {/* Search + Filter */}
           <div className="flex items-center gap-5 pb-1 flex-shrink-0">
-            {/* Search icon → expands input on click */}
+            {/* Search */}
             <div className="flex items-center gap-2">
               <button
                 onClick={() => { setSearchOpen(o => !o); if (searchOpen) setSearchTerm(''); }}
@@ -425,30 +425,26 @@ export default function Blog() {
                 />
               </div>
             </div>
-            {availableYears.length > 0 && (
-              <Select value={selectedYear} onValueChange={setSelectedYear}>
-                <SelectTrigger
-                  className="w-[110px] bg-transparent border-0 text-white/40 text-sm font-light p-0 h-auto focus:ring-0 focus:ring-offset-0 [&>svg]:text-white/40"
-                  data-testid="select-year"
+            {/* Filter icon */}
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => setFilterOpen(o => !o)}
+                className="relative flex items-center gap-1.5 text-white/50 hover:text-white transition-colors duration-200"
+                aria-label="Filter"
+                data-testid="button-filter-toggle"
+              >
+                <SlidersHorizontal className="w-4 h-4" />
+              </button>
+              {activeCount > 0 && (
+                <button
+                  onClick={() => { setSelectedYear('all'); setSelectedCategory('all'); setFilterOpen(false); }}
+                  className="text-[10px] uppercase tracking-widest text-white/30 hover:text-white/60 transition-colors duration-200"
+                  data-testid="button-filter-clear"
                 >
-                  <SelectValue placeholder={language === 'vi' ? 'Năm' : 'Year'} />
-                </SelectTrigger>
-                <SelectContent className="bg-black border-white/30 text-white rounded-none">
-                  <SelectItem value="all" className="focus:bg-white/10 focus:text-white">
-                    {language === 'vi' ? 'Tất cả các năm' : 'All years'}
-                  </SelectItem>
-                  {availableYears.map((year) => (
-                    <SelectItem
-                      key={year}
-                      value={year}
-                      className="focus:bg-white/10 focus:text-white"
-                    >
-                      {year}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            )}
+                  {language === 'vi' ? 'Xoá' : 'Clear'}
+                </button>
+              )}
+            </div>
           </div>
         </div>
         {/* Description below divider */}
@@ -457,6 +453,72 @@ export default function Blog() {
             ? 'Khám phá những xu hướng thiết kế mới nhất, mẹo hay và những dự án truyền cảm hứng từ IEVRA Design & Build'
             : 'Discover the latest design trends, helpful tips, and inspiring projects from IEVRA Design & Build'}
         </p>
+
+        {/* Expandable filter panel */}
+        <div
+          className="overflow-hidden transition-all duration-500 ease-in-out"
+          style={{ maxHeight: filterOpen ? '360px' : '0', opacity: filterOpen ? 1 : 0 }}
+        >
+          <div className="flex items-start gap-0 pt-6 pb-4 border-t border-white/10 mt-5">
+            {/* Category */}
+            {categories.length > 1 && (
+              <>
+                <div className="flex-1 pr-10">
+                  <p className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-4">
+                    {language === 'vi' ? 'Danh mục' : 'Category'}
+                  </p>
+                  <div className="flex flex-wrap gap-x-8 gap-y-3">
+                    {categories.map((cat) => (
+                      <button
+                        key={cat.value}
+                        onClick={() => setSelectedCategory(cat.value)}
+                        className={`text-sm font-light transition-colors duration-200 ${
+                          selectedCategory === cat.value ? 'text-white' : 'text-white/45 hover:text-white/80'
+                        }`}
+                        data-testid={`button-cat-${cat.value}`}
+                      >
+                        {language === 'vi' ? cat.labelVi : cat.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                {availableYears.length > 0 && (
+                  <div className="w-px self-stretch bg-white/10 flex-shrink-0" />
+                )}
+              </>
+            )}
+            {/* Year */}
+            {availableYears.length > 0 && (
+              <div className="flex-shrink-0 pl-10">
+                <p className="text-[10px] uppercase tracking-[0.15em] text-white/40 mb-4">
+                  {language === 'vi' ? 'Năm' : 'Year'}
+                </p>
+                <div className="flex flex-col gap-3">
+                  <button
+                    onClick={() => setSelectedYear('all')}
+                    className={`text-left text-sm font-light transition-colors duration-200 ${
+                      selectedYear === 'all' ? 'text-white' : 'text-white/45 hover:text-white/80'
+                    }`}
+                  >
+                    {language === 'vi' ? 'Tất cả' : 'All'}
+                  </button>
+                  {availableYears.map((year) => (
+                    <button
+                      key={year}
+                      onClick={() => setSelectedYear(year)}
+                      className={`text-left text-sm font-light transition-colors duration-200 ${
+                        selectedYear === year ? 'text-white' : 'text-white/45 hover:text-white/80'
+                      }`}
+                      data-testid={`button-year-${year}`}
+                    >
+                      {year}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Articles Grid */}
