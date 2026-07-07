@@ -487,8 +487,8 @@ export default function Blog() {
                     <div className="pt-3 pb-3 flex flex-col" style={{ height: '5.4rem' }}>
                       {/* Title — fixed 2-line height */}
                       <h3
-                        className="text-foreground text-sm md:text-[15px] font-light uppercase tracking-wide leading-snug"
-                        style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '2.8rem' }}
+                        className="text-foreground text-sm md:text-[15px] font-light uppercase tracking-wide leading-snug line-clamp-2"
+                        style={{ height: '2.8rem' }}
                         data-testid={`text-title-${article.id}`}
                       >
                         {article.title}
