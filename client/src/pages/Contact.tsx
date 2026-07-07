@@ -335,10 +335,10 @@ export default function Contact() {
                   />
                 </div>
                 <div className="pt-10 flex items-center justify-between">
-                  <p className="text-xs font-light text-white/25 max-w-[220px] leading-relaxed">
+                  <p className="text-xs font-light text-white/25 whitespace-nowrap">
                     {language === 'vi'
-                      ? 'Chúng tôi sẽ phản hồi trong vòng 24 giờ làm việc.'
-                      : 'We will respond within 24 business hours.'}
+                      ? 'Lưu ý: Chúng tôi sẽ phản hồi trong vòng 24 giờ làm việc.'
+                      : 'Note: We will respond within 24 business hours.'}
                   </p>
                   <Button
                     type="submit"
