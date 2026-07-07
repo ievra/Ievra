@@ -592,7 +592,7 @@ export default function Lookup() {
               const warrantyLabel = warrantyMap[result.client.warrantyStatus || "none"] || warrantyMap["none"];
               return (
                 <div className="py-14">
-                  <p className="text-base font-light text-white mb-6 sm:mb-8 tracking-wide">{isVi ? "Thông tin khách hàng" : "Client Information"}</p>
+                  <p className="text-lg font-light text-white mb-6 sm:mb-8 tracking-wide">{isVi ? "Thông tin khách hàng" : "Client Information"}</p>
                   {/* Header row: name + verify button */}
                   <div className="pb-5 sm:pb-6 flex items-start justify-between gap-4">
                     <div>
@@ -720,7 +720,7 @@ export default function Lookup() {
               );
               return (
                 <div className="space-y-10 py-14">
-                  <p className="text-base font-light text-white mb-6 sm:mb-8 tracking-wide">{isVi ? "Tóm tắt tiến độ" : "Progress Summary"}</p>
+                  <p className="text-lg font-light text-white mb-6 sm:mb-8 tracking-wide">{isVi ? "Tóm tắt tiến độ" : "Progress Summary"}</p>
                   {renderKpiSection(isVi ? "Thiết kế" : "Design", [
                     { label: isVi ? "Tiến độ" : "Progress", pct: dProgress },
                     { label: isVi ? "Thanh toán" : "Payment", pct: dPayPct },
@@ -735,12 +735,12 @@ export default function Lookup() {
 
             {/* Progress — 2 col (Design | Construction) */}
             <div className="py-14">
-              <p className="text-base font-light text-white mb-6 sm:mb-8 tracking-wide">{isVi ? "Tiến độ" : "Progress"}</p>
+              <p className="text-lg font-light text-white mb-6 sm:mb-8 tracking-wide">{isVi ? "Tiến độ" : "Progress"}</p>
               {/* Row 1: Circles */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
                 {/* ── Thiết kế circles ── */}
                 <div>
-                  <p className="text-base font-light text-white mb-6 sm:mb-8 tracking-wide">
+                  <p className="text-lg font-light text-white mb-6 sm:mb-8 tracking-wide">
                     {isVi ? "Thiết kế" : "Design"}
                   </p>
                   <div className="grid grid-cols-2 gap-6 items-start">
@@ -771,7 +771,7 @@ export default function Lookup() {
                 </div>
                 {/* ── Thi công circles ── */}
                 <div>
-                  <p className="text-base font-light text-white mb-6 sm:mb-8 tracking-wide">
+                  <p className="text-lg font-light text-white mb-6 sm:mb-8 tracking-wide">
                     {isVi ? "Thi công" : "Construction"}
                   </p>
                   <div className="grid grid-cols-2 gap-6 items-start">
@@ -856,7 +856,7 @@ export default function Lookup() {
             {/* ── Phase Overview ── */}
             {(designPhases.length > 0 || constructionPhases.length > 0) && (
               <div className="py-14">
-                <p className="text-base font-light text-white mb-6 sm:mb-8 tracking-wide">
+                <p className="text-lg font-light text-white mb-6 sm:mb-8 tracking-wide">
                   {isVi ? "Tổng quan giai đoạn" : "Phase Overview"}
                 </p>
                 <div className="space-y-8">
@@ -917,7 +917,7 @@ export default function Lookup() {
               if (allActivity.length === 0) return null;
               return (
                 <div className="py-14">
-                  <p className="text-base font-light text-white mb-6 sm:mb-8 tracking-wide">{isVi ? "Hoạt động gần đây" : "Recent Activity"}</p>
+                  <p className="text-lg font-light text-white mb-6 sm:mb-8 tracking-wide">{isVi ? "Hoạt động gần đây" : "Recent Activity"}</p>
                   <div className="divide-y divide-white/8">
                     {allActivity.map((item, idx) => (
                       <div key={item.id || idx} className="flex items-center gap-3 sm:gap-5 px-4 sm:px-8 py-4 sm:py-5">
@@ -938,7 +938,7 @@ export default function Lookup() {
             })()}
 
             <div className="py-14">
-              <p className="text-base font-light text-white mb-6 sm:mb-8 tracking-wide">{isVi ? "Nhật ký công trình" : "Construction Log"}</p>
+              <p className="text-lg font-light text-white mb-6 sm:mb-8 tracking-wide">{isVi ? "Nhật ký công trình" : "Construction Log"}</p>
               {/* Tab headers */}
               <div className="flex flex-wrap border-b border-white/8">
                 {([
@@ -1076,7 +1076,7 @@ export default function Lookup() {
 
             <div className="py-14">
               <div className="mb-6">
-                <p className="text-base font-light text-white mb-6 sm:mb-8 tracking-wide">{isVi ? "Yêu cầu hỗ trợ" : "Support Request"}</p>
+                <p className="text-lg font-light text-white mb-6 sm:mb-8 tracking-wide">{isVi ? "Yêu cầu hỗ trợ" : "Support Request"}</p>
                 <p className="text-xs font-light text-white/35 mt-2">
                   {isVi ? "Gửi câu hỏi hoặc yêu cầu hỗ trợ tới đội ngũ IEVRA" : "Send a question or request to the IEVRA team"}
                 </p>
