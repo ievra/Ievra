@@ -710,7 +710,7 @@ export default function Lookup() {
                           {pct}<span className="text-xl sm:text-2xl font-light">%</span>
                         </p>
                         <p className="text-xs uppercase tracking-[0.14em] font-light text-white/45 mt-4 flex-1">{label}</p>
-                        <div className="mt-4 w-full h-[2px] bg-white/10 rounded-full">
+                        <div className="mt-4 w-full h-[3px] bg-white/10 rounded-full">
                           <div className="h-full bg-white/55 rounded-full transition-all duration-1000 ease-out" style={{ width: `${pct}%` }} />
                         </div>
                       </div>
@@ -819,7 +819,7 @@ export default function Lookup() {
                               <span className="text-sm font-light text-white/45">{isVi ? phase.labelVi : phase.labelEn}</span>
                               <span className="text-sm font-light text-white/45 tabular-nums shrink-0 ml-4">{p}%</span>
                             </div>
-                            <div className="w-full h-[2px] bg-white/10 rounded-full">
+                            <div className="w-full h-[3px] bg-white/10 rounded-full">
                               <div className="h-full bg-white/60 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
                             </div>
                           </div>
@@ -841,7 +841,7 @@ export default function Lookup() {
                               <span className="text-sm font-light text-white/45">{isVi ? phase.labelVi : phase.labelEn}</span>
                               <span className="text-sm font-light text-white/45 tabular-nums shrink-0 ml-4">{p}%</span>
                             </div>
-                            <div className="w-full h-[2px] bg-white/10 rounded-full">
+                            <div className="w-full h-[3px] bg-white/10 rounded-full">
                               <div className="h-full bg-white/60 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
                             </div>
                           </div>
@@ -872,7 +872,7 @@ export default function Lookup() {
                           return (
                             <div key={phase.id} className="flex items-center gap-6">
                               <span className="text-sm font-light text-white/65 w-28 sm:w-40 md:w-52 shrink-0 truncate">{isVi ? phase.labelVi : phase.labelEn}</span>
-                              <div className="flex-1 h-[2px] bg-white/10 rounded-full">
+                              <div className="flex-1 h-[3px] bg-white/10 rounded-full">
                                 <div className="h-full bg-white/65 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
                               </div>
                               <span className="text-sm font-light text-white/45 w-12 text-right tabular-nums shrink-0">{p}%</span>
@@ -894,7 +894,7 @@ export default function Lookup() {
                           return (
                             <div key={phase.id} className="flex items-center gap-6">
                               <span className="text-sm font-light text-white/65 w-28 sm:w-40 md:w-52 shrink-0 truncate">{isVi ? phase.labelVi : phase.labelEn}</span>
-                              <div className="flex-1 h-[2px] bg-white/10 rounded-full">
+                              <div className="flex-1 h-[3px] bg-white/10 rounded-full">
                                 <div className="h-full bg-white/65 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
                               </div>
                               <span className="text-sm font-light text-white/45 w-12 text-right tabular-nums shrink-0">{p}%</span>
