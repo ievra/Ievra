@@ -720,12 +720,12 @@ export default function Lookup() {
               return (
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/8">
                   {kpis.map(({ label, pct }, i) => (
-                    <div key={i} className="bg-black px-5 py-6 sm:px-8 sm:py-8">
+                    <div key={i} className="bg-black px-5 py-6 sm:px-8 sm:py-8 flex flex-col">
                       <p className="text-4xl sm:text-5xl lg:text-6xl font-thin text-white tabular-nums leading-none">
                         {pct}<span className="text-xl sm:text-2xl font-light">%</span>
                       </p>
-                      <p className="text-xs uppercase tracking-[0.14em] font-light text-white/45 mt-4">{label}</p>
-                      <div className="mt-3 w-full h-[2px] bg-white/10 rounded-full">
+                      <p className="text-xs uppercase tracking-[0.14em] font-light text-white/45 mt-4 flex-1">{label}</p>
+                      <div className="mt-4 w-full h-[2px] bg-white/10 rounded-full">
                         <div className="h-full bg-white/55 rounded-full transition-all duration-1000 ease-out" style={{ width: `${pct}%` }} />
                       </div>
                     </div>
