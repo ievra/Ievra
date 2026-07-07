@@ -330,7 +330,7 @@ export default function Contact() {
                     placeholder={placeholders.requirements}
                     value={formData.requirements}
                     onChange={(e) => setFormData(prev => ({ ...prev, requirements: e.target.value }))}
-                    className={`${inputCls} border border-white/10 border-x-0 border-t-0 min-h-[140px] resize-none`}
+                    className={`${inputCls} border border-white/10 border-x-0 border-t-0 min-h-[260px] resize-none`}
                     data-testid="textarea-requirements"
                   />
                 </div>
