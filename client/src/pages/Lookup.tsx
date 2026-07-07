@@ -298,7 +298,7 @@ export default function Lookup() {
     /* ── Payment: flat KPI-card style (no SVG circle) ── */
     if (item.type === "design_payment" || item.type === "construction_payment") {
       return (
-        <div className="flex flex-col h-full justify-between">
+        <div className="flex flex-col h-full">
           <div>
             <p className="text-5xl font-thin text-white tabular-nums leading-none">
               {item.progress}<span className="text-xl font-light">%</span>
