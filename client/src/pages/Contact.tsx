@@ -226,7 +226,7 @@ export default function Contact() {
 
             {/* Left — intro */}
             <div className="lg:sticky lg:top-32">
-              <h1 className="text-4xl md:text-5xl font-light leading-[1.15] tracking-tight mb-12" data-testid="text-consultation">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-sans font-light tracking-tight leading-none mb-12" data-testid="text-consultation">
                 {t('contact.title')}
               </h1>
 
