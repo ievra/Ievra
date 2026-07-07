@@ -460,63 +460,51 @@ export default function Blog() {
               {articles.map((article, index) => (
                 <Link key={article.id} href={getArticlePath(language, article.slug)}>
                   <div
-                    className="article-card group relative overflow-hidden cursor-pointer w-full h-[360px] md:h-[420px] lg:h-[380px] bg-zinc-900 transform-gpu backface-hidden"
+                    className="article-card group cursor-pointer"
                     data-testid={`card-article-${article.id}`}
                   >
-                    {(article.featuredImage || article.featuredImageData) ? (
-                      <img
-                        src={toCardImg(article.featuredImage || article.featuredImageData || '', 1280)}
-                        srcSet={toCardSrcSet(article.featuredImage || article.featuredImageData || '')}
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        alt={article.title}
-                        className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                        loading={index < 3 ? 'eager' : 'lazy'}
-                        decoding="async"
-                        onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
-                        data-testid={`img-article-${article.id}`}
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-zinc-900" data-testid={`img-article-${article.id}`} />
-                    )}
-
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/5 to-transparent" />
-                    <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-black/40 to-transparent" />
-
-                    {/* Top-left: Category */}
-                    <div className="absolute top-0 left-0 p-5 md:p-6">
-                      <p className="text-white text-sm uppercase tracking-[0.15em] font-light leading-snug" data-testid={`text-category-${article.id}`}>
-                        {getCategoryLabel(article.category)}
-                      </p>
+                    {/* Image with category + date overlay */}
+                    <div className="relative overflow-hidden bg-zinc-900 w-full h-[220px] md:h-[250px] lg:h-[220px] transform-gpu backface-hidden">
+                      {(article.featuredImage || article.featuredImageData) ? (
+                        <img
+                          src={toCardImg(article.featuredImage || article.featuredImageData || '', 1280)}
+                          srcSet={toCardSrcSet(article.featuredImage || article.featuredImageData || '')}
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          alt={article.title}
+                          className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                          loading={index < 3 ? 'eager' : 'lazy'}
+                          decoding="async"
+                          onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
+                          data-testid={`img-article-${article.id}`}
+                        />
+                      ) : (
+                        <div className="w-full h-full bg-zinc-900" data-testid={`img-article-${article.id}`} />
+                      )}
+                      {/* Top gradient for overlay readability */}
+                      <div className="absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-black/50 to-transparent" />
+                      {/* Category + Date inside card image */}
+                      <div className="absolute top-0 left-0 p-3">
+                        <p className="text-white/90 text-[11px] uppercase tracking-widest font-light leading-snug" data-testid={`text-category-${article.id}`}>
+                          {getCategoryLabel(article.category)}
+                          {(article.publishedAt || article.createdAt) && (
+                            <span className="ml-2 text-white/60">| {formatDate(String(article.publishedAt || article.createdAt))}</span>
+                          )}
+                        </p>
+                      </div>
                     </div>
-
-                    {/* Bottom: Title + Excerpt + Date */}
-                    <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
+                    {/* Title + Team below image */}
+                    <div className="pt-3 pb-3">
+                      {(article as any).attribution && (
+                        <p className="text-foreground/50 text-[11px] font-light uppercase tracking-widest mb-1">
+                          {(article as any).attribution}
+                        </p>
+                      )}
                       <h3
-                        className="text-white uppercase tracking-wide text-sm md:text-base font-light mb-2 line-clamp-2"
+                        className="text-foreground text-sm md:text-[15px] font-light uppercase tracking-wide leading-snug line-clamp-2"
                         data-testid={`text-title-${article.id}`}
                       >
                         {article.title}
                       </h3>
-                      {article.excerpt && (
-                        <p
-                          className="text-white/60 text-xs font-light leading-relaxed mb-3 break-all"
-                          style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
-                        >
-                          {article.excerpt}
-                        </p>
-                      )}
-                      <div className="flex items-end justify-between">
-                        <div className="text-white">
-                          <p className="text-white/90 text-xs font-light">
-                            {formatDate(String(article.publishedAt || article.createdAt))}
-                          </p>
-                        </div>
-                        {(article as any).attribution && (
-                          <p className="text-white/50 text-[10px] font-light text-right max-w-[50%] line-clamp-2">
-                            {(article as any).attribution}
-                          </p>
-                        )}
-                      </div>
                     </div>
                   </div>
                 </Link>
