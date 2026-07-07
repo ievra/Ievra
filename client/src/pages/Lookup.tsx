@@ -890,10 +890,10 @@ export default function Lookup() {
                     </div>
                     {/* Phase filter chips */}
                     {currentPhases.length > 0 && (
-                      <div className="flex flex-wrap gap-4">
+                      <div className="flex gap-4 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                         <button
                           onClick={() => { setTablePhaseFilter(""); setDesignShowAll(false); setConstructionShowAll(false); }}
-                          className={`text-xs uppercase tracking-[0.12em] font-light transition-colors ${!tablePhaseFilter ? "text-white" : "text-white/35 hover:text-white/65"}`}
+                          className={`text-xs uppercase tracking-[0.12em] font-light transition-colors whitespace-nowrap shrink-0 ${!tablePhaseFilter ? "text-white" : "text-white/35 hover:text-white/65"}`}
                         >
                           {isVi ? "Tất cả" : "All"}
                         </button>
@@ -901,7 +901,7 @@ export default function Lookup() {
                           <button
                             key={phase.id}
                             onClick={() => { setTablePhaseFilter(phase.value === tablePhaseFilter ? "" : phase.value); setDesignShowAll(false); setConstructionShowAll(false); }}
-                            className={`text-xs uppercase tracking-[0.12em] font-light transition-colors ${tablePhaseFilter === phase.value ? "text-white" : "text-white/35 hover:text-white/65"}`}
+                            className={`text-xs uppercase tracking-[0.12em] font-light transition-colors whitespace-nowrap shrink-0 ${tablePhaseFilter === phase.value ? "text-white" : "text-white/35 hover:text-white/65"}`}
                           >
                             {isVi ? phase.labelVi : phase.labelEn}
                           </button>
