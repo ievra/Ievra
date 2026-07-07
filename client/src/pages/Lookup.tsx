@@ -956,7 +956,7 @@ export default function Lookup() {
               {(activeTab === "design" || activeTab === "construction") && (() => {
                 const currentPhases = activeTab === "design" ? designPhases : constructionPhases;
                 return (
-                  <div className="px-4 pt-4 pb-2 space-y-3">
+                  <div className="px-4 pt-4 pb-4 space-y-3 border-b border-white/10">
                     {/* Search input */}
                     <div className="flex items-center gap-3">
                       <Search className="w-3.5 h-3.5 text-white/30 shrink-0" />
