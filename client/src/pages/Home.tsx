@@ -1425,7 +1425,7 @@ export default function Home() {
                 {featuredArticles?.slice(0, 8).map((article, index) => (
                   <div
                     key={article.id}
-                    className="group overflow-hidden cursor-pointer rounded-none border border-white/10 hover:bg-white/[0.04] transition-colors duration-300 article-card flex flex-col h-[34rem]"
+                    className={`group overflow-hidden cursor-pointer rounded-none border border-white/10 hover:bg-white/[0.04] transition-colors duration-300 article-card flex flex-col h-[34rem] scroll-animate animate-delay-${(index % 4) * 100}`}
                     onClick={() => navigate(getArticlePath(language, article.slug))}
                     data-testid={`article-card-${article.id}`}
                   >
