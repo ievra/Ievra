@@ -344,9 +344,8 @@ export default function Lookup() {
               />
             )}
           </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-3xl font-thin text-white tabular-nums leading-none">{item.progress}</span>
-            <span className="text-sm font-light text-white/50 mt-0.5">%</span>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <span className="text-3xl font-thin text-white tabular-nums leading-none">{item.progress}<span className="text-base font-light text-white/50">%</span></span>
           </div>
         </div>
         <p className="text-xs font-light text-white/45 mt-4 tracking-[0.14em] text-center uppercase">{item.label}</p>
