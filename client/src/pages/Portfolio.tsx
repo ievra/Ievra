@@ -451,9 +451,6 @@ export default function Portfolio() {
                   data-testid="button-filter-toggle"
                 >
                   <SlidersHorizontal className="w-4 h-4" />
-                  {activeCount > 0 && (
-                    <span className="text-[10px] font-light text-amber-400">{activeCount}</span>
-                  )}
                 </button>
                 {/* Clear all */}
                 {activeCount > 0 && (
