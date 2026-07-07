@@ -54,7 +54,7 @@ export default function ProjectCard({
 
   return (
     <div
-      className={`project-card group relative overflow-hidden cursor-pointer w-full h-full transform-gpu backface-hidden ${className}`}
+      className={`project-card group relative overflow-hidden cursor-pointer w-full h-full bg-zinc-900 transform-gpu backface-hidden ${className}`}
       data-index={index}
     >
       <Link href={getProjectPath(language, project.slug, project.id)} className="block w-full h-full">
@@ -62,7 +62,7 @@ export default function ProjectCard({
           <img
             src={cardSrc}
             srcSet={cardSrcSet}
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 600px"
+            sizes="(max-width: 768px) 100vw, 50vw"
             alt={title}
             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             loading={index < 4 ? 'eager' : 'lazy'}

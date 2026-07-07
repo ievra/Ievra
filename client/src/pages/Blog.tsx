@@ -457,21 +457,22 @@ export default function Blog() {
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[3px]">
-              {articles.map((article) => (
+              {articles.map((article, index) => (
                 <Link key={article.id} href={getArticlePath(language, article.slug)}>
                   <div
-                    className="article-card group relative overflow-hidden cursor-pointer w-full h-[360px] md:h-[460px] lg:h-[560px] transform-gpu backface-hidden"
+                    className="article-card group relative overflow-hidden cursor-pointer w-full h-[360px] md:h-[460px] lg:h-[560px] bg-zinc-900 transform-gpu backface-hidden"
                     data-testid={`card-article-${article.id}`}
                   >
                     {(article.featuredImage || article.featuredImageData) ? (
                       <img
-                        src={toCardImg(article.featuredImage || article.featuredImageData || '', 960)}
+                        src={toCardImg(article.featuredImage || article.featuredImageData || '', 1280)}
                         srcSet={toCardSrcSet(article.featuredImage || article.featuredImageData || '')}
-                        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 500px"
+                        sizes="(max-width: 768px) 100vw, 50vw"
                         alt={article.title}
                         className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                        loading="lazy"
+                        loading={index < 3 ? 'eager' : 'lazy'}
                         decoding="async"
+                        onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
                         data-testid={`img-article-${article.id}`}
                       />
                     ) : (

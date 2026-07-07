@@ -1,1 +1,2 @@
 - [URL-driven language (Hướng A)](i18n-url-driven-language.md) — active language derives from URL (not toggle); keep BOTH EN+VI URLs with self-canonical + hreflang; do NOT collapse to VI-only.
+- [Card image sizes + object-cover](responsive-image-sizes-object-cover.md) — landscape image in portrait card via object-cover needs `sizes` bigger than column width (use ~50vw); eager-load first row + bg-zinc-900 to stop black flash.
