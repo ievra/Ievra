@@ -922,6 +922,12 @@ body{padding:16px 24px}
       const designPhases = allDesignPhases.filter((p: any) => !hiddenDesign.includes(p.value));
       const constructionPhases = allConstructionPhases.filter((p: any) => !hiddenConstruction.includes(p.value));
 
+      const [crmStages, crmTiers, crmStatuses] = await Promise.all([
+        storage.getCrmPipelineStages({}),
+        storage.getCrmCustomerTiers({}),
+        storage.getCrmStatuses({}),
+      ]);
+
       const safeClient = {
         firstName: client.firstName,
         lastName: client.lastName,
@@ -931,13 +937,21 @@ body{padding:16px 24px}
         address: client.address,
         stage: client.stage,
         tier: client.tier,
+        status: client.status,
+        intakeDate: client.intakeDate,
         warrantyStatus: client.warrantyStatus,
         warrantyExpiry: client.warrantyExpiry,
         designTimeline: client.designTimeline,
         constructionTimeline: client.constructionTimeline,
         designPhaseTargets: client.designPhaseTargets,
         constructionPhaseTargets: client.constructionPhaseTargets,
+        hiddenDesignPhases: client.hiddenDesignPhases,
+        hiddenConstructionPhases: client.hiddenConstructionPhases,
       };
+
+      const safeCrmStages = crmStages.map((s: any) => ({ value: s.value, labelVi: s.labelVi, labelEn: s.labelEn, color: s.color }));
+      const safeCrmTiers = crmTiers.map((t: any) => ({ value: t.value, labelVi: t.labelVi, labelEn: t.labelEn, color: t.color }));
+      const safeCrmStatuses = crmStatuses.map((s: any) => ({ value: s.value, labelVi: s.labelVi, labelEn: s.labelEn, color: s.color }));
 
       const safeInteractions = clientInteractions
         .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
@@ -984,6 +998,9 @@ body{padding:16px 24px}
         warrantyLogs: safeWarrantyLogs,
         designPhases,
         constructionPhases,
+        crmStages: safeCrmStages,
+        crmTiers: safeCrmTiers,
+        crmStatuses: safeCrmStatuses,
       });
     } catch (error) {
       res.status(500).json({ message: "Đã xảy ra lỗi khi tra cứu" });

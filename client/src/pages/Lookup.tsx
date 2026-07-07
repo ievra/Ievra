@@ -54,6 +54,13 @@ interface LookupWarrantyLog {
   attachments: string[] | null;
 }
 
+interface LookupCrmLabel {
+  value: string;
+  labelVi: string;
+  labelEn: string;
+  color: string | null;
+}
+
 interface LookupResult {
   client: {
     firstName: string;
@@ -64,18 +71,25 @@ interface LookupResult {
     address: string | null;
     stage: string;
     tier: string;
+    status: string;
+    intakeDate: string | null;
     warrantyStatus: string | null;
     warrantyExpiry: string | null;
     designTimeline: number | null;
     constructionTimeline: number | null;
     designPhaseTargets: Record<string, number> | null;
     constructionPhaseTargets: Record<string, number> | null;
+    hiddenDesignPhases: string[] | null;
+    hiddenConstructionPhases: string[] | null;
   };
   interactions: LookupInteraction[];
   transactions: LookupTransaction[];
   warrantyLogs: LookupWarrantyLog[];
   designPhases: LookupPhase[];
   constructionPhases: LookupPhase[];
+  crmStages: LookupCrmLabel[];
+  crmTiers: LookupCrmLabel[];
+  crmStatuses: LookupCrmLabel[];
 }
 
 export default function Lookup() {
@@ -536,82 +550,108 @@ export default function Lookup() {
         {result && (
           <div className="max-w-7xl mx-auto space-y-5 animate-in fade-in duration-500">
             {/* Client info card */}
-            <div className="border border-white/10 p-8 bg-black">
-              {/* Name row */}
-              <div className="flex items-start justify-between gap-4 mb-8">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.18em] text-white/40 mb-3">
-                    {isVi ? "Khách hàng" : "Client"}
-                  </p>
-                  <h3 className="text-3xl font-light text-white leading-tight">
-                    {infoRevealed
-                      ? `${result.client.lastName} ${result.client.firstName}`
-                      : (() => {
-                          const nameParts = `${result.client.lastName || ""} ${result.client.firstName || ""}`.trim().split(" ");
-                          return nameParts.map((p, i) => i === 0 ? p : "*".repeat(p.length)).join(" ");
-                        })()}
-                  </h3>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (infoRevealed) {
-                      setInfoRevealed(false);
-                    } else {
-                      setShowCccdDialog(true);
-                      setCccdInput("");
-                    }
-                  }}
-                  className="flex items-center gap-2 text-xs font-light text-white/40 hover:text-white/80 transition-colors border border-white/15 hover:border-white/35 px-4 py-2 shrink-0 mt-7"
-                  title={infoRevealed ? (isVi ? "Ẩn thông tin" : "Hide info") : (isVi ? "Hiển thị thông tin" : "Show info")}
-                >
-                  {infoRevealed ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                  <span className="hidden sm:inline">{infoRevealed ? (isVi ? "Ẩn" : "Hide") : (isVi ? "Xác minh" : "Verify")}</span>
-                </button>
-              </div>
+            {(() => {
+              const stageLabel = result.crmStages.find(s => s.value === result.client.stage);
+              const tierLabel = result.crmTiers.find(t => t.value === result.client.tier);
+              const statusLabel = result.crmStatuses.find(s => s.value === result.client.status);
+              const warrantyMap: Record<string, { vi: string; en: string }> = {
+                active: { vi: "Còn bảo hành", en: "Active" },
+                expired: { vi: "Hết bảo hành", en: "Expired" },
+                none: { vi: "Không áp dụng", en: "Not applicable" },
+              };
+              const warrantyLabel = warrantyMap[result.client.warrantyStatus || "none"] || warrantyMap["none"];
+              return (
+                <div className="border border-white/10 bg-black">
+                  {/* Header row: name + verify button */}
+                  <div className="px-8 pt-8 pb-6 flex items-start justify-between gap-4">
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.18em] text-white/35 mb-3">
+                        {isVi ? "Khách hàng" : "Client"}
+                      </p>
+                      <h3 className="text-3xl font-light text-white leading-tight">
+                        {infoRevealed
+                          ? `${result.client.lastName} ${result.client.firstName}`
+                          : (() => {
+                              const nameParts = `${result.client.lastName || ""} ${result.client.firstName || ""}`.trim().split(" ");
+                              return nameParts.map((p, i) => i === 0 ? p : "*".repeat(p.length)).join(" ");
+                            })()}
+                      </h3>
+                      {/* Status badges row */}
+                      <div className="flex flex-wrap items-center gap-2 mt-4">
+                        {stageLabel && (
+                          <span className="text-[10px] uppercase tracking-[0.12em] font-light px-2.5 py-1 border border-white/15 text-white/60">
+                            {isVi ? stageLabel.labelVi : stageLabel.labelEn}
+                          </span>
+                        )}
+                        {tierLabel && (
+                          <span className="text-[10px] uppercase tracking-[0.12em] font-light px-2.5 py-1 border border-white/15 text-white/60">
+                            {isVi ? tierLabel.labelVi : tierLabel.labelEn}
+                          </span>
+                        )}
+                        {statusLabel && (
+                          <span className="text-[10px] uppercase tracking-[0.12em] font-light px-2.5 py-1 border border-white/15 text-white/60">
+                            {isVi ? statusLabel.labelVi : statusLabel.labelEn}
+                          </span>
+                        )}
+                        {result.client.warrantyStatus && result.client.warrantyStatus !== "none" && (
+                          <span className={`text-[10px] uppercase tracking-[0.12em] font-light px-2.5 py-1 border ${result.client.warrantyStatus === "active" ? "border-white/25 text-white/75" : "border-white/10 text-white/30"}`}>
+                            {isVi ? warrantyLabel.vi : warrantyLabel.en}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (infoRevealed) {
+                          setInfoRevealed(false);
+                        } else {
+                          setShowCccdDialog(true);
+                          setCccdInput("");
+                        }
+                      }}
+                      className="flex items-center gap-2 text-xs font-light text-white/40 hover:text-white/80 transition-colors border border-white/15 hover:border-white/35 px-4 py-2 shrink-0 mt-7"
+                    >
+                      {infoRevealed ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      <span className="hidden sm:inline">{infoRevealed ? (isVi ? "Ẩn" : "Hide") : (isVi ? "Xác minh" : "Verify")}</span>
+                    </button>
+                  </div>
 
-              {/* Info fields grid */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-6 border-t border-white/8">
-                {result.client.phone && (
-                  <div>
-                    <p className="text-[10px] uppercase tracking-[0.15em] text-white/35 mb-2">{isVi ? "Điện thoại" : "Phone"}</p>
-                    <p className="text-sm font-light text-white/75">
-                      {infoRevealed ? result.client.phone : result.client.phone.slice(0, 3) + "*".repeat(Math.max(0, result.client.phone.length - 3))}
-                    </p>
+                  {/* Contact details grid */}
+                  <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/8">
+                    {[
+                      { label: isVi ? "Điện thoại" : "Phone", value: result.client.phone, hidden: result.client.phone ? result.client.phone.slice(0, 3) + "*".repeat(Math.max(0, result.client.phone.length - 3)) : null },
+                      { label: "Email", value: result.client.email, hidden: result.client.email ? (() => { const i = result.client.email!.indexOf("@"); const local = result.client.email!.slice(0, i); return local.slice(0, 3) + "*".repeat(Math.max(0, local.length - 3)) + result.client.email!.slice(i); })() : null },
+                      { label: isVi ? "Công ty" : "Company", value: result.client.company, hidden: result.client.company ? "*".repeat(Math.min(16, result.client.company.length)) : null },
+                      { label: isVi ? "Địa chỉ" : "Address", value: result.client.address, hidden: result.client.address ? "*".repeat(Math.min(16, result.client.address.length)) : null },
+                    ].map(({ label, value, hidden }, i) => value ? (
+                      <div key={i} className="bg-black px-6 py-5">
+                        <p className="text-[10px] uppercase tracking-[0.15em] text-white/30 mb-2">{label}</p>
+                        <p className="text-sm font-light text-white/75 truncate">{infoRevealed ? value : hidden}</p>
+                      </div>
+                    ) : null)}
                   </div>
-                )}
-                {result.client.email && (
-                  <div>
-                    <p className="text-[10px] uppercase tracking-[0.15em] text-white/35 mb-2">Email</p>
-                    <p className="text-sm font-light text-white/75 truncate">
-                      {infoRevealed ? result.client.email : (() => {
-                        const atIdx = result.client.email.indexOf("@");
-                        if (atIdx <= 0) return "*".repeat(result.client.email.length);
-                        const local = result.client.email.slice(0, atIdx);
-                        const domain = result.client.email.slice(atIdx);
-                        return local.slice(0, 3) + "*".repeat(Math.max(0, local.length - 3)) + domain;
-                      })()}
-                    </p>
-                  </div>
-                )}
-                {result.client.company && (
-                  <div>
-                    <p className="text-[10px] uppercase tracking-[0.15em] text-white/35 mb-2">{isVi ? "Công ty" : "Company"}</p>
-                    <p className="text-sm font-light text-white/75 truncate">
-                      {infoRevealed ? result.client.company : "*".repeat(Math.min(16, result.client.company.length))}
-                    </p>
-                  </div>
-                )}
-                {result.client.address && (
-                  <div>
-                    <p className="text-[10px] uppercase tracking-[0.15em] text-white/35 mb-2">{isVi ? "Địa chỉ" : "Address"}</p>
-                    <p className="text-sm font-light text-white/75 truncate">
-                      {infoRevealed ? result.client.address : "*".repeat(Math.min(16, result.client.address.length))}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
+
+                  {/* Extra info row: intake date + warranty expiry */}
+                  {(result.client.intakeDate || result.client.warrantyExpiry) && (
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/8 border-t border-white/8">
+                      {result.client.intakeDate && (
+                        <div className="bg-black px-6 py-5">
+                          <p className="text-[10px] uppercase tracking-[0.15em] text-white/30 mb-2">{isVi ? "Ngày tiếp nhận" : "Intake Date"}</p>
+                          <p className="text-sm font-light text-white/75">{formatDate(result.client.intakeDate)}</p>
+                        </div>
+                      )}
+                      {result.client.warrantyExpiry && (
+                        <div className="bg-black px-6 py-5">
+                          <p className="text-[10px] uppercase tracking-[0.15em] text-white/30 mb-2">{isVi ? "Hết hạn bảo hành" : "Warranty Expiry"}</p>
+                          <p className={`text-sm font-light ${result.client.warrantyStatus === "expired" ? "text-white/35" : "text-white/75"}`}>{formatDate(result.client.warrantyExpiry)}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
 
             {/* ── KPI Summary Row ── */}
             {(() => {
