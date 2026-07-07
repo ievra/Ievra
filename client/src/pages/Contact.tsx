@@ -203,54 +203,93 @@ export default function Contact() {
     mutation.mutate(inquiryData);
   };
 
+  const inputCls = "w-full bg-transparent border-0 border-b border-white/15 rounded-none px-0 py-4 text-sm font-light text-white placeholder-white/30 focus:border-white/60 focus-visible:ring-0 transition-colors duration-300 outline-none";
+
   return (
     <div className="bg-black text-white">
-      {/* Request Section */}
-      <section className="pt-60 pb-16">
-        <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto">
-            <div className="text-center mb-10">
-              <h1 className="text-3xl md:text-5xl font-light mb-3" data-testid="heading-questions">
+
+      {/* ── Hero + Form Section ── */}
+      <section className="pt-52 pb-20 lg:pb-32">
+        <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
+
+          {/* Top label */}
+          <p className="text-xs uppercase tracking-[0.22em] font-light text-white/35 mb-12" data-testid="heading-questions">
+            {language === 'vi' ? 'Tư vấn & Liên hệ' : 'Consultation & Contact'}
+          </p>
+
+          {/* 2-col layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 xl:gap-32 items-start">
+
+            {/* Left — intro */}
+            <div className="lg:sticky lg:top-32">
+              <h1 className="text-4xl md:text-5xl xl:text-6xl font-light leading-[1.1] tracking-tight mb-8" data-testid="text-consultation">
                 {t('contact.title')}
               </h1>
-              <p className="text-lg text-white/70 font-light" data-testid="text-consultation">
+              <p className="text-sm font-light text-white/50 leading-relaxed mb-12 max-w-sm">
                 {t('contact.subtitle')}
               </p>
+
+              {/* Contact info */}
+              <div className="space-y-8 border-t border-white/10 pt-10">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-3">
+                    {language === 'vi' ? 'Liên hệ trực tiếp' : 'Direct Contact'}
+                  </p>
+                  <div className="space-y-2">
+                    <a href="tel:0767554480" className="block text-sm font-light text-white/70 hover:text-white transition-colors">0767 5544 80</a>
+                    <a href="mailto:contact@ievra.com" className="block text-sm font-light text-white/70 hover:text-white transition-colors">contact@ievra.com</a>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-3">
+                    {language === 'vi' ? 'Văn phòng' : 'Office'}
+                  </p>
+                  <div className="space-y-2">
+                    <p className="text-sm font-light text-white/60 leading-relaxed">
+                      {language === 'vi' ? '422 Đào Trí, P. Phú Thuận, Q. 7, TP.HCM' : '422 Dao Tri, Phu Thuan, Dist. 7, HCMC'}
+                    </p>
+                    <p className="text-sm font-light text-white/60 leading-relaxed">
+                      {language === 'vi' ? '9 Nguyễn Khoái, P. 2, Q. 4, TP.HCM' : '9 Nguyen Khoai, Ward 2, Dist. 4, HCMC'}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <form onSubmit={handleSubmit}>
-              <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Right — form */}
+            <div>
+              <form onSubmit={handleSubmit} className="space-y-0">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8">
                   <div>
                     <Input
                       type="text"
                       placeholder={placeholders.name}
                       value={formData.name}
                       onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                      className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
+                      className={inputCls}
                       data-testid="input-name"
                     />
                   </div>
-                  <div>
-                    <Input
-                      type="email"
-                      placeholder={placeholders.email}
-                      value={formData.email}
-                      onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                      className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
-                      data-testid="input-email"
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Input
                       type="tel"
                       placeholder={placeholders.phone}
                       value={formData.phone}
                       onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                      className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
+                      className={inputCls}
                       data-testid="input-phone"
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8">
+                  <div>
+                    <Input
+                      type="email"
+                      placeholder={placeholders.email}
+                      value={formData.email}
+                      onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                      className={inputCls}
+                      data-testid="input-email"
                     />
                   </div>
                   <div>
@@ -259,7 +298,7 @@ export default function Contact() {
                       placeholder={placeholders.address}
                       value={formData.address}
                       onChange={(e) => setFormData(prev => ({ ...prev, address: e.target.value }))}
-                      className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
+                      className={inputCls}
                       data-testid="input-address"
                     />
                   </div>
@@ -270,7 +309,7 @@ export default function Contact() {
                     placeholder={placeholders.projectType}
                     value={formData.projectType}
                     onChange={(e) => setFormData(prev => ({ ...prev, projectType: e.target.value }))}
-                    className="bg-transparent border-0 border-b border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0"
+                    className={inputCls}
                     data-testid="input-project-type"
                   />
                 </div>
@@ -279,91 +318,80 @@ export default function Contact() {
                     placeholder={placeholders.requirements}
                     value={formData.requirements}
                     onChange={(e) => setFormData(prev => ({ ...prev, requirements: e.target.value }))}
-                    className="bg-transparent border border-gray-600 rounded-none px-0 py-4 text-white placeholder-gray-400 focus:border-white focus-visible:ring-0 min-h-[120px] resize-none"
+                    className={`${inputCls} border border-white/10 border-x-0 border-t-0 min-h-[140px] resize-none`}
                     data-testid="textarea-requirements"
                   />
                 </div>
-                <div className="flex justify-center pt-6">
+                <div className="pt-10 flex items-center justify-between">
+                  <p className="text-xs font-light text-white/25 max-w-[220px] leading-relaxed">
+                    {language === 'vi'
+                      ? 'Chúng tôi sẽ phản hồi trong vòng 24 giờ làm việc.'
+                      : 'We will respond within 24 business hours.'}
+                  </p>
                   <Button
                     type="submit"
                     disabled={mutation.isPending}
-                    className="bg-transparent border border-white/30 text-white hover:border-white hover:bg-white/10 px-8 py-3 font-light tracking-widest uppercase transition-all duration-300 ease-in-out rounded-none"
+                    className="bg-transparent border border-white/20 text-white hover:border-white/60 hover:bg-white/5 px-8 py-3 font-light text-xs tracking-[0.2em] uppercase transition-all duration-300 rounded-none shrink-0 ml-6"
                     data-testid="button-leave-request"
                   >
-                    {mutation.isPending ? t('contact.form.sending') : (language === 'vi' ? 'GỬI YÊU CẦU' : 'LEAVE A REQUEST')}
+                    {mutation.isPending
+                      ? (language === 'vi' ? 'Đang gửi...' : 'Sending...')
+                      : (language === 'vi' ? 'Gửi yêu cầu' : 'Send Request')}
                   </Button>
                 </div>
-              </div>
-            </form>
+              </form>
+            </div>
 
           </div>
         </div>
       </section>
 
-      {/* FAQ Section */}
-      <section className="py-16 bg-black">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Section Title */}
+      {/* ── FAQ Section ── */}
+      <section className="py-20 lg:py-28 border-t border-white/10">
+        <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
           <div className="mb-16">
-            <p className="text-2xl md:text-3xl font-light text-white leading-relaxed">
+            <p className="text-xs uppercase tracking-[0.2em] font-light text-white/30 mb-6">FAQ</p>
+            <p className="text-2xl md:text-3xl font-light text-white leading-relaxed max-w-2xl">
               {language === 'vi'
                 ? (homepageContent?.faqSectionSubtitleVi || homepageContent?.faqSectionSubtitle || '')
                 : (homepageContent?.faqSectionSubtitle || '')}
             </p>
           </div>
 
-          {/* FAQ Items */}
-          <div>
+          <div className="border-t border-white/10">
             {faqsLoading ? (
-              <div className="text-white/50 text-center py-8">
-                Loading FAQs...
-              </div>
+              <div className="text-white/30 text-sm font-light py-12">{language === 'vi' ? 'Đang tải...' : 'Loading...'}</div>
             ) : faqsError ? (
-              <div className="text-red-500 text-center py-8">
-                Error loading FAQs
-              </div>
+              <div className="text-red-500/60 text-sm font-light py-12">Error loading FAQs</div>
             ) : faqs.length === 0 ? null : (
               faqs.map((faq, index) => (
                 <div
                   key={faq.id}
-                  className={`pt-8 pb-8 group transition-colors cursor-pointer ${index !== 0 ? 'border-t border-white/20' : ''}`}
+                  className="border-b border-white/10 group cursor-pointer"
                   data-testid={`faq-item-${index + 1}`}
                 >
                   <div
-                    className="flex items-center justify-between"
-                    onClick={() =>
-                      setExpandedFaqIndex(
-                        expandedFaqIndex === index ? null : index,
-                      )
-                    }
+                    className="flex items-center justify-between py-7 gap-6"
+                    onClick={() => setExpandedFaqIndex(expandedFaqIndex === index ? null : index)}
                   >
-                    <div className="flex items-center gap-3 sm:gap-8">
-                      <span className="text-white/40 font-light text-lg">
-                        [{String(index + 1).padStart(2, "0")}]
+                    <div className="flex items-start gap-6 sm:gap-10">
+                      <span className="text-xs font-light text-white/25 tabular-nums shrink-0 mt-1">
+                        {String(index + 1).padStart(2, "0")}
                       </span>
-                      <h3 className="text-xl md:text-2xl font-light text-white">
+                      <h3 className="text-base sm:text-lg md:text-xl font-light text-white/85 group-hover:text-white transition-colors leading-snug">
                         {faq.question}
                       </h3>
                     </div>
                     <ArrowRight
-                      className={`w-5 h-5 text-white/40 group-hover:text-white transition-all ${
-                        expandedFaqIndex === index ? "rotate-90 text-white" : ""
-                      }`}
+                      className={`w-4 h-4 text-white/25 group-hover:text-white/60 shrink-0 transition-all duration-300 ${expandedFaqIndex === index ? "rotate-90 text-white/60" : ""}`}
                     />
                   </div>
-
                   <div
-                    className={`overflow-hidden transition-all duration-500 ease-in-out ${
-                      expandedFaqIndex === index
-                        ? "max-h-96 opacity-100 mt-8"
-                        : "max-h-0 opacity-0"
-                    }`}
+                    className={`overflow-hidden transition-all duration-500 ease-in-out ${expandedFaqIndex === index ? "max-h-96 opacity-100 pb-8" : "max-h-0 opacity-0"}`}
                   >
-                    <div className="border-l-2 border-white/20 pl-8">
-                      <p className="text-white/70 font-light text-lg">
-                        {faqAnswerTexts[faq.id] || ""}
-                      </p>
-                    </div>
+                    <p className="text-sm font-light text-white/55 leading-relaxed ml-0 sm:ml-[3.75rem] max-w-2xl">
+                      {faqAnswerTexts[faq.id] || ""}
+                    </p>
                   </div>
                 </div>
               ))
@@ -372,53 +400,47 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* Footer: Contact Info */}
-      <section className="pb-8 bg-black">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+      {/* ── Footer info ── */}
+      <section className="py-16 border-t border-white/10">
+        <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
             <div>
-              <p className="text-white/40 text-xs tracking-widest uppercase mb-2">
-                {language === 'vi' ? 'Thông Tin Liên Hệ' : 'Contact Information'}
+              <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-4">
+                {language === 'vi' ? 'Pháp nhân' : 'Legal Entity'}
+              </p>
+              <p className="text-sm font-light text-white/75 leading-relaxed mb-1">
+                {language === 'vi'
+                  ? 'CÔNG TY TNHH THIẾT KẾ VÀ THI CÔNG NỘI THẤT IEVRA'
+                  : 'IEVRA INTERIOR DESIGN AND CONSTRUCTION CO., LTD'}
+              </p>
+              <p className="text-sm font-light text-white/40">MST: 0319384424</p>
+            </div>
+            <div>
+              <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-4">
+                {language === 'vi' ? 'Liên hệ' : 'Contact'}
               </p>
               <div className="space-y-1">
-                <p className="text-white font-light text-base leading-relaxed">
-                  {language === 'vi'
-                    ? 'CÔNG TY TNHH THIẾT KẾ VÀ THI CÔNG NỘI THẤT IEVRA'
-                    : 'IEVRA INTERIOR DESIGN AND CONSTRUCTION CO., LTD'}
-                </p>
-                <p className="text-white/60 font-light text-base">
-                  {language === 'vi' ? 'Mã số thuế' : 'Tax code'}: 0319384424
-                </p>
-                <p className="text-white/60 font-light text-base">
-                  Email: contact@ievra.com
-                </p>
-                <p className="text-white/60 font-light text-base">
-                  {language === 'vi' ? 'Điện thoại' : 'Phone'}: 0767 5544 80
-                </p>
+                <p className="text-sm font-light text-white/60">contact@ievra.com</p>
+                <p className="text-sm font-light text-white/60">0767 5544 80</p>
               </div>
             </div>
             <div>
-              <p className="text-white/40 text-xs tracking-widest uppercase mb-2">
-                {language === 'vi' ? 'Địa Chỉ Văn Phòng' : 'Office Addresses'}
+              <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-4">
+                {language === 'vi' ? 'Văn phòng' : 'Offices'}
               </p>
-              <div className="space-y-1">
-                <p className="text-white/60 font-light text-base leading-relaxed">
-                  {language === 'vi'
-                    ? '422 Đào Trí, Phường Phú Thuận, Quận 7, Tp. Hồ Chí Minh.'
-                    : '422 Dao Tri, Phu Thuan Ward, District 7, Ho Chi Minh City.'}
+              <div className="space-y-2">
+                <p className="text-sm font-light text-white/60 leading-relaxed">
+                  {language === 'vi' ? '422 Đào Trí, P. Phú Thuận, Q. 7, TP.HCM' : '422 Dao Tri, Phu Thuan, Dist. 7, HCMC'}
                 </p>
-                <p className="text-white/60 font-light text-base leading-relaxed">
-                  {language === 'vi'
-                    ? '9 Nguyễn Khoái, Phường 2, Quận 4, Tp. Hồ Chí Minh.'
-                    : '9 Nguyen Khoai, Ward 2, District 4, Ho Chi Minh City.'}
+                <p className="text-sm font-light text-white/60 leading-relaxed">
+                  {language === 'vi' ? '9 Nguyễn Khoái, P. 2, Q. 4, TP.HCM' : '9 Nguyen Khoai, Ward 2, Dist. 4, HCMC'}
                 </p>
               </div>
             </div>
           </div>
-
         </div>
-
       </section>
+
     </div>
   );
 }
