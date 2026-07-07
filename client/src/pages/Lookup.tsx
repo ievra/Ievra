@@ -486,7 +486,7 @@ export default function Lookup() {
     <div className="min-h-screen bg-black pt-32 pb-20">
       <div className="px-4 sm:px-6 lg:px-8 mb-12">
         {/* Editorial header */}
-        <div className="flex items-end justify-between gap-6 border-b border-white/10 pb-8">
+        <div className="flex flex-col gap-6 border-b border-white/10 pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <div className="flex items-center gap-2 mb-4 text-[11px] uppercase tracking-widest font-light text-white/30">
               <Link href={language === 'vi' ? '/' : '/en'} className="hover:text-white/60 transition-colors duration-200">
@@ -499,26 +499,21 @@ export default function Lookup() {
               {isVi ? 'TRA CỨU' : 'LOOKUP'}
             </h1>
           </div>
-          {/* Search form — top right */}
-          <form onSubmit={handleSearch} className="flex-shrink-0 pb-1">
-            <div className="flex items-end gap-3">
-              <div
-                className="overflow-hidden transition-all duration-300 ease-in-out"
-                style={{ width: '18rem' }}
-              >
-                <Input
-                  ref={inputRef}
-                  type="tel"
-                  placeholder={typedPlaceholder}
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  className="bg-transparent text-white placeholder-white/30 px-0 py-0 text-sm font-light rounded-none focus-visible:ring-0 flex-1 border-0 w-full"
-                />
-              </div>
+          {/* Search form */}
+          <form onSubmit={handleSearch} className="flex-shrink-0 sm:pb-1 w-full sm:w-auto">
+            <div className="flex items-center gap-3 border-b border-white/20 pb-2 sm:border-b-0 sm:pb-0">
+              <Input
+                ref={inputRef}
+                type="tel"
+                placeholder={typedPlaceholder}
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="bg-transparent text-white placeholder-white/30 px-0 py-0 text-sm font-light rounded-none focus-visible:ring-0 border-0 flex-1 sm:w-72"
+              />
               <button
                 type="submit"
                 disabled={loading || phone.trim().length < 6}
-                className="text-white/40 hover:text-white transition-colors disabled:opacity-30 pb-0.5"
+                className="text-white/40 hover:text-white transition-colors disabled:opacity-30"
               >
                 {loading ? (
                   <div className="w-4 h-4 border border-white/30 border-t-white rounded-full animate-spin" />
@@ -563,7 +558,7 @@ export default function Lookup() {
               return (
                 <div className="border border-white/10 bg-black">
                   {/* Header row: name + verify button */}
-                  <div className="px-8 pt-8 pb-6 flex items-start justify-between gap-4">
+                  <div className="px-5 pt-6 pb-5 sm:px-8 sm:pt-8 sm:pb-6 flex items-start justify-between gap-4">
                     <div>
                       <p className="text-xs uppercase tracking-[0.14em] font-light text-white/35 mb-3">
                         {isVi ? "Khách hàng" : "Client"}
@@ -780,7 +775,7 @@ export default function Lookup() {
                           const p = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : (result.client.designTimeline ? 0 : 100);
                           return (
                             <div key={phase.id} className="flex items-center gap-6">
-                              <span className="text-sm font-light text-white/65 w-52 shrink-0 truncate">{isVi ? phase.labelVi : phase.labelEn}</span>
+                              <span className="text-sm font-light text-white/65 w-28 sm:w-40 md:w-52 shrink-0 truncate">{isVi ? phase.labelVi : phase.labelEn}</span>
                               <div className="flex-1 h-[2px] bg-white/10 rounded-full">
                                 <div className="h-full bg-white/65 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
                               </div>
@@ -802,7 +797,7 @@ export default function Lookup() {
                           const p = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : (result.client.constructionTimeline ? 0 : 100);
                           return (
                             <div key={phase.id} className="flex items-center gap-6">
-                              <span className="text-sm font-light text-white/65 w-52 shrink-0 truncate">{isVi ? phase.labelVi : phase.labelEn}</span>
+                              <span className="text-sm font-light text-white/65 w-28 sm:w-40 md:w-52 shrink-0 truncate">{isVi ? phase.labelVi : phase.labelEn}</span>
                               <div className="flex-1 h-[2px] bg-white/10 rounded-full">
                                 <div className="h-full bg-white/65 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
                               </div>
@@ -826,18 +821,18 @@ export default function Lookup() {
               if (allActivity.length === 0) return null;
               return (
                 <div className="border border-white/10">
-                  <div className="px-8 py-6 border-b border-white/10">
+                  <div className="px-4 sm:px-8 py-5 sm:py-6 border-b border-white/10">
                     <p className="text-xs font-light text-white/45 uppercase tracking-[0.14em]">{isVi ? "Hoạt động gần đây" : "Recent Activity"}</p>
                   </div>
                   <div className="divide-y divide-white/8">
                     {allActivity.map((item, idx) => (
-                      <div key={item.id || idx} className="flex items-center gap-5 px-8 py-5">
-                        <span className="text-sm font-light text-white/45 w-24 shrink-0 tabular-nums">{formatDate(item.date)}</span>
-                        <span className={`text-xs uppercase tracking-[0.14em] font-light shrink-0 ${item._type === "design" ? "text-white/50" : "text-white/30"}`}>
+                      <div key={item.id || idx} className="flex items-center gap-3 sm:gap-5 px-4 sm:px-8 py-4 sm:py-5">
+                        <span className="text-sm font-light text-white/45 w-20 sm:w-24 shrink-0 tabular-nums">{formatDate(item.date)}</span>
+                        <span className={`text-xs uppercase tracking-[0.14em] font-light shrink-0 hidden sm:inline ${item._type === "design" ? "text-white/50" : "text-white/30"}`}>
                           {item._type === "design" ? (isVi ? "Thiết kế" : "Design") : (isVi ? "Thi công" : "Const.")}
                         </span>
                         <span className="text-sm font-light text-white/75 truncate flex-1">{item.title}</span>
-                        {item.assignedTo && <span className="text-sm font-light text-white/40 shrink-0 hidden sm:block">{item.assignedTo}</span>}
+                        {item.assignedTo && <span className="text-sm font-light text-white/40 shrink-0 hidden md:block">{item.assignedTo}</span>}
                         <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(item)} className="h-7 w-7 text-white/40 hover:text-white shrink-0">
                           <Eye className="w-3.5 h-3.5" />
                         </Button>
@@ -970,7 +965,7 @@ export default function Lookup() {
             </div>
 
             <div className="border border-white/10 bg-black">
-              <div className="px-8 py-6 border-b border-white/10 flex items-start justify-between gap-4">
+              <div className="px-5 py-5 sm:px-8 sm:py-6 border-b border-white/10 flex items-start justify-between gap-4">
                 <div>
                   <p className="text-xs font-light text-white/45 uppercase tracking-[0.14em]">{isVi ? "Yêu cầu hỗ trợ" : "Support Request"}</p>
                   <p className="text-xs font-light text-white/35 mt-2">
