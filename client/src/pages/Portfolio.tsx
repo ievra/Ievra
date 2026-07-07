@@ -479,83 +479,87 @@ export default function Portfolio() {
         {/* Expandable filter panel */}
         <div
           className="overflow-hidden transition-all duration-500 ease-in-out"
-          style={{ maxHeight: filterOpen ? '400px' : '0', opacity: filterOpen ? 1 : 0 }}
+          style={{ maxHeight: filterOpen ? '360px' : '0', opacity: filterOpen ? 1 : 0 }}
         >
-          <div className="pt-6 pb-2 space-y-5">
+          <div className="flex items-start gap-0 pt-6 pb-3 border-t border-white/8 mt-5">
             {/* Project type */}
             {projectTypes.length > 1 && (
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="text-[10px] uppercase tracking-widest text-white/30 w-20 flex-shrink-0">
-                  {language === 'vi' ? 'Loại' : 'Type'}
-                </span>
-                {projectTypes.map((pt) => (
-                  <button
-                    key={pt.value}
-                    onClick={() => setSelectedType(pt.value)}
-                    className={`text-[11px] uppercase tracking-widest font-light px-3 py-1 border transition-colors duration-200 ${
-                      selectedType === pt.value
-                        ? 'border-white text-white'
-                        : 'border-white/20 text-white/40 hover:border-white/50 hover:text-white/70'
-                    }`}
-                    data-testid={`button-type-${pt.value}`}
-                  >
-                    {language === 'vi' ? pt.labelVi : pt.label}
-                  </button>
-                ))}
-              </div>
+              <>
+                <div className="flex-shrink-0 pr-8">
+                  <p className="text-[9px] uppercase tracking-[0.18em] text-white/25 mb-3">
+                    {language === 'vi' ? 'Loại' : 'Type'}
+                  </p>
+                  <div className="flex flex-col gap-2">
+                    {projectTypes.map((pt) => (
+                      <button
+                        key={pt.value}
+                        onClick={() => setSelectedType(pt.value)}
+                        className={`text-left text-[11px] font-light tracking-wide transition-colors duration-200 ${
+                          selectedType === pt.value ? 'text-white' : 'text-white/30 hover:text-white/60'
+                        }`}
+                        data-testid={`button-type-${pt.value}`}
+                      >
+                        {language === 'vi' ? pt.labelVi : pt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="w-px self-stretch bg-white/10 mx-0 flex-shrink-0" />
+              </>
             )}
             {/* Category */}
             {categories.length > 1 && (
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="text-[10px] uppercase tracking-widest text-white/30 w-20 flex-shrink-0">
-                  {language === 'vi' ? 'Danh mục' : 'Category'}
-                </span>
-                {categories.map((cat) => (
-                  <button
-                    key={cat.value}
-                    onClick={() => setSelectedCategory(cat.value)}
-                    className={`text-[11px] uppercase tracking-widest font-light px-3 py-1 border transition-colors duration-200 ${
-                      selectedCategory === cat.value
-                        ? 'border-white text-white'
-                        : 'border-white/20 text-white/40 hover:border-white/50 hover:text-white/70'
-                    }`}
-                    data-testid={`button-cat-${cat.value}`}
-                  >
-                    {language === 'vi' ? cat.labelVi : cat.label}
-                  </button>
-                ))}
-              </div>
+              <>
+                <div className="flex-1 px-8">
+                  <p className="text-[9px] uppercase tracking-[0.18em] text-white/25 mb-3">
+                    {language === 'vi' ? 'Danh mục' : 'Category'}
+                  </p>
+                  <div className="flex flex-wrap gap-x-6 gap-y-2">
+                    {categories.map((cat) => (
+                      <button
+                        key={cat.value}
+                        onClick={() => setSelectedCategory(cat.value)}
+                        className={`text-[11px] font-light tracking-wide transition-colors duration-200 ${
+                          selectedCategory === cat.value ? 'text-white' : 'text-white/30 hover:text-white/60'
+                        }`}
+                        data-testid={`button-cat-${cat.value}`}
+                      >
+                        {language === 'vi' ? cat.labelVi : cat.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div className="w-px self-stretch bg-white/10 mx-0 flex-shrink-0" />
+              </>
             )}
             {/* Year */}
             {availableYears.length > 0 && (
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="text-[10px] uppercase tracking-widest text-white/30 w-20 flex-shrink-0">
+              <div className="flex-shrink-0 pl-8">
+                <p className="text-[9px] uppercase tracking-[0.18em] text-white/25 mb-3">
                   {language === 'vi' ? 'Năm' : 'Year'}
-                </span>
-                <button
-                  onClick={() => setSelectedYear('all')}
-                  className={`text-[11px] uppercase tracking-widest font-light px-3 py-1 border transition-colors duration-200 ${
-                    selectedYear === 'all'
-                      ? 'border-white text-white'
-                      : 'border-white/20 text-white/40 hover:border-white/50 hover:text-white/70'
-                  }`}
-                >
-                  {language === 'vi' ? 'Tất cả' : 'All'}
-                </button>
-                {availableYears.map((year) => (
+                </p>
+                <div className="flex flex-col gap-2">
                   <button
-                    key={year}
-                    onClick={() => setSelectedYear(year)}
-                    className={`text-[11px] uppercase tracking-widest font-light px-3 py-1 border transition-colors duration-200 ${
-                      selectedYear === year
-                        ? 'border-white text-white'
-                        : 'border-white/20 text-white/40 hover:border-white/50 hover:text-white/70'
+                    onClick={() => setSelectedYear('all')}
+                    className={`text-left text-[11px] font-light tracking-wide transition-colors duration-200 ${
+                      selectedYear === 'all' ? 'text-white' : 'text-white/30 hover:text-white/60'
                     }`}
-                    data-testid={`button-year-${year}`}
                   >
-                    {year}
+                    {language === 'vi' ? 'Tất cả' : 'All'}
                   </button>
-                ))}
+                  {availableYears.map((year) => (
+                    <button
+                      key={year}
+                      onClick={() => setSelectedYear(year)}
+                      className={`text-left text-[11px] font-light tracking-wide transition-colors duration-200 ${
+                        selectedYear === year ? 'text-white' : 'text-white/30 hover:text-white/60'
+                      }`}
+                      data-testid={`button-year-${year}`}
+                    >
+                      {year}
+                    </button>
+                  ))}
+                </div>
               </div>
             )}
           </div>
