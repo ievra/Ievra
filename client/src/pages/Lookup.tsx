@@ -559,7 +559,7 @@ export default function Lookup() {
             </div>
           </form>
         </div>
-        <p className="text-sm text-white/40 font-light leading-relaxed mt-5 max-w-lg">
+        <p className="text-sm text-white/40 font-light mt-5 whitespace-nowrap">
           {isVi
             ? 'Nhập số điện thoại để tra cứu tiến độ dự án, nhật ký công trình và thông tin bảo hành.'
             : 'Enter your phone number to check project progress, construction log and warranty information.'}
