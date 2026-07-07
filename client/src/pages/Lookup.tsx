@@ -258,74 +258,84 @@ export default function Lookup() {
   const constructionPhases = result?.constructionPhases || [];
   const transactions = result?.transactions || [];
 
-  const renderCircle = (item: { label: string; progress: number; type: string }, phases: LookupPhase[], phaseTargets: Record<string, number>, circleInteractions: LookupInteraction[], hasTimeline = false) => {
-    const vb = 100;
-    const sw = 10;
-    const r = (vb - sw) / 2;
-    const circ = 2 * Math.PI * r;
-    const filled = (item.progress / 100) * circ;
-    const gap = circ - filled;
-    return (
-      <div className="flex flex-col items-center p-4">
-        <div className="relative w-full aspect-square max-w-[240px]">
-          <svg viewBox={`0 0 ${vb} ${vb}`} className="w-full h-full transform -rotate-90">
-            <circle cx={vb/2} cy={vb/2} r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth={sw} />
-            {item.progress > 0 && (
-              <circle cx={vb/2} cy={vb/2} r={r} fill="none" stroke="#d97706" strokeWidth={sw} strokeDasharray={`${filled} ${gap}`} className="transition-all duration-700 ease-out" />
-            )}
-          </svg>
-          <div className="absolute inset-0 flex items-center justify-center">
-            <span className="text-3xl font-medium text-white/70">{item.progress}%</span>
-          </div>
+  const renderMetric = (
+    label: string,
+    pct: number,
+    phases: LookupPhase[],
+    phaseTargets: Record<string, number>,
+    phaseInteractions: LookupInteraction[],
+    hasTimeline: boolean,
+    paymentTxList: LookupTransaction[]
+  ) => (
+    <div className="space-y-5">
+      {/* Tiến độ */}
+      <div>
+        <div className="flex items-baseline justify-between mb-3">
+          <span className="text-[10px] font-light tracking-[0.18em] text-white/35 uppercase">{label}</span>
+          <span className="text-4xl font-thin text-white leading-none tabular-nums">
+            {pct}<span className="text-xl font-light">%</span>
+          </span>
         </div>
-        <p className="text-sm text-white/50 font-light mt-3">{item.label}</p>
+        <div className="w-full h-[2px] bg-white/10">
+          <div className="h-full bg-white/70 transition-all duration-700 ease-out" style={{ width: `${pct}%` }} />
+        </div>
         {phases.length > 0 && (
-          <div className="w-full mt-4 space-y-2">
+          <div className="mt-4 space-y-3">
             {phases.map((phase) => {
               const target = phaseTargets[phase.value] || 0;
-              const logged = circleInteractions.filter((int) => int.phase === phase.value).length;
-              const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : (hasTimeline ? 0 : 100);
+              const logged = phaseInteractions.filter(i => i.phase === phase.value).length;
+              const p = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : (hasTimeline ? 0 : 100);
               return (
-                <div key={phase.id} className="space-y-0.5">
-                  <div className="flex justify-between items-center">
-                    <span className="text-[11px] text-white/50 truncate max-w-[70%]">{isVi ? phase.labelVi : phase.labelEn}</span>
-                    <span className="text-[11px] text-white/40">{pct}%</span>
+                <div key={phase.id}>
+                  <div className="flex items-baseline justify-between mb-1.5">
+                    <span className="text-[11px] font-light text-white/40 truncate max-w-[75%]">
+                      {isVi ? phase.labelVi : phase.labelEn}
+                    </span>
+                    <span className="text-[11px] font-light text-white/35">{p}%</span>
                   </div>
-                  <div className="w-full h-[3px] bg-white/8 overflow-hidden">
-                    <div className="h-full bg-amber-500/70 transition-all duration-700 ease-out" style={{ width: `${pct}%` }} />
+                  <div className="w-full h-px bg-white/10">
+                    <div className="h-px bg-white/45 transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
                   </div>
                 </div>
               );
             })}
           </div>
         )}
-        {(item.type === "design_payment" || item.type === "construction_payment") && (() => {
-          const paymentTx = item.type === "design_payment"
-            ? transactions.filter((t) => !t.category || t.category === "design")
-            : transactions.filter((t) => t.category === "construction");
-          if (paymentTx.length === 0) return null;
-          return (
-            <div className="w-full mt-4 space-y-2">
-              {[...paymentTx].reverse().map((tx, txIdx) => {
-                const pct = tx.status === "completed" ? 100 : 0;
-                return (
-                  <div key={tx.id || txIdx} className="space-y-0.5">
-                    <div className="flex justify-between items-center">
-                      <span className="text-[11px] text-white/50 truncate max-w-[70%]">{tx.title || tx.description || `${isVi ? "Giao dịch" : "Transaction"} ${txIdx + 1}`}</span>
-                      <span className="text-[11px] text-white/40">{pct}%</span>
-                    </div>
-                    <div className="w-full h-[3px] bg-white/8 overflow-hidden">
-                      <div className="h-full bg-amber-500/70 transition-all duration-700 ease-out" style={{ width: `${pct}%` }} />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          );
-        })()}
       </div>
-    );
-  };
+      {/* Thanh toán */}
+      {paymentTxList.length > 0 && (() => {
+        const paid = paymentTxList.filter(t => t.status === "completed").length;
+        const payPct = Math.round((paid / paymentTxList.length) * 100);
+        return (
+          <div className="pt-5 border-t border-white/8">
+            <div className="flex items-baseline justify-between mb-3">
+              <span className="text-[10px] font-light tracking-[0.18em] text-white/35 uppercase">
+                {isVi ? "Thanh toán" : "Payment"}
+              </span>
+              <span className="text-4xl font-thin text-white leading-none tabular-nums">
+                {payPct}<span className="text-xl font-light">%</span>
+              </span>
+            </div>
+            <div className="w-full h-[2px] bg-white/10">
+              <div className="h-full bg-white/70 transition-all duration-700 ease-out" style={{ width: `${payPct}%` }} />
+            </div>
+            <div className="mt-4 space-y-2.5">
+              {[...paymentTxList].reverse().map((tx, idx) => (
+                <div key={tx.id || idx} className="flex items-center justify-between gap-3">
+                  <span className="text-[11px] font-light text-white/40 truncate">
+                    {tx.title || tx.description || `${isVi ? "Giao dịch" : "Transaction"} ${idx + 1}`}
+                  </span>
+                  <span className={`text-[10px] font-light shrink-0 ${tx.status === "completed" ? "text-white/60" : "text-white/20"}`}>
+                    {tx.status === "completed" ? (isVi ? "Đã thanh toán" : "Paid") : (isVi ? "Chờ" : "Pending")}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
+    </div>
+  );
 
   const renderInteractionTable = (interactions: LookupInteraction[], phases: LookupPhase[]) => {
     return (
@@ -478,7 +488,7 @@ export default function Lookup() {
         {result && (
           <div className="max-w-7xl mx-auto space-y-5 animate-in fade-in duration-500">
             {/* Client info card */}
-            <div className="border-l-2 border-amber-500/60 pl-6 py-4 bg-white/[0.02]">
+            <div className="border-b border-white/10 pb-6">
               <div className="space-y-1">
                 <div className="flex items-center gap-3">
                   <h3 className="text-2xl font-light text-white">
@@ -526,64 +536,61 @@ export default function Lookup() {
               </div>
             </div>
 
-            <div className="border border-white/10 p-6 bg-white/[0.02]">
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-[11px] font-light tracking-[0.18em] text-white/40 mb-5 pb-2 border-b border-white/10">{isVi ? "Tiến độ thiết kế" : "Design Progress"}</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    {renderCircle(
-                      { label: isVi ? "Tiến Độ" : "Progress", progress: (() => {
-                        if (result.client.designTimeline) {
-                          return Math.min(100, Math.round((designInteractions.length / result.client.designTimeline) * 100));
-                        }
-                        const phaseTargets = (result.client.designPhaseTargets || {}) as Record<string, number>;
-                        if (designPhases.length > 0) {
-                          const sum = designPhases.reduce((acc, phase) => {
-                            const target = phaseTargets[phase.value] || 0;
-                            const logged = designInteractions.filter(i => i.phase === phase.value).length;
-                            const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 100;
-                            return acc + pct;
-                          }, 0);
-                          return Math.round(sum / designPhases.length);
-                        }
-                        return 100;
-                      })(), type: "design_progress" },
-                      designPhases, (result.client.designPhaseTargets || {}), designInteractions, !!result.client.designTimeline
-                    )}
-                    {renderCircle(
-                      { label: isVi ? "Thanh Toán" : "Payment", progress: (() => { const tx = transactions.filter(t => !t.category || t.category === "design"); const done = tx.filter(t => t.status === "completed").length; return tx.length > 0 ? Math.round((done / tx.length) * 100) : 0; })(), type: "design_payment" },
-                      [], {}, []
-                    )}
-                  </div>
-                </div>
-                <div>
-                  <h3 className="text-[11px] font-light tracking-[0.18em] text-white/40 mb-5 pb-2 border-b border-white/10">{isVi ? "Tiến độ thi công" : "Construction Progress"}</h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    {renderCircle(
-                      { label: isVi ? "Tiến Độ" : "Progress", progress: (() => {
-                        if (result.client.constructionTimeline) {
-                          return Math.min(100, Math.round((constructionInteractions.length / result.client.constructionTimeline) * 100));
-                        }
-                        const phaseTargets = (result.client.constructionPhaseTargets || {}) as Record<string, number>;
-                        if (constructionPhases.length > 0) {
-                          const sum = constructionPhases.reduce((acc, phase) => {
-                            const target = phaseTargets[phase.value] || 0;
-                            const logged = constructionInteractions.filter(i => i.phase === phase.value).length;
-                            const pct = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 100;
-                            return acc + pct;
-                          }, 0);
-                          return Math.round(sum / constructionPhases.length);
-                        }
-                        return 100;
-                      })(), type: "construction_progress" },
-                      constructionPhases, (result.client.constructionPhaseTargets || {}), constructionInteractions, !!result.client.constructionTimeline
-                    )}
-                    {renderCircle(
-                      { label: isVi ? "Thanh Toán" : "Payment", progress: (() => { const tx = transactions.filter(t => t.category === "construction"); const done = tx.filter(t => t.status === "completed").length; return tx.length > 0 ? Math.round((done / tx.length) * 100) : 0; })(), type: "construction_payment" },
-                      [], {}, []
-                    )}
-                  </div>
-                </div>
+            {/* Progress — 2 column: Design | Construction */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-px bg-white/8">
+              {/* Design column */}
+              <div className="bg-black py-8 pr-0 lg:pr-10">
+                <p className="text-[9px] uppercase tracking-[0.22em] text-white/25 mb-8 pb-3 border-b border-white/8">
+                  {isVi ? "Thiết kế" : "Design"}
+                </p>
+                {renderMetric(
+                  isVi ? "Tiến độ" : "Progress",
+                  (() => {
+                    if (result.client.designTimeline) return Math.min(100, Math.round((designInteractions.length / result.client.designTimeline) * 100));
+                    const pt = (result.client.designPhaseTargets || {}) as Record<string, number>;
+                    if (designPhases.length > 0) {
+                      const sum = designPhases.reduce((acc, ph) => {
+                        const t = pt[ph.value] || 0;
+                        const l = designInteractions.filter(i => i.phase === ph.value).length;
+                        return acc + (t > 0 ? Math.min(100, Math.round((l / t) * 100)) : 100);
+                      }, 0);
+                      return Math.round(sum / designPhases.length);
+                    }
+                    return 100;
+                  })(),
+                  designPhases,
+                  (result.client.designPhaseTargets || {}) as Record<string, number>,
+                  designInteractions,
+                  !!result.client.designTimeline,
+                  transactions.filter(t => !t.category || t.category === "design")
+                )}
+              </div>
+              {/* Construction column */}
+              <div className="bg-black py-8 pl-0 lg:pl-10">
+                <p className="text-[9px] uppercase tracking-[0.22em] text-white/25 mb-8 pb-3 border-b border-white/8">
+                  {isVi ? "Thi công" : "Construction"}
+                </p>
+                {renderMetric(
+                  isVi ? "Tiến độ" : "Progress",
+                  (() => {
+                    if (result.client.constructionTimeline) return Math.min(100, Math.round((constructionInteractions.length / result.client.constructionTimeline) * 100));
+                    const pt = (result.client.constructionPhaseTargets || {}) as Record<string, number>;
+                    if (constructionPhases.length > 0) {
+                      const sum = constructionPhases.reduce((acc, ph) => {
+                        const t = pt[ph.value] || 0;
+                        const l = constructionInteractions.filter(i => i.phase === ph.value).length;
+                        return acc + (t > 0 ? Math.min(100, Math.round((l / t) * 100)) : 100);
+                      }, 0);
+                      return Math.round(sum / constructionPhases.length);
+                    }
+                    return 100;
+                  })(),
+                  constructionPhases,
+                  (result.client.constructionPhaseTargets || {}) as Record<string, number>,
+                  constructionInteractions,
+                  !!result.client.constructionTimeline,
+                  transactions.filter(t => t.category === "construction")
+                )}
               </div>
             </div>
 
