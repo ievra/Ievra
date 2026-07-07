@@ -699,25 +699,36 @@ export default function Lookup() {
               const cTx = transactions.filter(t => t.category === "construction");
               const dPayPct = dTx.length > 0 ? Math.round((dTx.filter(t => t.status === "completed").length / dTx.length) * 100) : 0;
               const cPayPct = cTx.length > 0 ? Math.round((cTx.filter(t => t.status === "completed").length / cTx.length) * 100) : 0;
-              const kpis = [
-                { label: isVi ? "Tiến độ Thiết kế" : "Design Progress", pct: dProgress },
-                { label: isVi ? "Thanh toán Thiết kế" : "Design Payment", pct: dPayPct },
-                { label: isVi ? "Tiến độ Thi công" : "Construction Progress", pct: cProgress },
-                { label: isVi ? "Thanh toán Thi công" : "Construction Payment", pct: cPayPct },
-              ];
-              return (
-                <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/8">
-                  {kpis.map(({ label, pct }, i) => (
-                    <div key={i} className="bg-black px-5 py-6 sm:px-8 sm:py-8 flex flex-col">
-                      <p className="text-4xl sm:text-5xl lg:text-6xl font-thin text-white tabular-nums leading-none">
-                        {pct}<span className="text-xl sm:text-2xl font-light">%</span>
-                      </p>
-                      <p className="text-xs uppercase tracking-[0.14em] font-light text-white/45 mt-4 flex-1">{label}</p>
-                      <div className="mt-4 w-full h-[2px] bg-white/10 rounded-full">
-                        <div className="h-full bg-white/55 rounded-full transition-all duration-1000 ease-out" style={{ width: `${pct}%` }} />
+              const renderKpiSection = (sectionLabel: string, items: { label: string; pct: number }[]) => (
+                <div>
+                  <div className="px-5 sm:px-8 pt-5 sm:pt-6 pb-3">
+                    <p className="text-xs uppercase tracking-[0.14em] font-light text-white/35">{sectionLabel}</p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-px bg-white/8">
+                    {items.map(({ label, pct }, i) => (
+                      <div key={i} className="bg-black px-5 py-6 sm:px-8 sm:py-8 flex flex-col">
+                        <p className="text-4xl sm:text-5xl lg:text-6xl font-thin text-white tabular-nums leading-none">
+                          {pct}<span className="text-xl sm:text-2xl font-light">%</span>
+                        </p>
+                        <p className="text-xs uppercase tracking-[0.14em] font-light text-white/45 mt-4 flex-1">{label}</p>
+                        <div className="mt-4 w-full h-[2px] bg-white/10 rounded-full">
+                          <div className="h-full bg-white/55 rounded-full transition-all duration-1000 ease-out" style={{ width: `${pct}%` }} />
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
+                </div>
+              );
+              return (
+                <div className="border border-white/10 space-y-0 divide-y divide-white/10">
+                  {renderKpiSection(isVi ? "Thiết kế" : "Design", [
+                    { label: isVi ? "Tiến độ" : "Progress", pct: dProgress },
+                    { label: isVi ? "Thanh toán" : "Payment", pct: dPayPct },
+                  ])}
+                  {renderKpiSection(isVi ? "Thi công" : "Construction", [
+                    { label: isVi ? "Tiến độ" : "Progress", pct: cProgress },
+                    { label: isVi ? "Thanh toán" : "Payment", pct: cPayPct },
+                  ])}
                 </div>
               );
             })()}
