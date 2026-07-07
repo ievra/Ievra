@@ -519,7 +519,7 @@ export default function Lookup() {
 
   return (
     <div className="min-h-screen bg-black pt-32 pb-20">
-      <div className="px-4 sm:px-6 lg:px-8 mb-12">
+      <div className="px-6 sm:px-10 lg:px-16 mb-12">
         {/* Editorial header */}
         <div className="flex flex-col gap-6 border-b border-white/10 pb-8 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -566,7 +566,7 @@ export default function Lookup() {
         </p>
       </div>
 
-      <div className="px-4 sm:px-6 lg:px-8">
+      <div className="px-6 sm:px-10 lg:px-16">
 
         {error && searched && (
           <div className="max-w-3xl mx-auto">
@@ -578,7 +578,7 @@ export default function Lookup() {
         )}
 
         {result && (
-          <div className="max-w-7xl mx-auto space-y-5 animate-in fade-in duration-500">
+          <div className="max-w-[1400px] mx-auto space-y-5 animate-in fade-in duration-500">
             {/* Client info card */}
             {(() => {
               const stageLabel = result.crmStages.find(s => s.value === result.client.stage);
