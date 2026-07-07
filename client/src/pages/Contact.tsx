@@ -226,30 +226,10 @@ export default function Contact() {
                 {t('contact.title')}
               </h1>
 
-              {/* Contact info */}
-              <div className="space-y-6 border-t border-white/10 pt-8">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-3">
-                    {language === 'vi' ? 'Liên hệ trực tiếp' : 'Direct Contact'}
-                  </p>
-                  <div className="space-y-1.5">
-                    <a href="tel:0767554480" className="block text-sm font-light text-white/70 hover:text-white transition-colors">0767 5544 80</a>
-                    <a href="mailto:contact@ievra.com" className="block text-sm font-light text-white/70 hover:text-white transition-colors">contact@ievra.com</a>
-                  </div>
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-3">
-                    {language === 'vi' ? 'Văn phòng' : 'Office'}
-                  </p>
-                  <div className="space-y-1.5">
-                    <p className="text-sm font-light text-white/60">
-                      {language === 'vi' ? '422 Đào Trí, P. Phú Thuận, Q. 7, TP.HCM' : '422 Dao Tri, Phu Thuan, Dist. 7, HCMC'}
-                    </p>
-                    <p className="text-sm font-light text-white/60">
-                      {language === 'vi' ? '9 Nguyễn Khoái, P. 2, Q. 4, TP.HCM' : '9 Nguyen Khoai, Ward 2, Dist. 4, HCMC'}
-                    </p>
-                  </div>
-                </div>
+              {/* Quick contact links */}
+              <div className="border-t border-white/10 pt-8 space-y-1.5">
+                <a href="tel:0767554480" className="block text-sm font-light text-white/50 hover:text-white transition-colors">0767 5544 80</a>
+                <a href="mailto:contact@ievra.com" className="block text-sm font-light text-white/50 hover:text-white transition-colors">contact@ievra.com</a>
               </div>
             </div>
 
