@@ -417,11 +417,6 @@ export default function Lookup() {
 
     return (
       <div className="space-y-0">
-        {visible.length === 0 && (
-          <div className="text-center py-10">
-            <p className="text-sm font-light text-white/30">{isVi ? "Không tìm thấy kết quả" : "No results found"}</p>
-          </div>
-        )}
         {/* Mobile card view */}
         <div className="sm:hidden divide-y divide-white/8">
           {grouped.map((group, gi) => (
