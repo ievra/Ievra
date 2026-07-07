@@ -412,7 +412,7 @@ export default function Blog() {
               </button>
               <div
                 className="overflow-hidden transition-all duration-300 ease-in-out"
-                style={{ width: searchOpen ? '12rem' : '0', opacity: searchOpen ? 1 : 0 }}
+                style={{ width: searchOpen ? '22rem' : '0', opacity: searchOpen ? 1 : 0 }}
               >
                 <Input
                   type="text"
@@ -420,7 +420,7 @@ export default function Blog() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   autoFocus={searchOpen}
-                  className="bg-transparent text-white placeholder-white/30 px-0 py-0 text-sm font-light rounded-none focus-visible:ring-0 border-0 w-48"
+                  className="bg-transparent text-white placeholder-white/30 px-0 py-0 text-sm font-light rounded-none focus-visible:ring-0 border-0 w-full"
                   data-testid="input-search"
                 />
               </div>
