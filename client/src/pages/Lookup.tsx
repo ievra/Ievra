@@ -553,7 +553,7 @@ export default function Lookup() {
             </div>
           </form>
         </div>
-        <p className="text-sm text-white/40 font-light mt-5 whitespace-nowrap">
+        <p className="text-sm text-white/40 font-light mt-5">
           {isVi
             ? 'Nhập số điện thoại để tra cứu tiến độ dự án, nhật ký công trình và thông tin bảo hành.'
             : 'Enter your phone number to check project progress, construction log and warranty information.'}
@@ -572,7 +572,7 @@ export default function Lookup() {
         )}
 
         {result && (
-          <div className="max-w-[1400px] mx-auto bg-black border border-white/[0.08] divide-y divide-white/[0.07] px-8 sm:px-12 lg:px-16 animate-in fade-in duration-500">
+          <div className="max-w-[1400px] mx-auto bg-black border border-white/[0.08] divide-y divide-white/[0.07] px-4 sm:px-12 lg:px-16 animate-in fade-in duration-500">
             {/* Client info card */}
             {(() => {
               const stageLabel = result.crmStages.find(s => s.value === result.client.stage);
