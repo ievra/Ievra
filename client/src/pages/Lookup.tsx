@@ -620,7 +620,7 @@ export default function Lookup() {
                       { label: isVi ? "Công ty" : "Company", value: result.client.company, hidden: result.client.company ? "*".repeat(Math.min(16, result.client.company.length)) : null },
                       { label: isVi ? "Địa chỉ" : "Address", value: result.client.address, hidden: result.client.address ? "*".repeat(Math.min(16, result.client.address.length)) : null },
                     ].map(({ label, value, hidden }, i) => value ? (
-                      <div key={i} className="bg-black px-6 py-5">
+                      <div key={i} className="bg-black px-4 py-4 sm:px-6 sm:py-5">
                         <p className="text-xs uppercase tracking-[0.14em] font-light text-white/30 mb-2">{label}</p>
                         <p className="text-sm font-light text-white/75 truncate">{infoRevealed ? value : hidden}</p>
                       </div>
@@ -675,12 +675,12 @@ export default function Lookup() {
               return (
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/8">
                   {kpis.map(({ label, pct }, i) => (
-                    <div key={i} className="bg-black px-8 py-8">
-                      <p className="text-5xl lg:text-6xl font-thin text-white tabular-nums leading-none">
-                        {pct}<span className="text-2xl font-light">%</span>
+                    <div key={i} className="bg-black px-5 py-6 sm:px-8 sm:py-8">
+                      <p className="text-4xl sm:text-5xl lg:text-6xl font-thin text-white tabular-nums leading-none">
+                        {pct}<span className="text-xl sm:text-2xl font-light">%</span>
                       </p>
-                      <p className="text-xs uppercase tracking-[0.14em] font-light text-white/45 mt-5">{label}</p>
-                      <div className="mt-4 w-full h-[2px] bg-white/10 rounded-full">
+                      <p className="text-xs uppercase tracking-[0.14em] font-light text-white/45 mt-4">{label}</p>
+                      <div className="mt-3 w-full h-[2px] bg-white/10 rounded-full">
                         <div className="h-full bg-white/55 rounded-full transition-all duration-1000 ease-out" style={{ width: `${pct}%` }} />
                       </div>
                     </div>
@@ -692,8 +692,8 @@ export default function Lookup() {
             {/* Progress — 2 col (Design | Construction), mỗi cột 2 vòng tròn (Tiến độ | Thanh toán) */}
             <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-white/8">
               {/* ── Thiết kế ── */}
-              <div className="py-10 lg:pr-10">
-                <p className="text-xs font-light text-white/45 mb-8 uppercase tracking-[0.14em]">
+              <div className="py-6 sm:py-10 lg:pr-10">
+                <p className="text-xs font-light text-white/45 mb-6 sm:mb-8 uppercase tracking-[0.14em]">
                   {isVi ? "Thiết kế" : "Design"}
                 </p>
                 <div className="grid grid-cols-2 gap-6 items-stretch">
@@ -724,8 +724,8 @@ export default function Lookup() {
                 </div>
               </div>
               {/* ── Thi công ── */}
-              <div className="py-10 lg:pl-10">
-                <p className="text-xs font-light text-white/45 mb-8 uppercase tracking-[0.14em]">
+              <div className="py-6 sm:py-10 lg:pl-10">
+                <p className="text-xs font-light text-white/45 mb-6 sm:mb-8 uppercase tracking-[0.14em]">
                   {isVi ? "Thi công" : "Construction"}
                 </p>
                 <div className="grid grid-cols-2 gap-6 items-stretch">
@@ -759,8 +759,8 @@ export default function Lookup() {
 
             {/* ── Phase Overview ── */}
             {(designPhases.length > 0 || constructionPhases.length > 0) && (
-              <div className="border border-white/10 p-8">
-                <p className="text-xs font-light text-white/45 mb-8 uppercase tracking-[0.14em]">
+              <div className="border border-white/10 p-5 sm:p-8">
+                <p className="text-xs font-light text-white/45 mb-6 sm:mb-8 uppercase tracking-[0.14em]">
                   {isVi ? "Tổng quan giai đoạn" : "Phase Overview"}
                 </p>
                 <div className="space-y-8">
@@ -974,7 +974,7 @@ export default function Lookup() {
                 </div>
               </div>
               <form onSubmit={handleSupportSubmit}>
-                <div className="px-8 pt-6 pb-8">
+                <div className="px-5 pt-5 pb-6 sm:px-8 sm:pt-6 sm:pb-8">
                   <textarea
                     placeholder={isVi ? "Nhập yêu cầu hoặc ghi chú của bạn..." : "Type your request or notes here..."}
                     value={supportMessage}
