@@ -476,7 +476,7 @@ export default function Portfolio() {
         {/* Expandable filter panel */}
         <div
           className="overflow-hidden transition-all duration-500 ease-in-out"
-          style={{ maxHeight: filterOpen ? '360px' : '0', opacity: filterOpen ? 1 : 0 }}
+          style={{ maxHeight: filterOpen ? '600px' : '0', opacity: filterOpen ? 1 : 0 }}
         >
           <div className="flex items-start gap-0 pt-6 pb-4 border-t border-white/10 mt-5">
             {/* Project type */}
