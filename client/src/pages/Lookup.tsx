@@ -701,7 +701,7 @@ export default function Lookup() {
               const renderKpiSection = (sectionLabel: string, items: { label: string; pct: number }[]) => (
                 <div>
                   <div className="pb-5 sm:pb-6">
-                    <p className="text-base font-light text-white tracking-wide">{sectionLabel}</p>
+                    <p className="text-xs uppercase tracking-[0.14em] font-light text-white/40">{sectionLabel}</p>
                   </div>
                   <div className="grid grid-cols-2 gap-12 sm:gap-16">
                     {items.map(({ label, pct }, i) => (
@@ -740,7 +740,7 @@ export default function Lookup() {
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
                 {/* ── Thiết kế circles ── */}
                 <div>
-                  <p className="text-lg font-light text-white mb-6 sm:mb-8 tracking-wide">
+                  <p className="text-xs uppercase tracking-[0.14em] font-light text-white/40 mb-6 sm:mb-8">
                     {isVi ? "Thiết kế" : "Design"}
                   </p>
                   <div className="grid grid-cols-2 gap-6 items-start">
@@ -771,7 +771,7 @@ export default function Lookup() {
                 </div>
                 {/* ── Thi công circles ── */}
                 <div>
-                  <p className="text-lg font-light text-white mb-6 sm:mb-8 tracking-wide">
+                  <p className="text-xs uppercase tracking-[0.14em] font-light text-white/40 mb-6 sm:mb-8">
                     {isVi ? "Thi công" : "Construction"}
                   </p>
                   <div className="grid grid-cols-2 gap-6 items-start">
