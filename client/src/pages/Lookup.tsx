@@ -630,10 +630,10 @@ export default function Lookup() {
               const dPayPct = dTx.length > 0 ? Math.round((dTx.filter(t => t.status === "completed").length / dTx.length) * 100) : 0;
               const cPayPct = cTx.length > 0 ? Math.round((cTx.filter(t => t.status === "completed").length / cTx.length) * 100) : 0;
               const kpis = [
-                { label: isVi ? "Tiến độ\nThiết kế" : "Design\nProgress", pct: dProgress },
-                { label: isVi ? "Thanh toán\nThiết kế" : "Design\nPayment", pct: dPayPct },
-                { label: isVi ? "Tiến độ\nThi công" : "Construction\nProgress", pct: cProgress },
-                { label: isVi ? "Thanh toán\nThi công" : "Construction\nPayment", pct: cPayPct },
+                { label: isVi ? "Tiến độ Thiết kế" : "Design Progress", pct: dProgress },
+                { label: isVi ? "Thanh toán Thiết kế" : "Design Payment", pct: dPayPct },
+                { label: isVi ? "Tiến độ Thi công" : "Construction Progress", pct: cProgress },
+                { label: isVi ? "Thanh toán Thi công" : "Construction Payment", pct: cPayPct },
               ];
               return (
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-white/8">
@@ -642,7 +642,7 @@ export default function Lookup() {
                       <p className="text-5xl lg:text-6xl font-thin text-white tabular-nums leading-none">
                         {pct}<span className="text-2xl font-light">%</span>
                       </p>
-                      <p className="text-xs uppercase tracking-[0.14em] text-white/55 mt-5 whitespace-pre-line leading-relaxed">{label}</p>
+                      <p className="text-xs uppercase tracking-[0.14em] text-white/55 mt-5">{label}</p>
                       <div className="mt-4 w-full h-[2px] bg-white/10 rounded-full">
                         <div className="h-full bg-white/55 rounded-full transition-all duration-1000 ease-out" style={{ width: `${pct}%` }} />
                       </div>
