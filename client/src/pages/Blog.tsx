@@ -466,7 +466,7 @@ export default function Blog() {
                     data-testid={`card-article-${article.id}`}
                   >
                     {/* Image with category + date overlay */}
-                    <div className="relative overflow-hidden bg-zinc-900 w-full h-[280px] md:h-[340px] lg:h-[320px] transform-gpu backface-hidden">
+                    <div className="relative overflow-hidden bg-zinc-900 w-full h-[340px] md:h-[420px] lg:h-[400px] transform-gpu backface-hidden">
                       {(article.featuredImage || article.featuredImageData) ? (
                         <img
                           src={toCardImg(article.featuredImage || article.featuredImageData || '', 1280)}
