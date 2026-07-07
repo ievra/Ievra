@@ -847,7 +847,7 @@ export default function Lookup() {
             {/* ── Phase Overview ── */}
             {(designPhases.length > 0 || constructionPhases.length > 0) && (
               <div className="border border-white/10 p-5 sm:p-8">
-                <p className="text-xs font-light text-white/45 mb-6 sm:mb-8 uppercase tracking-[0.14em]">
+                <p className="text-base font-light text-white/80 mb-6 sm:mb-8 tracking-wide">
                   {isVi ? "Tổng quan giai đoạn" : "Phase Overview"}
                 </p>
                 <div className="space-y-8">
