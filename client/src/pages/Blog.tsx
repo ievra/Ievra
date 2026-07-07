@@ -495,10 +495,10 @@ export default function Blog() {
                       </h3>
                       {/* Bottom row: category left | attribution + date right — fixed height */}
                       <div className="flex items-center justify-between mt-auto" style={{ height: '1rem' }}>
-                        <p className="text-foreground/25 text-[10px] uppercase tracking-widest font-light truncate mr-2">
+                        <p className="text-foreground/15 text-[10px] uppercase tracking-widest font-light truncate mr-2">
                           {getCategoryLabel(article.category)}
                         </p>
-                        <p className="text-foreground/25 text-[10px] font-light whitespace-nowrap">
+                        <p className="text-foreground/15 text-[10px] font-light whitespace-nowrap">
                           {[
                             (article as any).attribution,
                             formatDate(String(article.publishedAt || article.createdAt))
