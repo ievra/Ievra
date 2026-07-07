@@ -494,19 +494,29 @@ export default function Blog() {
                         </p>
                       </div>
                     </div>
-                    {/* Title + Team below image */}
-                    <div className="pt-3 pb-3">
-                      {(article as any).attribution && (
-                        <p className="text-foreground/50 text-[11px] font-light uppercase tracking-widest mb-1">
-                          {(article as any).attribution}
-                        </p>
-                      )}
+                    {/* Text below image */}
+                    <div className="pt-3 pb-3 flex flex-col gap-1">
+                      {/* Category above title */}
+                      <p className="text-foreground/40 text-[10px] uppercase tracking-widest font-light leading-none">
+                        {getCategoryLabel(article.category)}
+                      </p>
+                      {/* Title — reserved 2-line height */}
                       <h3
-                        className="text-foreground text-sm md:text-[15px] font-light uppercase tracking-wide leading-snug line-clamp-2"
+                        className="text-foreground text-sm md:text-[15px] font-light uppercase tracking-wide leading-snug"
+                        style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', minHeight: '2.6rem' }}
                         data-testid={`text-title-${article.id}`}
                       >
                         {article.title}
                       </h3>
+                      {/* Bottom row: date left | attribution right */}
+                      <div className="flex items-center justify-between mt-1">
+                        <p className="text-foreground/35 text-[10px] font-light">
+                          {formatDate(String(article.publishedAt || article.createdAt))}
+                        </p>
+                        <p className="text-foreground/35 text-[10px] font-light text-right">
+                          {(article as any).attribution || ''}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </Link>
