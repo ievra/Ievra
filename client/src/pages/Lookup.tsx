@@ -494,49 +494,78 @@ export default function Lookup() {
         {result && (
           <div className="max-w-7xl mx-auto space-y-5 animate-in fade-in duration-500">
             {/* Client info card */}
-            <div className="border-b border-white/10 pb-6">
-              <div className="space-y-1">
-                <div className="flex items-center gap-3">
-                  <h3 className="text-2xl font-light text-white">
-                    {infoRevealed ? `${result.client.lastName} ${result.client.firstName}` : (() => {
-                      const last = result.client.lastName || "";
-                      const first = result.client.firstName || "";
-                      const nameParts = `${last} ${first}`.trim().split(" ");
-                      return nameParts.map((p, i) => i === 0 ? p : "*".repeat(p.length)).join(" ");
-                    })()}
+            <div className="border border-white/10 p-8 bg-white/[0.02]">
+              {/* Name row */}
+              <div className="flex items-start justify-between gap-4 mb-8">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.18em] text-white/40 mb-3">
+                    {isVi ? "Khách hàng" : "Client"}
+                  </p>
+                  <h3 className="text-3xl font-light text-white leading-tight">
+                    {infoRevealed
+                      ? `${result.client.lastName} ${result.client.firstName}`
+                      : (() => {
+                          const nameParts = `${result.client.lastName || ""} ${result.client.firstName || ""}`.trim().split(" ");
+                          return nameParts.map((p, i) => i === 0 ? p : "*".repeat(p.length)).join(" ");
+                        })()}
                   </h3>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (infoRevealed) {
-                        setInfoRevealed(false);
-                      } else {
-                        setShowCccdDialog(true);
-                        setCccdInput("");
-                      }
-                    }}
-                    className="text-white/40 hover:text-white transition-colors p-1"
-                    title={infoRevealed ? (isVi ? "Ẩn thông tin" : "Hide info") : (isVi ? "Hiển thị thông tin" : "Show info")}
-                  >
-                    {infoRevealed ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-                  </button>
                 </div>
-                <div className="flex flex-wrap items-center gap-4 text-sm text-white/60 pl-0.5">
-                  {result.client.phone && <span>{infoRevealed ? result.client.phone : result.client.phone.slice(0, 3) + "*".repeat(Math.max(0, result.client.phone.length - 3))}</span>}
-                  {result.client.phone && result.client.email && <span className="text-white/20">-</span>}
-                  {result.client.email && <span>{infoRevealed ? result.client.email : (() => {
-                    const atIdx = result.client.email.indexOf("@");
-                    if (atIdx <= 0) return "*".repeat(result.client.email.length);
-                    const local = result.client.email.slice(0, atIdx);
-                    const domain = result.client.email.slice(atIdx);
-                    return local.slice(0, 3) + "*".repeat(Math.max(0, local.length - 3)) + domain;
-                  })()}</span>}
-                </div>
-                {(result.client.company || result.client.address) && (
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-white/40 pl-0.5">
-                    {result.client.company && <span>{infoRevealed ? result.client.company : "*".repeat(16)}</span>}
-                    {result.client.company && result.client.address && <span className="text-white/20">-</span>}
-                    {result.client.address && <span>{infoRevealed ? result.client.address : "*".repeat(16)}</span>}
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (infoRevealed) {
+                      setInfoRevealed(false);
+                    } else {
+                      setShowCccdDialog(true);
+                      setCccdInput("");
+                    }
+                  }}
+                  className="flex items-center gap-2 text-xs font-light text-white/40 hover:text-white/80 transition-colors border border-white/15 hover:border-white/35 px-4 py-2 shrink-0 mt-7"
+                  title={infoRevealed ? (isVi ? "Ẩn thông tin" : "Hide info") : (isVi ? "Hiển thị thông tin" : "Show info")}
+                >
+                  {infoRevealed ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                  <span className="hidden sm:inline">{infoRevealed ? (isVi ? "Ẩn" : "Hide") : (isVi ? "Xác minh" : "Verify")}</span>
+                </button>
+              </div>
+
+              {/* Info fields grid */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 pt-6 border-t border-white/8">
+                {result.client.phone && (
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.15em] text-white/35 mb-2">{isVi ? "Điện thoại" : "Phone"}</p>
+                    <p className="text-sm font-light text-white/75">
+                      {infoRevealed ? result.client.phone : result.client.phone.slice(0, 3) + "*".repeat(Math.max(0, result.client.phone.length - 3))}
+                    </p>
+                  </div>
+                )}
+                {result.client.email && (
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.15em] text-white/35 mb-2">Email</p>
+                    <p className="text-sm font-light text-white/75 truncate">
+                      {infoRevealed ? result.client.email : (() => {
+                        const atIdx = result.client.email.indexOf("@");
+                        if (atIdx <= 0) return "*".repeat(result.client.email.length);
+                        const local = result.client.email.slice(0, atIdx);
+                        const domain = result.client.email.slice(atIdx);
+                        return local.slice(0, 3) + "*".repeat(Math.max(0, local.length - 3)) + domain;
+                      })()}
+                    </p>
+                  </div>
+                )}
+                {result.client.company && (
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.15em] text-white/35 mb-2">{isVi ? "Công ty" : "Company"}</p>
+                    <p className="text-sm font-light text-white/75 truncate">
+                      {infoRevealed ? result.client.company : "*".repeat(Math.min(16, result.client.company.length))}
+                    </p>
+                  </div>
+                )}
+                {result.client.address && (
+                  <div>
+                    <p className="text-[10px] uppercase tracking-[0.15em] text-white/35 mb-2">{isVi ? "Địa chỉ" : "Address"}</p>
+                    <p className="text-sm font-light text-white/75 truncate">
+                      {infoRevealed ? result.client.address : "*".repeat(Math.min(16, result.client.address.length))}
+                    </p>
                   </div>
                 )}
               </div>
