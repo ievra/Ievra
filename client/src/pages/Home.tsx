@@ -1532,8 +1532,8 @@ export default function Home() {
                         }}
                         data-testid={`article-card-${article.id}`}
                       >
-                        {/* Fixed-height image - not full cover */}
-                        <div className="relative overflow-hidden bg-white/5" style={{ flex: '3' }}>
+                        {/* Image fills remaining space above the fixed-height content */}
+                        <div className="relative overflow-hidden bg-white/5" style={{ flex: '1' }}>
                           {(article.featuredImage || article.featuredImageData) ? (
                             <img
                               src={toCardImg(article.featuredImage || article.featuredImageData || '', 1280)}
@@ -1552,38 +1552,38 @@ export default function Home() {
                           <div className="absolute inset-0 bg-white/[0.06] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         </div>
 
-                        {/* Content below image */}
-                        <div className="p-4 flex flex-col flex-shrink-0" style={{ height: '15rem' }}>
-                          {article.category && (
-                            <p className="text-white/40 text-xs uppercase tracking-widest mb-2 font-light">
-                              {getArticleCategoryLabel(article.category)}
-                            </p>
-                          )}
+                        {/* Content below image — fixed slots so the typewriter effect never shifts layout */}
+                        <div className="p-4 flex flex-col flex-shrink-0">
+                          <p className="text-white/40 text-xs uppercase tracking-widest mb-2 font-light" style={{ minHeight: '1rem' }}>
+                            {article.category ? getArticleCategoryLabel(article.category) : ''}
+                          </p>
                           <TypewriterTitle
                             key={`article-title-${article.id}`}
                             text={article.title}
                             animate={isActive}
                             className="text-xl font-sans font-light mb-2"
-                            style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+                            style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '3.5rem', lineHeight: '1.75rem' }}
                           />
-                          {isActive && (
-                            <TypewriterTitle
-                              key={`article-excerpt-${article.id}`}
-                              as="p"
-                              text={article.excerpt || "Discover insights and trends in interior design..."}
-                              charDelay={(() => {
-                                const titleLen = (article.title || '').length || 1;
-                                const titleSpeed = Math.max(60, Math.round(2800 / titleLen));
-                                const titleDuration = titleLen * titleSpeed;
-                                const excerptLen = (article.excerpt || "Discover insights and trends in interior design...").length || 1;
-                                return Math.max(18, Math.round(titleDuration / excerptLen));
-                              })()}
-                              className="text-foreground/80 text-sm mb-2 break-words"
-                              style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
-                              testId={`text-article-excerpt-${article.id}`}
-                            />
-                          )}
-                          <div className="mt-auto pt-2 flex items-end justify-between gap-2">
+                          <div className="mb-2" style={{ height: '3.75rem' }}>
+                            {isActive && (
+                              <TypewriterTitle
+                                key={`article-excerpt-${article.id}`}
+                                as="p"
+                                text={article.excerpt || "Discover insights and trends in interior design..."}
+                                charDelay={(() => {
+                                  const titleLen = (article.title || '').length || 1;
+                                  const titleSpeed = Math.max(60, Math.round(2800 / titleLen));
+                                  const titleDuration = titleLen * titleSpeed;
+                                  const excerptLen = (article.excerpt || "Discover insights and trends in interior design...").length || 1;
+                                  return Math.max(18, Math.round(titleDuration / excerptLen));
+                                })()}
+                                className="text-foreground/80 text-sm break-words"
+                                style={{ display: '-webkit-box', WebkitLineClamp: 3, WebkitBoxOrient: 'vertical', overflow: 'hidden', lineHeight: '1.25rem' }}
+                                testId={`text-article-excerpt-${article.id}`}
+                              />
+                            )}
+                          </div>
+                          <div className="pt-2 flex items-end justify-between gap-2">
                             <p className="text-muted-foreground text-xs flex-shrink-0">
                               {article.publishedAt &&
                                 new Date(article.publishedAt).toLocaleDateString(
