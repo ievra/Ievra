@@ -417,8 +417,48 @@ export default function Lookup() {
     const showPhaseHeaders = phases.length > 0;
 
     return (
-      <div className="space-y-0 overflow-x-auto">
-        <div className="min-w-[700px]">
+      <div className="space-y-0">
+        {visible.length === 0 && (
+          <div className="text-center py-10">
+            <p className="text-sm font-light text-white/30">{isVi ? "Không tìm thấy kết quả" : "No results found"}</p>
+          </div>
+        )}
+        {/* Mobile card view */}
+        <div className="sm:hidden divide-y divide-white/8">
+          {grouped.map((group, gi) => (
+            <div key={group.phaseValue + gi}>
+              {showPhaseHeaders && (
+                <div className="py-2.5 px-2">
+                  <span className="text-xs font-light text-white/40 uppercase tracking-[0.14em]">{group.phaseLabel}</span>
+                </div>
+              )}
+              {group.rows.map((row) => (
+                <div key={row.interaction.id} className="flex items-start gap-3 px-2 py-3 border-t border-white/8">
+                  <span className="text-xs font-light text-white/30 tabular-nums w-6 shrink-0 pt-0.5">{row.num}</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-light text-white/80 leading-snug">{row.interaction.title}</p>
+                    <div className="flex items-center gap-3 mt-1.5 flex-wrap">
+                      <span className="text-xs font-light text-white/40 tabular-nums">{formatDate(row.interaction.date)}</span>
+                      {row.interaction.assignedTo && <span className="text-xs font-light text-white/35">{row.interaction.assignedTo}</span>}
+                    </div>
+                    {Array.isArray(row.interaction.attachments) && row.interaction.attachments.length > 0 && (
+                      <div className="flex gap-1 mt-2 cursor-pointer" onClick={() => openLightbox(row.interaction.attachments as string[], 0)}>
+                        {(row.interaction.attachments as string[]).slice(0, 3).map((url, idx) => (
+                          <img key={idx} src={url} alt="" className="w-10 h-10 object-cover border border-white/10" />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(row.interaction)} className="h-7 w-7 text-white/35 hover:text-white shrink-0">
+                    <Eye className="w-3.5 h-3.5" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+        {/* Desktop table view */}
+        <div className="hidden sm:block">
           <div className="grid grid-cols-[40px_120px_1fr_100px_160px_50px] gap-2 px-4 py-2 border-b border-white/10">
             <span className="text-xs font-light text-white/30 uppercase tracking-[0.12em]">{isVi ? "STT" : "No"}</span>
             <span className="text-xs font-light text-white/30 uppercase tracking-[0.12em]">{isVi ? "Ngày" : "Date"}</span>
@@ -427,11 +467,6 @@ export default function Lookup() {
             <span className="text-xs font-light text-white/30 uppercase tracking-[0.12em]">{isVi ? "Hình ảnh" : "Images"}</span>
             <span></span>
           </div>
-          {visible.length === 0 && (
-            <div className="text-center py-10">
-              <p className="text-sm font-light text-white/30">{isVi ? "Không tìm thấy kết quả" : "No results found"}</p>
-            </div>
-          )}
           {grouped.map((group, gi) => (
             <div key={group.phaseValue + gi}>
               {showPhaseHeaders && (
