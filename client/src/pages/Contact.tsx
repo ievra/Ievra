@@ -230,10 +230,41 @@ export default function Contact() {
                 {t('contact.title')}
               </h1>
 
-              {/* Quick contact links */}
-              <div className="border-t border-white/10 pt-8 space-y-1.5">
-                <a href="tel:0767554480" className="block text-sm font-light text-white/50 hover:text-white transition-colors">0767 5544 80</a>
-                <a href="mailto:contact@ievra.com" className="block text-sm font-light text-white/50 hover:text-white transition-colors">contact@ievra.com</a>
+              {/* Company info */}
+              <div className="border-t border-white/10 pt-8 space-y-6">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-3">
+                    {language === 'vi' ? 'Pháp nhân' : 'Legal Entity'}
+                  </p>
+                  <p className="text-sm font-light text-white/65 leading-relaxed mb-1">
+                    {language === 'vi'
+                      ? 'CÔNG TY TNHH THIẾT KẾ VÀ THI CÔNG NỘI THẤT IEVRA'
+                      : 'IEVRA INTERIOR DESIGN AND CONSTRUCTION CO., LTD'}
+                  </p>
+                  <p className="text-sm font-light text-white/35">MST: 0319384424</p>
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-3">
+                    {language === 'vi' ? 'Liên hệ' : 'Contact'}
+                  </p>
+                  <div className="space-y-1.5">
+                    <a href="tel:0767554480" className="block text-sm font-light text-white/55 hover:text-white transition-colors">0767 5544 80</a>
+                    <a href="mailto:contact@ievra.com" className="block text-sm font-light text-white/55 hover:text-white transition-colors">contact@ievra.com</a>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-3">
+                    {language === 'vi' ? 'Văn phòng' : 'Offices'}
+                  </p>
+                  <div className="space-y-1.5">
+                    <p className="text-sm font-light text-white/55 leading-relaxed">
+                      {language === 'vi' ? '422 Đào Trí, P. Phú Thuận, Q. 7, TP.HCM' : '422 Dao Tri, Phu Thuan, Dist. 7, HCMC'}
+                    </p>
+                    <p className="text-sm font-light text-white/55 leading-relaxed">
+                      {language === 'vi' ? '9 Nguyễn Khoái, P. 2, Q. 4, TP.HCM' : '9 Nguyen Khoai, Ward 2, Dist. 4, HCMC'}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -381,46 +412,6 @@ export default function Contact() {
         </div>
       </section>
 
-      {/* ── Footer info ── */}
-      <section className="py-16 border-t border-white/10">
-        <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
-            <div>
-              <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-4">
-                {language === 'vi' ? 'Pháp nhân' : 'Legal Entity'}
-              </p>
-              <p className="text-sm font-light text-white/75 leading-relaxed mb-1">
-                {language === 'vi'
-                  ? 'CÔNG TY TNHH THIẾT KẾ VÀ THI CÔNG NỘI THẤT IEVRA'
-                  : 'IEVRA INTERIOR DESIGN AND CONSTRUCTION CO., LTD'}
-              </p>
-              <p className="text-sm font-light text-white/40">MST: 0319384424</p>
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-4">
-                {language === 'vi' ? 'Liên hệ' : 'Contact'}
-              </p>
-              <div className="space-y-1">
-                <p className="text-sm font-light text-white/60">contact@ievra.com</p>
-                <p className="text-sm font-light text-white/60">0767 5544 80</p>
-              </div>
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-4">
-                {language === 'vi' ? 'Văn phòng' : 'Offices'}
-              </p>
-              <div className="space-y-2">
-                <p className="text-sm font-light text-white/60 leading-relaxed">
-                  {language === 'vi' ? '422 Đào Trí, P. Phú Thuận, Q. 7, TP.HCM' : '422 Dao Tri, Phu Thuan, Dist. 7, HCMC'}
-                </p>
-                <p className="text-sm font-light text-white/60 leading-relaxed">
-                  {language === 'vi' ? '9 Nguyễn Khoái, P. 2, Q. 4, TP.HCM' : '9 Nguyen Khoai, Ward 2, Dist. 4, HCMC'}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
     </div>
   );
