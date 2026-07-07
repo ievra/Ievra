@@ -501,7 +501,7 @@ export default function Lookup() {
           </div>
           {/* Search form — top right */}
           <form onSubmit={handleSearch} className="flex-shrink-0 pb-1">
-            <div className="flex items-end gap-3 border-b border-white/20 pb-2">
+            <div className="flex items-end gap-3">
               <div
                 className="overflow-hidden transition-all duration-300 ease-in-out"
                 style={{ width: '18rem' }}
