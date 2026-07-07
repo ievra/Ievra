@@ -4,7 +4,7 @@ import { usePageMeta, CANONICAL_BASE_URL } from "@/hooks/use-page-meta";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Search, X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import OptimizedImage from "@/components/OptimizedImage";
 import type { Article, Category } from "@shared/schema";
@@ -54,6 +54,7 @@ export default function Blog() {
   const [selectedYear, setSelectedYear] = useState('all');
   const articlesPerPage = 12;
   const [searchPlaceholder, setSearchPlaceholder] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false);
 
   // Animation - reset when back to top
   useEffect(() => {
@@ -389,14 +390,31 @@ export default function Blog() {
           </h1>
           {/* Search + Year filter */}
           <div className="flex items-center gap-5 pb-1 flex-shrink-0">
-            <Input
-              type="text"
-              placeholder={searchPlaceholder}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="bg-transparent text-white placeholder-white/30 px-0 py-0 text-sm font-light rounded-none focus-visible:ring-0 border-0 w-36 md:w-52"
-              data-testid="input-search"
-            />
+            {/* Search icon → expands input on click */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => { setSearchOpen(o => !o); if (searchOpen) setSearchTerm(''); }}
+                className="text-white/50 hover:text-white transition-colors duration-200"
+                aria-label="Search"
+                data-testid="button-search-toggle"
+              >
+                {searchOpen ? <X className="w-4 h-4" /> : <Search className="w-4 h-4" />}
+              </button>
+              <div
+                className="overflow-hidden transition-all duration-300 ease-in-out"
+                style={{ width: searchOpen ? '12rem' : '0', opacity: searchOpen ? 1 : 0 }}
+              >
+                <Input
+                  type="text"
+                  placeholder={searchPlaceholder}
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  autoFocus={searchOpen}
+                  className="bg-transparent text-white placeholder-white/30 px-0 py-0 text-sm font-light rounded-none focus-visible:ring-0 border-0 w-48"
+                  data-testid="input-search"
+                />
+              </div>
+            </div>
             {availableYears.length > 0 && (
               <Select value={selectedYear} onValueChange={setSelectedYear}>
                 <SelectTrigger
