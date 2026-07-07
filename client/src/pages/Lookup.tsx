@@ -501,7 +501,7 @@ export default function Lookup() {
           </div>
           {/* Search form */}
           <form onSubmit={handleSearch} className="flex-shrink-0 sm:pb-1 w-full sm:w-auto">
-            <div className="flex items-center gap-3 border-b border-white/20 pb-2 sm:border-b-0 sm:pb-0">
+            <div className="flex items-center gap-3">
               <Input
                 ref={inputRef}
                 type="tel"
