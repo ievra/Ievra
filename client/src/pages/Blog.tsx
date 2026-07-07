@@ -429,8 +429,10 @@ export default function Blog() {
             )}
           </div>
         </div>
+      </div>
 
-        {/* Articles Grid */}
+      {/* Articles Grid */}
+      <div className="px-4 sm:px-6 lg:px-8">
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
@@ -456,7 +458,7 @@ export default function Blog() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[3px]">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
               {articles.map((article, index) => (
                 <Link key={article.id} href={getArticlePath(language, article.slug)}>
                   <div
@@ -464,7 +466,7 @@ export default function Blog() {
                     data-testid={`card-article-${article.id}`}
                   >
                     {/* Image with category + date overlay */}
-                    <div className="relative overflow-hidden bg-zinc-900 w-full h-[220px] md:h-[250px] lg:h-[220px] transform-gpu backface-hidden">
+                    <div className="relative overflow-hidden bg-zinc-900 w-full h-[280px] md:h-[340px] lg:h-[320px] transform-gpu backface-hidden">
                       {(article.featuredImage || article.featuredImageData) ? (
                         <img
                           src={toCardImg(article.featuredImage || article.featuredImageData || '', 1280)}
