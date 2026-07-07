@@ -606,29 +606,38 @@ export default function Lookup() {
                               return nameParts.map((p, i) => i === 0 ? p : "*".repeat(p.length)).join(" ");
                             })()}
                       </h3>
-                      {/* Status badges row */}
-                      <div className="flex flex-wrap items-center gap-2 mt-4">
+                      {/* Stage / status as plain text */}
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3">
                         {stageLabel && (
-                          <span className="text-xs uppercase tracking-[0.14em] font-light px-2.5 py-1 border border-white/15 text-white/55">
+                          <span className="text-sm font-light text-white/55">
                             {isVi ? stageLabel.labelVi : stageLabel.labelEn}
                           </span>
                         )}
-                        {tierLabel && (
-                          <span className="text-xs uppercase tracking-[0.14em] font-light px-2.5 py-1 border border-white/15 text-white/55">
-                            {isVi ? tierLabel.labelVi : tierLabel.labelEn}
-                          </span>
-                        )}
                         {statusLabel && (
-                          <span className="text-xs uppercase tracking-[0.14em] font-light px-2.5 py-1 border border-white/15 text-white/55">
+                          <span className="text-sm font-light text-white/40">
                             {isVi ? statusLabel.labelVi : statusLabel.labelEn}
                           </span>
                         )}
-                        {result.client.warrantyStatus && result.client.warrantyStatus !== "none" && (
-                          <span className={`text-xs uppercase tracking-[0.14em] font-light px-2.5 py-1 border ${result.client.warrantyStatus === "active" ? "border-white/25 text-white/75" : "border-white/10 text-white/30"}`}>
-                            {isVi ? warrantyLabel.vi : warrantyLabel.en}
+                        {tierLabel && (
+                          <span className="text-sm font-light text-white/35">
+                            {isVi ? tierLabel.labelVi : tierLabel.labelEn}
                           </span>
                         )}
                       </div>
+                      {/* Warranty date */}
+                      {result.client.warrantyExpiry && (
+                        <div className="flex items-baseline gap-2 mt-2">
+                          <span className="text-xs font-light text-white/30 uppercase tracking-[0.12em]">
+                            {isVi ? "Bảo hành đến" : "Warranty until"}
+                          </span>
+                          <span className={`text-sm font-light ${result.client.warrantyStatus === "expired" ? "text-white/30 line-through" : "text-white/65"}`}>
+                            {formatDate(result.client.warrantyExpiry)}
+                          </span>
+                          {result.client.warrantyStatus === "expired" && (
+                            <span className="text-xs font-light text-white/30">{isVi ? "(hết hạn)" : "(expired)"}</span>
+                          )}
+                        </div>
+                      )}
                     </div>
                     <button
                       type="button"
