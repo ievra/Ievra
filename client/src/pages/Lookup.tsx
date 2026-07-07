@@ -618,10 +618,9 @@ export default function Lookup() {
                           setCccdInput("");
                         }
                       }}
-                      className="flex items-center gap-2 text-xs font-light text-white/40 hover:text-white/80 transition-colors border border-white/15 hover:border-white/35 px-4 py-2 shrink-0 mt-7"
+                      className="text-white/30 hover:text-white/70 transition-colors shrink-0 mt-7 p-1"
                     >
-                      {infoRevealed ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                      <span className="hidden sm:inline">{infoRevealed ? (isVi ? "Ẩn" : "Hide") : (isVi ? "Xác minh" : "Verify")}</span>
+                      {infoRevealed ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
 
