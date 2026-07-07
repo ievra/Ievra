@@ -458,7 +458,7 @@ export default function Blog() {
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 lg:gap-6">
               {articles.map((article, index) => (
                 <Link key={article.id} href={getArticlePath(language, article.slug)}>
                   <div
