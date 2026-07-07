@@ -482,34 +482,23 @@ export default function Blog() {
                       ) : (
                         <div className="w-full h-full bg-zinc-900" data-testid={`img-article-${article.id}`} />
                       )}
-                      {/* Top gradient for overlay readability */}
-                      <div className="absolute inset-x-0 top-0 h-14 bg-gradient-to-b from-black/50 to-transparent" />
-                      {/* Category + Date inside card image */}
-                      <div className="absolute top-0 left-0 p-3">
-                        <p className="text-white/90 text-[11px] uppercase tracking-widest font-light leading-snug" data-testid={`text-category-${article.id}`}>
-                          {getCategoryLabel(article.category)}
-                          {(article.publishedAt || article.createdAt) && (
-                            <span className="ml-2 text-white/60">| {formatDate(String(article.publishedAt || article.createdAt))}</span>
-                          )}
-                        </p>
-                      </div>
                     </div>
                     {/* Text below image — fixed height to prevent layout shift */}
-                    <div className="pt-3 pb-3 flex flex-col" style={{ height: '4.2rem' }}>
+                    <div className="pt-3 pb-3 flex flex-col" style={{ height: '5.4rem' }}>
                       {/* Title — fixed 2-line height */}
                       <h3
                         className="text-foreground text-sm md:text-[15px] font-light uppercase tracking-wide leading-snug"
-                        style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '2.6rem' }}
+                        style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden', height: '2.8rem' }}
                         data-testid={`text-title-${article.id}`}
                       >
                         {article.title}
                       </h3>
                       {/* Bottom row: category left | attribution + date right — fixed height */}
-                      <div className="flex items-center justify-between mt-auto pt-1" style={{ height: '1rem' }}>
-                        <p className="text-foreground/40 text-[10px] uppercase tracking-widest font-light truncate mr-2">
+                      <div className="flex items-center justify-between mt-auto" style={{ height: '1rem' }}>
+                        <p className="text-foreground/25 text-[10px] uppercase tracking-widest font-light truncate mr-2">
                           {getCategoryLabel(article.category)}
                         </p>
-                        <p className="text-foreground/35 text-[10px] font-light whitespace-nowrap">
+                        <p className="text-foreground/25 text-[10px] font-light whitespace-nowrap">
                           {[
                             (article as any).attribution,
                             formatDate(String(article.publishedAt || article.createdAt))
