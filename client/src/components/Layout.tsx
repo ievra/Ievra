@@ -175,9 +175,12 @@ export default function Layout({ children }: LayoutProps) {
       }
     };
 
+    const handleMouseMove = () => resetIdleTimer();
+
     window.addEventListener("scroll", updateScrollPosition);
     window.addEventListener("wheel", handleWheel);
     window.addEventListener("touchmove", handleTouchMove);
+    window.addEventListener("mousemove", handleMouseMove);
 
     resetIdleTimer();
 
@@ -185,6 +188,7 @@ export default function Layout({ children }: LayoutProps) {
       window.removeEventListener("scroll", updateScrollPosition);
       window.removeEventListener("wheel", handleWheel);
       window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("mousemove", handleMouseMove);
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
     };
   }, []);
@@ -355,7 +359,11 @@ export default function Layout({ children }: LayoutProps) {
       <header ref={headerRef} className={`fixed top-0 left-0 right-0 z-50 ${
         noTransition ? '' : `transition-transform ${logoSwapped ? 'duration-700 ease-in-out' : ''}`
       } ${
-        location === '/' && !headerRevealed ? '-translate-y-full' : (isScrolled && logoSwapped ? '-translate-y-full' : 'translate-y-0')
+        location === '/' && !headerRevealed
+          ? '-translate-y-full'
+          : (isScrolled && logoSwapped) || (isIdle && logoSwapped && !mobileMenuOpen && !langDropdownOpen)
+            ? '-translate-y-full'
+            : 'translate-y-0'
       }`}>
         <div className={`flex items-center justify-between py-2 px-6 md:py-3 md:px-10 lg:px-16 transition-colors duration-300 ${isInHero ? '' : 'bg-black/70'}`}>
           <nav className="hidden lg:flex items-center gap-8 transition-opacity duration-500" style={{ opacity: location === '/' && !logoSwapped ? (introProgress > 0 ? 1 : 0) : 1 }}>
