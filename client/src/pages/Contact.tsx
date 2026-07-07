@@ -221,11 +221,6 @@ export default function Contact() {
             <span className="text-white/50">{language === 'vi' ? 'Liên Hệ' : 'Contact'}</span>
           </div>
 
-          {/* Top label */}
-          <p className="text-xs uppercase tracking-[0.22em] font-light text-white/35 mb-10" data-testid="heading-questions">
-            {language === 'vi' ? 'Tư vấn & Liên hệ' : 'Consultation & Contact'}
-          </p>
-
           {/* 2-col layout */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-start">
 
