@@ -298,22 +298,22 @@ export default function Lookup() {
             <span className="text-sm font-light text-white/50 mt-0.5">%</span>
           </div>
         </div>
-        <p className="text-[11px] font-light text-white/50 mt-4 tracking-wide text-center uppercase">{item.label}</p>
+        <p className="text-sm font-light text-white/65 mt-4 tracking-widest text-center uppercase">{item.label}</p>
         {/* Phase breakdown bars */}
         {phases.length > 0 && (
-          <div className="w-full mt-6 space-y-3.5">
+          <div className="w-full mt-6 space-y-4">
             {phases.map((phase) => {
               const target = phaseTargets[phase.value] || 0;
               const logged = circleInteractions.filter(i => i.phase === phase.value).length;
               const p = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : (hasTimeline ? 0 : 100);
               return (
                 <div key={phase.id}>
-                  <div className="flex items-baseline justify-between mb-1.5">
-                    <span className="text-[10px] font-light text-white/40 truncate max-w-[68%]">{isVi ? phase.labelVi : phase.labelEn}</span>
-                    <span className="text-[10px] font-light text-white/40 tabular-nums">{p}%</span>
+                  <div className="flex items-baseline justify-between mb-2">
+                    <span className="text-xs font-light text-white/60 truncate max-w-[68%]">{isVi ? phase.labelVi : phase.labelEn}</span>
+                    <span className="text-xs font-light text-white/60 tabular-nums">{p}%</span>
                   </div>
-                  <div className="w-full h-[2px] bg-white/8 rounded-full">
-                    <div className="h-full bg-white/55 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
+                  <div className="w-full h-[2px] bg-white/10 rounded-full">
+                    <div className="h-full bg-white/60 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
                   </div>
                 </div>
               );
@@ -322,13 +322,13 @@ export default function Lookup() {
         )}
         {/* Payment transaction list */}
         {paymentTx.length > 0 && (
-          <div className="w-full mt-5 space-y-2.5 border-t border-white/8 pt-4">
+          <div className="w-full mt-5 space-y-3 border-t border-white/10 pt-5">
             {[...paymentTx].reverse().map((tx, idx) => (
               <div key={tx.id || idx} className="flex items-center justify-between gap-2">
-                <span className="text-[10px] font-light text-white/40 truncate leading-relaxed">
+                <span className="text-xs font-light text-white/55 truncate leading-relaxed">
                   {tx.title || tx.description || `${isVi ? "Đợt" : "Stage"} ${idx + 1}`}
                 </span>
-                <span className={`text-[11px] font-light shrink-0 ${tx.status === "completed" ? "text-white/70" : "text-white/20"}`}>
+                <span className={`text-sm font-light shrink-0 ${tx.status === "completed" ? "text-white/75" : "text-white/25"}`}>
                   {tx.status === "completed" ? "✓" : "○"}
                 </span>
               </div>
@@ -573,9 +573,9 @@ export default function Lookup() {
                       <p className="text-5xl lg:text-6xl font-thin text-white tabular-nums leading-none">
                         {pct}<span className="text-2xl font-light">%</span>
                       </p>
-                      <p className="text-[10px] uppercase tracking-[0.16em] text-white/35 mt-5 whitespace-pre-line leading-relaxed">{label}</p>
-                      <div className="mt-4 w-full h-px bg-white/10">
-                        <div className="h-px bg-white/50 transition-all duration-1000 ease-out" style={{ width: `${pct}%` }} />
+                      <p className="text-xs uppercase tracking-[0.14em] text-white/55 mt-5 whitespace-pre-line leading-relaxed">{label}</p>
+                      <div className="mt-4 w-full h-[2px] bg-white/10 rounded-full">
+                        <div className="h-full bg-white/55 rounded-full transition-all duration-1000 ease-out" style={{ width: `${pct}%` }} />
                       </div>
                     </div>
                   ))}
@@ -587,7 +587,7 @@ export default function Lookup() {
             <div className="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-white/8">
               {/* ── Thiết kế ── */}
               <div className="py-10 lg:pr-10">
-                <p className="text-[9px] uppercase tracking-[0.22em] text-white/30 mb-8 pb-3 border-b border-white/8">
+                <p className="text-xs uppercase tracking-[0.18em] text-white/50 mb-8 pb-4 border-b border-white/10">
                   {isVi ? "Thiết kế" : "Design"}
                 </p>
                 <div className="grid grid-cols-2 gap-6 items-start">
@@ -619,7 +619,7 @@ export default function Lookup() {
               </div>
               {/* ── Thi công ── */}
               <div className="py-10 lg:pl-10">
-                <p className="text-[9px] uppercase tracking-[0.22em] text-white/30 mb-8 pb-3 border-b border-white/8">
+                <p className="text-xs uppercase tracking-[0.18em] text-white/50 mb-8 pb-4 border-b border-white/10">
                   {isVi ? "Thi công" : "Construction"}
                 </p>
                 <div className="grid grid-cols-2 gap-6 items-start">
@@ -654,13 +654,13 @@ export default function Lookup() {
             {/* ── Phase Overview ── */}
             {(designPhases.length > 0 || constructionPhases.length > 0) && (
               <div className="border border-white/10 p-8">
-                <p className="text-[9px] uppercase tracking-[0.22em] text-white/30 mb-8 pb-3 border-b border-white/8">
+                <p className="text-xs uppercase tracking-[0.18em] text-white/55 mb-8 pb-4 border-b border-white/10">
                   {isVi ? "Tổng quan giai đoạn" : "Phase Overview"}
                 </p>
                 <div className="space-y-8">
                   {designPhases.length > 0 && (
                     <div>
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-white/25 mb-5">{isVi ? "Thiết kế" : "Design"}</p>
+                      <p className="text-xs uppercase tracking-[0.14em] text-white/45 mb-5">{isVi ? "Thiết kế" : "Design"}</p>
                       <div className="space-y-5">
                         {designPhases.map((phase) => {
                           const pt = (result.client.designPhaseTargets || {}) as Record<string, number>;
@@ -669,11 +669,11 @@ export default function Lookup() {
                           const p = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : (result.client.designTimeline ? 0 : 100);
                           return (
                             <div key={phase.id} className="flex items-center gap-6">
-                              <span className="text-sm font-light text-white/65 w-48 shrink-0 truncate">{isVi ? phase.labelVi : phase.labelEn}</span>
-                              <div className="flex-1 h-[2px] bg-white/8 rounded-full">
-                                <div className="h-full bg-white/60 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
+                              <span className="text-sm font-light text-white/75 w-52 shrink-0 truncate">{isVi ? phase.labelVi : phase.labelEn}</span>
+                              <div className="flex-1 h-[2px] bg-white/10 rounded-full">
+                                <div className="h-full bg-white/65 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
                               </div>
-                              <span className="text-sm font-thin text-white/50 w-10 text-right tabular-nums shrink-0">{p}%</span>
+                              <span className="text-sm font-light text-white/65 w-12 text-right tabular-nums shrink-0">{p}%</span>
                             </div>
                           );
                         })}
@@ -681,8 +681,8 @@ export default function Lookup() {
                     </div>
                   )}
                   {constructionPhases.length > 0 && (
-                    <div className={designPhases.length > 0 ? "pt-6 border-t border-white/8" : ""}>
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-white/25 mb-5">{isVi ? "Thi công" : "Construction"}</p>
+                    <div className={designPhases.length > 0 ? "pt-6 border-t border-white/10" : ""}>
+                      <p className="text-xs uppercase tracking-[0.14em] text-white/45 mb-5">{isVi ? "Thi công" : "Construction"}</p>
                       <div className="space-y-5">
                         {constructionPhases.map((phase) => {
                           const pt = (result.client.constructionPhaseTargets || {}) as Record<string, number>;
@@ -691,11 +691,11 @@ export default function Lookup() {
                           const p = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : (result.client.constructionTimeline ? 0 : 100);
                           return (
                             <div key={phase.id} className="flex items-center gap-6">
-                              <span className="text-sm font-light text-white/65 w-48 shrink-0 truncate">{isVi ? phase.labelVi : phase.labelEn}</span>
-                              <div className="flex-1 h-[2px] bg-white/8 rounded-full">
-                                <div className="h-full bg-white/60 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
+                              <span className="text-sm font-light text-white/75 w-52 shrink-0 truncate">{isVi ? phase.labelVi : phase.labelEn}</span>
+                              <div className="flex-1 h-[2px] bg-white/10 rounded-full">
+                                <div className="h-full bg-white/65 rounded-full transition-all duration-700 ease-out" style={{ width: `${p}%` }} />
                               </div>
-                              <span className="text-sm font-thin text-white/50 w-10 text-right tabular-nums shrink-0">{p}%</span>
+                              <span className="text-sm font-light text-white/65 w-12 text-right tabular-nums shrink-0">{p}%</span>
                             </div>
                           );
                         })}
@@ -716,18 +716,18 @@ export default function Lookup() {
               return (
                 <div className="border border-white/10">
                   <div className="px-8 py-5 border-b border-white/10">
-                    <p className="text-[9px] uppercase tracking-[0.22em] text-white/30">{isVi ? "Hoạt động gần đây" : "Recent Activity"}</p>
+                    <p className="text-xs uppercase tracking-[0.18em] text-white/55">{isVi ? "Hoạt động gần đây" : "Recent Activity"}</p>
                   </div>
                   <div className="divide-y divide-white/8">
                     {allActivity.map((item, idx) => (
-                      <div key={item.id || idx} className="flex items-center gap-5 px-8 py-4">
-                        <span className="text-[11px] font-light text-white/30 w-24 shrink-0 tabular-nums">{formatDate(item.date)}</span>
-                        <span className={`text-[9px] uppercase tracking-[0.15em] font-light px-2 py-0.5 border shrink-0 ${item._type === "design" ? "border-white/25 text-white/50" : "border-white/12 text-white/30"}`}>
+                      <div key={item.id || idx} className="flex items-center gap-5 px-8 py-5">
+                        <span className="text-xs font-light text-white/50 w-24 shrink-0 tabular-nums">{formatDate(item.date)}</span>
+                        <span className={`text-[10px] uppercase tracking-[0.12em] font-light px-2.5 py-1 border shrink-0 ${item._type === "design" ? "border-white/30 text-white/60" : "border-white/15 text-white/40"}`}>
                           {item._type === "design" ? (isVi ? "Thiết kế" : "Design") : (isVi ? "Thi công" : "Const.")}
                         </span>
-                        <span className="text-sm font-light text-white/75 truncate flex-1">{item.title}</span>
-                        {item.assignedTo && <span className="text-[11px] font-light text-white/35 shrink-0 hidden sm:block">{item.assignedTo}</span>}
-                        <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(item)} className="h-7 w-7 text-white/30 hover:text-white shrink-0">
+                        <span className="text-sm font-light text-white/80 truncate flex-1">{item.title}</span>
+                        {item.assignedTo && <span className="text-xs font-light text-white/50 shrink-0 hidden sm:block">{item.assignedTo}</span>}
+                        <Button variant="ghost" size="icon" onClick={() => setViewingInteraction(item)} className="h-7 w-7 text-white/40 hover:text-white shrink-0">
                           <Eye className="w-3.5 h-3.5" />
                         </Button>
                       </div>
