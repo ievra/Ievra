@@ -933,7 +933,7 @@ export default function Home() {
   return (
     <div className="min-h-[120vh] bg-black">
       {/* Hero Slider Section - IIDA Style */}
-      <HeroSlider projects={Array.from(new Map([...(featuredProjects || []), ...(featuredArchProjects || [])].map((p) => [p.id, p])).values())} />
+      <HeroSlider projects={Array.from(new Map([...(featuredProjects || []), ...(featuredArchProjects || [])].map((p) => [p.id, p])).values())} featuredArticle={featuredArticles?.[0]} />
       {/* Featured Projects Section */}
       <section id="featured-projects" className="min-h-screen bg-card py-16">
         <div className="w-full px-4 sm:px-6 lg:px-8">

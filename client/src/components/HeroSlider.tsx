@@ -2,21 +2,27 @@ import { useState, useRef, useEffect } from 'react';
 import { Link } from 'wouter';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay, EffectFade } from 'swiper/modules';
-import type { Project, Category } from '@shared/schema';
+import type { Project, Category, Article } from '@shared/schema';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { useQuery } from '@tanstack/react-query';
-import { getProjectPath } from '@/lib/routes';
+import { getProjectPath, getArticlePath } from '@/lib/routes';
 
 
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 
+const heroArticleImg = (src: string) =>
+  src?.startsWith('/api/assets/')
+    ? `/api/img/${src.replace('/api/assets/', '')}?w=320`
+    : src;
+
 interface HeroSliderProps {
   projects: Project[];
+  featuredArticle?: Article;
 }
 
-export default function HeroSlider({ projects }: HeroSliderProps) {
+export default function HeroSlider({ projects, featuredArticle }: HeroSliderProps) {
   const [progressKey, setProgressKey] = useState(0);
   const swiperRef = useRef<any>(null);
   const { language } = useLanguage();
@@ -157,6 +163,39 @@ export default function HeroSlider({ projects }: HeroSliderProps) {
           );
         })}
       </Swiper>
+
+      {/* Featured article quick-access card */}
+      {featuredArticle && featuredArticle.slug && (
+        <Link
+          href={getArticlePath(language, featuredArticle.slug)}
+          className={`hidden md:flex absolute top-24 right-6 md:right-10 lg:right-16 z-20 w-72 items-center gap-3 p-3 bg-black/40 backdrop-blur-md border border-white/15 hover:bg-black/60 transition-all duration-500 group ${heroContentVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+          data-testid="hero-featured-article"
+        >
+          {(featuredArticle.featuredImage || featuredArticle.featuredImageData) && (
+            <div className="relative w-16 h-16 flex-shrink-0 overflow-hidden bg-white/5">
+              <img
+                src={heroArticleImg(featuredArticle.featuredImage || featuredArticle.featuredImageData || '')}
+                alt={featuredArticle.title}
+                className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
+                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+              />
+            </div>
+          )}
+          <div className="min-w-0">
+            <p className="text-white/50 text-[10px] uppercase tracking-widest mb-1 font-light">
+              {language === 'vi' ? 'Bài viết nổi bật' : 'Featured article'}
+            </p>
+            <p
+              className="text-white text-sm font-light leading-snug group-hover:text-white/80 transition-colors duration-300"
+              style={{ display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+            >
+              {featuredArticle.title}
+            </p>
+          </div>
+        </Link>
+      )}
 
       {/* Navigation Arrows (single instance, reliably bound) */}
       <div className={`hidden sm:flex gap-4 absolute bottom-8 right-6 md:right-10 lg:right-16 z-20 transition-opacity duration-700 ${heroContentVisible ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
