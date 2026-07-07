@@ -578,7 +578,7 @@ export default function Lookup() {
         )}
 
         {result && (
-          <div className="max-w-[1400px] mx-auto space-y-14 animate-in fade-in duration-500">
+          <div className="max-w-[1400px] mx-auto divide-y divide-white/[0.07] animate-in fade-in duration-500">
             {/* Client info card */}
             {(() => {
               const stageLabel = result.crmStages.find(s => s.value === result.client.stage);
@@ -591,7 +591,7 @@ export default function Lookup() {
               };
               const warrantyLabel = warrantyMap[result.client.warrantyStatus || "none"] || warrantyMap["none"];
               return (
-                <div>
+                <div className="py-14">
                   {/* Header row: name + verify button */}
                   <div className="pb-5 sm:pb-6 flex items-start justify-between gap-4">
                     <div>
@@ -719,7 +719,7 @@ export default function Lookup() {
                 </div>
               );
               return (
-                <div className="space-y-10">
+                <div className="space-y-10 py-14">
                   {renderKpiSection(isVi ? "Thiết kế" : "Design", [
                     { label: isVi ? "Tiến độ" : "Progress", pct: dProgress },
                     { label: isVi ? "Thanh toán" : "Payment", pct: dPayPct },
@@ -733,7 +733,7 @@ export default function Lookup() {
             })()}
 
             {/* Progress — 2 col (Design | Construction) */}
-            <div>
+            <div className="py-14">
               {/* Row 1: Circles */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
                 {/* ── Thiết kế circles ── */}
@@ -853,7 +853,7 @@ export default function Lookup() {
 
             {/* ── Phase Overview ── */}
             {(designPhases.length > 0 || constructionPhases.length > 0) && (
-              <div>
+              <div className="py-14">
                 <p className="text-base font-light text-white/80 mb-6 sm:mb-8 tracking-wide">
                   {isVi ? "Tổng quan giai đoạn" : "Phase Overview"}
                 </p>
@@ -914,7 +914,7 @@ export default function Lookup() {
               ].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 5);
               if (allActivity.length === 0) return null;
               return (
-                <div>
+                <div className="py-14">
                   <p className="text-xs font-light text-white/45 uppercase tracking-[0.14em] mb-6">{isVi ? "Hoạt động gần đây" : "Recent Activity"}</p>
                   <div className="divide-y divide-white/8">
                     {allActivity.map((item, idx) => (
@@ -935,7 +935,7 @@ export default function Lookup() {
               );
             })()}
 
-            <div>
+            <div className="py-14">
               {/* Tab headers */}
               <div className="flex flex-wrap border-b border-white/8">
                 {([
@@ -1071,7 +1071,7 @@ export default function Lookup() {
               </div>
             </div>
 
-            <div>
+            <div className="py-14">
               <div className="mb-6">
                 <p className="text-xs font-light text-white/45 uppercase tracking-[0.14em]">{isVi ? "Yêu cầu hỗ trợ" : "Support Request"}</p>
                 <p className="text-xs font-light text-white/35 mt-2">
