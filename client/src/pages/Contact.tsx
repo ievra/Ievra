@@ -362,7 +362,7 @@ export default function Contact() {
       <section className="py-20 lg:py-28 border-t border-white/10">
         <div className="max-w-[1400px] mx-auto px-6 sm:px-10 lg:px-16">
           <div className="mb-16">
-            <p className="text-2xl md:text-3xl font-light text-white leading-relaxed max-w-2xl">
+            <p className="text-2xl md:text-3xl font-light text-white leading-relaxed whitespace-nowrap">
               {language === 'vi'
                 ? (homepageContent?.faqSectionSubtitleVi || homepageContent?.faqSectionSubtitle || '')
                 : (homepageContent?.faqSectionSubtitle || '')}
