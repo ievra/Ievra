@@ -592,6 +592,7 @@ export default function Lookup() {
               const warrantyLabel = warrantyMap[result.client.warrantyStatus || "none"] || warrantyMap["none"];
               return (
                 <div className="py-14">
+                  <p className="text-base font-light text-white mb-6 sm:mb-8 tracking-wide">{isVi ? "Thông tin khách hàng" : "Client Information"}</p>
                   {/* Header row: name + verify button */}
                   <div className="pb-5 sm:pb-6 flex items-start justify-between gap-4">
                     <div>
@@ -720,6 +721,7 @@ export default function Lookup() {
               );
               return (
                 <div className="space-y-10 py-14">
+                  <p className="text-base font-light text-white mb-2 tracking-wide">{isVi ? "Tóm tắt tiến độ" : "Progress Summary"}</p>
                   {renderKpiSection(isVi ? "Thiết kế" : "Design", [
                     { label: isVi ? "Tiến độ" : "Progress", pct: dProgress },
                     { label: isVi ? "Thanh toán" : "Payment", pct: dPayPct },
@@ -734,6 +736,7 @@ export default function Lookup() {
 
             {/* Progress — 2 col (Design | Construction) */}
             <div className="py-14">
+              <p className="text-base font-light text-white mb-6 sm:mb-8 tracking-wide">{isVi ? "Tiến độ" : "Progress"}</p>
               {/* Row 1: Circles */}
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
                 {/* ── Thiết kế circles ── */}
@@ -936,6 +939,7 @@ export default function Lookup() {
             })()}
 
             <div className="py-14">
+              <p className="text-base font-light text-white mb-6 sm:mb-8 tracking-wide">{isVi ? "Nhật ký công trình" : "Construction Log"}</p>
               {/* Tab headers */}
               <div className="flex flex-wrap border-b border-white/8">
                 {([
