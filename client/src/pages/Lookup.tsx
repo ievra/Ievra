@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "wouter";
 import { usePageMeta, CANONICAL_BASE_URL } from "@/hooks/use-page-meta";
 import { createPortal } from "react-dom";
-import { Search, ArrowRight, Clock, ChevronLeft, ChevronRight, X, Eye, EyeOff } from "lucide-react";
+import { Search, ArrowRight, Clock, ChevronLeft, ChevronRight, ChevronDown, X, Eye, EyeOff } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -126,6 +126,7 @@ export default function Lookup() {
   const [supportSent, setSupportSent] = useState(false);
   const [tableSearch, setTableSearch] = useState("");
   const [tablePhaseFilter, setTablePhaseFilter] = useState("");
+  const [phaseDropdownOpen, setPhaseDropdownOpen] = useState(false);
   const [designShowAll, setDesignShowAll] = useState(false);
   const [constructionShowAll, setConstructionShowAll] = useState(false);
   const { toast } = useToast();
@@ -932,24 +933,39 @@ export default function Lookup() {
                         </button>
                       )}
                     </div>
-                    {/* Phase filter chips */}
+                    {/* Phase filter dropdown */}
                     {currentPhases.length > 0 && (
-                      <div className="flex gap-4 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                      <div className="relative">
                         <button
-                          onClick={() => { setTablePhaseFilter(""); setDesignShowAll(false); setConstructionShowAll(false); }}
-                          className={`text-xs uppercase tracking-[0.12em] font-light transition-colors whitespace-nowrap shrink-0 ${!tablePhaseFilter ? "text-white" : "text-white/35 hover:text-white/65"}`}
+                          onClick={() => setPhaseDropdownOpen(v => !v)}
+                          className="flex items-center gap-2 text-xs font-light transition-colors text-white/50 hover:text-white/80"
                         >
-                          {isVi ? "Tất cả" : "All"}
+                          <span className="uppercase tracking-[0.12em]">
+                            {tablePhaseFilter
+                              ? (isVi ? (currentPhases.find(p => p.value === tablePhaseFilter)?.labelVi ?? tablePhaseFilter) : (currentPhases.find(p => p.value === tablePhaseFilter)?.labelEn ?? tablePhaseFilter))
+                              : (isVi ? "Tất cả giai đoạn" : "All phases")}
+                          </span>
+                          <ChevronDown className={`w-3 h-3 transition-transform duration-200 ${phaseDropdownOpen ? "rotate-180" : ""}`} />
                         </button>
-                        {currentPhases.map((phase) => (
-                          <button
-                            key={phase.id}
-                            onClick={() => { setTablePhaseFilter(phase.value === tablePhaseFilter ? "" : phase.value); setDesignShowAll(false); setConstructionShowAll(false); }}
-                            className={`text-xs uppercase tracking-[0.12em] font-light transition-colors whitespace-nowrap shrink-0 ${tablePhaseFilter === phase.value ? "text-white" : "text-white/35 hover:text-white/65"}`}
-                          >
-                            {isVi ? phase.labelVi : phase.labelEn}
-                          </button>
-                        ))}
+                        {phaseDropdownOpen && (
+                          <div className="absolute left-0 top-full mt-1 z-20 bg-[#111] border border-white/15 min-w-[220px] shadow-lg">
+                            <button
+                              onClick={() => { setTablePhaseFilter(""); setDesignShowAll(false); setConstructionShowAll(false); setPhaseDropdownOpen(false); }}
+                              className={`w-full text-left px-4 py-2.5 text-xs uppercase tracking-[0.12em] font-light transition-colors ${!tablePhaseFilter ? "text-white bg-white/5" : "text-white/45 hover:text-white hover:bg-white/5"}`}
+                            >
+                              {isVi ? "Tất cả" : "All"}
+                            </button>
+                            {currentPhases.map((phase) => (
+                              <button
+                                key={phase.id}
+                                onClick={() => { setTablePhaseFilter(phase.value === tablePhaseFilter ? "" : phase.value); setDesignShowAll(false); setConstructionShowAll(false); setPhaseDropdownOpen(false); }}
+                                className={`w-full text-left px-4 py-2.5 text-xs uppercase tracking-[0.12em] font-light transition-colors ${tablePhaseFilter === phase.value ? "text-white bg-white/5" : "text-white/45 hover:text-white hover:bg-white/5"}`}
+                              >
+                                {isVi ? phase.labelVi : phase.labelEn}
+                              </button>
+                            ))}
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
