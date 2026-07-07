@@ -963,7 +963,7 @@ export default function Lookup() {
               {(activeTab === "design" || activeTab === "construction") && (() => {
                 const currentPhases = activeTab === "design" ? designPhases : constructionPhases;
                 return (
-                  <div className="px-4 pt-4 pb-4 space-y-3">
+                  <div className="py-7 sm:py-8 space-y-5">
                     {/* Search input */}
                     <div className="flex items-center gap-3">
                       <Search className="w-3.5 h-3.5 text-white/30 shrink-0" />
@@ -1019,7 +1019,7 @@ export default function Lookup() {
                 );
               })()}
 
-              <div className="p-4">
+              <div className="py-6">
                 {activeTab === "design" && renderInteractionTable(designInteractions, designPhases, tableSearch, tablePhaseFilter, designShowAll, () => setDesignShowAll(v => !v))}
                 {activeTab === "construction" && renderInteractionTable(constructionInteractions, constructionPhases, tableSearch, tablePhaseFilter, constructionShowAll, () => setConstructionShowAll(v => !v))}
                 {activeTab === "warranty" && (
