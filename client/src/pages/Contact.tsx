@@ -258,10 +258,20 @@ export default function Contact() {
                   </p>
                   <div className="space-y-1.5">
                     <p className="text-sm font-light text-white/55 leading-relaxed">
-                      {language === 'vi' ? '422 Đào Trí, P. Phú Thuận, Q. 7, TP.HCM' : '422 Dao Tri, Phu Thuan, Dist. 7, HCMC'}
+                      {language === 'vi' ? '28 Đại lộ Mai Chí Thọ, Phường An Phú, Quận 2, Tp. Hồ Chí Minh' : '28 Mai Chi Tho Blvd, An Phu Ward, District 2, Ho Chi Minh City'}
                     </p>
                     <p className="text-sm font-light text-white/55 leading-relaxed">
-                      {language === 'vi' ? '9 Nguyễn Khoái, P. 2, Q. 4, TP.HCM' : '9 Nguyen Khoai, Ward 2, Dist. 4, HCMC'}
+                      {language === 'vi' ? '9 Nguyễn Khoái, Phường 2, Quận 4, Tp. Hồ Chí Minh' : '9 Nguyen Khoai, Ward 2, District 4, Ho Chi Minh City'}
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-3">
+                    {language === 'vi' ? 'Xưởng' : 'Workshop'}
+                  </p>
+                  <div className="space-y-1.5">
+                    <p className="text-sm font-light text-white/55 leading-relaxed">
+                      {language === 'vi' ? '69F/4, Khu phố Vĩnh Phú, Phường Lái Thiêu, Tp. Hồ Chí Minh' : '69F/4, Vinh Phu Quarter, Lai Thieu Ward, Ho Chi Minh City'}
                     </p>
                   </div>
                 </div>
