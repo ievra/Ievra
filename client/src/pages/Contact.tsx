@@ -359,6 +359,9 @@ export default function Contact() {
                     <p className="text-sm font-light text-white/55 leading-relaxed">
                       {language === 'vi' ? '69F/4, Khu phố Vĩnh Phú, Phường Lái Thiêu, Tp. Hồ Chí Minh' : '69F/4, Vinh Phu Quarter, Lai Thieu Ward, Ho Chi Minh City'}
                     </p>
+                    <p className="text-sm font-light text-white/55 leading-relaxed">
+                      {language === 'vi' ? 'Xóm 1, Thôn Thắng Thuận, Phường Hàm Thắng, Tỉnh Lâm Đồng' : 'Hamlet 1, Thang Thuan Village, Ham Thang Ward, Lam Dong Province'}
+                    </p>
                   </div>
                 </div>
               </div>
