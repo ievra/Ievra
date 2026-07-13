@@ -221,16 +221,17 @@ export default function Contact() {
             <span className="text-white/50">{language === 'vi' ? 'Liên Hệ' : 'Contact'}</span>
           </div>
 
-          {/* 2-col layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start">
-
-            {/* Left — intro */}
-            <div className="lg:sticky lg:top-32">
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-sans font-light tracking-tight leading-none mb-12" data-testid="text-consultation">
-                {t('contact.title')}
+          {/* Stacked layout */}
+          <div>
+            {/* Header */}
+            <div>
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-sans font-light tracking-tight leading-none mb-12 whitespace-nowrap" data-testid="text-consultation">
+                {language === 'vi' ? 'ĐỂ LẠI THÔNG TIN NHẬN TƯ VẤN' : 'LEAVE YOUR INFORMATION FOR CONSULTATION'}
               </h1>
+            </div>
 
-              {/* Company info */}
+            {/* Company info */}
+            <div>
               <div className="border-t border-white/10 pt-10 space-y-8">
                 <div>
                   <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-3">
@@ -278,8 +279,8 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* Right — form */}
-            <div>
+            {/* Form */}
+            <div className="mt-16 border-t border-white/10 pt-10">
               <form onSubmit={handleSubmit} className="space-y-0">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10">
                   <div>
