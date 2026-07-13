@@ -221,66 +221,16 @@ export default function Contact() {
             <span className="text-white/50">{language === 'vi' ? 'Liên Hệ' : 'Contact'}</span>
           </div>
 
-          {/* Stacked layout */}
-          <div>
-            {/* Header */}
-            <div>
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-sans font-light tracking-tight leading-none mb-12 whitespace-nowrap" data-testid="text-consultation">
-                {language === 'vi' ? 'ĐỂ LẠI THÔNG TIN NHẬN TƯ VẤN' : 'LEAVE YOUR INFORMATION FOR CONSULTATION'}
-              </h1>
-            </div>
+          {/* Title */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-sans font-light tracking-tight leading-none mb-12 whitespace-nowrap" data-testid="text-consultation">
+            {language === 'vi' ? 'ĐỂ LẠI THÔNG TIN NHẬN TƯ VẤN' : 'LEAVE YOUR INFORMATION FOR CONSULTATION'}
+          </h1>
 
-            {/* Company info */}
-            <div>
-              <div className="border-t border-white/10 pt-10 space-y-8">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-3">
-                    {language === 'vi' ? 'Pháp nhân' : 'Legal Entity'}
-                  </p>
-                  <p className="text-sm font-light text-white/65 leading-relaxed mb-1">
-                    {language === 'vi'
-                      ? 'CÔNG TY TNHH THIẾT KẾ VÀ THI CÔNG NỘI THẤT IEVRA'
-                      : 'IEVRA INTERIOR DESIGN AND CONSTRUCTION CO., LTD'}
-                  </p>
-                  <p className="text-sm font-light text-white/35">MST: 0319384424</p>
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-3">
-                    {language === 'vi' ? 'Liên hệ' : 'Contact'}
-                  </p>
-                  <div className="space-y-1.5">
-                    <a href="tel:0767554480" className="block text-sm font-light text-white/55 hover:text-white transition-colors">0767 5544 80</a>
-                    <a href="mailto:contact@ievra.com" className="block text-sm font-light text-white/55 hover:text-white transition-colors">contact@ievra.com</a>
-                  </div>
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-3">
-                    {language === 'vi' ? 'Văn phòng' : 'Offices'}
-                  </p>
-                  <div className="space-y-1.5">
-                    <p className="text-sm font-light text-white/55 leading-relaxed">
-                      {language === 'vi' ? '28 Đại lộ Mai Chí Thọ, Phường An Phú, Quận 2, Tp. Hồ Chí Minh' : '28 Mai Chi Tho Blvd, An Phu Ward, District 2, Ho Chi Minh City'}
-                    </p>
-                    <p className="text-sm font-light text-white/55 leading-relaxed">
-                      {language === 'vi' ? '9 Nguyễn Khoái, Phường 2, Quận 4, Tp. Hồ Chí Minh' : '9 Nguyen Khoai, Ward 2, District 4, Ho Chi Minh City'}
-                    </p>
-                  </div>
-                </div>
-                <div>
-                  <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-3">
-                    {language === 'vi' ? 'Xưởng' : 'Workshop'}
-                  </p>
-                  <div className="space-y-1.5">
-                    <p className="text-sm font-light text-white/55 leading-relaxed">
-                      {language === 'vi' ? '69F/4, Khu phố Vĩnh Phú, Phường Lái Thiêu, Tp. Hồ Chí Minh' : '69F/4, Vinh Phu Quarter, Lai Thieu Ward, Ho Chi Minh City'}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+          {/* 2-col: form right on desktop, form first on mobile */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-start border-t border-white/10 pt-10">
 
-            {/* Form */}
-            <div className="mt-16 border-t border-white/10 pt-10">
+            {/* Form — order 1 on mobile (top), order 2 on desktop (right) */}
+            <div className="order-1 lg:order-2">
               <form onSubmit={handleSubmit} className="space-y-0">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-10">
                   <div>
@@ -363,6 +313,55 @@ export default function Contact() {
                   </Button>
                 </div>
               </form>
+            </div>
+
+            {/* Info — order 2 on mobile (bottom), order 1 on desktop (left) */}
+            <div className="order-2 lg:order-1 lg:sticky lg:top-32">
+              <div className="space-y-8">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-3">
+                    {language === 'vi' ? 'Pháp nhân' : 'Legal Entity'}
+                  </p>
+                  <p className="text-sm font-light text-white/65 leading-relaxed mb-1">
+                    {language === 'vi'
+                      ? 'CÔNG TY TNHH THIẾT KẾ VÀ THI CÔNG NỘI THẤT IEVRA'
+                      : 'IEVRA INTERIOR DESIGN AND CONSTRUCTION CO., LTD'}
+                  </p>
+                  <p className="text-sm font-light text-white/35">MST: 0319384424</p>
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-3">
+                    {language === 'vi' ? 'Liên hệ' : 'Contact'}
+                  </p>
+                  <div className="space-y-1.5">
+                    <a href="tel:0767554480" className="block text-sm font-light text-white/55 hover:text-white transition-colors">0767 5544 80</a>
+                    <a href="mailto:contact@ievra.com" className="block text-sm font-light text-white/55 hover:text-white transition-colors">contact@ievra.com</a>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-3">
+                    {language === 'vi' ? 'Văn phòng' : 'Offices'}
+                  </p>
+                  <div className="space-y-1.5">
+                    <p className="text-sm font-light text-white/55 leading-relaxed">
+                      {language === 'vi' ? '28 Đại lộ Mai Chí Thọ, Phường An Phú, Quận 2, Tp. Hồ Chí Minh' : '28 Mai Chi Tho Blvd, An Phu Ward, District 2, Ho Chi Minh City'}
+                    </p>
+                    <p className="text-sm font-light text-white/55 leading-relaxed">
+                      {language === 'vi' ? '9 Nguyễn Khoái, Phường 2, Quận 4, Tp. Hồ Chí Minh' : '9 Nguyen Khoai, Ward 2, District 4, Ho Chi Minh City'}
+                    </p>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.18em] font-light text-white/30 mb-3">
+                    {language === 'vi' ? 'Xưởng' : 'Workshop'}
+                  </p>
+                  <div className="space-y-1.5">
+                    <p className="text-sm font-light text-white/55 leading-relaxed">
+                      {language === 'vi' ? '69F/4, Khu phố Vĩnh Phú, Phường Lái Thiêu, Tp. Hồ Chí Minh' : '69F/4, Vinh Phu Quarter, Lai Thieu Ward, Ho Chi Minh City'}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
 
           </div>
