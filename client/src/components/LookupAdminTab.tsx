@@ -1022,6 +1022,25 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                       )}
                     </div>
                   )}
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-white/40 pl-0.5 pt-1">
+                    {(selectedClient as any).projectCategory && (
+                      <span className="text-white/50">
+                        <span className="text-white/25 text-xs mr-1">{isVi ? "Hạng mục:" : "Category:"}</span>
+                        {(selectedClient as any).projectCategory}
+                      </span>
+                    )}
+                    {(selectedClient as any).projectCategory && selectedClient.stage && (
+                      <span className="text-white/20">·</span>
+                    )}
+                    {selectedClient.stage && (
+                      <span className="text-white/50">
+                        <span className="text-white/25 text-xs mr-1">{isVi ? "Giai đoạn:" : "Stage:"}</span>
+                        {stageLabels[selectedClient.stage]
+                          ? (isVi ? stageLabels[selectedClient.stage].vi : stageLabels[selectedClient.stage].en)
+                          : selectedClient.stage}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             </CardContent>
