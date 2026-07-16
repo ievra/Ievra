@@ -1434,6 +1434,10 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                         <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'CCCD/CMND' : 'Identity Card'}</label>
                         <p className="text-base mt-1">{viewingClient.identityCard || "—"}</p>
                       </div>
+                      <div>
+                        <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Hạng Mục' : 'Project Category'}</label>
+                        <p className="text-base mt-1">{(viewingClient as any).projectCategory || "—"}</p>
+                      </div>
                     </div>
                   </div>
 
