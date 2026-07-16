@@ -628,12 +628,12 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                   <div className="grid grid-cols-2 gap-4">
                     <FormField
                       control={clientForm.control}
-                      name="firstName"
+                      name="lastName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t('crm.firstName')} *</FormLabel>
+                          <FormLabel>{t('crm.lastName')} *</FormLabel>
                           <FormControl>
-                            <Input {...field} placeholder="Nguyễn" data-testid="input-client-first-name" />
+                            <Input {...field} placeholder="Nguyễn" data-testid="input-client-last-name" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -642,12 +642,12 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
 
                     <FormField
                       control={clientForm.control}
-                      name="lastName"
+                      name="firstName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>{t('crm.lastName')} *</FormLabel>
+                          <FormLabel>{t('crm.firstName')} *</FormLabel>
                           <FormControl>
-                            <Input {...field} placeholder="Văn A" data-testid="input-client-last-name" />
+                            <Input {...field} placeholder="Văn A" data-testid="input-client-first-name" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
