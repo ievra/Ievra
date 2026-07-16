@@ -681,13 +681,13 @@ export default function Lookup() {
               const dProgress = result.client.designTimeline
                 ? Math.min(100, Math.round((designInteractions.length / result.client.designTimeline) * 100))
                 : designPhases.length > 0
-                  ? Math.round(designPhases.reduce((acc, ph) => { const t = dPt[ph.value] || 0; const l = designInteractions.filter(i => i.phase === ph.value).length; return acc + (t > 0 ? Math.min(100, Math.round((l / t) * 100)) : 100); }, 0) / designPhases.length)
-                  : 100;
+                  ? Math.round(designPhases.reduce((acc, ph) => { const t = dPt[ph.value] || 0; const l = designInteractions.filter(i => i.phase === ph.value).length; return acc + (t > 0 ? Math.min(100, Math.round((l / t) * 100)) : 0); }, 0) / designPhases.length)
+                  : 0;
               const cProgress = result.client.constructionTimeline
                 ? Math.min(100, Math.round((constructionInteractions.length / result.client.constructionTimeline) * 100))
                 : constructionPhases.length > 0
-                  ? Math.round(constructionPhases.reduce((acc, ph) => { const t = cPt[ph.value] || 0; const l = constructionInteractions.filter(i => i.phase === ph.value).length; return acc + (t > 0 ? Math.min(100, Math.round((l / t) * 100)) : 100); }, 0) / constructionPhases.length)
-                  : 100;
+                  ? Math.round(constructionPhases.reduce((acc, ph) => { const t = cPt[ph.value] || 0; const l = constructionInteractions.filter(i => i.phase === ph.value).length; return acc + (t > 0 ? Math.min(100, Math.round((l / t) * 100)) : 0); }, 0) / constructionPhases.length)
+                  : 0;
               const dTx = transactions.filter(t => !t.category || t.category === "design");
               const cTx = transactions.filter(t => t.category === "construction");
               const dPayPct = dTx.length > 0 ? Math.round((dTx.filter(t => t.status === "completed").length / dTx.length) * 100) : 0;
@@ -746,11 +746,11 @@ export default function Lookup() {
                           const sum = designPhases.reduce((acc, ph) => {
                             const t = pt[ph.value] || 0;
                             const l = designInteractions.filter(i => i.phase === ph.value).length;
-                            return acc + (t > 0 ? Math.min(100, Math.round((l / t) * 100)) : 100);
+                            return acc + (t > 0 ? Math.min(100, Math.round((l / t) * 100)) : 0);
                           }, 0);
                           return Math.round(sum / designPhases.length);
                         }
-                        return 100;
+                        return 0;
                       })(), type: "design_progress" },
                       [], {}, [], false
                     )}
@@ -777,11 +777,11 @@ export default function Lookup() {
                           const sum = constructionPhases.reduce((acc, ph) => {
                             const t = pt[ph.value] || 0;
                             const l = constructionInteractions.filter(i => i.phase === ph.value).length;
-                            return acc + (t > 0 ? Math.min(100, Math.round((l / t) * 100)) : 100);
+                            return acc + (t > 0 ? Math.min(100, Math.round((l / t) * 100)) : 0);
                           }, 0);
                           return Math.round(sum / constructionPhases.length);
                         }
-                        return 100;
+                        return 0;
                       })(), type: "construction_progress" },
                       [], {}, [], false
                     )}
@@ -806,7 +806,7 @@ export default function Lookup() {
                         const pt = (result.client.designPhaseTargets || {}) as Record<string, number>;
                         const target = pt[phase.value] || 0;
                         const logged = designInteractions.filter(i => i.phase === phase.value).length;
-                        const p = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : (result.client.designTimeline ? 0 : 100);
+                        const p = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 0;
                         return (
                           <div key={phase.id}>
                             <div className="flex items-baseline justify-between mb-2">
@@ -828,7 +828,7 @@ export default function Lookup() {
                         const pt = (result.client.constructionPhaseTargets || {}) as Record<string, number>;
                         const target = pt[phase.value] || 0;
                         const logged = constructionInteractions.filter(i => i.phase === phase.value).length;
-                        const p = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : (result.client.constructionTimeline ? 0 : 100);
+                        const p = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 0;
                         return (
                           <div key={phase.id}>
                             <div className="flex items-baseline justify-between mb-2">
@@ -862,7 +862,7 @@ export default function Lookup() {
                           const pt = (result.client.designPhaseTargets || {}) as Record<string, number>;
                           const target = pt[phase.value] || 0;
                           const logged = designInteractions.filter(i => i.phase === phase.value).length;
-                          const p = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : (result.client.designTimeline ? 0 : 100);
+                          const p = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 0;
                           return (
                             <div key={phase.id} className="flex items-center gap-6">
                               <span className="text-sm font-light text-white/65 w-28 sm:w-40 md:w-52 shrink-0 truncate">{isVi ? phase.labelVi : phase.labelEn}</span>
@@ -884,7 +884,7 @@ export default function Lookup() {
                           const pt = (result.client.constructionPhaseTargets || {}) as Record<string, number>;
                           const target = pt[phase.value] || 0;
                           const logged = constructionInteractions.filter(i => i.phase === phase.value).length;
-                          const p = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : (result.client.constructionTimeline ? 0 : 100);
+                          const p = target > 0 ? Math.min(100, Math.round((logged / target) * 100)) : 0;
                           return (
                             <div key={phase.id} className="flex items-center gap-6">
                               <span className="text-sm font-light text-white/65 w-28 sm:w-40 md:w-52 shrink-0 truncate">{isVi ? phase.labelVi : phase.labelEn}</span>
