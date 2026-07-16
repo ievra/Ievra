@@ -453,7 +453,7 @@ export default function Lookup() {
         </div>
         {/* Desktop table view */}
         <div className="hidden sm:block">
-          <div className="grid grid-cols-[40px_120px_1fr_100px_160px_50px] gap-2 px-4 py-2 border-b border-white/10">
+          <div className="grid grid-cols-[40px_120px_1fr_100px_160px_50px] gap-6 px-4 py-2 border-b border-white/10">
             <span className="text-xs font-light text-white/30 uppercase tracking-[0.12em]">{isVi ? "STT" : "No"}</span>
             <span className="text-xs font-light text-white/30 uppercase tracking-[0.12em]">{isVi ? "Ngày" : "Date"}</span>
             <span className="text-xs font-light text-white/30 uppercase tracking-[0.12em]">{isVi ? "Tiêu đề" : "Title"}</span>
@@ -472,7 +472,7 @@ export default function Lookup() {
                 </>
               )}
               {group.rows.map((row) => (
-                <div key={row.interaction.id} className="grid grid-cols-[40px_120px_1fr_100px_160px_50px] gap-2 px-4 py-2 border-b border-white/10 items-center">
+                <div key={row.interaction.id} className="grid grid-cols-[40px_120px_1fr_100px_160px_50px] gap-6 px-4 py-2 border-b border-white/10 items-center">
                   <span className="text-sm font-light text-white/35 tabular-nums">{row.num}</span>
                   <span className="text-sm font-light text-white/50">{formatDate(row.interaction.date)}</span>
                   <span className="text-sm font-light text-white/80">{row.interaction.title}</span>
@@ -1027,7 +1027,7 @@ export default function Lookup() {
                       </div>
                     ) : (
                       <div className="min-w-[700px]">
-                        <div className="grid grid-cols-[40px_100px_1fr_1fr_100px_120px_50px] gap-2 px-4 py-2 border-b border-white/10">
+                        <div className="grid grid-cols-[40px_100px_1fr_1fr_100px_120px_50px] gap-6 px-4 py-2 border-b border-white/10">
                           <span className="text-xs font-light text-white/30 uppercase tracking-[0.12em]">{isVi ? "STT" : "No"}</span>
                           <span className="text-xs font-light text-white/30 uppercase tracking-[0.12em]">{isVi ? "Ngày" : "Date"}</span>
                           <span className="text-xs font-light text-white/30 uppercase tracking-[0.12em]">{isVi ? "Tiêu đề" : "Title"}</span>
@@ -1037,7 +1037,7 @@ export default function Lookup() {
                           <span></span>
                         </div>
                         {result.warrantyLogs.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()).map((log, index) => (
-                          <div key={log.id} className="grid grid-cols-[40px_100px_1fr_1fr_100px_120px_50px] gap-2 px-4 py-2 border-b border-white/10 items-center">
+                          <div key={log.id} className="grid grid-cols-[40px_100px_1fr_1fr_100px_120px_50px] gap-6 px-4 py-2 border-b border-white/10 items-center">
                             <span className="text-sm font-light text-white/35">{index + 1}</span>
                             <span className="text-sm font-light text-white/50">{formatDate(log.date)}</span>
                             <span className="text-sm font-light text-white/80">{log.title}</span>
