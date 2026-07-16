@@ -445,7 +445,6 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
       return date.toISOString().split('T')[0];
     };
     
-    console.warn("[DEBUG handleEditClient] projectCategory =", (client as any).projectCategory, "| keys:", Object.keys(client).join(","));
     clientForm.reset({
       firstName: client.firstName,
       lastName: client.lastName,
@@ -478,7 +477,6 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
 
   const onClientSubmit = async (data: ClientFormData) => {
     try {
-      console.warn("[DEBUG onClientSubmit] data.projectCategory =", data.projectCategory);
       let warrantyStatus: "none" | "active" | "expired" = "none";
       if (data.warrantyExpiry && data.warrantyExpiry.trim() !== "") {
         const expiryDate = new Date(data.warrantyExpiry);
@@ -499,7 +497,6 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
       };
 
       if (editingClient) {
-        console.warn("[DEBUG onClientSubmit] cleanedData.projectCategory =", cleanedData.projectCategory);
         await updateClientMutation.mutateAsync({ id: editingClient.id, ...cleanedData });
         setEditingClient(null);
         setIsClientDialogOpen(false);
@@ -1327,8 +1324,8 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                                 <AlertDialogTitle>{language === 'vi' ? 'Không thể xóa khách hàng' : 'Cannot Delete Client'}</AlertDialogTitle>
                                 <AlertDialogDescription>
                                   {language === 'vi'
-                                    ? <>Khách hàng <strong>{editingClient.firstName} {editingClient.lastName}</strong> hiện có <strong>{transactions.length}</strong> giao dịch. Vui lòng xóa tất cả giao dịch trước khi xóa khách hàng.</>
-                                    : <>Client <strong>{editingClient.firstName} {editingClient.lastName}</strong> currently has <strong>{transactions.length}</strong> transaction(s). Please delete all transactions before deleting this client.</>
+                                    ? <>Khách hàng <strong>{editingClient.lastName} {editingClient.firstName}</strong> hiện có <strong>{transactions.length}</strong> giao dịch. Vui lòng xóa tất cả giao dịch trước khi xóa khách hàng.</>
+                                    : <>Client <strong>{editingClient.lastName} {editingClient.firstName}</strong> currently has <strong>{transactions.length}</strong> transaction(s). Please delete all transactions before deleting this client.</>
                                   }
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
@@ -1344,8 +1341,8 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                                 <AlertDialogTitle>{language === 'vi' ? 'Xác nhận xóa khách hàng' : 'Confirm Delete Client'}</AlertDialogTitle>
                                 <AlertDialogDescription className="text-white/70">
                                   {language === 'vi' 
-                                    ? <>Bạn có chắc chắn muốn xóa khách hàng <strong className="text-white">{editingClient.firstName} {editingClient.lastName}</strong>?</>
-                                    : <>Are you sure you want to delete client <strong className="text-white">{editingClient.firstName} {editingClient.lastName}</strong>?</>
+                                    ? <>Bạn có chắc chắn muốn xóa khách hàng <strong className="text-white">{editingClient.lastName} {editingClient.firstName}</strong>?</>
+                                    : <>Are you sure you want to delete client <strong className="text-white">{editingClient.lastName} {editingClient.firstName}</strong>?</>
                                   }
                                 </AlertDialogDescription>
                               </AlertDialogHeader>
@@ -1423,7 +1420,7 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">{t('crm.name')}</label>
-                        <p className="text-base mt-1">{viewingClient.firstName} {viewingClient.lastName}</p>
+                        <p className="text-base mt-1">{viewingClient.lastName} {viewingClient.firstName}</p>
                       </div>
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">{t('crm.email')}</label>
