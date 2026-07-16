@@ -222,7 +222,7 @@ export default function Contact() {
           </div>
 
           {/* Title */}
-          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-sans font-light tracking-tight leading-none mb-12 whitespace-nowrap" data-testid="text-consultation">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-sans font-light tracking-tight leading-tight mb-12" data-testid="text-consultation">
             {language === 'vi' ? 'ĐỂ LẠI THÔNG TIN NHẬN TƯ VẤN' : 'LEAVE YOUR INFORMATION FOR CONSULTATION'}
           </h1>
 
