@@ -2063,7 +2063,7 @@ export default function AdminProjectsTab({ user, hasPermission }: AdminProjectsT
                     <TableCell>{primary.style || "—"}</TableCell>
                     <TableCell>{primary.area || "—"}</TableCell>
                     <TableCell>
-                      <p className="font-light">{primary.title}</p>
+                      <p className="font-light truncate max-w-[200px]" title={primary.title}>{primary.title}</p>
                     </TableCell>
                     <TableCell>
                       <div className="flex gap-2">
