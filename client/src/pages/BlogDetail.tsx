@@ -301,7 +301,7 @@ export default function BlogDetail() {
   if (isLoading || isFetching) {
     return (
       <div className="min-h-screen pt-24 pb-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto px-6 sm:px-10 lg:px-16">
           <div className="animate-pulse">
             <div className="h-8 bg-white/10 rounded w-1/4 mb-8" />
             <div className="h-12 bg-white/10 rounded w-3/4 mb-4" />
@@ -321,7 +321,7 @@ export default function BlogDetail() {
   if (!article) {
     return (
       <div className="min-h-screen pt-24 pb-20">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center py-16">
+        <div className="max-w-4xl mx-auto px-6 sm:px-10 lg:px-16 text-center py-16">
           <h1 className="text-2xl font-bold mb-4">
             {language === 'vi' ? 'Không tìm thấy bài viết' : 'Article Not Found'}
           </h1>
@@ -343,7 +343,7 @@ export default function BlogDetail() {
 
   return (
     <div className="min-h-[120vh] pt-24 pb-20">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16">
         {/* Back Button */}
         <Button 
           variant="ghost" 

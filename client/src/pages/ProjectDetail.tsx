@@ -351,7 +351,7 @@ export default function ProjectDetail() {
   if (isLoading || isFetching) {
     return (
       <div className="min-h-screen bg-black">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 lg:px-16 py-24">
           <div className="animate-pulse space-y-12">
             <div className="h-8 bg-zinc-800 rounded w-1/4" />
             <div className="h-16 bg-zinc-800 rounded w-1/2" />

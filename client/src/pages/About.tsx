@@ -287,7 +287,7 @@ export default function About() {
           {/* Content */}
           {aboutContent && (
             <div className="absolute inset-0 flex items-center" style={{ zIndex: 2 }}>
-              <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
+              <div className="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16 w-full">
                 <div className="flex justify-center">
                   <h1 className="font-light text-white uppercase tracking-[0.06em] text-center whitespace-pre-line text-[42px]">
                     {(language === "vi" ? aboutContent.heroTitleVi : aboutContent.heroTitleEn).split('').map((char, i) => (
@@ -309,7 +309,7 @@ export default function About() {
       {/* Company History Section */}
       {aboutContent?.historyContentEn && aboutContent?.historyContentVi && (
         <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
               <div className="slide-from-left space-y-8">
                 <h3 className="md:text-4xl font-light text-white uppercase tracking-wide text-[24px]">
@@ -337,7 +337,7 @@ export default function About() {
       {/* Mission & Vision Section - 2 columns: Mission (small img) | Vision (large img) */}
       {(aboutContent?.missionContentEn || aboutContent?.visionContentEn) && (
         <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16">
             <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-10 lg:gap-20 items-start">
               {/* LEFT: Small image + Mission */}
               {aboutContent?.missionContentEn && aboutContent?.missionContentVi && (
@@ -395,7 +395,7 @@ export default function About() {
       {/* Design Philosophy / Principles Section */}
       {aboutContent && (aboutContent.principlesContentEn || aboutContent.principlesContentVi) && (
         <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16">
             <div className="grid grid-cols-1 lg:grid-cols-[2fr_2fr_1fr] gap-10 items-start">
               {/* Left image — large */}
               {(aboutContent.principlesImageLeftData || aboutContent.principlesImageLeft) ? (
@@ -501,7 +501,7 @@ export default function About() {
       {/* Core Values Section */}
       {coreValues.length > 0 && aboutContent && (
         <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16">
             <div className="mb-16">
               <h3 className="slide-from-left md:text-4xl font-light text-white uppercase tracking-wide text-[24px]">
                 {language === "vi" ? aboutContent.coreValuesTitleVi : aboutContent.coreValuesTitleEn}
@@ -614,7 +614,7 @@ export default function About() {
       {/* Process Section */}
       {processSteps.length > 0 && aboutContent && (
         <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16">
             <div className="mb-16">
               <h3 className="slide-from-left md:text-4xl font-light text-white uppercase tracking-wide text-[24px]">
                 {language === "vi" ? aboutContent.processTitleVi : aboutContent.processTitleEn}
@@ -902,7 +902,7 @@ export default function About() {
       {/* Team Members Section */}
       {teamMembers.length > 0 && aboutContent && (
         <section className="py-20 bg-black lg:-ml-16 overflow-hidden border-t border-white/10">
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16">
             <div className="mb-16">
               <h3 className="typewriter-heading text-3xl md:text-4xl font-light text-white uppercase tracking-wide mb-4">
                 {language === "vi" ? aboutContent.teamTitleVi : aboutContent.teamTitleEn}
@@ -1096,7 +1096,7 @@ export default function About() {
       {/* Awards Section */}
       {aboutContent && (awards.length > 0) && (
         <section className="py-20 bg-black lg:-ml-16 border-t border-white/10">
-          <div className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16">
             <div className="mb-12">
               <h3 className="typewriter-heading md:text-4xl font-light text-white uppercase tracking-wide text-[24px]">
                 {language === "vi" ? aboutContent.awardsSectionTitleVi : aboutContent.awardsSectionTitleEn}
