@@ -200,6 +200,10 @@ export default function LookupAdminTab({ user }: { user?: any }) {
   });
 
 
+  const { data: crmPipelineStages = [] } = useQuery<any[]>({
+    queryKey: ['/api/crm-pipeline-stages'],
+  });
+
   const { data: allConstructionPhases = [] } = useQuery<ConstructionPhase[]>({
     queryKey: ['/api/construction-phases'],
   });
@@ -1022,23 +1026,24 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                       )}
                     </div>
                   )}
-                  <div className="flex flex-wrap items-center gap-4 text-sm text-white/40 pl-0.5 pt-1">
+                  <div className="grid grid-cols-2 gap-x-8 gap-y-4 pt-5 mt-4 border-t border-white/10">
                     {(selectedClient as any).projectCategory && (
-                      <span className="text-white/50">
-                        <span className="text-white/25 text-xs mr-1">{isVi ? "Hạng mục:" : "Category:"}</span>
-                        {(selectedClient as any).projectCategory}
-                      </span>
-                    )}
-                    {(selectedClient as any).projectCategory && selectedClient.stage && (
-                      <span className="text-white/20">·</span>
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.14em] font-light text-white/30 mb-1.5">Hạng Mục</p>
+                        <p className="text-sm font-light text-white/70">{(selectedClient as any).projectCategory}</p>
+                      </div>
                     )}
                     {selectedClient.stage && (
-                      <span className="text-white/50">
-                        <span className="text-white/25 text-xs mr-1">{isVi ? "Giai đoạn:" : "Stage:"}</span>
-                        {stageLabels[selectedClient.stage]
-                          ? (isVi ? stageLabels[selectedClient.stage].vi : stageLabels[selectedClient.stage].en)
-                          : selectedClient.stage}
-                      </span>
+                      <div>
+                        <p className="text-xs uppercase tracking-[0.14em] font-light text-white/30 mb-1.5">Giai Đoạn</p>
+                        <p className="text-sm font-light text-white/70">
+                          {(() => {
+                            const s = crmPipelineStages.find((st: any) => st.value === selectedClient.stage);
+                            if (s) return s.labelVi || s.labelEn || selectedClient.stage;
+                            return stageLabels[selectedClient.stage]?.vi || selectedClient.stage;
+                          })()}
+                        </p>
+                      </div>
                     )}
                   </div>
                 </div>
