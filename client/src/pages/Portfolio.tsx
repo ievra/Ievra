@@ -245,6 +245,36 @@ export default function Portfolio() {
 
   const projects = sortedFilteredProjects;
 
+  // Split into groups for display when no type filter is active
+  const archProjects = projects.filter(p => (p as any).projectType === 'architecture');
+  const interiorProjects = projects.filter(p => (p as any).projectType !== 'architecture');
+  const showGrouped = selectedType === 'all' && (archProjects.length > 0 && interiorProjects.length > 0);
+
+  const archTypeLabel = projectTypes.find(t => t.value === 'architecture');
+  const interiorTypeLabel = projectTypes.find(t => t.value === 'interior');
+
+  const renderGrid = (list: typeof projects) => {
+    const spans = computeSpans(list);
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 [grid-auto-rows:360px] md:[grid-auto-rows:480px] lg:[grid-auto-rows:600px] gap-[3px]">
+        {list.map((project, index) => {
+          const span = spans[index];
+          const lgSpan = LG_SPAN_CLASS[span] || 'lg:col-span-2';
+          const isLarge = span >= 3;
+          return (
+            <ProjectCard
+              key={project.id}
+              project={project}
+              index={index}
+              className={lgSpan}
+              isLarge={isLarge}
+            />
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-[120vh] pt-32 pb-20">
       {/* Editorial header */}
@@ -443,28 +473,27 @@ export default function Portfolio() {
               {language === 'vi' ? 'Hiện tại chưa có dự án nào.' : 'No projects are available at the moment.'}
             </p>
           </div>
-        ) : (
+        ) : showGrouped ? (
           <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 [grid-auto-rows:360px] md:[grid-auto-rows:480px] lg:[grid-auto-rows:600px] gap-[3px]">
-              {(() => {
-                const spans = computeSpans(projects);
-                return projects.map((project, index) => {
-                  const span = spans[index];
-                  const lgSpan = LG_SPAN_CLASS[span] || 'lg:col-span-2';
-                  const isLarge = span >= 3;
-                  return (
-                    <ProjectCard
-                      key={project.id}
-                      project={project}
-                      index={index}
-                      className={lgSpan}
-                      isLarge={isLarge}
-                    />
-                  );
-                });
-              })()}
-            </div>
+            {archProjects.length > 0 && (
+              <div className="mb-16">
+                <p className="text-[11px] uppercase tracking-[0.2em] font-light text-white/30 mb-6 px-1">
+                  {language === 'vi' ? (archTypeLabel?.labelVi || 'Kiến Trúc') : (archTypeLabel?.label || 'Architecture')}
+                </p>
+                {renderGrid(archProjects)}
+              </div>
+            )}
+            {interiorProjects.length > 0 && (
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.2em] font-light text-white/30 mb-6 px-1">
+                  {language === 'vi' ? (interiorTypeLabel?.labelVi || 'Nội Thất') : (interiorTypeLabel?.label || 'Interior')}
+                </p>
+                {renderGrid(interiorProjects)}
+              </div>
+            )}
           </>
+        ) : (
+          renderGrid(projects)
         )}
       </div>
     </div>
