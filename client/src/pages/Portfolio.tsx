@@ -278,7 +278,7 @@ export default function Portfolio() {
   return (
     <div className="min-h-[120vh] pt-32 pb-20">
       {/* Editorial header */}
-      <div className="max-w-[1600px] mx-auto px-2 sm:px-3 lg:px-4 mb-10">
+      <div className="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16 mb-10">
         <div className="flex items-end justify-between gap-6 border-b border-white/10 pb-8">
           <div>
             {/* Breadcrumb */}
@@ -450,7 +450,7 @@ export default function Portfolio() {
         </div>
       </div>
 
-      <div className="max-w-[1600px] mx-auto px-2 sm:px-3 lg:px-4">
+      <div className="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16">
         {/* Projects Grid */}
 
         {/* Projects Grid */}
