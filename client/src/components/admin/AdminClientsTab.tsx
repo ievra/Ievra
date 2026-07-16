@@ -1987,8 +1987,8 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                             </span>
                           </TableCell>
                           <TableCell className="align-middle overflow-hidden">
-                            <div className="font-light truncate" title={`${client.firstName} ${client.lastName}`}>
-                              {client.firstName} {client.lastName}
+                            <div className="font-light truncate" title={`${client.lastName} ${client.firstName}`}>
+                              {client.lastName} {client.firstName}
                             </div>
                             <div className="text-xs text-muted-foreground mt-1">
                               {client.intakeDate ? new Date(client.intakeDate).toLocaleDateString('vi-VN') : "—"}
