@@ -157,6 +157,14 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
     queryKey: ['/api/clients'],
   });
 
+  // Keep viewingClient in sync with latest cache data
+  useEffect(() => {
+    if (viewingClient && clients.length > 0) {
+      const updated = clients.find((c: Client) => c.id === viewingClient.id);
+      if (updated) setViewingClient(updated);
+    }
+  }, [clients]);
+
   const { data: crmStages = [] } = useQuery<any[]>({
     queryKey: ['/api/crm-pipeline-stages'],
   });
@@ -437,6 +445,7 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
       return date.toISOString().split('T')[0];
     };
     
+    console.warn("[DEBUG handleEditClient] projectCategory =", (client as any).projectCategory, "| keys:", Object.keys(client).join(","));
     clientForm.reset({
       firstName: client.firstName,
       lastName: client.lastName,
@@ -469,6 +478,7 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
 
   const onClientSubmit = async (data: ClientFormData) => {
     try {
+      console.warn("[DEBUG onClientSubmit] data.projectCategory =", data.projectCategory);
       let warrantyStatus: "none" | "active" | "expired" = "none";
       if (data.warrantyExpiry && data.warrantyExpiry.trim() !== "") {
         const expiryDate = new Date(data.warrantyExpiry);
@@ -489,6 +499,7 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
       };
 
       if (editingClient) {
+        console.warn("[DEBUG onClientSubmit] cleanedData.projectCategory =", cleanedData.projectCategory);
         await updateClientMutation.mutateAsync({ id: editingClient.id, ...cleanedData });
         setEditingClient(null);
         setIsClientDialogOpen(false);

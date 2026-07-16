@@ -199,6 +199,13 @@ export default function LookupAdminTab({ user }: { user?: any }) {
     queryKey: ['/api/clients'],
   });
 
+  // Keep selectedClient in sync with fresh cache data after edits
+  useEffect(() => {
+    if (selectedClient && clients.length > 0) {
+      const updated = clients.find((c: Client) => c.id === selectedClient.id);
+      if (updated) setSelectedClient(updated);
+    }
+  }, [clients]);
 
   const { data: crmPipelineStages = [] } = useQuery<any[]>({
     queryKey: ['/api/crm-pipeline-stages'],
