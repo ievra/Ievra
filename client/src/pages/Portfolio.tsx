@@ -238,12 +238,14 @@ export default function Portfolio() {
     );
   });
 
-  // Sort: featured projects first, preserve relative order within each group
+  // Sort: featured first, then architecture before interior, preserve relative order within each group
   const sortedFilteredProjects = useMemo(() =>
     filteredProjects.slice().sort((a, b) => {
       if (a.featured && !b.featured) return -1;
       if (!a.featured && b.featured) return 1;
-      return 0;
+      const archA = a.category === 'architecture' ? 0 : 1;
+      const archB = b.category === 'architecture' ? 0 : 1;
+      return archA - archB;
     }),
     [filteredProjects]
   );
