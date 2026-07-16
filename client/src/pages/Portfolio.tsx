@@ -450,7 +450,7 @@ export default function Portfolio() {
         </div>
       </div>
 
-      <div className="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16">
+      <div className="px-6 md:px-10 lg:px-16">
         {/* Projects Grid */}
 
         {/* Projects Grid */}
