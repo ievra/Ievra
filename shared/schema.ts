@@ -103,6 +103,7 @@ export const clients = pgTable("clients", {
   hiddenDesignPhases: jsonb("hidden_design_phases").default([]),
   hiddenConstructionPhases: jsonb("hidden_construction_phases").default([]),
   identityCard: text("identity_card"),
+  projectCategory: text("project_category"), // Hạng Mục (điền tay)
   // Warranty & Additional Info
   warrantyStatus: varchar("warranty_status", { length: 30 }).default("none"), // none, active, expired
   warrantyExpiry: timestamp("warranty_expiry"), // Ngày hết hạn bảo hành
