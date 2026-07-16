@@ -1034,12 +1034,6 @@ export default function LookupAdminTab({ user }: { user?: any }) {
                     </div>
                   )}
                   <div className="grid grid-cols-2 gap-x-8 gap-y-4 pt-5 mt-4 border-t border-white/10">
-                    {(selectedClient as any).projectCategory && (
-                      <div>
-                        <p className="text-xs uppercase tracking-[0.14em] font-light text-white/30 mb-1.5">Hạng Mục</p>
-                        <p className="text-sm font-light text-white/70">{(selectedClient as any).projectCategory}</p>
-                      </div>
-                    )}
                     {selectedClient.stage && (
                       <div>
                         <p className="text-xs uppercase tracking-[0.14em] font-light text-white/30 mb-1.5">Giai Đoạn</p>

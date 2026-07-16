@@ -489,7 +489,6 @@ export const insertClientSchema = createInsertSchema(clients).omit({
   tags: z.array(z.string()).optional().default([]),
   hiddenDesignPhases: z.array(z.string()).optional().default([]),
   hiddenConstructionPhases: z.array(z.string()).optional().default([]),
-  projectCategory: z.string().nullable().optional(),
 });
 
 export const insertInquirySchema = createInsertSchema(inquiries).omit({

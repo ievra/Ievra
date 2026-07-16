@@ -46,7 +46,6 @@ const clientSchema = z.object({
   constructionTimeline: z.number().optional(),
   tier: z.string().default("silver"),
   identityCard: z.string().optional(),
-  projectCategory: z.string().optional(),
   tags: z.array(z.string()).default([]),
   notes: z.string().optional(),
 });
@@ -283,7 +282,6 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
       referralCount: 0,
       referralRevenue: "0",
       identityCard: "",
-      projectCategory: "",
       tags: [],
       notes: "",
     },
@@ -468,7 +466,6 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
       constructionTimeline: client.constructionTimeline || 0,
       tier: client.tier || "silver",
       identityCard: client.identityCard || "",
-      projectCategory: (client as any).projectCategory || "",
       tags: Array.isArray(client.tags) ? (client.tags as string[]) : [],
       notes: client.notes || "",
     });
@@ -586,7 +583,6 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                 warrantyStatus: "none",
                 warrantyExpiry: "",
                 identityCard: "",
-                projectCategory: "",
                 tags: [],
                 notes: "",
               });
@@ -771,19 +767,6 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                       )}
                     />
 
-                    <FormField
-                      control={clientForm.control}
-                      name="projectCategory"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>{language === 'vi' ? 'Hạng Mục' : 'Project Category'}</FormLabel>
-                          <FormControl>
-                            <Input {...field} placeholder={language === 'vi' ? 'VD: Nhà phố, Căn hộ...' : 'e.g. House, Apartment...'} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
                   </div>
 
                   <FormField
@@ -1441,10 +1424,6 @@ export default function AdminClientsTab({ user, hasPermission }: AdminClientsTab
                       <div>
                         <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'CCCD/CMND' : 'Identity Card'}</label>
                         <p className="text-base mt-1">{viewingClient.identityCard || "—"}</p>
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium text-muted-foreground">{language === 'vi' ? 'Hạng Mục' : 'Project Category'}</label>
-                        <p className="text-base mt-1">{(viewingClient as any).projectCategory || "—"}</p>
                       </div>
                     </div>
                   </div>
