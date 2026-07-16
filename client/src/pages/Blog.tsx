@@ -379,7 +379,7 @@ export default function Blog() {
 
   return (
     <div className="min-h-[120vh] pt-32 pb-20">
-      <div className="px-4 sm:px-6 lg:px-8 mb-10">
+      <div className="max-w-[1600px] mx-auto px-2 sm:px-3 lg:px-4 mb-10">
         {/* Editorial header: title left, search right */}
         <div className="flex items-end justify-between gap-6 border-b border-white/10 pb-8">
           <div>
@@ -522,7 +522,7 @@ export default function Blog() {
       </div>
 
       {/* Articles Grid */}
-      <div className="px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1600px] mx-auto px-2 sm:px-3 lg:px-4">
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
