@@ -522,7 +522,7 @@ export default function Blog() {
       </div>
 
       {/* Articles Grid */}
-      <div className="max-w-[1600px] mx-auto px-6 sm:px-10 lg:px-16">
+      <div className="px-6 md:px-10 lg:px-16">
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
