@@ -11,6 +11,7 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import { storage } from "./storage";
+import { pool } from "./db";
 import { CANONICAL_BASE_URL } from "@shared/constants";
 import { insertProjectSchema, insertClientSchema, insertInquirySchema, insertServiceSchema, insertArticleSchema, insertHomepageContentSchema, insertPartnerSchema, insertCategorySchema, insertInteractionSchema, insertDealSchema, insertTransactionSchema, insertWarrantyLogSchema, insertSettingsSchema, insertFaqSchema, insertAdvantageSchema, insertJourneyStepSchema, insertAboutPageContentSchema, insertAboutShowcaseServiceSchema, insertAboutProcessStepSchema, insertAboutCoreValueSchema, insertAboutTeamMemberSchema, insertAboutAwardSchema, insertCrmPipelineStageSchema, insertCrmCustomerTierSchema, insertCrmStatusSchema, insertUserSchema, insertBusinessPartnerSchema, insertBpTransactionSchema, insertBpCategorySchema, insertBpStatusSchema, insertBpTierSchema, insertConstructionPhaseSchema, insertDesignPhaseSchema } from "@shared/schema";
 import { z } from "zod";
@@ -3059,6 +3060,122 @@ body{padding:16px 24px}
       res.status(500).json({ message: "Failed to delete design phase" });
     }
   });
+
+  // ── Storage management ────────────────────────────────────────────────────
+  function findAssetDir(): string {
+    const candidates = [
+      '/var/www/vhosts/moderno.com.vn/httpdocs/attached_assets',
+      path.join(process.cwd(), 'attached_assets'),
+      path.join(__dirname, '..', 'attached_assets'),
+    ];
+    for (const d of candidates) {
+      if (fs.existsSync(d) && fs.statSync(d).isDirectory()) return d;
+    }
+    return '';
+  }
+
+  async function getReferencedFilenames(): Promise<Set<string>> {
+    const refs = new Set<string>();
+    const addUrl = (url: string | null | undefined) => {
+      const fn = extractAssetFilename(url || '');
+      if (fn) refs.add(fn);
+    };
+    const addArr = (arr: any) => {
+      if (!arr) return;
+      const items: any[] = Array.isArray(arr) ? arr : (() => { try { return JSON.parse(arr); } catch { return []; } })();
+      for (const item of items) {
+        if (typeof item === 'string') addUrl(item);
+        else if (item && typeof item === 'object') addUrl(item.url || item.src || item.path || '');
+      }
+    };
+    try {
+      const { rows: proj } = await pool.query(`SELECT hero_image, banner_image, section_2_image, section_3_image, og_image, cover_images, content_images, gallery_images, images FROM projects`);
+      for (const r of proj) { addUrl(r.hero_image); addUrl(r.banner_image); addUrl(r.section_2_image); addUrl(r.section_3_image); addUrl(r.og_image); addArr(r.cover_images); addArr(r.content_images); addArr(r.gallery_images); addArr(r.images); }
+    } catch {}
+    try {
+      const { rows: arts } = await pool.query(`SELECT featured_image, og_image FROM articles`);
+      for (const r of arts) { addUrl(r.featured_image); addUrl(r.og_image); }
+    } catch {}
+    try {
+      const { rows: parts } = await pool.query(`SELECT logo FROM partners`);
+      for (const r of parts) addUrl(r.logo);
+    } catch {}
+    try {
+      const { rows: hp } = await pool.query(`SELECT hero_background_image, quality_background_image, quality2_background_image FROM homepage_content`);
+      for (const r of hp) { addUrl(r.hero_background_image); addUrl(r.quality_background_image); addUrl(r.quality2_background_image); }
+    } catch {}
+    try {
+      const { rows: s } = await pool.query(`SELECT logo_url, og_image FROM settings`);
+      for (const r of s) { addUrl(r.logo_url); addUrl(r.og_image); }
+    } catch {}
+    try {
+      const { rows: ab } = await pool.query(`SELECT principles_image_left, principles_image_right, showcase_banner_image, history_image, mission_image, mission_vision_image, cta_banner_image, hero_images FROM about_page_content`);
+      for (const r of ab) {
+        addUrl(r.principles_image_left); addUrl(r.principles_image_right);
+        addUrl(r.showcase_banner_image); addUrl(r.history_image);
+        addUrl(r.mission_image); addUrl(r.mission_vision_image); addUrl(r.cta_banner_image);
+        if (Array.isArray(r.hero_images)) r.hero_images.forEach(addUrl);
+      }
+    } catch {}
+    try {
+      const { rows: team } = await pool.query(`SELECT image FROM about_team_members`);
+      for (const r of team) addUrl(r.image);
+    } catch {}
+    try {
+      const { rows: awards } = await pool.query(`SELECT image FROM about_awards`);
+      for (const r of awards) addUrl(r.image);
+    } catch {}
+    try {
+      const { rows: ints } = await pool.query(`SELECT attachments FROM interactions`);
+      for (const r of ints) addArr(r.attachments);
+    } catch {}
+    try {
+      const { rows: wl } = await pool.query(`SELECT attachments FROM warranty_logs`);
+      for (const r of wl) { if (Array.isArray(r.attachments)) r.attachments.forEach(addUrl); }
+    } catch {}
+    try {
+      const { rows: bpRows } = await pool.query(`SELECT logo FROM business_partners`);
+      for (const r of bpRows) addUrl(r.logo);
+    } catch {}
+    return refs;
+  }
+
+  app.get("/api/admin/storage-stats", requireAuth, async (req, res) => {
+    try {
+      const assetDir = findAssetDir();
+      if (!assetDir) return res.json({ totalFiles: 0, totalSize: 0, orphanedFiles: 0, orphanedSize: 0, referencedFiles: 0 });
+      const files = fs.readdirSync(assetDir).filter(f => !f.startsWith('.') && fs.statSync(path.join(assetDir, f)).isFile());
+      let totalSize = 0;
+      for (const f of files) { try { totalSize += fs.statSync(path.join(assetDir, f)).size; } catch {} }
+      const refs = await getReferencedFilenames();
+      const orphaned = files.filter(f => !refs.has(f));
+      let orphanedSize = 0;
+      for (const f of orphaned) { try { orphanedSize += fs.statSync(path.join(assetDir, f)).size; } catch {} }
+      res.json({ totalFiles: files.length, totalSize, orphanedFiles: orphaned.length, orphanedSize, referencedFiles: refs.size });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to get storage stats" });
+    }
+  });
+
+  app.post("/api/admin/cleanup-storage", requireAuth, async (req, res) => {
+    try {
+      const assetDir = findAssetDir();
+      if (!assetDir) return res.json({ deleted: 0, freedSize: 0 });
+      const files = fs.readdirSync(assetDir).filter(f => !f.startsWith('.') && fs.statSync(path.join(assetDir, f)).isFile());
+      const refs = await getReferencedFilenames();
+      const orphaned = files.filter(f => !refs.has(f));
+      let deleted = 0, freedSize = 0;
+      for (const f of orphaned) {
+        const fp = path.join(assetDir, f);
+        try { const stat = fs.statSync(fp); fs.unlinkSync(fp); freedSize += stat.size; deleted++; console.log(`[storage-cleanup] deleted ${f}`); }
+        catch (e) { console.error(`[storage-cleanup] failed to delete ${f}`, e); }
+      }
+      res.json({ deleted, freedSize });
+    } catch (error) {
+      res.status(500).json({ message: "Failed to cleanup storage" });
+    }
+  });
+  // ─────────────────────────────────────────────────────────────────────────────
 
   const httpServer = createServer(app);
   return httpServer;

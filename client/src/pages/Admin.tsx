@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { LogOut, User, BarChart3, Briefcase, Users, Mail, Newspaper, Edit3, Home, Image, Shield, Search, Handshake } from "lucide-react";
+import { LogOut, User, BarChart3, Briefcase, Users, Mail, Newspaper, Edit3, Home, Image, Shield, Search, Handshake, HardDrive } from "lucide-react";
 import AdminDashboard from "@/components/AdminDashboard";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -21,7 +21,8 @@ const TAB_PERMISSIONS: Record<string, string> = {
   homepage: 'homepage',
   about: 'about',
   content: 'content',
-  users: 'users'
+  users: 'users',
+  storage: 'users',
 };
 
 // Helper function to check if user has permission for a specific feature
@@ -52,7 +53,8 @@ function getTabs(t: (key: string) => string, language: string) {
     { id: 'homepage', label: t('admin.homepage'), icon: Home },
     { id: 'about', label: t('admin.about'), icon: Image },
     { id: 'content', label: t('admin.seo'), icon: Edit3 },
-    { id: 'users', label: t('admin.users'), icon: Shield }
+    { id: 'users', label: t('admin.users'), icon: Shield },
+    { id: 'storage', label: language === 'vi' ? 'Lưu Trữ' : 'Storage', icon: HardDrive },
   ];
 }
 

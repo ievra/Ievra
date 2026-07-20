@@ -14,7 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { Pencil, Trash2, Eye, Plus, Lock, Search } from "lucide-react";
+import { Pencil, Trash2, Eye, Plus, Lock, Search, HardDrive, Trash, RefreshCw } from "lucide-react";
 import type { Inquiry, HomepageContent, Partner, AboutPageContent, AboutCoreValue, AboutShowcaseService, AboutProcessStep, AboutTeamMember, AboutAward, InsertAboutPageContent, InsertAboutCoreValue, InsertAboutShowcaseService, InsertAboutProcessStep, InsertAboutTeamMember, InsertAboutAward, Settings as SettingsType } from "@shared/schema";
 import { insertAboutPageContentSchema, insertAboutCoreValueSchema, insertAboutShowcaseServiceSchema, insertAboutProcessStepSchema, insertAboutTeamMemberSchema, insertAboutAwardSchema } from "@shared/schema";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -27,6 +27,111 @@ const AdminBusinessPartnersTab = lazy(() => import("@/components/admin/AdminBusi
 const AdminArticlesTab = lazy(() => import("@/components/admin/AdminArticlesTab"));
 const AdminHomepageTab = lazy(() => import("@/components/admin/AdminHomepageTab"));
 const AdminUsersTab = lazy(() => import("@/components/admin/AdminUsersTab"));
+
+function StorageTab({ language }: { language: string }) {
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+  const isVi = language === 'vi';
+
+  const { data: stats, isLoading, refetch } = useQuery<{
+    totalFiles: number; totalSize: number; orphanedFiles: number; orphanedSize: number; referencedFiles: number;
+  }>({ queryKey: ['/api/admin/storage-stats'] });
+
+  const cleanupMutation = useMutation({
+    mutationFn: () => apiRequest('POST', '/api/admin/cleanup-storage'),
+    onSuccess: async (data: any) => {
+      const mb = (data.freedSize / 1024 / 1024).toFixed(2);
+      toast({ title: isVi ? 'Dọn dẹp hoàn tất' : 'Cleanup complete', description: isVi ? `Đã xóa ${data.deleted} file, giải phóng ${mb} MB` : `Deleted ${data.deleted} files, freed ${mb} MB` });
+      refetch();
+    },
+    onError: () => toast({ title: isVi ? 'Lỗi' : 'Error', description: isVi ? 'Không thể dọn dẹp file' : 'Failed to cleanup files', variant: 'destructive' }),
+  });
+
+  const fmtSize = (bytes: number) => {
+    if (bytes >= 1024 * 1024) return (bytes / 1024 / 1024).toFixed(1) + ' MB';
+    if (bytes >= 1024) return (bytes / 1024).toFixed(0) + ' KB';
+    return bytes + ' B';
+  };
+
+  const handleClearCache = () => {
+    queryClient.clear();
+    toast({ title: isVi ? 'Đã xóa cache' : 'Cache cleared', description: isVi ? 'Cache dữ liệu đã được làm mới' : 'All cached data has been cleared' });
+  };
+
+  return (
+    <div className="p-6 space-y-6">
+      <div>
+        <h2 className="text-xl font-light text-white mb-1">{isVi ? 'Quản Lý Lưu Trữ' : 'Storage Management'}</h2>
+        <p className="text-sm text-white/40 font-light">{isVi ? 'Kiểm tra và dọn dẹp file ảnh không còn sử dụng' : 'Inspect and clean up unused image files'}</p>
+      </div>
+
+      {/* Stats cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {[
+          { label: isVi ? 'Tổng file' : 'Total files', value: isLoading ? '...' : String(stats?.totalFiles ?? 0) },
+          { label: isVi ? 'Dung lượng' : 'Total size', value: isLoading ? '...' : fmtSize(stats?.totalSize ?? 0) },
+          { label: isVi ? 'File không dùng' : 'Orphaned files', value: isLoading ? '...' : String(stats?.orphanedFiles ?? 0), accent: (stats?.orphanedFiles ?? 0) > 0 },
+          { label: isVi ? 'Có thể giải phóng' : 'Can free up', value: isLoading ? '...' : fmtSize(stats?.orphanedSize ?? 0), accent: (stats?.orphanedSize ?? 0) > 0 },
+        ].map(({ label, value, accent }) => (
+          <Card key={label} className="bg-white/5 border-white/10 rounded-none">
+            <CardContent className="p-5">
+              <p className="text-xs uppercase tracking-widest font-light text-white/40 mb-2">{label}</p>
+              <p className={`text-2xl font-light tabular-nums ${accent ? 'text-yellow-400' : 'text-white'}`}>{value}</p>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Actions */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <Card className="bg-white/5 border-white/10 rounded-none">
+          <CardContent className="p-5">
+            <div className="flex items-start gap-4">
+              <Trash className="w-5 h-5 text-white/50 mt-0.5 shrink-0" />
+              <div className="flex-1">
+                <p className="text-sm font-light text-white mb-1">{isVi ? 'Dọn dẹp file thừa' : 'Clean orphaned files'}</p>
+                <p className="text-xs text-white/40 font-light mb-4">{isVi ? 'Xóa vĩnh viễn các ảnh đã tải lên nhưng không còn được sử dụng trong hệ thống.' : 'Permanently delete uploaded images no longer referenced anywhere in the system.'}</p>
+                <Button
+                  onClick={() => cleanupMutation.mutate()}
+                  disabled={cleanupMutation.isPending || (stats?.orphanedFiles ?? 0) === 0}
+                  className="rounded-none bg-transparent border border-white/30 text-white hover:border-white hover:bg-white/10 font-light text-sm"
+                >
+                  {cleanupMutation.isPending ? (isVi ? 'Đang xóa...' : 'Cleaning...') : isVi ? `Xóa ${stats?.orphanedFiles ?? 0} file không dùng` : `Delete ${stats?.orphanedFiles ?? 0} orphaned files`}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-white/5 border-white/10 rounded-none">
+          <CardContent className="p-5">
+            <div className="flex items-start gap-4">
+              <RefreshCw className="w-5 h-5 text-white/50 mt-0.5 shrink-0" />
+              <div className="flex-1">
+                <p className="text-sm font-light text-white mb-1">{isVi ? 'Làm mới cache' : 'Clear cache'}</p>
+                <p className="text-xs text-white/40 font-light mb-4">{isVi ? 'Xóa cache dữ liệu trên trình duyệt. Các trang sẽ tải lại dữ liệu mới từ server.' : 'Clear browser-side data cache. Pages will re-fetch fresh data from the server.'}</p>
+                <Button
+                  onClick={handleClearCache}
+                  className="rounded-none bg-transparent border border-white/30 text-white hover:border-white hover:bg-white/10 font-light text-sm"
+                >
+                  {isVi ? 'Xóa cache' : 'Clear cache'}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Refresh stats */}
+      <div className="flex items-center gap-3">
+        <Button variant="ghost" size="sm" onClick={() => refetch()} className="text-white/40 hover:text-white text-xs font-light gap-2">
+          <RefreshCw className="w-3.5 h-3.5" />
+          {isVi ? 'Tải lại thống kê' : 'Refresh stats'}
+        </Button>
+      </div>
+    </div>
+  );
+}
 
 function TabLoader() {
   return (
@@ -1777,6 +1882,10 @@ export default function AdminDashboard({ activeTab, user, hasPermission }: Admin
       return <PermissionDenied feature="Tra Cứu / Lookup" />;
     }
     return <LookupAdminTab user={user} />;
+  }
+
+  if (activeTab === 'storage') {
+    return <StorageTab language={language} />;
   }
 
   return (
