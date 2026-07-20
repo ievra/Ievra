@@ -849,6 +849,14 @@ body{padding:16px 24px}
       if (current) {
         if (validatedData.heroImage !== undefined && validatedData.heroImage !== current.heroImage)
           deleteAssetFile(current.heroImage);
+        if (validatedData.bannerImage !== undefined && validatedData.bannerImage !== current.bannerImage)
+          deleteAssetFile(current.bannerImage);
+        if ((validatedData as any).section2Image !== undefined && (validatedData as any).section2Image !== (current as any).section2Image)
+          deleteAssetFile((current as any).section2Image);
+        if ((validatedData as any).section3Image !== undefined && (validatedData as any).section3Image !== (current as any).section3Image)
+          deleteAssetFile((current as any).section3Image);
+        if (validatedData.ogImage !== undefined && validatedData.ogImage !== current.ogImage)
+          deleteAssetFile(current.ogImage);
         if (validatedData.coverImages !== undefined) {
           const oldPaths = galleryPaths(current.coverImages);
           const newPaths = new Set(galleryPaths(validatedData.coverImages));
@@ -882,10 +890,14 @@ body{padding:16px 24px}
       if (project) {
         deleteAssetFiles([
           project.heroImage,
+          project.bannerImage,
+          (project as any).section2Image,
+          (project as any).section3Image,
           project.ogImage,
           ...galleryPaths(project.coverImages),
           ...galleryPaths(project.galleryImages),
           ...galleryPaths(project.contentImages),
+          ...galleryPaths((project as any).images),
         ]);
       }
       res.status(204).send();
